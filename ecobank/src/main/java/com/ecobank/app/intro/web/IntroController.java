@@ -17,17 +17,17 @@ public class IntroController {
 			// 2. 클라이언트에 전달할 데이터 담기
 			
 			// 3. 데이터를 출력할  페이지 결정
-			return "redirect:home";
+			return "main/home";
 		}
 		// 소개 페이지
-		@GetMapping("home")
-		public String intro(Model model) {
+		@GetMapping("about")
+		public String about(Model model) {
 			// 1. 기능수행
 			
 			// 2. 클라이언트에 전달할 데이터 담기
 			
 			// 3. 데이터를 출력할  페이지 결정
-			return "main/home";
+			return "main/about";
 		}
 		
 }

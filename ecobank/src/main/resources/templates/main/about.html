@@ -8,10 +8,15 @@
 <meta name="contextPath"
 	  th:value="${#httpServletRequest.getContextPath()}">
 <!--/* jsp = ${pageContext.request.contextPath} */-->
-<title>home.html</title>
+<script src="https://climateclock.world/widget-v2.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<title>about.html</title>
   
 </head>
 <body>
-<h1>홈 화면</h1>
+<h1>소개 화면</h1>
+
+<climate-clock></climate-clock>
 </body>
 </html>
