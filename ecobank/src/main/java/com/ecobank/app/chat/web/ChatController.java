@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ChatController {
 	
-	@GetMapping("/chat")
+	@GetMapping("/chatRoom")
 	public String chat(Model model) {
-		return "chat";
+		return "chat/chatRoom";
 	}
 	
-	@MessageMapping("/chat")
+	@MessageMapping("/chatRoom")
 	@SendTo("/topic/messages")
 	public String send(String message) {
 		return message;
