@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layouts/default_layout}"
+	  layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<meta name="contextPath"
+	  th:value="${#httpServletRequest.getContextPath()}">
+<!--/* jsp = ${pageContext.request.contextPath} */-->
+<title>main.html</title>
+  
+</head>
+<body>
+<h1>홈 화면</h1>
+</body>
+</html>
