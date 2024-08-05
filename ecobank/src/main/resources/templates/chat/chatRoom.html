@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="https://www.thymeleaf.org/"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layouts/default_layout}"
+	  layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>채팅</title>
+
 <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 </head>
 <body>
-	<h1>채팅방</h1>
+	<h1>채팅</h1>
     <div id="chatbox"></div>
     <input type="text" id="message" placeholder="Enter your message here..."/>
     <button onclick="sendMessage()">Send</button>
     
     <script type="text/javascript">
-        var socket = new SockJS('/ws');
-        var stompClient = Stomp.over(socket);
+        let socket = new SockJS('/ws');
+        let stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function(frame) {
             console.log('Connected: ' + frame);
