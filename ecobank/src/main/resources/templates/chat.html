@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+	<h1>Chat Room</h1>
+    <div id="chatbox"></div>
+    <input type="text" id="message" placeholder="Enter your message here..."/>
+    <button onclick="sendMessage()">Send</button>
+    
+    <script type="text/javascript">
+        var socket = new SockJS('/ws');
+        var stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/messages', function(message) {
+                showMessage(JSON.parse(message.body).content);
+            });
+        });
+
+        function sendMessage() {
+            var input = document.getElementById("message");
+            stompClient.send("/app/chat", {}, JSON.stringify({'content': input.value}));
+            input.value = "";
+        }
+
+        function showMessage(message) {
+            var chatbox = document.getElementById("chatbox");
+            var newMessage = document.createElement("div");
+            newMessage.textContent = message;
+            chatbox.appendChild(newMessage);
+        }
+    </script>
+</body>
+</html>
