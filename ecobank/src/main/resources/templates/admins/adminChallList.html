@@ -17,7 +17,7 @@
                         <tr class="table-warning">
                             <th>번호</th>
                             <th>제목</th>
-                            <th>작성일</th>
+                            <th>등록일자</th>
                             <th>챌린지 상태</th>
                         </tr>
                     </thead>
@@ -26,8 +26,10 @@
                             <tr th:onclick="|location.href='@{/challInfo(challNo=${challenge.challNo})}'|">
                                 <td th:text="${challenge.challNo}"></td>
                                 <td th:text="${challenge.challTitle}"></td>
-                                <td th:text="${#dates.format(challenge.challCreateAt, 'yy년MM월dd일')}"></td>
-                                <td th:text="${challenge.challState}"></td>
+                                <td th:text="${#dates.format(challenge.challCreateAt, 'yyyy/MM/dd')}"></td>
+                                <td th:if="${challenge.challState == 'D1'}">오픈 예정</td>
+                                <td th:if="${challenge.challState == 'D2'}">진행 중</td>
+                                <td th:if="${challenge.challState == 'D3'}">종료</td>
                             </tr>
                         </th:block>
                     </tbody>

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.challenge.service.ChallService;
@@ -66,7 +69,7 @@ public class ChallengController {
 	//@PostMapping("challInsert")
 	public String challInsertProcess(ChallVO challVO) {
 		int cno = challService.challInsert(challVO);
-		return "redirect:adminChallInfo?challNo=" + cno;
+		return "redirect:challInfo?challNo=" + cno;
 	}
 	    
 	// 등록 - 처리 : URI - boardInsert / PARAMETER - BoardVO(QueryString)
@@ -104,7 +107,22 @@ public class ChallengController {
 			}
 		}
 		int cno = challService.challInsert(challVO);
-		return "redirect:adminChallInfo?challNo=" + cno;
+		return "redirect:challInfo?challNo=" + cno;
+	}
+	
+	// 수정 - 페이지
+	@GetMapping("challUpdate")
+	public String challUpdateForm(ChallVO challVO, Model model) {
+		ChallVO findVO = challService.challInfo(challVO);
+		model.addAttribute("challup", findVO);
+		return "admins/adminChallUpdate";
+	}
+	
+	// 수정 - 처리 
+	@PostMapping("challUpdate")
+	@ResponseBody
+	public Map<String, Object> challUpdateProcess(@RequestBody ChallVO challVO){ 
+		return challService.challUpdate(challVO);
 	}
 	
 }
