@@ -1,44 +1,128 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{common/layouts/default_layout}"
-	  layout:fragment="Content">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>채팅</title>
-
+<style>
+.chatbox{
+    flex: 1;
+    overflow: auto;
+}
+.chatbox, .chatForm{
+    display: flex;
+    flex-direction: column;
+}
+.chatbox::before{
+    content: "";
+    display: block;
+    flex: 1;
+}
+.chatForm{
+    height: 400px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+</style>
 <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+<style>
+</style>
 </head>
 <body>
-	<h1>채팅</h1>
-    <div id="chatbox"></div>
-    <input type="text" id="message" placeholder="Enter your message here..."/>
-    <button onclick="sendMessage()">Send</button>
+    <h3>채팅</h3>
+    <div class="container-fluid">
+    	<div class="row">
+            <!-- 유저 목록 -->
+            <div class="col-md-2 col-sm-12">
+                <div class="row">
+	                <div class="col-md-3 col-sm-12 d-flex flex-column align-items-center">
+                	<h5>콘</h5>
+	                    <a href="#">S1</a>
+	                    <a href="#">S2</a>
+	                    <a href="#">S3</a>
+	                </div>
+	                <div class="col-md-9 col-sm-12">
+	                <h5>채팅방</h5>
+	                    <div>채팅1</div>
+	                    <div>채팅2</div>
+	                    <div>채팅3</div>
+	                </div>   
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="col-md-10 col-sm-12 d-flex flex-column">
+            	<div class="row">            	
+	                <div>
+	                    <h3>채팅창 제목</h3>
+	                </div>
+            	</div>
+                <div class="row">
+                	<div class="col-md-9 col-sm-12">
+		                <div class="chatForm flex-grow-1 border-bottom" id="chatForm" style="overflow-y: auto;">
+		                <!-- Messages will go here -->
+                            <div class="chatbox" id="chatbox">
+
+                            </div>
+		                </div>
+		                <!-- Message Input -->
+		                <div class="input-group mt-3">
+		                    <input type="text" class="form-control" placeholder="메시지..." id="message">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" id="send-button" onclick="sendMessage()">Send</button>
+                            </div>                	
+                	    </div>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                		<h5>접속중인 유저</h5>
+                        <div>
+                            <div>User1</div>
+                            <div>User2</div>
+                            <div>User3</div>
+                        </div>
+                        <h5>오프라인 유저</h5>
+                        <div>
+                            <div>User1</div>
+                            <div>User2</div>
+                            <div>User3</div>
+                        </div>
+                	</div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+  <script type="text/javascript">
+    // 소켓 열기
+    let socket = new SockJS('/ws');
+    let stompClient = Stomp.over(socket);
     
-    <script type="text/javascript">
-        let socket = new SockJS('/ws');
-        let stompClient = Stomp.over(socket);
-
-        stompClient.connect({}, function(frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/messages', function(message) {
-                showMessage(JSON.parse(message.body).content);
-            });
+    // 메시지를 받음.
+    stompClient.connect({}, function(frame) {
+        stompClient.subscribe('/topic/messages', function(message) {
+            showMessage(JSON.parse(message.body).content);
         });
+    });
 
-        function sendMessage() {
-            var input = document.getElementById("message");
-            stompClient.send("/app/chatRoom", {}, JSON.stringify({'content': input.value}));
-            input.value = "";
-        }
+    // 메시지 보냄
+    function sendMessage() {
+        let input = document.getElementById("message");
+        stompClient.send("/app/chat", {}, JSON.stringify({'content': input.value}));
+        input.value = "";
+    }
 
-        function showMessage(message) {
-            var chatbox = document.getElementById("chatbox");
-            var newMessage = document.createElement("div");
-            newMessage.textContent = message;
-            chatbox.appendChild(newMessage);
-        }
-    </script>
+    // 메시지를 보여줌
+    function showMessage(message) {
+        let chatbox = document.getElementById("chatbox");
+        let newMessage = document.createElement("div");
+        newMessage.textContent = message;
+        chatbox.appendChild(newMessage);
+    }
+</script>
 </body>
 </html>

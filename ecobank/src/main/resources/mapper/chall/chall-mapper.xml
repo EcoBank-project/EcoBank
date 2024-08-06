@@ -28,11 +28,20 @@
 							chall_no
 							, chall_title
 							, chall_content
+							, chall_startAt
+		        			, chall_closeAt
+							, main_img
+							, detail_img
+
 						)
 		VALUES 			(
 							#{challNo}
 							, #{challTitle}
 							, #{challContent}
+							, #{challStartAt}
+							, #{challCloseAt}
+							, #{mainImg}
+							, #{detailImg}
 						)		
 	</insert>
 
