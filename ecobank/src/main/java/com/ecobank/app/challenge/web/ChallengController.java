@@ -48,13 +48,21 @@ public class ChallengController {
 		return "admins/adminChallList";
 	}
 	
+	//챌린지 단건 조회 - 관리자
+	@GetMapping("challInfo")
+	public String challInfo(ChallVO challVO, Model model) {
+		ChallVO findVO = challService.challInfo(challVO);
+		model.addAttribute("challenge", findVO);
+		return "admins/adminChallInfo";
+	}
+	
 	//챌린지 등록 - 페이지
 	//@Scheduled
 	@GetMapping("challInsert")
 	public String challInsertForm() {
 		return "admins/adminChallInsert";
 	}
-	////
+	
 	//@PostMapping("challInsert")
 	public String challInsertProcess(ChallVO challVO) {
 		int cno = challService.challInsert(challVO);
@@ -67,6 +75,7 @@ public class ChallengController {
 	public String challInsertProcess(ChallVO challVO, @RequestPart MultipartFile[] images) {
 		//log.info(images[0].getOriginalFilename()); //파일 이름만 가져온거
 		int index = 0;
+		
 		for(MultipartFile image : images) {
 			//1)원래 파일이름
 			String fileName = image.getOriginalFilename();
@@ -79,13 +88,14 @@ public class ChallengController {
 			String saveName = uploadPath + File.separator + uniqueFileName; //""가 /와 같아
 			
 			Path savePath = Paths.get(saveName); //여기에 경로 담았음
+			
 			if(index == 0) {
 				challVO.setMainImg(uniqueFileName); //파일의 정보를 가져와서 challVO에 파일의 이름을 넣어줌
-				
 			}else {
 				challVO.setDetailImg(uniqueFileName);
 			}
 			index++;
+			
 			//3)*파일 작성(파일 업로드)
 			try {
 				image.transferTo(savePath); //*실제 경로 지정 /Path는 경로/transferTo=햇살

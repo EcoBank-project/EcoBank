@@ -10,7 +10,7 @@ import lombok.Data;
 public class ChallVO {
 	//챌린지
 	private Integer challNo; 		//챌린지 번호
-	private int user_no;			//회원번호(=관리자 번호)
+	private int userNo;			//회원번호(=관리자 번호)
 	private String challTitle;		//챌린지 제목
 	private String challContent;	//챌린지 내용
 	@DateTimeFormat(pattern="yyyy-MM-dd")
@@ -22,7 +22,9 @@ public class ChallVO {
 	private String detailImg;		//상세 이미지
 	private int challScore;			//챌린지 점수
 	private int viewCount;			//조회수
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date challCreateAt;		//챌린지 등록 일자
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date challUpdateAt;		//챌린지 수정 일자
 	
 	//챌린지 좋아요
