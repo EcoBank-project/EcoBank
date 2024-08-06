@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layouts/default_layout}"
+      layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<h3>챌린지 관리 - 관리자</h3>
+		<form name="insertForm" th:action="@{/challInsert}" method="post" >
+			<table class="table">
+				<tr>
+					<th>제목</th>
+					<td><input type="text" name="challTitle"></td>
+				</tr>
+				<tr>
+					<th>챌린지 시작 일자</th>
+					<td><label for="date"></label>
+						<input type="date"
+						        id="date"
+						        max="2030-08-06"
+						        min="2024-07-01"
+						        value="2024-08-06"></td>
+				</tr>
+				<tr>
+					<th>챌린지 종료 일자</th>
+					<td><label for="date"></label>
+						<input type="date"
+						        id="date1"
+						        max="2030-08-06"
+						        min="2024-07-01"
+						        value="2024-08-06"></td>
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td><textarea name="challContent" cols="30" rows="5"></textarea></td>
+				</tr>
+<!-- 				<tr>
+					<th>첨부이미지</th>
+					<td><input type="text" name="image"></td>
+				</tr> -->
+				<tr>
+					<th>작성일자</th><!-- 'yyyy/MM/dd' -->
+					<td><input type="text" name="challCreateAt" placeholder="yyyy-MM-dd" readonly></td>
+				</tr>
+			</table>
+			<button type="submit" class="btn btn-primary">등록</button>
+		</form>
+	</div>
+	<script>
+		$('form[name=insertForm]').on
+	</script>
+</body>
+</html>
