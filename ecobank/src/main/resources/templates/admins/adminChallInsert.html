@@ -10,7 +10,7 @@
 <body>
 	<div>
 		<h3>챌린지 관리 - 관리자</h3>
-		<form name="insertForm" th:action="@{/challInsert}" method="post"  enctype="multipart/form-data">
+		<form name="insertForm" th:action="@{/challInsert}" method="post" enctype="multipart/form-data">
 			<table class="table">
 				<tr>
 					<th>제목</th>
@@ -23,7 +23,8 @@
 						        id="date"
 						        max="2030-08-06"
 						        min="2024-07-01"
-						        value="2024-08-06"></td>
+						        
+						        name="challStartAt"></td>
 				</tr>
 				<tr>
 					<th>챌린지 종료 일자</th>
@@ -32,7 +33,8 @@
 						        id="date1"
 						        max="2030-08-06"
 						        min="2024-07-01"
-						        value="2024-08-06"></td>
+						        
+						        name="challCloseAt"></td>
 				</tr>
 				<tr>
 					<th>내용</th>
@@ -40,7 +42,11 @@
 				</tr>
 				<tr>
 					<th>첨부이미지</th>
-					<td><input type="file" name="images" multiple></td>
+					<td><input type="file" name="images" ></td>
+				</tr>
+				<tr>
+					<th>첨부이미지</th>
+					<td><input type="file" name="images"></td>
 				</tr>
 <!-- 				<tr>
 					<th>작성일자</th>
