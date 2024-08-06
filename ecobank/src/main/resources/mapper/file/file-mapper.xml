@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ecobank.app.sns.mapper.FileMapper">
+<mapper namespace="com.ecobank.app.upload.mapper.FileMapper">
 
 	<!-- 등록 -->
 	<insert id="insertFileInfo" parameterType="FileVO">
@@ -8,14 +8,14 @@
 					resultType="Integer"
 					order="BEFORE">
 			SELECT NVL(MAX(file_no),1)+1
-			FROM file
+			FROM files
 		</selectKey>
-		INSERT INTO file 
+		INSERT INTO files
 		(
 			 file_no	
 			 ,file_name
 			 ,file_path
-			 ,file_type
+			
 			 ,file_code
 			 ,file_code_no )
 		VALUES
@@ -23,7 +23,7 @@
 			#{fileNo}
 			,#{fileName}
 			,#{filePath}
-			,#{fileType}
+			
 			,#{fileCode}
 			,#{fileCodeNo}
 			)

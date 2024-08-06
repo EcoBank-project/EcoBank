@@ -62,5 +62,11 @@ public class SnsServiceImpl implements SnsService{
 	public int deleteSns(int SnsNo) {
 		return snsMapper.deleteSnsInfo(SnsNo);
 	}
+	
+	//번호 생성
+	@Override
+	public int selectSnsNum() {
+		return snsMapper.selectSnsNum();
+	}
 
 }

@@ -20,4 +20,7 @@ public interface SnsMapper {
 	
 	//삭제
 	public int deleteSnsInfo(int snsVO);
+	
+	//sns 피드번호 생성
+	public int selectSnsNum();
 }

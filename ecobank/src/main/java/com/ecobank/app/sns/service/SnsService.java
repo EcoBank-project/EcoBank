@@ -18,4 +18,7 @@ public interface SnsService {
 	
 	//삭제
 	public int deleteSns(int SnsNo);
+	
+	//피드 번호 생성
+	public int selectSnsNum();
 }
