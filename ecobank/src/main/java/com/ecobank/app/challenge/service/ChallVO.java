@@ -15,6 +15,7 @@ public class ChallVO {
 	private String challContent;	//챌린지 내용
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date challStartAt;		//챌린지 시작 일자
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date challCloseAt;		//챌린지 종료 일자
 	private String challState;		//챌린지 상태
 	private String mainImg;			//메인 이미지
