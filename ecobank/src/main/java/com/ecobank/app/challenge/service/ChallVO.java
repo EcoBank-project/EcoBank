@@ -2,6 +2,8 @@ package com.ecobank.app.challenge.service;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
@@ -11,6 +13,7 @@ public class ChallVO {
 	private int user_no;			//회원번호(=관리자 번호)
 	private String challTitle;		//챌린지 제목
 	private String challContent;	//챌린지 내용
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date challStartAt;		//챌린지 시작 일자
 	private Date challCloseAt;		//챌린지 종료 일자
 	private String challState;		//챌린지 상태
