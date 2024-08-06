@@ -82,6 +82,12 @@
 			)
 	</insert>
 	
+	<!-- 번호생성 -->
+	<select id="selectSnsNum" resultType="int">
+			SELECT NVL(MAX(feed_no),1)+1
+			FROM sns
+	</select>
+	
 	<!-- 삭제 -->
 	<delete id="deleteSnsInfo" parameterType="int">
 		DELETE FROM sns

@@ -8,31 +8,18 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h3>sns 상세보기</h3>
-	<form  action="uploadForm" method="post"
-					enctype="multipart/form-data">
-		<div>
-			<label>번호</label>
-			<input type="number" th:value="${sns.feedNo}" readonly>
-		</div>
+	<h3>sns 등록</h3>
+	<form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
+	<div>피드번호<input name="fileCodeNo" ></div>	
+	<div>피드작성자<input name="userNo"></div>
+	<div>피드내용<input name="feedContent"></div>
 	
+	<input type="file" name="images" multiple>
+			
 		<div>
-			<label>작성자</label>
-			<input type="text" th:value="${sns.userNo}" readonly>
-		</div>
-		<div>
-			<label>작성일자</label>
-			<input type="date" th:value="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}" readonly>
-		</div>
-			<div>
-			<label>내용</label>
-			<input type="text" th:value="${sns.feedContent}" readonly>
-				<!--/* [[${board.boardContent]] style="height:100px; widthL200px;" */-->
-		</div>
-		<div>
-			<button type="button" th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
+			<button type="submit" >저장</button>
 			<button type="button" th:onclick="|location.href='@{/snsList}'|">목록</button>
-			<button type="button" th:onclick="|location.href='@{/snsDelete(feedNo=${sns.feedNo})}'|">삭제</button>
+			
 		</div>
 		</form>
 </body>
