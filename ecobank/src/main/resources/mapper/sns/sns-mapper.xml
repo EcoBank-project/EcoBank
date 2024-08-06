@@ -56,8 +56,36 @@
 			     ,s.user_no
 			     ,s.feed_state
 	</select>
-
-
-
+	
+	<!-- 등록 -->
+	<insert id="insertSnsInfo" parameterType="SnsVO">
+		<selectKey keyProperty="feedNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(feed_no),1)+1
+			FROM sns
+		</selectKey>
+		INSERT INTO sns 
+		(
+			 feed_no	
+			 ,feed_content
+			 ,hashtag
+			 ,feed_createAt
+			 ,user_no )
+		VALUES
+		(
+			#{feedNo}
+			,#{feedContent}
+			,#{hashtag}
+			,#{feedCreateAt}
+			,#{userNo}
+			)
+	</insert>
+	
+	<!-- 삭제 -->
+	<delete id="deleteSnsInfo" parameterType="int">
+		DELETE FROM sns
+		WHERE feed_no = #{feedNo}
+	</delete>
 
 </mapper>
