@@ -11,6 +11,8 @@
 <script src="https://climateclock.world/widget-v2.js" async></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script type="text/javascript" th:src="@{/js/mapdata.js}"></script>		
+<script  type="text/javascript" th:src="@{/js/worldmap.js}"></script>
 <title>about.html</title>
   
 </head>
@@ -18,5 +20,23 @@
 <h1>소개 화면</h1>
 
 <climate-clock></climate-clock>
+<div id="map"></div>
+    <style type="text/css">
+.legend{color: black; width: 100%; font-family: arial; font-size: 14px;}    
+.legend_color {display: table; width: 100%; background: white; list-style: none; margin: 0px; padding: 0px; }
+.legend_color li{width: 20%;  height: 20px; display: table-cell;}
+.legend_label {display: table; width: 100%;  padding: 0px; padding-left: 10%; padding-right: 10%; list-style: none; margin: 0px; box-sizing: border-box;}
+.legend_label li{width: 25%;  height: 20px; display: table-cell; text-align: center;}
+</style>
+<div class="legend">
+  <ul class="legend_label">
+    <li>250</li><li>1,000</li><li>1,500</li><li>1,700</li>
+  </ul>
+  <ul class="legend_color">
+    <li style="background-color: #ff6666"></li><li style="background-color: #ff3333"></li><li style="background-color: #ff0000"></li><li style="background-color: #cc0000"></li><li style="background-color: #990000"></li>
+  </ul>
+</div>
+
 </body>
 </html>
+
