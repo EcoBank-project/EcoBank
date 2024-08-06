@@ -22,4 +22,6 @@ public class SnsVO {
 	private String hashtag;			//해시태그
 	private Integer countLike;		//좋아요갯수
 	private Integer countReply;		//댓글갯수
+	private String fileName;		//파일이름
+	private int fileCodeNo;			//파일코드번호
 }
