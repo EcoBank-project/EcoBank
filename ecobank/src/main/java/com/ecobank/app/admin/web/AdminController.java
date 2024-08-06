@@ -37,8 +37,8 @@ public class AdminController {
     }
 
     @PostMapping("adminUserUpdate")
-    public String updateUserState(@RequestParam String userId, @RequestParam String userState, Model model) {
-        int updatedCount = adminService.updateUserState(userId, userState);
+    public String updateUserState(@RequestParam String useId, @RequestParam String userState, Model model) {
+        int updatedCount = adminService.updateUserState(useId, userState);
         model.addAttribute("updateStatus", updatedCount > 0 ? "성공적으로 업데이트되었습니다." : "업데이트 실패.");
         return "redirect:/adminUser";
     }
