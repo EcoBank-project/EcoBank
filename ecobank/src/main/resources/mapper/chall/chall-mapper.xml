@@ -17,6 +17,17 @@
 		ORDER BY chall_no
 	</select>
 	
+	<!-- 단건조회 -->
+	<select id="selectChallInfo" resultType="ChallVO" parameterType="ChallVO">
+		SELECT chall_no
+				, chall_title
+				, chall_createAt
+				, chall_state
+		FROM chall
+		WHERE chall_no = #{challNo}
+	</select>
+	
+	<!-- 등록 -->
 	<insert id="insertChallInfo" parameterType="ChallVO">
 		<selectKey keyProperty="challNo"
 			resultType="Integer"
