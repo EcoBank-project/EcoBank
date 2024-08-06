@@ -18,25 +18,21 @@
 	</select>
 	
 	<insert id="insertChallInfo" parameterType="ChallVO">
+		<selectKey keyProperty="challNo"
+			resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(chall_no), 0) + 1
+			FROM chall
+		</selectKey>
 		INSERT INTO chall(
 							chall_no
 							, chall_title
 							, chall_content
-							, chall_startAt
-							, chall_closeAt
-							, chall_state
-							, chall_score
-							, chall_createAt
 						)
 		VALUES 			(
 							#{challNo}
 							, #{challTitle}
 							, #{challContent}
-							, #{challStartAt}
-							, #{challCloseAt}
-							, #{challState}
-							, #{challScore}
-							, #{challCreateAt}
 						)		
 	</insert>
 
