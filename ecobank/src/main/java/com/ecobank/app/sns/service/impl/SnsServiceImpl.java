@@ -17,7 +17,7 @@ public class SnsServiceImpl implements SnsService{
 	
 	@Override
 	public List<SnsVO> snsList() {
-		return snsMapper.selectSnsAll();
+		return snsMapper.selectSnsInfo();
 	}
 
 }
