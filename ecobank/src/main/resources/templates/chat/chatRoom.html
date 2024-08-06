@@ -27,6 +27,14 @@
     border: 1px solid #ccc;
     padding: 10px;
 }
+.message_left {
+	align-self: flex-start;
+}
+.message_right {
+    align-self: flex-end;
+}
+
+
 </style>
 <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
@@ -55,7 +63,7 @@
                 </div>
             </div>
 
-            <!-- Chat Messages -->
+            <!-- 채팅 -->
             <div class="col-md-10 col-sm-12 d-flex flex-column">
             	<div class="row">            	
 	                <div>
@@ -65,12 +73,12 @@
                 <div class="row">
                 	<div class="col-md-9 col-sm-12">
 		                <div class="chatForm flex-grow-1 border-bottom" id="chatForm" style="overflow-y: auto;">
-		                <!-- Messages will go here -->
+		                <!-- 메시지 로그 -->
                             <div class="chatbox" id="chatbox">
 
                             </div>
 		                </div>
-		                <!-- Message Input -->
+		                <!-- 메시지 입력 -->
 		                <div class="input-group mt-3">
 		                    <input type="text" class="form-control" placeholder="메시지..." id="message">
                             <div class="input-group-append">
@@ -78,13 +86,16 @@
                             </div>                	
                 	    </div>
                     </div>
+                    <!-- 유저 -->
                     <div class="col-md-3 col-sm-12">
-                		<h5>접속중인 유저</h5>
+                		<!-- 세션을 이용-->
+                        <h5>접속중인 유저</h5>
                         <div>
                             <div>User1</div>
                             <div>User2</div>
                             <div>User3</div>
                         </div>
+                        <!-- DB를 이용 -->
                         <h5>오프라인 유저</h5>
                         <div>
                             <div>User1</div>
@@ -105,14 +116,19 @@
     // 메시지를 받음.
     stompClient.connect({}, function(frame) {
         stompClient.subscribe('/topic/messages', function(message) {
-            showMessage(JSON.parse(message.body).content);
+            showMessage(JSON.parse(message.body));
         });
     });
 
     // 메시지 보냄
     function sendMessage() {
         let input = document.getElementById("message");
-        stompClient.send("/app/chat", {}, JSON.stringify({'content': input.value}));
+        const chatMessage = {
+            send: "User",	// 나중에 세션정보 넣으면됨.
+            content: input.value,
+            type: 'CHAR'
+        };
+        stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
         input.value = "";
     }
 
@@ -120,7 +136,12 @@
     function showMessage(message) {
         let chatbox = document.getElementById("chatbox");
         let newMessage = document.createElement("div");
-        newMessage.textContent = message;
+        if(message.send === "User"){
+        	newMessage.classList.add('message_right');
+        }else{
+        	newMessage.classList.add('message_left');
+        }
+        newMessage.textContent = message.content;
         chatbox.appendChild(newMessage);
     }
 </script>
