@@ -23,24 +23,24 @@
                             <td th:text="${challenge.challTitle}"></td>
                         </tr>
                         <tr>
+						    <th class="table-warning">챌린지 기간</th>
+						    <td th:text="${#dates.format(challenge.challStartAt, 'yyyy/MM/dd')} + ' ~ ' + ${#dates.format(challenge.challCloseAt, 'yyyy/MM/dd')}"></td>
+						</tr>
+                        <tr>
                             <th class="table-warning">내용</th>
                             <td th:text="${challenge.challContent}" style="height: 100px;"></td>
                         </tr>
                         <tr>
                             <th class="table-warning">메인이미지</th>
                             <td>
-                                <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="이미지" style="width:100px; height:100px">
+                                <img th:src="@{'/images/' + ${challenge.mainImg}}" class="img-fluid" style="width:100px; height:100px">
                             </td>
                         </tr>
-                        <tr>
+                       <tr>
                             <th class="table-warning">상세이미지</th>
                             <td>
-                                <img th:src="@{/images/{fileName}(fileName=${challenge.detailImg})}" class="img-fluid" style="width:50%;">
+                                <img th:src="@{/images/{fileName}(fileName=${challenge.detailImg})}" class="img-fluid" style="width:100px; height:100px">
                             </td>
-                        </tr>
-                        <tr>
-                            <th class="table-warning">작성일자</th>
-                            <td th:text="${#dates.format(challenge.challCreateAt, 'yyyy/MM/dd')}"></td>
                         </tr>
                     </tbody>
                 </table>

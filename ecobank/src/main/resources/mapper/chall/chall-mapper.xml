@@ -14,14 +14,19 @@
 		        , chall_score
 		        , chall_createAt
 		FROM chall
-		ORDER BY chall_no
+		ORDER BY chall_no DESC
 	</select>
 	
 	<!-- 단건조회 -->
 	<select id="selectChallInfo" resultType="ChallVO" parameterType="ChallVO">
 		SELECT chall_no
 				, chall_title
+				, chall_content
 				, chall_createAt
+				, chall_startAt
+				, chall_closeAt
+				, main_img
+		        , detail_img
 				, chall_state
 		FROM chall
 		WHERE chall_no = #{challNo}
@@ -55,5 +60,16 @@
 							, #{detailImg}
 						)		
 	</insert>
+	
+	<update id="updateChallInfo" parameterType="ChallVO">
+		UPDATE chall
+		SET chall_title = #{challTitle}
+			, chall_content = #{challContent}
+			, chall_startAt = #{challStartAt}
+			, chall_closeAt = #{challCloseAt}
+			, main_img = #{mainImg}
+			, detail_img = #{detailImg}
+		WHERE chall_no = #{challNo}
+	</update>
 
 </mapper>

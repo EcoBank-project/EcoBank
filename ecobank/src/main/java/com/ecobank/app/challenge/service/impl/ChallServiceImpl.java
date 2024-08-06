@@ -1,5 +1,6 @@
 package com.ecobank.app.challenge.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,18 @@ public class ChallServiceImpl implements ChallService{
 	//챌린지 수정
 	@Override
 	public Map<String, Object> challUpdate(ChallVO challVO) {
-		return null;
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+		
+		int result = challMapper.updateChallInfo(challVO);
+		if(result > 0) { //수정되었으면 
+			isSuccessed = true; //성공
+		}
+		
+		map.put("result", isSuccessed); //수정되었을때 true,실패하면 false 반환
+		map.put("target", challVO); //수정된 내용
+		
+		return map;
 	}
 	
 }
