@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.challenge.mapper.ChallMapper">
-
+	<!-- 챌린지 전체 조회 -->
+	<select id="selectChallAll" resultType="ChallVO">
+		SELECT chall_no
+		        , chall_title
+		        , chall_content
+		        , chall_startAt
+		        , chall_closeAt
+		        , chall_state
+		        , main_img
+		        , detail_img
+		        , chall_score
+		        , chall_createAt
+		FROM chall
+		ORDER BY chall_no
+	</select>
 	
+	<insert id="insertChallInfo" parameterType="ChallVO">
+		INSERT INTO chall(
+							chall_no
+							, chall_title
+							, chall_content
+							, chall_startAt
+							, chall_closeAt
+							, chall_state
+							, chall_score
+							, chall_createAt
+						)
+		VALUES 			(
+							#{challNo}
+							, #{challTitle}
+							, #{challContent}
+							, #{challStartAt}
+							, #{challCloseAt}
+							, #{challState}
+							, #{challScore}
+							, #{challCreateAt}
+						)		
+	</insert>
 
 </mapper>
