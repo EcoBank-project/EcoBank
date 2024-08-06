@@ -11,34 +11,63 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 </head>
 <body>
-	<h1>채팅</h1>
-    <div id="chatbox"></div>
-    <input type="text" id="message" placeholder="Enter your message here..."/>
-    <button onclick="sendMessage()">Send</button>
+    <h3>채팅</h3>
+    <div class="container-fluid">
+        <div class="row">
+          <!-- 유저 목록 -->
+          <div class="col-md-3 col-sm-12 border-right">
+            <h5>유저</h5>
+            <ul class="list-group">
+              <li class="list-group-item">User 1</li>
+            </ul>
+          </div>
+
+          <!-- Chat Messages -->
+      <div class="col-md-9 col-sm-12 d-flex flex-column">
+        <div>
+            <h3>채팅창 제목</h3>
+        </div>
+        <div class="flex-grow-1 border-bottom" id="chat-window" style="overflow-y: auto;">
+          <!-- Messages will go here -->
+          <div id="chatbox">
+            
+          </div>
+        </div>
+        <!-- Message Input -->
+        <div class="input-group mt-3">
+          <input type="text" class="form-control" placeholder="메시지..." id="message">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button" id="send-button" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    let socket = new SockJS('/ws');
+    let stompClient = Stomp.over(socket);
     
-    <script type="text/javascript">
-        let socket = new SockJS('/ws');
-        let stompClient = Stomp.over(socket);
-
-        stompClient.connect({}, function(frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/messages', function(message) {
-                showMessage(JSON.parse(message.body).content);
-            });
+    // 메시지를 받음.
+    stompClient.connect({}, function(frame) {
+        stompClient.subscribe('/topic/messages', function(message) {
+            showMessage(JSON.parse(message.body).content);
         });
+    });
 
-        function sendMessage() {
-            var input = document.getElementById("message");
-            stompClient.send("/app/chatRoom", {}, JSON.stringify({'content': input.value}));
-            input.value = "";
-        }
+    // 메시지 보냄
+    function sendMessage() {
+        let input = document.getElementById("message");
+        stompClient.send("/app/chat", {}, JSON.stringify({'content': input.value}));
+        input.value = "";
+    }
 
-        function showMessage(message) {
-            var chatbox = document.getElementById("chatbox");
-            var newMessage = document.createElement("div");
-            newMessage.textContent = message;
-            chatbox.appendChild(newMessage);
-        }
-    </script>
+    // 메시지를 보여줌
+    function showMessage(message) {
+        let chatbox = document.getElementById("chatbox");
+        let newMessage = document.createElement("div");
+        newMessage.textContent = message;
+        chatbox.appendChild(newMessage);
+    }
+</script>
 </body>
 </html>
