@@ -21,6 +21,6 @@ public class SnsController {
 	public String snsList(Model model) {
 		List<SnsVO> list = snsService.snsList();
 		model.addAttribute("snsList",list);
-		return "sns";
+		return "sns/snsList";
 	}
 }

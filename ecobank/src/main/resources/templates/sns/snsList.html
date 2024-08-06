@@ -6,5 +6,9 @@
 </head>
 <body>
 	<h1>sns페이지</h1>
+	<div th:each="sns, sts : ${snsList}">
+	<p th:name=${sts.index}	></p>
+	<p th:text =${sns.userNo}></p>
+	</div>
 </body>
 </html>

@@ -3,6 +3,31 @@
 <mapper namespace="com.ecobank.app.sns.mapper.SnsMapper">
 	<!-- 전체조회 -->
 	<select id="selectSnsAll" resultType="SnsVO">
+		SELECT s.feed_no    
+		       ,u.profile_img
+		       ,u.nickname
+		       ,s.feed_createAt
+		       ,s.user_no
+		       ,s.feed_state
+		       ,count(l.user_no) 
+		       ,count(r.reply_no)
+		FROM sns s JOIN users u 
+						ON s.user_no = u.user_no
+		           LEFT OUTER JOIN sns_like l  
+		           		ON s.feed_no = l.feed_no                   
+		           LEFT OUTER JOIN sns_reply r  
+		           		ON s.feed_no = r.feed_no  
+		GROUP BY s.feed_no
+				,u.profile_img
+		        ,u.nickname
+		      	,s.feed_createAt
+	          	,s.user_no
+	          	,s.feed_state
+		ORDER BY s.feed_no DESC
+	</select>
+	
+	<!-- 단건조회 -->
+	<select id="selectSnsInfo" resultType="SnsVO">
 		SELECT feed_no    
             	,feed_content
             	,feed_createAt
