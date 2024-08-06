@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.ecobank.app.admin.service.UserVO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

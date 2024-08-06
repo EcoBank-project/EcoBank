@@ -1,6 +1,6 @@
 package com.ecobank.app.security.mapper;
 
-import com.ecobank.app.security.service.UserVO;
+import com.ecobank.app.admin.service.UserVO;
 
 public interface UserMapper {
 	

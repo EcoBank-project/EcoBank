@@ -10,9 +10,10 @@ public class UserVO {
 	
 	private String useId;
 	private String nickName;
+	private String password;
 	private  Date  creaTeat;
 	private String tell;
-	private String  resp;
+	private String  roleName;
 	private String  country;
 	private String  userState;
 	

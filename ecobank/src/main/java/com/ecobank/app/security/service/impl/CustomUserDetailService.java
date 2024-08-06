@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.ecobank.app.admin.service.UserVO;
 import com.ecobank.app.security.mapper.UserMapper;
 import com.ecobank.app.security.service.LoginUserVO;
-import com.ecobank.app.security.service.UserVO;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService{
