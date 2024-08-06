@@ -10,7 +10,7 @@
 <body>
 	<div>
 		<h3>챌린지 관리 - 관리자</h3>
-		<form name="insertForm" th:action="@{/challInsert}" method="post" >
+		<form name="insertForm" th:action="@{/challInsert}" method="post"  enctype="multipart/form-data">
 			<table class="table">
 				<tr>
 					<th>제목</th>
@@ -38,20 +38,20 @@
 					<th>내용</th>
 					<td><textarea name="challContent" cols="30" rows="5"></textarea></td>
 				</tr>
-<!-- 				<tr>
-					<th>첨부이미지</th>
-					<td><input type="text" name="image"></td>
-				</tr> -->
 				<tr>
-					<th>작성일자</th><!-- 'yyyy/MM/dd' -->
-					<td><input type="text" name="challCreateAt" placeholder="yyyy-MM-dd" readonly></td>
+					<th>첨부이미지</th>
+					<td><input type="file" name="images" multiple></td>
 				</tr>
+<!-- 				<tr>
+					<th>작성일자</th>
+					<td><th:block th:text="${challCreateAt}"></td>
+				</tr> -->
 			</table>
 			<button type="submit" class="btn btn-primary">등록</button>
 		</form>
 	</div>
 	<script>
-		$('form[name=insertForm]').on
+		
 	</script>
 </body>
 </html>
