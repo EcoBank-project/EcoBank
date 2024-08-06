@@ -8,4 +8,16 @@ public interface SnsMapper {
 	
 	//전체조회
 	public List<SnsVO> selectSnsAll();
+	
+	//단건조회 
+	public SnsVO selectSnsInfo(SnsVO snsVO);
+	
+	//등록
+	public int insertSnsInfo(SnsVO snsVO);
+	
+	//수정
+	public int updateSnsInfo(SnsVO snsVO);
+	
+	//삭제
+	public int deleteSnsInfo(int snsVO);
 }

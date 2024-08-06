@@ -3,15 +3,58 @@
 <mapper namespace="com.ecobank.app.sns.mapper.SnsMapper">
 	<!-- 전체조회 -->
 	<select id="selectSnsAll" resultType="SnsVO">
-		SELECT feed_no    
-            	,feed_content
-            	,feed_createAt
-            	,feed_updateAt
-            	,user_no
-            	,feed_state
-            	,hashtag
-		FROM sns
-		ORDER BY feed_no
+		SELECT s.feed_no    
+		       ,u.profile_img
+		       ,u.nickname
+		       ,s.feed_createAt
+		       ,s.user_no
+		       ,s.feed_state
+		       ,count(l.sns_like_no) as count_like
+		       ,count(r.reply_no) as count_reply
+		FROM sns s JOIN users u 
+						ON s.user_no = u.user_no
+		           LEFT OUTER JOIN sns_like l  
+		           		ON s.feed_no = l.feed_no                   
+		           LEFT OUTER JOIN sns_reply r  
+		           		ON s.feed_no = r.feed_no  
+		GROUP BY s.feed_no
+				,u.profile_img
+		        ,u.nickname
+		      	,s.feed_createAt
+	          	,s.user_no
+	          	,s.feed_state
+		ORDER BY s.feed_no DESC
+	</select>
+	
+	<!-- 단건조회 -->
+	<select id="selectSnsInfo" resultType="SnsVO">
+		SELECT s.feed_no  
+				,u.profile_img
+		        ,u.nickname
+		   		,s.feed_content
+		        ,s.feed_createAt
+		        ,s.feed_updateAt
+			    ,s.user_no
+		        ,s.feed_state
+			    ,count(l.sns_like_no) as count_like
+                ,count(r.reply_no) as count_reply
+                ,s.hashtag
+		FROM sns s JOIN users u 
+		                ON s.user_no = u.user_no
+		           LEFT OUTER JOIN sns_like l  
+		        		ON s.feed_no = l.feed_no                   
+		           LEFT OUTER JOIN sns_reply r  
+	                    ON s.feed_no = r.feed_no 
+		WHERE s.feed_no = #{feedNo}
+		GROUP BY s.feed_no
+		         ,u.profile_img
+		         ,u.nickname
+		         ,s.feed_content
+		         ,s.feed_createAt
+		         ,s.feed_updateAt
+		         ,s.hashtag
+			     ,s.user_no
+			     ,s.feed_state
 	</select>
 
 
