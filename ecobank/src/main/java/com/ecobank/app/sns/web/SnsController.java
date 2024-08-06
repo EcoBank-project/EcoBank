@@ -35,11 +35,25 @@ public class SnsController {
 		model.addAttribute("sns", findVO);
 		return "sns/snsInfo";
 	}
+	
+	//등록
+	//@PostMapping("snsInsert")
+	//public String snsInsertProcess(SnsVO snsVO) {
+//		for()
+//	}
+	
+	
 	//수정
+	
+	
+	
+	
+	
+	
 	//삭제
 	@GetMapping("snsDelete")
-	public String snsDelete(Integer snsNo) {
-		snsService.deleteSns(snsNo);
+	public String snsDelete(Integer feedNo) {
+		snsService.deleteSns(feedNo);
 		return "redirect:snsList";
 	}
 
