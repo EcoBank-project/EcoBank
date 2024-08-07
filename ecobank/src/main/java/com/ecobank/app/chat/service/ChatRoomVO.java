@@ -2,6 +2,8 @@ package com.ecobank.app.chat.service;
 
 import java.util.Date;
 
+import org.springframework.web.socket.WebSocketSession;
+
 import lombok.Data;
 
 @Data
