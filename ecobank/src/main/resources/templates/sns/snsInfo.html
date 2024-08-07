@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script> 
 </head>
 <body>
 	<h3>sns 상세보기</h3>
@@ -15,7 +16,8 @@
 			<label>번호</label>
 			<input type="number" th:value="${sns.feedNo}" readonly>
 		</div>
-	
+		<img th:src =@{/images/{fileName}(fileName=${sns.fileName})}
+					style="width : 40%;" >
 		<div>
 			<label>작성자</label>
 			<input type="text" th:value="${sns.userNo}" readonly>
@@ -31,7 +33,7 @@
 		</div>
 		<div>
 			<button type="button" th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
-			<button type="button" th:onclick="|location.href='@{/snsList}'|">목록</button>
+			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
 			<button type="button" th:onclick="|location.href='@{/snsDelete(feedNo=${sns.feedNo})}'|">삭제</button>
 		</div>
 		</form>
