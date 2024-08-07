@@ -34,6 +34,7 @@
 			<input type="text" th:value="${sns.feedContent}" readonly>
 				<!--/* [[${board.boardContent]] style="height:100px; widthL200px;" */-->
 		</div>
+		
 		<div>
 			<button type="button" th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
 			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
