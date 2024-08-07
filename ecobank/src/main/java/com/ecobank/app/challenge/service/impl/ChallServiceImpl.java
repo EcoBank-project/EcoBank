@@ -54,5 +54,15 @@ public class ChallServiceImpl implements ChallService{
 		
 		return map;
 	}
+
+	@Override
+	public int challDelete(int challNo) {
+		return challMapper.deleteChallInfo(challNo);
+	}
+
+//	@Override
+//	public int selectChallNum() {
+//		return challMapper.selectChallNum();
+//	}
 	
 }
