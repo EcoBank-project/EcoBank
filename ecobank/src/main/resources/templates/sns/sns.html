@@ -27,7 +27,8 @@
 					<td th:text =${sns.nickname}></td>
 					<td th:text =${sns.countLike}></td>
 					<td th:text =${sns.countReply}></td>
-					<td th:src =@{${sns.fileName}}></td>
+					<td><img th:src =@{/images/{fileName}(fileName=${sns.fileName})}
+					style="width : 40%;" ></td>
 				</tr>
 				</th:block>
 			</tbody>

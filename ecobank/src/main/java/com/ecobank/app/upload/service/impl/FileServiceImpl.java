@@ -46,8 +46,8 @@ public class FileServiceImpl implements FileService{
 				String saveName = uploadPath + File.separator + uniqueFileName; //""가 /와 같아
 				
 				Path savePath = Paths.get(saveName); //여기에 경로 담았음
-				
 				//파일의 정보를 가져와서 boardVO에 파일의 이름을 넣어줌
+				System.out.println("파일"+saveName);
 				fileVO.setFileName(uniqueFileName);	//파일 이름
 				fileVO.setFilePath(saveName); 		//파일 경로
 				//fileVO.setFiletype(fileType); 		//파일 타입
@@ -62,7 +62,6 @@ public class FileServiceImpl implements FileService{
 					e.printStackTrace();
 				}
 			}
-			
 			return result == 1 ? fileVO.getFileNo() : -1;
 		}
 	

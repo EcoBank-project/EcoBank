@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  	layout:decorate="~{common/layouts/default_layout}"
+	  	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h3>sns 수정</h3>
+	<form name="updateForm" th:object="${snsInfo}" method="post" enctype="multipart/form-data">
+
+
+	<div>피드내용<input name="feedContent" th:field="*{feedContent}"></div>
+		<img th:src =@{/images/{fileName}(fileName=*{fileName})}
+					style="width : 40%;" >
+	<input type="file" name="images" th:field="*{fileName}" multiple>
+			
+		<div>
+			<button type="button" id="updateBtn" >저장</button>
+			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
+			
+		</div>
+		</form>
+</body>
+	<script>
+
+		$('#updateBtn').on('click',updateAjax);
+		
+		function updateAjax(event){
+			//1) 유효성체크
+			//	if(validationCheck() == false) return;
+			//2) 서버에 보낼 데이터 정리
+				let dataObj = getSnsObj();
+				console.log('데이터',dataObj);
+			//3) AJAX (경로,기본설정)
+			$.ajax('snsUpdate',{
+				type:'post', 	//통신할 때 method: get, post, put, delete
+				// => 커맨드 객체, @RequestParam
+				//data : dataObj	//data는 기본 객체 타입만 받음, 자동으로 QueryString변환됨
+				//=> @RequestBody (JSON)
+				contentType : 'application/json',
+				data: JSON.stringify(dataObj)
+			})
+			.done( result => {
+				console.log(result);
+			})
+			.fail(err => console.log(err));
+		}
+		
+		//1)
+		function validationCheck(){
+			let fContent = $('[name="feedContent"]');
+			if(fContent.val()==''){
+				alert('내용은 필수 값입니다.');
+				fContent.focus();
+				return false;
+			}//return false -> event핸들러 종료가됨 input태그 입력해주지않아도됨, name값으로 찾아감
+			
+			/* let snsfname = $('[name="fileName"]');
+			if(snsfname.val() == ''){
+				alert('사진은 필수 값입니다.');
+				snsfname.focus();
+				return false;
+			} */
+			return true;
+		}
+		
+		//2)
+		function getSnsObj(){
+			let formAry = $('form[name="updateForm"]').serializeArray();
+			//[{name : 'empid' , value:'209'},{name :'empname' , value : 'HONG'},...]
+			// -> serializeArray()를 통해 하나의 변수로 꺼낼 수 있음, 객체로 바꿔줘야함
+			// => javascript 에선 FormData java에선 serializeArray()
+			console.log('폼',formAry);
+			let formObj = {};
+
+			//{empid : 209, empname:'Hong', ...} -> 이 형태가 되어야함
+			$.each(formAry, function(idx, input){
+				//input = {name : 'empid' , value : '209'} 
+				formObj[input.name] = input.value;
+				//formObj['empid'] = '209';
+			});
+			return formObj;
+				//{empid : 209, empname:'Hong', ...} -> 이 형태가 됨, 객체(input.name) 이름과 VO이름이 같아서 전달 가능
+		}
+		
+	</script>
+</html>

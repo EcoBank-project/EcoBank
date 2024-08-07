@@ -10,7 +10,7 @@
 <body>
 	<h3>sns 등록</h3>
 	<form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
-	<div>피드번호<input name="fileCodeNo" ></div>	
+
 	<div>피드작성자<input name="userNo"></div>
 	<div>피드내용<input name="feedContent"></div>
 	
@@ -18,7 +18,7 @@
 			
 		<div>
 			<button type="submit" >저장</button>
-			<button type="button" th:onclick="|location.href='@{/snsList}'|">목록</button>
+			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
 			
 		</div>
 		</form>
