@@ -4,9 +4,20 @@
       th:fragment="headerFragment">
 <head>
     <meta charset="UTF-8">
-
+    <!-- csrf -->
+	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+ 	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Header</title>
     <!-- Add your CSS and other head elements here -->
+    <script>
+	 var token = $("meta[name='_csrf']").attr("content");
+	 var header = $("meta[name='_csrf_header']").attr("content");
+	  $.ajaxSetup({
+	      beforeSend: function(xhr, settings) {
+	          xhr.setRequestHeader(header, token);
+	      }
+	  });
+ 	</script>
 </head>
 <body>
     <div class="container-fluid bg-dark p-0">
