@@ -1,12 +1,17 @@
 package com.ecobank.app.sns.web;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.sns.service.SnsService;
@@ -15,6 +20,15 @@ import com.ecobank.app.upload.service.FileService;
 
 @Controller
 public class SnsController {
+	//파일등록
+	@Value("${file.upload.path}")
+	private String uploadPath;
+	
+	@GetMapping("getPath")
+	@ResponseBody
+	public String getPath() {
+		return uploadPath;
+	}
 	
 	private SnsService snsService;
 	private FileService fileService;
@@ -32,6 +46,7 @@ public class SnsController {
 	public String snsList(Model model) {
 		List<SnsVO> list = snsService.snsList();
 		model.addAttribute("snsList",list);
+		
 		return "sns/sns";
 	}
 	
@@ -63,9 +78,23 @@ public class SnsController {
 	}
 	
 	
-	//수정
+	//수정 페이지
+	@GetMapping("snsUpdate")
+	public String snsUpdateForm(@RequestParam Integer feedNo, Model model) {
+		SnsVO snsVO = new SnsVO();
+		snsVO.setFeedNo(feedNo);
+		SnsVO findVO = snsService.snsInfo(snsVO);
+		model.addAttribute("snsInfo", findVO);
+		return "sns/snsUpdate";
+	}
 	
-	
+	//수정 처리
+	@PostMapping("snsUpdate")
+	@ResponseBody
+	public Map<String, Object> snsUpdateAJAXJSON(@RequestBody SnsVO snsVO){
+		
+		return snsService.updateSns(snsVO);
+	}
 	
 	
 	
@@ -74,7 +103,7 @@ public class SnsController {
 	@GetMapping("snsDelete")
 	public String snsDelete(Integer feedNo) {
 		snsService.deleteSns(feedNo);
-		return "redirect:snsList";
+		return "redirect:sns";
 	}
 
 }

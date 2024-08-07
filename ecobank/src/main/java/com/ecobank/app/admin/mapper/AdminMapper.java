@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
 
 public interface AdminMapper {
@@ -17,4 +18,7 @@ public interface AdminMapper {
     
     // 회원 상태 업데이트
     int updateUserState(@Param("useId") String useId, @Param("userState") String userState);
+    
+    //챌린지 신고 조회 
+    List<ChallDeclareVO> ChallDeclareList();
 }

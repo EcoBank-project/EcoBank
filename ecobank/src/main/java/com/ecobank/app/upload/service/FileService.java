@@ -10,6 +10,7 @@ public interface FileService {
 	//등록
 	public int insertFile(MultipartFile[] images, String fileCode, int codeNo);
 	
-	//수정
-	public Map<String, Object> updateFile(FileVO fileVO);
+
+	//삭제
+	public int deleteFile(int fileNo);
 }
