@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,33 +32,33 @@ public class FileServiceImpl implements FileService{
 
 	//등록
 		@Override
-		public int insertFile(MultipartFile[] images, String fileCode, int codeNo) {
+		public int insertFile(MultipartFile[] images, String fileCode, int fileCodeNo) {
 			int result = 0;
 			FileVO fileVO = new FileVO();
+
 			for(MultipartFile image : images) {
 				//1)원래 파일이름
-				String orginName = image.getOriginalFilename();
-				String fileName = orginName.replace('\\', '/');
+				String fileName = image.getOriginalFilename(); 
 				
 				 //파일 형식
 				//String fileType = image.getContentType();
 				String folderPath = makeFolder();
 				//고유한 식별자로 이미지 저장해서 클라이언트가 업로드했을때 파일이름이 겹치지 않도록 하는거
 				UUID uuid = UUID.randomUUID();
-				String uniqueFileName = folderPath +File.separator + uuid + "_" + fileName;
+				String uniqueFileName = folderPath + "/" + uuid + "_" + fileName;
 				
 				//2)실제로 저장할 경로를 생성 : 서버의 업로드 경로 + 파일이름
 				
-				String saveName = uploadPath + File.separator + uniqueFileName; //""가 /와 같아
+				String saveName = uploadPath + "/" + uniqueFileName; //""가 /와 같아
 				
 				Path savePath = Paths.get(saveName); //여기에 경로 담았음
 				//파일의 정보를 가져와서 boardVO에 파일의 이름을 넣어줌
 				System.out.println("파일"+saveName);
-				fileVO.setFileName(uniqueFileName);	//파일 이름
-				fileVO.setFilePath(saveName); 		//파일 경로
+				fileVO.setFileName(fileName);			//파일 이름
+				fileVO.setFilePath(uniqueFileName); 	//파일 경로
 				//fileVO.setFiletype(fileType); 		//파일 타입
-				fileVO.setFileCode(fileCode);		//파일 분류 코드
-				fileVO.setFileCodeNo(codeNo);		//파일 분류 번호
+				fileVO.setFileCode(fileCode);			//파일 분류 코드
+				fileVO.setFileCodeNo(fileCodeNo);		//게시글번호
 				
 				result = fileMapper.insertFileInfo(fileVO);
 				//3)*파일 작성(파일 업로드)
@@ -74,8 +74,8 @@ public class FileServiceImpl implements FileService{
 		private String makeFolder() {
 			String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 			// LocalDate를 문자열로 포멧
-			String folderPath = str.replace("/", File.separator);
-			File uploadPathFoler = new File(uploadPath, folderPath);
+			//String folderPath = str.replace("/", File.separator);
+			File uploadPathFoler = new File(str);
 			// File newFile= new File(dir,"파일명");
 			if (uploadPathFoler.exists() == false) {
 				uploadPathFoler.mkdirs();
@@ -83,13 +83,18 @@ public class FileServiceImpl implements FileService{
 				// mkdir(): 디렉토리에 상위 디렉토리가 존재하지 않을경우에는 생성이 불가능한 함수
 				// mkdirs(): 디렉토리의 상위 디렉토리가 존재하지 않을 경우에는 상위 디렉토리까지 모두 생성하는 함수
 			}
-			return folderPath;
+			return str;
 		}
 		
 		//삭제
 		@Override
 		public int deleteFile(int fileNo) {
-			return 0;
+			return fileMapper.deleteFileInfo(fileNo);
+		}
+
+		@Override
+		public List<FileVO> selectFileInfo(int feedNo) {
+			return fileMapper.selectSnsFileInfo(feedNo);
 		}
 
 }
