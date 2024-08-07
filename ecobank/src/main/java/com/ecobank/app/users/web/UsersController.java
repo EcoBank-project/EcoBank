@@ -25,17 +25,14 @@ public class UsersController {
 		return "users/login";
 	}
 
-	@PostMapping("login")
-	public ModelAndView login(@RequestParam String useId, @RequestParam String password) {
-		boolean isAuthenticated = userService.authenticate(useId, password);
-		if (isAuthenticated) {
-			return new ModelAndView("redirect:/");
-		} else {
-			ModelAndView mav = new ModelAndView("users/login");
-			mav.addObject("error", "로그인 실패: 사용자 이름 또는 비밀번호가 올바르지 않습니다.");
-			return mav;
-		}
-	}
+	/*
+	 * @PostMapping("login") public ModelAndView login(@RequestParam String
+	 * useId, @RequestParam String password) { boolean isAuthenticated =
+	 * userService.authenticate(useId, password); if (isAuthenticated) { return new
+	 * ModelAndView("redirect:/"); } else { ModelAndView mav = new
+	 * ModelAndView("users/login"); mav.addObject("error",
+	 * "로그인 실패: 사용자 이름 또는 비밀번호가 올바르지 않습니다."); return mav; } }
+	 */
 
 	@GetMapping("signup")
 	public String signUp(UserCreateForm userCreateForm) {
