@@ -66,6 +66,11 @@ public class ChallServiceImpl implements ChallService{
 		return challMapper.selectScoreAll();
 	}
 
+	@Override
+	public int countChallengesByState(String challState) {
+		return challMapper.countAllChallenges(challState);
+	}
+
 //	@Override
 //	public int selectChallNum() {
 //		return challMapper.selectChallNum();
