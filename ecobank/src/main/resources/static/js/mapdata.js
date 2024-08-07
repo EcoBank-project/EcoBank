@@ -11,12 +11,12 @@ var simplemaps_worldmap_mapdata={
     state_description: "State description",
     state_color: "#88A4BC",
     state_hover_color: "#3B729F",
-    state_url: "http://simplemaps.com",
+    state_url: "#",
     border_size: 1.5,
     all_states_inactive: "no",
     all_states_zoomable: "no",
     
-    //Location defaults
+/*    //Location defaults
     location_description: "Location description",
     location_color: "#FF0067",
     location_opacity: 0.8,
@@ -29,7 +29,7 @@ var simplemaps_worldmap_mapdata={
     location_border: 2,
     location_hover_border: 2.5,
     all_locations_inactive: "no",
-    all_locations_hidden: "no",
+    all_locations_hidden: "no",*/
     
     //Label defaults
     label_color: "#d5ddec",
