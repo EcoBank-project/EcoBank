@@ -5,8 +5,8 @@
 	<select id="getUserInfo" resultType="UserVO">
 	select use_id,
 	password,
-	get_codename(resp)
+	'ROLE_'|| resp as role_name
 	from users
-	where use_id = #{id}	
+	where use_id = #{useId}	
 	</select>
 </mapper>

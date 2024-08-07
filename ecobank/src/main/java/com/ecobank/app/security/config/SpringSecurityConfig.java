@@ -24,7 +24,7 @@ public class SpringSecurityConfig {
         http
         .authorizeHttpRequests(authorize -> authorize
             .antMatchers("/css/**", "/js/**", "/img/**").permitAll() // 정적 자원 허용
-            .antMatchers("/**", "/login", "/signup").permitAll() // 인증 필요 없는 경로
+            .antMatchers("/**", "/login*", "/signup").permitAll() // 인증 필요 없는 경로
             .anyRequest().authenticated() // 나머지 요청은 인증 필요
         )
         .formLogin(formLogin -> formLogin
@@ -37,6 +37,8 @@ public class SpringSecurityConfig {
             .logoutSuccessUrl("/") // 로그아웃 성공 시 리다이렉트 URL
             .permitAll() // 로그아웃은 모든 사용자에게 허용
         );
+        
+        http.csrf().disable();
 		return http.build();
 	}
 }

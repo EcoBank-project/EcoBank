@@ -4,6 +4,6 @@ import com.ecobank.app.admin.service.UserVO;
 
 public interface UserMapper {
 	
-	public UserVO getUserInfo(String id);
+	public UserVO getUserInfo(String useId);
 
 }

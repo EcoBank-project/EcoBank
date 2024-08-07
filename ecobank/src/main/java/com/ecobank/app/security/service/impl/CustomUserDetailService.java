@@ -21,7 +21,10 @@ public class CustomUserDetailService implements UserDetailsService{
 
 	@Override // 인증을 하기위한 정보 조회
 	public UserDetails loadUserByUsername(String useId) throws UsernameNotFoundException {
+		
+		
 		UserVO userVO = userMapper.getUserInfo(useId);
+		System.out.println(userVO);
 		
 		if( userVO == null ) { // 유저 정보가 없을 시
 			throw new UsernameNotFoundException(useId);
