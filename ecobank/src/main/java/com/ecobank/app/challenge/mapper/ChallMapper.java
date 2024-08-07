@@ -11,11 +11,19 @@ public interface ChallMapper {
 	//챌린지 단건 조회 - challNo
 	public ChallVO selectChallInfo(ChallVO challVO);
 	
+	//챌린지 번호 생성
+	//public int selectChallNum();
+	
 	//챌린지 등록
-	// : challNo, challTitle, challContent, challStartAt, challCloseAt..
 	public int insertChallInfo(ChallVO challVO);
 	
 	//챌린지 수정
 	public int updateChallInfo(ChallVO challVO);
+	
+	//챌린지 사진 update
+	public int reUpdateChall(ChallVO challVO);
+	
+	//챌린지 삭제
+	public int deleteChallInfo(int challNo);
 	
 }
