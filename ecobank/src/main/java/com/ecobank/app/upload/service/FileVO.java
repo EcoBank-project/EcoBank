@@ -10,5 +10,7 @@ public class FileVO {
 	private String fileType;	//파일형식
 	private String fileCode;	//파일 분류 코드
 	private Integer fileCodeNo;	//파일 분류 코드 번호
+	private Integer userNo;		//회원 번호
+
 	
 }

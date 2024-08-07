@@ -67,6 +67,6 @@ public class SnsServiceImpl implements SnsService{
 	@Override
 	public int selectSnsNum() {
 		return snsMapper.selectSnsNum();
-	}
+		}
 
 }
