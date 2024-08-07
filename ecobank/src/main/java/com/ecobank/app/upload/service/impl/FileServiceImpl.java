@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,14 +37,18 @@ public class FileServiceImpl implements FileService{
 			FileVO fileVO = new FileVO();
 			for(MultipartFile image : images) {
 				//1)원래 파일이름
-				String fileName = image.getOriginalFilename();
+				String orginName = image.getOriginalFilename();
+				String fileName = orginName.replace('\\', '/');
+				
 				 //파일 형식
 				//String fileType = image.getContentType();
+				String folderPath = makeFolder();
 				//고유한 식별자로 이미지 저장해서 클라이언트가 업로드했을때 파일이름이 겹치지 않도록 하는거
 				UUID uuid = UUID.randomUUID();
-				String uniqueFileName = uuid + "_" + fileName;
+				String uniqueFileName = folderPath +File.separator + uuid + "_" + fileName;
 				
 				//2)실제로 저장할 경로를 생성 : 서버의 업로드 경로 + 파일이름
+				
 				String saveName = uploadPath + File.separator + uniqueFileName; //""가 /와 같아
 				
 				Path savePath = Paths.get(saveName); //여기에 경로 담았음
@@ -64,12 +70,26 @@ public class FileServiceImpl implements FileService{
 			}
 			return result == 1 ? fileVO.getFileNo() : -1;
 		}
-	
-	//수정
-	@Override
-	public Map<String, Object> updateFile(FileVO fileVO) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		
+		private String makeFolder() {
+			String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+			// LocalDate를 문자열로 포멧
+			String folderPath = str.replace("/", File.separator);
+			File uploadPathFoler = new File(uploadPath, folderPath);
+			// File newFile= new File(dir,"파일명");
+			if (uploadPathFoler.exists() == false) {
+				uploadPathFoler.mkdirs();
+				// 만약 uploadPathFolder가 존재하지않는다면 makeDirectory하라는 의미입니다.
+				// mkdir(): 디렉토리에 상위 디렉토리가 존재하지 않을경우에는 생성이 불가능한 함수
+				// mkdirs(): 디렉토리의 상위 디렉토리가 존재하지 않을 경우에는 상위 디렉토리까지 모두 생성하는 함수
+			}
+			return folderPath;
+		}
+		
+		//삭제
+		@Override
+		public int deleteFile(int fileNo) {
+			return 0;
+		}
 
 }

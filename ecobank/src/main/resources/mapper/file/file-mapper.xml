@@ -28,6 +28,9 @@
 	</insert>
 	
 	<!-- 수정 및 삭제 -->
-		
+	<delete id="deleteFileInfo" parameterType="int">
+		DELETE FROM files
+		WHERE file_no = #{fileNo}
+	</delete>
 
 </mapper>

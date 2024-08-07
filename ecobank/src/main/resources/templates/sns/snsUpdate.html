@@ -9,8 +9,9 @@
 </head>
 <body>
 	<h3>sns 수정</h3>
+	
 	<form name="updateForm" th:object="${snsInfo}" method="post" enctype="multipart/form-data">
-
+	<input type= "hidden" th:field ="*{feedNo}">
 
 	<div>피드내용<input name="feedContent" th:field="*{feedContent}"></div>
 		<img th:src =@{/images/{fileName}(fileName=*{fileName})}

@@ -103,14 +103,12 @@
 	<!-- 수정 -->
 	<update id="updateSnsInfo">
 		UPDATE sns
-		<set>
-			feed_content = #{sns.feedContent}
-			,hashtag = #{sns.hashtag}
+		SET
+			feed_content = #{feedContent}
+			,hashtag = #{hashtag}
 			,feed_updateAt = sysdate
-		</set>
-		WHERE feedNo = #{feedNo}
+		WHERE feed_no = #{feedNo}
 	</update>
-	
 	
 	
 	<!-- 삭제 -->
