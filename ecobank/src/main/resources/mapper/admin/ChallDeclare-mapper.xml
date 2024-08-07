@@ -12,5 +12,10 @@
             FROM chall_confirm_declare
 		</select>
 		
+		<delete id="deleteChallDeclare">
+    DELETE FROM chall_confirm_declare
+    WHERE confirm_declare_no = #{confirmDeclareNo}
+		</delete>
+
 		
 </mapper>
