@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ecobank.app.sns.service.SnsService;
 import com.ecobank.app.sns.service.SnsVO;
 import com.ecobank.app.upload.service.FileService;
+import com.ecobank.app.upload.service.FileVO;
 
 @Controller
 public class SnsController {
@@ -52,11 +53,15 @@ public class SnsController {
 	
 	//단건조회
 	@GetMapping("snsInfo")
-	public String snsInfo(SnsVO snsVO, Model model) {
+	public String snsInfo(SnsVO snsVO, FileVO fileVO, Model model) {
 		SnsVO findVO = snsService.snsInfo(snsVO);
+		List<FileVO> list = fileService.selectFileInfo(snsVO.getFeedNo());
+		model.addAttribute("snsFileInfo",list);
 		model.addAttribute("sns", findVO);
 		return "sns/snsInfo";
 	}
+	
+
 	//등록 페이지 이동
 	@GetMapping("snsInsert")
 	public String snsInsert() {
@@ -69,11 +74,11 @@ public class SnsController {
 		//이미지, 파일코드, 파일번호(피드코드번호)
 		String snsCode = "J1";
 		int snsNum = snsService.selectSnsNum();
-		
-		fileService.insertFile(images, snsCode,snsNum); //피드번호
+		System.out.println("번호생성"+snsNum);
 		int fno = snsService.insertSns(snsVO);
+		System.out.println("인서트"+fno);
+		fileService.insertFile(images, snsCode,snsNum); //피드번호
 
-		
 		return "redirect:snsInfo?feedNo=" + fno;
 	}
 	

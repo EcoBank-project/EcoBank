@@ -37,7 +37,8 @@
         font-size: 45px;
         line-height: 45px;
     }
-    .modal {
+    /* 채팅방 모달 */
+    .modal-chat {
         display: none; /* 초기에는 모달을 숨김 */
         position: fixed;
         z-index: 1000;
@@ -52,7 +53,7 @@
         height: 500px;    
     }
 
-    .modal-overlay {
+    .modal-chat-overlay {
         display: none; /* 초기에는 오버레이를 숨김 */
         position: fixed;
         top: 0;
@@ -140,9 +141,9 @@
         </div>
     </div>
     <!-- 채팅방 만들기 모달-->
-    <div class="modal-overlay"></div>
-    <div class="modal" id="myModal">
-        <h2>모달 제목</h2>
+    <div class="modal-chat-overlay"></div>
+    <div class="modal-chat" id="myModal">
+        <h2>채팅방</h2>
         <p>모달 내용입니다.</p>
         <button id="closeModalBtn">모달 닫기</button>
     </div>        
@@ -162,12 +163,14 @@
     // 메시지 보냄
     function sendMessage() {
         let input = document.getElementById("message");
+        let today = new Date(); 
         const chatMessage = {
-            send: "User",	// 나중에 세션정보 넣으면됨.
-            content: input.value,
-            type: 'CHAR'
+            userNo: 1,	// 나중에 세션정보 넣으면됨.
+            msgContent: input.value,
+            msgType: 'CHAR',
+            msgSendTime: today
         };
-        stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+        stompClient.send("/app/chat.message", {}, JSON.stringify(chatMessage));
         input.value = "";
     }
 
@@ -180,11 +183,11 @@
         }else{
         	newMessage.classList.add('message_left');
         }
-        newMessage.textContent = message.content;
+        newMessage.textContent = message.msgContent;
         chatbox.appendChild(newMessage);
     }
     //채팅방 조회
-    function chatRoomList(event){
+    function chatRoomList(){
     	
     }
     
@@ -193,18 +196,18 @@
     	
     //채팅방 만들기
     $('.bi-plus-circle').on('click', function(event){
-    	$('.modal-overlay').show();
+    	$('.modal-chat-overlay').show();
         $('#myModal').show();
     })
     
     $('#closeModalBtn').on('click', function() {
-    	$('.modal-overlay').hide();
+    	$('.modal-chat-overlay').hide();
         $('#myModal').hide();
     });
 
     // 오버레이 클릭 시 모달 닫기
-    $('.modal-overlay').on('click', function() {
-        $('.modal-overlay').hide();
+    $('.modal-chat-overlay').on('click', function() {
+        $('.modal-chat-overlay').hide();
         $('#myModal').hide();
     });
     //오픈채팅 만들기

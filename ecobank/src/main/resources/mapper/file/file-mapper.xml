@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.upload.mapper.FileMapper">
-
+	<!-- 조회 -->
+	<select id="selectSnsFileInfo" resultType="FileVO">
+		SELECT s.feed_no  
+               ,f.file_no
+               ,f.file_path
+		FROM sns s RIGHT OUTER JOIN files f
+                                    ON s.feed_no = f.file_code_no
+        WHERE  f.file_code_no = #{feedNo}
+		GROUP BY s.feed_no  
+                 ,f.file_no
+                 ,f.file_path
+	</select>
+	
 	<!-- 등록 -->
 	<insert id="insertFileInfo" parameterType="FileVO">
 		<selectKey keyProperty="fileNo" 
