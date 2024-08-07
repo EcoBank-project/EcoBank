@@ -7,6 +7,9 @@ public interface ChallService {
 	//챌린지 전체 조회
 	public List<ChallVO> challList();
 	
+	//챌린지 카운트 가져오기
+	public int countChallengesByState(String challState);
+	
 	//챌린지 단건 조회
 	public ChallVO challInfo(ChallVO challVO);
 	

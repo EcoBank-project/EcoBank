@@ -17,6 +17,12 @@
 		ORDER BY chall_no DESC
 	</select>
 	
+	<select id="countAllChallenges" resultType="int" parameterType="String">
+		SELECT count(*)
+		FROM chall
+		WHERE chall_state = #{challState}
+	</select>
+	
 	<!-- 단건조회 -->
 	<select id="selectChallInfo" resultType="ChallVO" parameterType="ChallVO">
 		SELECT chall_no

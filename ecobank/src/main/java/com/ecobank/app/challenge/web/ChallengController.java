@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.challenge.service.ChallService;
 import com.ecobank.app.challenge.service.ChallVO;
-import com.ecobank.app.challenge.service.ScoreVO;
 
 @Controller
 public class ChallengController {
@@ -38,6 +39,13 @@ public class ChallengController {
 	@GetMapping("ready")
 	public String challready(Model model) {
 		List<ChallVO> list = challService.challList();
+        int countD1 = challService.countChallengesByState("D1");
+        int countD2 = challService.countChallengesByState("D2");
+        int countD3 = challService.countChallengesByState("D3");
+
+        model.addAttribute("countD1", countD1);
+        model.addAttribute("countD2", countD2);
+        model.addAttribute("countD3", countD3);
 		model.addAttribute("ready", list);
 		return "chall/ready";
 	}
