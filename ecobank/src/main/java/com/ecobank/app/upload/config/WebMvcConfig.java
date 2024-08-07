@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-//@Configuration
+@Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
 	//설정파일 모아두는 곳(자동으로 설정되어있는거 수정하는 곳)
 	//스프링한테 웹 환경구현한다고 알리는거

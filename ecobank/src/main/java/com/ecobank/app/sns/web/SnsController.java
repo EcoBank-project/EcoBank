@@ -28,11 +28,11 @@ public class SnsController {
 	}
 	
 	//전체조회
-	@GetMapping("snsList")
+	@GetMapping("sns")
 	public String snsList(Model model) {
 		List<SnsVO> list = snsService.snsList();
 		model.addAttribute("snsList",list);
-		return "sns/snsList";
+		return "sns/sns";
 	}
 	
 	//단건조회

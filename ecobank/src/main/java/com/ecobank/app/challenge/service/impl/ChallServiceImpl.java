@@ -1,6 +1,8 @@
 package com.ecobank.app.challenge.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +25,34 @@ public class ChallServiceImpl implements ChallService{
 		return challMapper.selectChallAll();
 	}
 	
+	//단건조회
+	@Override
+	public ChallVO challInfo(ChallVO challVO) {
+		return challMapper.selectChallInfo(challVO);
+	}
+
 	//챌린지 등록
 	@Override
 	public int challInsert(ChallVO challVO) {
 		int result = challMapper.insertChallInfo(challVO);
 		return result == 1 ? challVO.getChallNo() : -1;
+	}
+
+	//챌린지 수정
+	@Override
+	public Map<String, Object> challUpdate(ChallVO challVO) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+		
+		int result = challMapper.updateChallInfo(challVO);
+		if(result > 0) { //수정되었으면 
+			isSuccessed = true; //성공
+		}
+		
+		map.put("result", isSuccessed); //수정되었을때 true,실패하면 false 반환
+		map.put("target", challVO); //수정된 내용
+		
+		return map;
 	}
 	
 }

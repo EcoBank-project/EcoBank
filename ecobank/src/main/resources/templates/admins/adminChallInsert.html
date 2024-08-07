@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div>
-		<h3>챌린지 관리 - 관리자</h3>
+		<h3>챌린지 등록</h3>
 		<form name="insertForm" th:action="@{/challInsert}" method="post" enctype="multipart/form-data">
 			<table class="table">
 				<tr>
@@ -39,17 +39,13 @@
 					<td><textarea name="challContent" cols="30" rows="5"></textarea></td>
 				</tr>
 				<tr>
-					<th>첨부이미지</th>
-					<td><input type="file" name="images" ></td>
-				</tr>
-				<tr>
-					<th>첨부이미지</th>
+					<th>메인 이미지</th>
 					<td><input type="file" name="images"></td>
 				</tr>
-<!-- 				<tr>
-					<th>작성일자</th>
-					<td><th:block th:text="${challCreateAt}"></td>
-				</tr> -->
+				<tr>
+					<th>상세 이미지</th>
+					<td><input type="file" name="images"></td>
+				</tr>
 			</table>
 			<button type="submit" class="btn btn-primary">등록</button>
 		</form>

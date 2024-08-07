@@ -11,18 +11,24 @@
 		       ,s.feed_state
 		       ,count(l.sns_like_no) as count_like
 		       ,count(r.reply_no) as count_reply
+		       ,f.file_name
+               ,f.file_code_no  
 		FROM sns s JOIN users u 
 						ON s.user_no = u.user_no
 		           LEFT OUTER JOIN sns_like l  
 		           		ON s.feed_no = l.feed_no                   
 		           LEFT OUTER JOIN sns_reply r  
 		           		ON s.feed_no = r.feed_no  
+		           LEFT OUTER JOIN files f
+                        ON s.feed_no = f.file_code_no
 		GROUP BY s.feed_no
 				,u.profile_img
 		        ,u.nickname
 		      	,s.feed_createAt
 	          	,s.user_no
 	          	,s.feed_state
+	          	,f.file_name
+               ,f.file_code_no  
 		ORDER BY s.feed_no DESC
 	</select>
 	

@@ -1,9 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layouts/default_layout}"
+      layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
+	<div class="container mt-5">
+        <h3 class="mb-4">챌린지 상세 조회</h3>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th class="table-warning" style="width: 20%;">번호</th>
+                            <td th:text="${challenge.challNo}"></td>
+                        </tr>
+                        <tr>
+                            <th class="table-warning">제목</th>
+                            <td th:text="${challenge.challTitle}"></td>
+                        </tr>
+                        <tr>
+						    <th class="table-warning">챌린지 기간</th>
+						    <td th:text="${#dates.format(challenge.challStartAt, 'yyyy/MM/dd')} + ' ~ ' + ${#dates.format(challenge.challCloseAt, 'yyyy/MM/dd')}"></td>
+						</tr>
+                        <tr>
+                            <th class="table-warning">내용</th>
+                            <td th:text="${challenge.challContent}" style="height: 100px;"></td>
+                        </tr>
+                        <tr>
+                            <th class="table-warning">메인이미지</th>
+                            <td>
+                                <img th:src="@{'/images/' + ${challenge.mainImg}}" class="img-fluid" style="width:100px; height:100px">
+                            </td>
+                        </tr>
+                       <tr>
+                            <th class="table-warning">상세이미지</th>
+                            <td>
+                                <img th:src="@{/images/{fileName}(fileName=${challenge.detailImg})}" class="img-fluid" style="width:100px; height:100px">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="button" class="btn btn-warning me-2" th:onclick="|location.href='@{challUpdate(challNo=${challenge.challNo})}'|">수정</button>
+                    <button type="button" class="btn btn-secondary me-2" th:onclick="|location.href='@{/challList}'|">목록</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
