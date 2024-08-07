@@ -11,6 +11,9 @@
 	<div>
 		<h3>챌린지 수정</h3>
 		<form name="updateForm" th:object="${challup}" enctype="multipart/form-data">
+			<input type="hidden" th:field="*{challNo}">
+			<input type="hidden" th:field="*{challStartAt}">
+			<input type="hidden" th:field="*{challCloseAt}">
 			<table class="table">
 				<tr>
 					<th>제목</th>
@@ -23,17 +26,15 @@
 				<tr>
 					<th>메인 이미지</th>
 					<td>
-						<!-- <input type="file" th:field="*{mainImg}"> -->
 						<img th:src="@{'/images/' + ${challup.mainImg}}" alt="이미지" style="width:100px; height:100px"> 
-						<input type="file" name="images" >
+						<input type="file" name="images">
 					</td>
 				</tr>
 				<tr>
 					<th>상세 이미지</th>
 					<td>
-						<!-- <input type="file" th:field="*{detailImg}"> -->
 						<img th:src="@{'/images/' + ${challup.detailImg}}" alt="이미지" style="width:100px; height:100px"> 
-						<input type="file" name="images" >
+						<input type="file" name="images">
 					</td>
 				</tr>
 			</table>
@@ -42,15 +43,12 @@
 		</form>
 	</div>
 	<script>
-		
-		
 		function updateAjax(event){
 			//1)유효성 체크
 			//if(validationCheck() == false) return;
 			
 			//2)서버에 보낼 데이터 정리
-			let dataObj = getChallObj(); //리턴된 값이 객체로 바껴서 넘어옴
-			console.log(dataObj, '데이터확인');
+			var formData = new FormData(document.updateForm);
 			//{ empid : 209, empname : 'Hong', ... }
 			
 			//3)AJAX('경로', {}) /.done(=.then())/ .fail(=.catch()) => @ResponseBody
@@ -59,8 +57,9 @@
 				//=> 커맨드 객체, @RequestParam
 				//data : dataObj //기본 객체타입만 받아, 자동으로 QueryString 변환 /이거는 수정 처리 첫번째
 				//=> @RequestBody
-				contentType : 'application/json', //이거는 수정 처리 두번째
-				data : JSON.stringify(dataObj)
+				processData : false,
+				contentType : false,
+				data : formData
 			})
 			.done(result => { //.done()이 알아서 다 바꿔줘
 				console.log(result);
@@ -87,23 +86,6 @@
 			return true; //정상적으로 진행된 경우는 if를 돌지않고 바로 return true겠지
 		} */
 		
-		function getChallObj(){ 
-			let formAry = $('form[name="updateForm"]').serializeArray();
-			//[ { name : 'empid', value : '209' }, 
-			//	{ name : 'empname', value : 'Hong' }, ... ]
-			// => javascript에선 FormData
-			console.log(formAry, '2.배열로 넘어옴');
-	
-			let formObj = {};
-			$.each(formAry, function(idx, input){ //??독립된 메소드.each /forEach
-				//지금 input = { name : 'empid', value : '209' } 이러한데
-				//우리는 이 형태이길 원해서{ empid : 209, empname : 'Hong', ... }
-				formObj[input.name] = input.value; //내가 원하는 객체 형식으로 바꿔줌
-				//formObj['empid'] = '209';
-			});
-			//{ empid : 209, empname : 'Hong', ... }
-			return formObj;
-		}
 /* 		$('#updateBtn').on('click', challUpdateAjax);
 		
 		function challUpdateAjax(event){

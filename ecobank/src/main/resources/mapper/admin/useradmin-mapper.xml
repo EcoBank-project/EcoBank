@@ -21,6 +21,11 @@
         WHERE trunc(CREATEAT) = trunc(sysdate)
     </select>
     
+    <!-- 회원수 조회  -->
+    <select id="getusers" resultType="int">
+    select count(*)
+	from users
+    </select>
     <!-- 회원 상태 업데이트 -->
     <update id="updateUserState">
         UPDATE users

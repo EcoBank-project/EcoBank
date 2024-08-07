@@ -31,13 +31,15 @@ public class LoginUserVO implements UserDetails{
 		return userVO.getPassword();
 
 	}
-
 	@Override
-	public String getUsername() {
-		return userVO.getUseId();
-
+    public String getUsername() {
+        return userVO.getUseId();
+    }
+	
+	public String getNickname() {
+		return userVO.getNickName();
 	}
-
+	
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
