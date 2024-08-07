@@ -22,4 +22,7 @@ public interface ChallService {
 	//챌린지 삭제
 	public int challDelete(int challNo);
 	
+	//점수 목록
+	public List<Map<String, Object>> scoreList();
+	
 }

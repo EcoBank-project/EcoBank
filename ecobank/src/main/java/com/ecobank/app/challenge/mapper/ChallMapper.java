@@ -1,6 +1,7 @@
 package com.ecobank.app.challenge.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ecobank.app.challenge.service.ChallVO;
 
@@ -25,5 +26,8 @@ public interface ChallMapper {
 	
 	//챌린지 삭제
 	public int deleteChallInfo(int challNo);
+	
+	//인증 회원 점수 목록
+	public List<Map<String, Object>> selectScoreAll();
 	
 }

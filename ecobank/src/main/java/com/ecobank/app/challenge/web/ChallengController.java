@@ -10,19 +10,17 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.challenge.service.ChallService;
 import com.ecobank.app.challenge.service.ChallVO;
-import com.ecobank.app.upload.service.FileService;
+import com.ecobank.app.challenge.service.ScoreVO;
 
 @Controller
 public class ChallengController {
@@ -162,6 +160,15 @@ public class ChallengController {
 //		
 //		fileService.insertFile(images, challCode, challNo); //피드번호
 		return challService.challUpdate(challVO);
+	}
+	
+	//챌린지 목록 - 관리자
+	@GetMapping("scoreList")
+	public String scoreList(Model model) {
+		List<Map<String, Object>> list = challService.scoreList();
+		
+		model.addAttribute("scoreList", list);
+		return "admins/adminScoreList";
 	}
 	
 	
