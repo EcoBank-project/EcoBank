@@ -45,12 +45,16 @@
 			    ,count(l.sns_like_no) as count_like
                 ,count(r.reply_no) as count_reply
                 ,s.hashtag
+                ,f.file_name
+                ,f.file_code_no  
 		FROM sns s JOIN users u 
 		                ON s.user_no = u.user_no
 		           LEFT OUTER JOIN sns_like l  
 		        		ON s.feed_no = l.feed_no                   
 		           LEFT OUTER JOIN sns_reply r  
 	                    ON s.feed_no = r.feed_no 
+	               LEFT OUTER JOIN files f
+                        ON s.feed_no = f.file_code_no
 		WHERE s.feed_no = #{feedNo}
 		GROUP BY s.feed_no
 		         ,u.profile_img
@@ -61,6 +65,8 @@
 		         ,s.hashtag
 			     ,s.user_no
 			     ,s.feed_state
+			     ,f.file_name
+                 ,f.file_code_no  
 	</select>
 	
 	<!-- 등록 -->
@@ -93,6 +99,17 @@
 			SELECT NVL(MAX(feed_no),1)+1
 			FROM sns
 	</select>
+	
+	<!-- 수정 -->
+	<update id="updateSnsInfo">
+		UPDATE sns
+		SET
+			feed_content = #{feedContent}
+			,hashtag = #{hashtag}
+			,feed_updateAt = sysdate
+		WHERE feed_no = #{feedNo}
+	</update>
+	
 	
 	<!-- 삭제 -->
 	<delete id="deleteSnsInfo" parameterType="int">
