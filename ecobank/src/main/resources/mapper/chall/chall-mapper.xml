@@ -32,6 +32,11 @@
 		WHERE chall_no = #{challNo}
 	</select>
 	
+<!-- 	<select id="selectChallNum" resultType="int">
+		SELECT NVL(MAX(chall_no), 0) + 1
+		FROM chall
+	</select> -->
+	
 	<!-- 등록 -->
 	<insert id="insertChallInfo" parameterType="ChallVO">
 		<selectKey keyProperty="challNo"
@@ -67,9 +72,31 @@
 			, chall_content = #{challContent}
 			, chall_startAt = #{challStartAt}
 			, chall_closeAt = #{challCloseAt}
+			<if test="mainImg != null and mainImg != ''">
 			, main_img = #{mainImg}
 			, detail_img = #{detailImg}
+			</if>
+			
 		WHERE chall_no = #{challNo}
 	</update>
-
+	
+	<delete id="deleteChallInfo" parameterType="int">
+		DELETE FROM chall
+		WHERE chall_no = #{challNo}
+	</delete>
+	
+	<select id="selectScoreAll" resultType="Map">
+		SELECT s.score_no "scoreNo"
+				, f.user_no "userNo"
+				, c.chall_title "challTitle"
+				, s.confirm_count "confirmCount"
+				, TO_CHAR(chall_closeAt, 'YYYY/MM/DD')|| ' - ' || TO_CHAR(chall_startAt, 'YYYY/MM/DD') "term"
+				, s.confirm_count*10 "score"
+		FROM score s JOIN chall c
+		                ON s.chall_no = c.chall_no            
+		            JOIN chall_confirm f
+		                ON s.user_no = f.user_no
+		ORDER BY score_no DESC
+	</select>
+	
 </mapper>

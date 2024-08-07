@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ecobank.app.challenge.mapper.ChallMapper;
 import com.ecobank.app.challenge.service.ChallService;
 import com.ecobank.app.challenge.service.ChallVO;
+import com.ecobank.app.challenge.service.ScoreVO;
 @Service
 public class ChallServiceImpl implements ChallService{
 	private ChallMapper challMapper;
@@ -54,5 +55,20 @@ public class ChallServiceImpl implements ChallService{
 		
 		return map;
 	}
+
+	@Override
+	public int challDelete(int challNo) {
+		return challMapper.deleteChallInfo(challNo);
+	}
+	//점수 목록 조회
+	@Override
+	public List<Map<String, Object>> scoreList() {
+		return challMapper.selectScoreAll();
+	}
+
+//	@Override
+//	public int selectChallNum() {
+//		return challMapper.selectChallNum();
+//	}
 	
 }
