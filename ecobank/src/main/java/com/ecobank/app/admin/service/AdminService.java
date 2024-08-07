@@ -12,4 +12,7 @@ public interface AdminService {
     
     // 회원 상태 업데이트
     int updateUserState(String useId, String userState);
+    
+    //챌린지 신고 조회 
+    List<ChallDeclareVO> ChallDeclareList();
 }

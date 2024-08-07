@@ -82,16 +82,16 @@ public class ChallengController {
 		for(MultipartFile image : images) {
 			//1)원래 파일이름
 			String fileName = image.getOriginalFilename();
-			
+			//System.out.println(fileName);
 			//고유한 식별자로 이미지 저장해서 클라이언트가 업로드했을때 파일이름이 겹치지 않도록 하는거
 			UUID uuid = UUID.randomUUID();
 			String uniqueFileName = uuid + "_" + fileName;
 			
 			//2)실제로 저장할 경로를 생성 : 서버의 업로드 경로 + 파일이름
 			String saveName = uploadPath + File.separator + uniqueFileName; //""가 /와 같아
-			
+			//System.out.println(saveName);
 			Path savePath = Paths.get(saveName); //여기에 경로 담았음
-			
+			//System.out.println(savePath);
 			if(index == 0) {
 				challVO.setMainImg(uniqueFileName); //파일의 정보를 가져와서 challVO에 파일의 이름을 넣어줌
 			}else {
@@ -115,6 +115,7 @@ public class ChallengController {
 	public String challUpdateForm(ChallVO challVO, Model model) {
 		ChallVO findVO = challService.challInfo(challVO);
 		model.addAttribute("challup", findVO);
+		System.out.println("model");
 		return "admins/adminChallUpdate";
 	}
 	
@@ -122,6 +123,7 @@ public class ChallengController {
 	@PostMapping("challUpdate")
 	@ResponseBody
 	public Map<String, Object> challUpdateProcess(@RequestBody ChallVO challVO){ 
+		System.out.println("ddddddd");
 		return challService.challUpdate(challVO);
 	}
 	
