@@ -4,91 +4,51 @@
 	layout:decorate="~{common/layouts/default_layout}"
 	layout:fragment="Content">
 <head>
-	<meta charset="UTF-8">
-	<title>회원가입</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #f7f7f7;
-			margin: 0;
-			padding: 0;
-		}
-		.container {
-			max-width: 500px;
-			margin: 50px auto;
-			padding: 20px;
-			background-color: #fff;
-			border-radius: 8px;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		}
-		h2 {
-			text-align: center;
-			margin-bottom: 20px;
-		}
-		.form-label {
-			display: block;
-			margin-bottom: 5px;
-			font-weight: bold;
-		}
-		.form-control {
-			width: 100%;
-			padding: 10px;
-			margin-bottom: 10px;
-			border: 1px solid #ccc;
-			border-radius: 4px;
-			box-sizing: border-box;
-		}
-		.form-control:focus {
-			border-color: #007bff;
-			outline: none;
-		}
-		.mb-3 {
-			margin-bottom: 15px;
-		}
-		.button-container {
-			text-align: center;
-		}
-		button[type="submit"] {
-			background-color: #007bff;
-			color: #fff;
-			padding: 10px 20px;
-			border: none;
-			border-radius: 4px;
-			cursor: pointer;
-			font-size: 16px;
-		}
-		button[type="submit"]:hover {
-			background-color: #0056b3;
-		}
-	</style>
+<meta charset="UTF-8">
+<title>회원가입</title>
+<link rel="stylesheet" href="../css/users/signup.css" />
+<script src="../js/users/signup.js"></script>
 </head>
 <body>
 	<div class="container">
 		<h2>회원가입 페이지</h2>
-		<form th:action="@{/signup}" th:object="${userCreateForm}" method="post">
+		<form th:action="@{/signup}" th:object="${userCreateForm}"
+			method="post" onsubmit="return validateForm()">
 			<div class="mb-3">
-				<label for="useid" class="form-label">아이디(이메일)</label>
+				<label for="useid" class="form-label">아이디(이메일)</label> 
 				<input type="text" th:field="*{useId}" class="form-control" id="useid">
-			</div>
-			<div class="mb-3">
-				<label for="password1" class="form-label">비밀번호</label>
-				<input type="password" th:field="*{password1}" class="form-control" id="password1">
-			</div>
-			<div class="mb-3">
-				<label for="password2" class="form-label">비밀번호 확인</label>
-				<input type="password" th:field="*{password2}" class="form-control" id="password2">
-			</div>
-			<div class="mb-3">
-				<label for="nickname" class="form-label">닉네임</label>
-				<input type="text" th:field="*{nickName}" class="form-control" id="nickname">
-			</div>
-			<div class="mb-3">
-				<label for="tell" class="form-label">연락처</label>
-				<input type="text" th:field="*{tell}" class="form-control" id="tell">
-			</div>
-			<div class="button-container">
-				<button type="submit">회원가입</button>
-			</div>
+				<button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
+				<br>
+				<div id="mail_number" name="mail_number" style="display: none">
+					<input type="text" name="number" id="number"
+						style="width: 250px; margin-top: -10px" placeholder="인증번호 입력">
+					<button type="button" name="confirmBtn" id="confirmBtn"
+						onclick="confirmNumber()">이메일 인증</button>
+					<input type="text" id="Confirm" name="Confirm" style="display: none" value="">
+				</div>
+				<div class="mb-3">
+					<label for="password1" class="form-label">비밀번호</label> <input
+						type="password" th:field="*{password1}" class="form-control"
+						id="password1">
+				</div>
+				<div class="mb-3">
+					<label for="password2" class="form-label">비밀번호 확인</label> <input
+						type="password" th:field="*{password2}" class="form-control"
+						id="password2">
+					<p id="error-message" class="error-message">비밀번호가 일치하지 않습니다.</p>
+				</div>
+				<div class="mb-3">
+					<label for="nickname" class="form-label">닉네임</label> <input
+						type="text" th:field="*{nickName}" class="form-control"
+						id="nickname" placeholder="6글자 이상 20글자 이하">
+				</div>
+				<div class="mb-3">
+					<label for="tell" class="form-label">연락처</label> <input type="text"
+						th:field="*{tell}" class="form-control" id="tell">
+				</div>
+				<div class="button-container">
+					<button type="submit" id="submit-button" disabled>회원가입</button>
+				</div>
 		</form>
 	</div>
 </body>
