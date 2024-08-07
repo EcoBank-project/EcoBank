@@ -38,7 +38,7 @@ public class SpringSecurityConfig {
             .permitAll() // 로그아웃은 모든 사용자에게 허용
         );
         
-        http.csrf().disable();
+        //http.csrf().disable();
 		return http.build();
 	}
 }

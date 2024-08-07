@@ -32,6 +32,11 @@
 		WHERE chall_no = #{challNo}
 	</select>
 	
+<!-- 	<select id="selectChallNum" resultType="int">
+		SELECT NVL(MAX(chall_no), 0) + 1
+		FROM chall
+	</select> -->
+	
 	<!-- 등록 -->
 	<insert id="insertChallInfo" parameterType="ChallVO">
 		<selectKey keyProperty="challNo"
@@ -67,9 +72,17 @@
 			, chall_content = #{challContent}
 			, chall_startAt = #{challStartAt}
 			, chall_closeAt = #{challCloseAt}
+			<if test="mainImg != null and mainImg != ''">
 			, main_img = #{mainImg}
 			, detail_img = #{detailImg}
+			</if>
+			
 		WHERE chall_no = #{challNo}
 	</update>
+	
+	<delete id="deleteChallInfo" parameterType="int">
+		DELETE FROM chall
+		WHERE chall_no = #{challNo}
+	</delete>
 
 </mapper>

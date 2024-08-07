@@ -10,10 +10,16 @@ public interface ChallService {
 	//챌린지 단건 조회
 	public ChallVO challInfo(ChallVO challVO);
 	
+	//챌린지 번호 생성
+	//public int selectChallNum();
+	
 	//챌린지 등록
 	public int challInsert(ChallVO challVO);
 	
 	//챌린지 수정
 	public Map<String, Object> challUpdate(ChallVO challVO);
+	
+	//챌린지 삭제
+	public int challDelete(int challNo);
 	
 }
