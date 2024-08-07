@@ -40,7 +40,7 @@ public class AdminController {
     @GetMapping("adminUser")
     public String getusers(Model model) {
     	List<UserVO> list = adminService.UserList();
-        model.addAttribute("getusers", list);
+        model.addAttribute("userList", list);
         return "admins/adminUser";
     }
     
