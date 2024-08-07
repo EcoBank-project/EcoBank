@@ -13,6 +13,8 @@ public interface AdminMapper {
     // 유저 목록 조회
     List<UserVO> userList();
     
+    //가입한 회원수 조회
+    int getusers();
     // 오늘 가입한 회원 수 조회
     int getcreaTeat();
     
@@ -21,4 +23,7 @@ public interface AdminMapper {
     
     //챌린지 신고 조회 
     List<ChallDeclareVO> ChallDeclareList();
+    
+    //챌린지 삭제
+    int deleteChallDeclare (int confirmDeclareNo);
 }
