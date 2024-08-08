@@ -13,6 +13,8 @@ public interface AdminMapper {
     // 유저 목록 조회
     List<UserVO> userList();
     
+    
+    
     //가입한 회원수 조회
     int getusers();
     // 오늘 가입한 회원 수 조회

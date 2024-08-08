@@ -27,12 +27,12 @@
         <tbody>
             <th:block th:each="user : ${userList}">
                 <tr>
-                    <td class="text-center">[[${user.useId}]]</td>
-                    <td class="text-center">[[${user.nickName}]]</td>
-                    <td class="text-center">[[${user.creaTeat}]]</td>
-                    <td class="text-center">[[${user.tell}]]</td>
-                    <td class="text-center">[[${user.resp}]]</td>
-                    <td class="text-center">[[${user.country}]]</td>
+                    <td class="text-center" th:text="${user.useId}"></td>
+                    <td class="text-center" th:text="${user.nickName}"></td>
+                    <td class="text-center" th:text="${user.creaTeat}"></td>
+                    <td class="text-center" th:text="${user.tell}"></td>
+                    <td class="text-center" th:text="${user.resp}"></td>
+                    <td class="text-center" th:text="${user.country}"></td>
                     <td class="text-center">
                         <form th:action="@{/adminUserUpdate}" method="post">
                             <input type="hidden" name="useId" th:value="${user.useId}"/>
@@ -40,19 +40,33 @@
                                 <option th:value="${user.userState}" th:text="${user.userState}" selected></option>
                                 <option value="B1">B1</option>
                                 <option value="B2">B2</option>
-                                <!-- 추가 옵션이 필요하면 여기 추가 -->
-                            </td>
-                            
                             </select>
-                           <td class="text-center">                         
                             <button type="submit" class="btn btn-primary btn-sm">업데이트</button>
-                       		</td>
-</form>
-                   
+                        </form>
+                    </td>
                 </tr>
             </th:block>
         </tbody>
     </table>
+
+    <!-- 페이징 링크 추가 -->
+    <nav>
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 </body>

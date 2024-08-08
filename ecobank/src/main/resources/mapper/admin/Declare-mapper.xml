@@ -49,6 +49,7 @@
  			 WHERE DECLARE_NO = #{declareNO}		
 		</delete>
 		
+	
 		
 		
 		
