@@ -7,6 +7,7 @@
 		   password,
 		   nickname,
 		   user_state,
+		   user_no,
 	'ROLE_'|| resp as role_name
 	from users
 	where use_id = #{useId}	
