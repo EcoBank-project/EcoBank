@@ -2,7 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-
+<meta charset="UTF-8">
+    <!-- csrf -->
+	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+ 	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Header</title>
+    <!-- Add your CSS and other head elements here -->
  <title>Layout page</title>
 <th:block th:replace="common/configs/config :: MainTemplateConfig"></th:block>
 <th:block th:replace="common/configs/config :: jQueryConfig"></th:block>
@@ -14,5 +19,14 @@
 		<th:block layout:fragment="Content"></th:block>
 	</main>
 	<footer th:insert="common/fragments/footer :: footerFragment"></footer>
+	<script>
+	 var token = $("meta[name='_csrf']").attr("content");
+	 var header = $("meta[name='_csrf_header']").attr("content");
+	  $.ajaxSetup({
+	      beforeSend: function(xhr, settings) {
+	          xhr.setRequestHeader(header, token);
+	      }
+	  });
+ 	</script>
 </body>
 </html>

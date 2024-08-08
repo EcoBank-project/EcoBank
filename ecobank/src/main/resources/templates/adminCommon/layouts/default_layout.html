@@ -1,12 +1,44 @@
+<!-- templates/adminCommon/layouts/default_layout.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-
+    <title>Layout page</title>
+    <!-- Import global configurations -->
+    <th:block th:replace="adminCommon/configs/config :: MainTemplateConfig"></th:block>
+    <th:block th:replace="adminCommon/configs/config :: VendorCSS"></th:block>
+    <th:block th:replace="adminCommon/configs/config :: MainCSS"></th:block>
+    <th:block th:replace="adminCommon/configs/config :: GoogleFonts"></th:block>
+    <th:block th:replace="adminCommon/configs/config :: Icons"></th:block>
+    <th:block th:replace="adminCommon/configs/config :: jQueryConfig"></th:block>
+    <th:block th:replace="adminCommon/configs/config :: SweetAlertConfig"></th:block>
+</head>
 <body>
-	<header th:insert="adminCommon/fragments/header :: headerFragment"></header>
-	<main>
-	</main>
-
+    <div id="wrapper">
+        <header th:insert="adminCommon/fragments/header :: headerFragment"></header>
+        <div id="sidebar" th:insert="adminCommon/fragments/sidebar :: sidebarFragment"></div>
+        <main>
+            <div class="main">
+                <div class="main-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <th:block layout:fragment="Content"></th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div class="clearfix"></div>
+        <footer>
+            <div class="container-fluid">
+                <p class="copyright">Shared by <i class="fa fa-love"></i><a href="https://bootstrapthemes.co">BootstrapThemes</a></p>
+            </div>
+        </footer>
+    </div>
+    <!-- Javascript -->
+    <script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="assets/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js"></script>
+    <script src="assets/vendor/chartist/js/chartist.min.js"></script>
+    <script src="assets/scripts/klorofil-common.js"></script>
 </body>
 </html>

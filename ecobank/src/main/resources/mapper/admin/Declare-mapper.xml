@@ -16,6 +16,15 @@
     DELETE FROM chall_confirm_declare
     WHERE confirm_declare_no = #{confirmDeclareNo}
 		</delete>
+		
+		<!-- sns 댓글 신고 목록 -->
+		<select id="SnsReplyDeclareList" resultType="com.ecobank.app.admin.service.SnsDeclareVO">
+		select  DECLARE_NO,
+       			CONFIRM_USER_NO,
+       			DECLARE_CODE,
+        		REPLY_NO
+		from sns_declare
+		</select>
 
 		
 </mapper>

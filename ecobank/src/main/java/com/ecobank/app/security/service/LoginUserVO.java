@@ -29,15 +29,24 @@ public class LoginUserVO implements UserDetails{
 	@Override
 	public String getPassword() {
 		return userVO.getPassword();
-
 	}
+	
 	@Override
     public String getUsername() {
         return userVO.getUseId();
     }
 	
+	
 	public String getNickname() {
 		return userVO.getNickName();
+	}
+	
+	public String getUserState() {
+		return userVO.getUserState();
+	}
+	
+	public int getUserNO() {
+		return userVO.getUserNo();
 	}
 	
 	@Override

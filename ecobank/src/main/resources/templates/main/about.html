@@ -8,12 +8,7 @@
 <meta name="contextPath"
 	  th:value="${#httpServletRequest.getContextPath()}">
 <!--/* jsp = ${pageContext.request.contextPath} */-->
-<script src="https://climateclock.world/widget-v2.js" async></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script type="text/javascript" th:src="@{/js/mapdata.js}"></script>		
-<script  type="text/javascript" th:src="@{/js/worldmap.js}"></script>
-<script type="text/javascript" th:src="@{/js/about/mapcontrol.js}"></script>
 <title>about.html</title>
   
 </head>
@@ -38,6 +33,13 @@
   </ul>
 </div>
 <input type="hidden" id="carbList" th:value="${carbList}">
+
+<script src="https://climateclock.world/widget-v2.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="text/javascript" th:src="@{/js/mapdata.js}"></script>		
+<script  type="text/javascript" th:src="@{/js/worldmap.js}"></script>
+<script type="text/javascript" th:src="@{/js/about/mapcontrol.js}"></script>
 </body>
 </html>
 

@@ -4,7 +4,7 @@
 //$(document).ready(getAllPath);
 
 window.setTimeout(getAllPath,500);
-var count = 0;
+
 
 /*데이터 별 색 정의
 
@@ -27,10 +27,10 @@ var count = 0;
 */
 
 function getAllPath() {
-	count+=1;
-    console.log( "ready!"+count );
+
+    console.log( "ready!" );
     
-    if(count == 2){
+   
 		let carbDataAry = JSON.parse($("input[id='carbList']").val());
 		let test = $("path");		
 		let className='';
@@ -78,9 +78,10 @@ function getAllPath() {
 		console.log(dataAry);
 		console.log(simplemaps_worldmap_mapdata.data);
 		simplemaps_worldmap.load();
-	}
+	
 		simplemaps_worldmap.hooks.zoomable_click_region=function(id){alert(simplemaps_worldmap_mapdata.regions[id].name);}
 		simplemaps_worldmap.hooks.click_region = function(id){console.log(id);}
+		simplemaps_worldmap.hooks.back=function(e){alert(e);}
 
 }
  
