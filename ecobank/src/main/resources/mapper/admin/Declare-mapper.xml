@@ -19,12 +19,16 @@
 		
 		<!-- sns 댓글 신고 목록 -->
 		<select id="SnsReplyDeclareList" resultType="com.ecobank.app.admin.service.SnsDeclareVO">
-		select  DECLARE_NO,
-       			CONFIRM_USER_NO,
-       			DECLARE_CODE,
-        		REPLY_NO
-		from sns_declare
+		SELECT DECLARE_NO,
+        DECLAREAT,
+        CONFIRM_USER_NO,
+        DECLARE_CODE,
+        REPLY_NO
+        FROM sns_declare
+        WHERE  REPLY_NO IS NOT NULL AND  REPLY_NO != 0
 		</select>
+		
+		
 
 		
 </mapper>
