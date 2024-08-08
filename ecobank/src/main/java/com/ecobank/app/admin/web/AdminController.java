@@ -68,10 +68,34 @@ public class AdminController {
         return "redirect:/ChallDeclareList";
     }
     
+    //sns 신고 댓글 조회
     @GetMapping("SnsReplyDeclareList")
-    public String SnsDeclareList(Model model) {
+    public String SnsReplyDeclareList(Model model) {
         List<SnsDeclareVO> list = adminService.SnsReplyDeclareList();
-        model.addAttribute("SnsDeclareList", list);
+        model.addAttribute("SnsReplyDeclareList", list);
         return "admins/SnsReplyDeclareList";
     }
+    
+    //sns 신고조회
+    @GetMapping("SnsDeclareList")
+    public String SnsDeclareList(Model model) {
+        List<SnsDeclareVO> list = adminService.SnsDeclareList();
+        model.addAttribute("SnsDeclareList", list);
+        return "admins/SnsDeclareList";
+    }
+    
+    
+    //sns 신고 삭제
+    @PostMapping("snsDeclareDelete")
+    public String snsDeclareDelete(@RequestParam int confirmNo) {
+        adminService.snsDeclareDelete(confirmNo);
+        return "redirect:/SnsDeclareList";
+    }
+    
+    @PostMapping("snsReplyDeclareDelete")
+    public String snsReplyDeclareDelete(@RequestParam int confirmNo) {
+        adminService.snsReplyDeclareDelete(confirmNo);
+        return "redirect:/SnsReplyDeclareList";
+    }
+    
 }

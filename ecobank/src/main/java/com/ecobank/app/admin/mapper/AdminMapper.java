@@ -27,6 +27,17 @@ public interface AdminMapper {
     //챌린지 삭제
     int deleteChallDeclare (int confirmDeclareNo);
     
+    //sns 신고 조회
+    List<SnsDeclareVO> SnsDeclareList();
+    
     //sns 댓글 신고 조회 
     List<SnsDeclareVO> SnsReplyDeclareList();
+    
+    //sns 신고 조회
+    int snsDeclareDelete (int declareNo);
+    
+    int snsReplyDeclareDelete (int declareNo);
+    
+    
+    
 }
