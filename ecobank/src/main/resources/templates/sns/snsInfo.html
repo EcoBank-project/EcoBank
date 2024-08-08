@@ -56,7 +56,8 @@
 	</div>
 	<script>
 	// ajax로 댓글 불러오기
-	let fno = $('#feedNo').val()
+	let fno = $('#feedNo').val();
+	let rno = $('#replyNo').val();
 	let replyContent = $('#replyContent');
 	reply();
 	function reply(){
@@ -81,9 +82,11 @@
 		//let userNo = $('#userNo').val()
 		let replyContent = $('#replyContent').val();
 		let fno = $('#feedNo').val();
-		
+		let rno = $('#replyNo').val();
 		console.log('#feedNo',fno);
 		console.log('#replycontent',replyContent);
+		console.log('#replyNo',replyNo);
+		
 		//console.log("cWriter : " + cWriter + ", cContent : " + cContent + ", cbNum : "+ cbNum);
 		
 		// ajax로  불러오기
@@ -106,7 +109,28 @@
 			}
 		});
 	});
+	//리뷰 삭제
+	function deleteBtn(){
+		console.log('ddddddd0');
 	
+		let rno = $('#replyNo').val();
+			console.log('rno',rno);
+				$.ajax({
+					url:"snsReply",
+			         type: 'delete',
+				     data: {
+				 		"replyNo" : rno
+					},
+			         success: function(result) {
+			        	 alert("리뷰가 삭제되었습니다");
+			        	 location.reload();
+			          },
+			          error: function() {
+			          	alert('리뷰 수정 실패');
+			          }
+				});	
+				
+	};
 	function replyList(list){	
 		let output = "";
 		
@@ -120,10 +144,11 @@
 		for(let i in list){
 			output += "<tr>";
 			//output += "<td>" + list[i].userNo+"</td>";
+			
+			output += "<td>" + list[i].replyNo+"</td>";
 			output += "<td>" + list[i].replyContent+"</td>";
 			output += "<td>" + list[i].replyCreateAt+"</td>";
-			output += "<td>수정</td>";
-			output += "<td>삭제</td>";
+			output += "<td><button onclick='deleteBtn()'>삭제</button></td>";
 
 			output += "</tr>";
 		}
