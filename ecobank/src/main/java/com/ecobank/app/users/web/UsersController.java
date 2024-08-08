@@ -50,7 +50,10 @@ public class UsersController {
 			return "users/signup_form";
 		}
 
-		userService.create(userCreateForm.getNickName(), userCreateForm.getUseId(), userCreateForm.getPassword1());
+		userService.create(userCreateForm.getNickName(),
+				userCreateForm.getUseId(),
+				userCreateForm.getPassword1(),
+				userCreateForm.getTell());
 
 		return "redirect:/";
 	}

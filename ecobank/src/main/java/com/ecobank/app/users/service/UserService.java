@@ -15,11 +15,12 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	
-	public Users create(String nickname, String useId, String password) {
+	public Users create(String nickname, String useId, String password, String tell) {
 		Users user = new Users();
-		user.setNickName(nickname);
 		user.setUseId(useId);
 		user.setPassword(passwordEncoder.encode(password));
+		user.setNickName(nickname);
+		user.setTell(tell);
 		this.userRepository.save(user);
 		
 		return user;

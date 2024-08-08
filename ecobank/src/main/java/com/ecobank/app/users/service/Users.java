@@ -39,5 +39,5 @@ public class Users {
 	private Date createAt;
 	
 	@Column(name = "resp")
-	private String resp;
+	private String resp = "A1"; // 일반회원
 }

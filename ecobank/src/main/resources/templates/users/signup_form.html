@@ -14,41 +14,41 @@
 		<h2>회원가입 페이지</h2>
 		<form th:action="@{/signup}" th:object="${userCreateForm}"
 			method="post" onsubmit="return validateForm()">
-			<div class="mb-3">
-				<label for="useid" class="form-label">아이디(이메일)</label> 
-				<input type="text" th:field="*{useId}" class="form-control" id="useid">
-				<button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
+				<div class="mb-3">
+					<label for="useid" class="form-label">아이디(이메일)</label> 
+					<input type="text" th:field="*{useId}" class="form-control" id="useid" onblur="validateUseId()">
+					<p id="useId-error" class="error-message">아이디는 필수 항목입니다.</p>
+               		<p id="useId-duplicate-error" class="error-message">아이디가 이미 존재합니다.</p>
+					<button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
 				<br>
 				<div id="mail_number" name="mail_number" style="display: none">
-					<input type="text" name="number" id="number"
-						style="width: 250px; margin-top: -10px" placeholder="인증번호 입력">
-					<button type="button" name="confirmBtn" id="confirmBtn"
-						onclick="confirmNumber()">이메일 인증</button>
+					<input type="text" name="number" id="number" style="width: 250px; margin-top: -10px" placeholder="인증번호 입력">
+					<button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">이메일 인증</button>
 					<input type="text" id="Confirm" name="Confirm" style="display: none" value="">
 				</div>
 				<div class="mb-3">
-					<label for="password1" class="form-label">비밀번호</label> <input
-						type="password" th:field="*{password1}" class="form-control"
-						id="password1">
+					<label for="password1" class="form-label">비밀번호</label> 
+					<input type="password" th:field="*{password1}" class="form-control" id="password1">
 				</div>
 				<div class="mb-3">
-					<label for="password2" class="form-label">비밀번호 확인</label> <input
-						type="password" th:field="*{password2}" class="form-control"
-						id="password2">
-					<p id="error-message" class="error-message">비밀번호가 일치하지 않습니다.</p>
+					<label for="password2" class="form-label">비밀번호 확인</label>
+					<input type="password" th:field="*{password2}" class="form-control" id="password2">
+              	    <p id="password-error" class="error-message">비밀번호가 일치하지 않습니다.</p>
 				</div>
 				<div class="mb-3">
-					<label for="nickname" class="form-label">닉네임</label> <input
-						type="text" th:field="*{nickName}" class="form-control"
-						id="nickname" placeholder="6글자 이상 20글자 이하">
+					<label for="nickname" class="form-label">닉네임</label>
+					<input type="text" th:field="*{nickName}" class="form-control" id="nickname" placeholder="6글자 이상 20글자 이하">
+					<p id="nickname-error" class="error-message">닉네임은 6자 이상 20자 이하이어야 합니다.</p>
 				</div>
 				<div class="mb-3">
-					<label for="tell" class="form-label">연락처</label> <input type="text"
-						th:field="*{tell}" class="form-control" id="tell">
+					<label for="tell" class="form-label">연락처</label> 
+					<input type="text" th:field="*{tell}" class="form-control" id="tell">
+					<p id="tell-error" class="error-message">연락처는 필수 항목입니다.</p>
 				</div>
 				<div class="button-container">
-					<button type="submit" id="submit-button" disabled>회원가입</button>
+					<button type="submit" id="submit-button">회원가입</button>
 				</div>
+			</div>
 		</form>
 	</div>
 </body>
