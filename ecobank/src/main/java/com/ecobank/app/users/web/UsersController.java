@@ -1,24 +1,34 @@
 package com.ecobank.app.users.web;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecobank.app.users.service.UserCreateForm;
+import com.ecobank.app.users.service.UserRepository;
 import com.ecobank.app.users.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
+@CrossOrigin(origins = "http://localhost:8080") // 클라이언트 URL을 설정합니다.
 public class UsersController {
 
 	private final UserService userService;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping("login")
 	public String goLogin() {
@@ -50,9 +60,19 @@ public class UsersController {
 			return "users/signup_form";
 		}
 
-		userService.create(userCreateForm.getNickName(), userCreateForm.getUseId(), userCreateForm.getPassword1());
+		userService.create(userCreateForm.getNickName(), userCreateForm.getUseId(), userCreateForm.getPassword1(),
+				userCreateForm.getTell());
 
 		return "redirect:/";
 	}
+	
+    @GetMapping("/user/api/check-duplicate")
+    @ResponseBody
+    public Map<String, Boolean> checkDuplicate(@RequestParam String useId) {
+        Map<String, Boolean> response = new HashMap<>();
+        boolean exists = userRepository.findByUseId(useId) != null;
+        response.put("exists", exists);
+        return response;
+    }
 
 }

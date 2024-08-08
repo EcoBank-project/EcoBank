@@ -84,30 +84,36 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	<div class="challenge-links">
 		<ul>
 			<li>
-				<a th:href="@{/ready}" title="오픈 예정 챌린지">오픈 예정 챌린지</a> 
+				<a th:href="@{/ready}" title="오픈 예정 챌린지" th:classappend="${status=='D1' ? 'active' : ''}">오픈 예정 챌린지</a> 
 			</li>
 			<li>
-				<a th:href="@{/progress}" title="진행 중인 챌린지">진행 중인 챌린지</a> 
+				<a th:href="@{/progress}" title="진행 중인 챌린지" th:classappend="${status=='D2' ? 'active' : ''}">진행 중인 챌린지</a> 
 			</li>
 			<li>
-				<a th:href="@{/end}" title="종료된 챌린지">종료된 챌린지</a> 
+				<a th:href="@{/end}" title="종료된 챌린지" th:classappend="${status=='D3' ? 'active' : ''}">종료된 챌린지</a> 
 			</li>
 		</ul>
     </div>
     <div class="challenge-count">
-	    <p>총 <span th:text="${countD1}" style="text-decoration: underline; font-weight: bold"></span>개의 챌린지</p>
+	    <p>총 <span th:text="${count}" style="text-decoration: underline; font-weight: bold"></span>개의 챌린지</p>
     </div>
 	<div class="challenge-container">
-	    <div class="challenge-card" th:each="challenge : ${ready}">
+	    <div class="challenge-card" th:each="challenge : ${list}">
 	        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 
 	        <div class="card-body">
 	            <!--/* <div class="d-day" th:text="'D-' + (${#dates.format(challenge.challStartAt, 'yyyy/MM/dd')} - ${#dates.format(challenge.challCreateAt, 'yyyy/MM/dd')})">D-날짜차이</div> */-->
+	            <div class="d-day" id="dDay"  th:text="'D-' + ${challenge.daysUntilStart}"></div>
 	            <h5 class="card-title">챌린지 제목 : [[ ${challenge.challTitle} ]]</h5>
 	            <p class="card-text">챌린지 가이드 : [[ ${challenge.challContent} ]]</p>
-	            <p class="card-text">시작 일자 : [[ ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} ]]</p>
+	            <p th:if="${status=='D1'}" class="card-text">시작 일자 : [[ ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} ]]</p>
+	            <p th:if="${status=='D2'} OR ${status=='D3'}" class="card-text">진행 기간 : [[ ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} ]] ~ [[ ${#dates.format(challenge.challCloseAt, 'yyyy-MM-dd')} ]]</p>
 	            <a th:onclick="|location.href='@{readyDetail(challNo=${challenge.challNo})}'|" class="btn btn-primary">챌린지 둘러보기</a>
+		        <a th:if="${status=='D2'}" th:onclick="|location.href='@{}'|" class="btn btn-primary">도전하기</a>
 	        </div>
 	    </div>
 	</div>
+	<script>
+
+	</script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.ecobank.app.challenge.service.impl;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.ecobank.app.challenge.mapper.ChallMapper;
 import com.ecobank.app.challenge.service.ChallService;
 import com.ecobank.app.challenge.service.ChallVO;
-import com.ecobank.app.challenge.service.ScoreVO;
 @Service
 public class ChallServiceImpl implements ChallService{
 	private ChallMapper challMapper;
@@ -23,6 +23,9 @@ public class ChallServiceImpl implements ChallService{
 	//전체조회
 	@Override
 	public List<ChallVO> challList() {
+		LocalDate now = LocalDate.now();
+		System.out.println(now);
+		
 		return challMapper.selectChallAll();
 	}
 	
@@ -69,6 +72,11 @@ public class ChallServiceImpl implements ChallService{
 	@Override
 	public int countChallengesByState(String challState) {
 		return challMapper.countAllChallenges(challState);
+	}
+
+	@Override
+	public List<ChallVO> getDList(String challState) {
+		return challMapper.getChallList(challState);
 	}
 
 //	@Override
