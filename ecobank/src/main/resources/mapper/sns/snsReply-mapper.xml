@@ -21,7 +21,7 @@
 			SELECT NVL(MAX(reply_no),1)+1
 			FROM sns_reply
 		</selectKey>
-		INSERT INTO sns_rpely 
+		INSERT INTO sns_reply 
 		(
 			 reply_no	
 			 ,reply_content

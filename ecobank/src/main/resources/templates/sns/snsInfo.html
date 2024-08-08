@@ -10,6 +10,7 @@
 </head>
 <body>
 	<h3>sns 상세보기</h3>
+
 	<form  action="uploadForm" method="post"
 					enctype="multipart/form-data">
 		<div>
@@ -29,18 +30,134 @@
 			<label>작성일자</label>
 			<input type="date" th:value="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}" readonly>
 		</div>
-			<div>
+		<div>
 			<label>내용</label>
 			<input type="text" th:value="${sns.feedContent}" readonly>
 				<!--/* [[${board.boardContent]] style="height:100px; widthL200px;" */-->
 		</div>
-		
+ 
 		<div>
 			<button type="button" th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
 			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
 			<button type="button" th:onclick="|location.href='@{/snsDelete(feedNo=${sns.feedNo})}'|">삭제</button>
 		</div>
 		</form>
+		<!-- 댓글영역 -->
+		<div id="replyWrite">
+		<input type="hidden" th:value="${sns.feedNo}" id="feedNo" /> 
+
+<!-- 		<input type="hidden"  name="userNo" /> -->
+		<textarea rows="1" cols="30" th:text="${replyContent}" id="replyContent"></textarea>
+		<button id="writeBtn">댓글입력</button>
+	</div>
+
+	<div id="replyArea">
+
+	</div>
+	<script>
+	// ajax로 댓글 불러오기
+	let fno = $('#feedNo').val();
+	let rno = $('#replyNo').val();
+	let replyContent = $('#replyContent');
+	reply();
+	function reply(){
+		$.ajax({
+			type : "GET",
+			url : "snsReply?feedNo="+fno ,
+			dataType : "json",
+			success : function(list){
+				// replyList() 함수 호출
+				console.log('getcon',replyContent);
+				replyList(list);
+			},
+			error :  function(){
+				alert("댓글 불러오기 통신 실패");
+			}
+		});
+	}
+	
+
+	// 댓글 입력(writeBtn) 버튼을 클릭할 경우
+	$('#writeBtn').click(function(){
+		//let userNo = $('#userNo').val()
+		let replyContent = $('#replyContent').val();
+		let fno = $('#feedNo').val();
+		let rno = $('#replyNo').val();
+		console.log('#feedNo',fno);
+		console.log('#replycontent',replyContent);
+		console.log('#replyNo',replyNo);
+		
+		//console.log("cWriter : " + cWriter + ", cContent : " + cContent + ", cbNum : "+ cbNum);
+		
+		// ajax로  불러오기
+		$.ajax({
+			type : "POST",
+			url : "snsReply",
+			data : {
+				"feedNo" : fno,
+				"replyContent" : replyContent,
+			//	"userNo" : userNo
+			},
+			dataType : "json",
+			success : function(list){
+
+				$('#replyContent').val(""); //초기화
+				reply();
+			},
+			error :  function(){
+				alert("댓글 작성 통신 실패");
+			}
+		});
+	});
+	//리뷰 삭제
+	function deleteBtn(){
+		console.log('ddddddd0');
+	
+		let rno = $('#replyNo').val();
+			console.log('rno',rno);
+				$.ajax({
+					url:"snsReply",
+			         type: 'delete',
+				     data: {
+				 		"replyNo" : rno
+					},
+			         success: function(result) {
+			        	 alert("리뷰가 삭제되었습니다");
+			        	 location.reload();
+			          },
+			          error: function() {
+			          	alert('리뷰 수정 실패');
+			          }
+				});	
+				
+	};
+	function replyList(list){	
+		let output = "";
+		
+		output += "<table>";
+		output += "<tr>";
+		output += "<th>작성자</th>";
+		output += "<th>내용</th>";
+		output += "<th>작성일</th>";
+		output += "</tr>";
+		console.log(list,'postlist')
+		for(let i in list){
+			output += "<tr>";
+			//output += "<td>" + list[i].userNo+"</td>";
+			
+			output += "<td>" + list[i].replyNo+"</td>";
+			output += "<td>" + list[i].replyContent+"</td>";
+			output += "<td>" + list[i].replyCreateAt+"</td>";
+			output += "<td><button onclick='deleteBtn()'>삭제</button></td>";
+
+			output += "</tr>";
+		}
+
+		output += "</table>";
+		$('#replyArea').html(output);
+	}
+	
+	</script>
 </body>
 
 </html>
