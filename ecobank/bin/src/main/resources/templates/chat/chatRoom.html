@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>채팅</title>
+<style>
+    .chatbox{
+        flex: 1;
+        overflow: auto;
+    }
+    .chatbox, .chatForm{
+        display: flex;
+        flex-direction: column;
+    }
+    .chatbox::before{
+        content: "";
+        display: block;
+        flex: 1;
+    }
+    .chatForm{
+        height: 400px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    .message_left {
+        align-self: flex-start;
+    }
+    .message_right {
+        align-self: flex-end;
+    }
+    .bi-plus-circle{
+        font-size: 45px;
+        line-height: 45px;
+    }
+    /* 채팅방 모달 */
+    .modal-chat {
+        display: none; /* 초기에는 모달을 숨김 */
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        width: 500px; /* 모달의 너비 */
+        height: 500px;    
+    }
+
+    .modal-chat-overlay {
+        display: none; /* 초기에는 오버레이를 숨김 */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+<style>
+</style>
+</head>
+<body>
+    <h3>채팅</h3>
+    <div class="container-fluid">
+    	<div class="row">
+            
+            <div class="col-md-2 col-sm-12">
+                <div class="row">
+	                <!-- 아이콘 -->
+	                <div class="col-md-3 col-sm-12 d-flex flex-column align-items-center">
+                	<h5>콘</h5>
+	                    <a href="#">S1</a>
+	                    <a href="#">
+	                    	<i class="bi bi-plus-circle"></i>
+	                    </a>
+	                    <a href="#">S3</a>
+	                </div>
+	                <!-- 채팅방 목록 -->
+	                <div class="col-md-9 col-sm-12">
+	                <h5>채팅방</h5>
+	                    <div>채팅1</div>
+	                    <div>채팅2</div>
+	                    <div>채팅3</div>
+	                </div>   
+                </div>
+            </div>
+
+            <!-- 채팅 -->
+            <div class="col-md-10 col-sm-12 d-flex flex-column">
+            	<div class="row">            	
+	                <div>
+	                    <h3>채팅창 제목</h3>
+	                </div>
+            	</div>
+                <div class="row">
+                	<div class="col-md-9 col-sm-12">
+		                <div class="chatForm flex-grow-1 border-bottom" id="chatForm" style="overflow-y: auto;">
+		                <!-- 메시지 로그 -->
+                            <div class="chatbox" id="chatbox">
+
+                            </div>
+		                </div>
+		                <!-- 메시지 입력 -->
+		                <div class="input-group mt-3">
+		                    <input type="text" class="form-control" placeholder="메시지..." id="message">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" th:attr="onclick=${'sendMessage(' + userNo + ')'}">보내기</button>
+                            </div>                	
+                	    </div>
+                    </div>
+                    <!-- 유저 -->
+                    <div class="col-md-3 col-sm-12">
+                		<!-- 세션을 이용-->
+                        <h5>접속중인 유저</h5>
+                        <div>
+                            <div>User1</div>
+                            <div>User2</div>
+                            <div>User3</div>
+                        </div>
+                        <!-- DB를 이용 -->
+                        <h5>오프라인 유저</h5>
+                        <div>
+                            <div>User1</div>
+                            <div>User2</div>
+                            <div>User3</div>
+                        </div>
+                	</div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- 채팅방 만들기 모달-->
+    <div class="modal-chat-overlay"></div>
+    <div class="modal-chat" id="myModal">
+        <h2>채팅방</h2>
+        <p>모달 내용입니다.</p>
+        <button id="closeModalBtn">모달 닫기</button>
+    </div>        
+    
+    <script type="text/javascript">
+    // 소켓 열기
+    let socket = new SockJS('/ws');
+    let stompClient = Stomp.over(socket);
+
+    const nickname = "[[${nickname}]]"; // 세션값
+    // 메시지를 받음.
+    stompClient.connect({}, function(frame) {
+//        let userName = frame.headers['user-name']; 헤더값 가지고 옴
+        stompClient.subscribe('/topic/messages', function(message) {
+            showMessage(JSON.parse(message.body));
+        });
+    });
+
+    // 메시지 보냄
+    function sendMessage(userId) {
+        let input = document.getElementById("message");
+        let today = new Date(); 
+        const chatMessage = {
+            userNo: userId,
+            msgContent: input.value,
+            msgType: 'CHAR',
+            msgSendTime: today
+        };
+        stompClient.send("/app/chat.message", {}, JSON.stringify(chatMessage));
+        input.value = "";
+    }
+
+    // 메시지를 보여줌
+    function showMessage(message) {
+        let chatbox = document.getElementById("chatbox");
+        let newMessage = document.createElement("div");
+        if(message.userNo === Number("[[${userNo}]]")){
+        	// 나
+        	newMessage.classList.add('message_right');
+            newMessage.textContent = message.userNo + " : " + message.msgContent;
+        }else{
+        	// 상대방
+        	newMessage.classList.add('message_left');
+            newMessage.textContent = message.userNo + " : " + message.msgContent;
+        }
+        chatbox.appendChild(newMessage);
+    }
+    //채팅방 조회
+    function chatRoomList(){
+    	
+    }
+    
+    //아이콘 기능 모음
+    //채팅홈
+    	
+    //채팅방 만들기
+    $('.bi-plus-circle').on('click', function(event){
+    	$('.modal-chat-overlay').show();
+        $('#myModal').show();
+    })
+    
+    $('#closeModalBtn').on('click', function() {
+    	$('.modal-chat-overlay').hide();
+        $('#myModal').hide();
+    });
+
+    // 오버레이 클릭 시 모달 닫기
+    $('.modal-chat-overlay').on('click', function() {
+        $('.modal-chat-overlay').hide();
+        $('#myModal').hide();
+    });
+    //오픈채팅 만들기
+    
+    //오픈채팅 검색
+    
+</script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{adminCommon/layouts/default_layout}"
+      layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<h3>챌린지 수정</h3>
+		<form name="updateForm" th:object="${challup}" enctype="multipart/form-data">
+			<input type="hidden" th:field="*{challNo}">
+			<input type="hidden" th:field="*{challStartAt}">
+			<input type="hidden" th:field="*{challCloseAt}">
+			<table class="table">
+				<tr>
+					<th>제목</th>
+					<td><input type="text" th:field="*{challTitle}"></td>
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td><textarea th:field="*{challContent}" cols="30" rows="5"></textarea></td>
+				</tr>
+				<tr>
+					<th>메인 이미지</th>
+					<td>
+						<img th:src="@{'/images/' + ${challup.mainImg}}" alt="이미지" style="width:100px; height:100px"> 
+						<input type="file" name="images">
+					</td>
+				</tr>
+				<tr>
+					<th>상세 이미지</th>
+					<td>
+						<img th:src="@{'/images/' + ${challup.detailImg}}" alt="이미지" style="width:100px; height:100px"> 
+						<input type="file" name="images">
+					</td>
+				</tr>
+			</table>
+			<button type="button" class="btn btn-warning" id="updateBtn">수정</button>
+			<button type="button" class="btn btn-secondary" th:onclick="|location.href ='@{/challList}'|">목록</button>
+		</form>
+	</div>
+	<script>
+		function updateAjax(event){
+			//1)유효성 체크
+			//if(validationCheck() == false) return;
+			
+			//2)서버에 보낼 데이터 정리
+			var formData = new FormData(document.updateForm);
+			//{ empid : 209, empname : 'Hong', ... }
+			
+			//3)AJAX('경로', {}) /.done(=.then())/ .fail(=.catch()) => @ResponseBody
+			$.ajax('challUpdate', { 
+				type : 'post', //통신할때 method : get, post, put, delete
+				//=> 커맨드 객체, @RequestParam
+				//data : dataObj //기본 객체타입만 받아, 자동으로 QueryString 변환 /이거는 수정 처리 첫번째
+				//=> @RequestBody
+				processData : false,
+				contentType : false,
+				data : formData
+			})
+			.done(result => { //.done()이 알아서 다 바꿔줘
+				console.log(result);
+			})
+			.fail(err => console.log(err));
+		}
+		$('#updateBtn').on('click', updateAjax);
+		
+/* 		function validationCheck(){
+			let ename = $('[name="empname"]'); //등록에서처럼 input있어도 돼 
+			if(ename.val() == ''){
+				alert('이름은 필수 값입니다.');
+				ename.focus();
+				return false; //리턴하면서 값을 돌려줘야함(false) 그다음에 핸들러를 위에서 종료(return)
+			}
+			
+			let sal = $('[name="sal"]');
+			if(sal.val() < 1000 || sal.val() > 99999){
+				alert('급여의 범위는 1,000 ~ 99,999 입니다.');
+				sal.focus();
+				return false;
+			}
+			
+			return true; //정상적으로 진행된 경우는 if를 돌지않고 바로 return true겠지
+		} */
+		
+/* 		$('#updateBtn').on('click', challUpdateAjax);
+		
+		function challUpdateAjax(event){
+			//1) 보낼 데이터 확인
+			let info = getChallInfo();
+			console.log('인포', info);
+			//2) AJAX
+			$.ajax('challUpdate',{
+				type:'post',
+				contentType : 'application/json',
+				data : JSON.stringify(info)
+			})
+			.done(data => {
+				if(data.result){
+					alert('정상적으로 수정되었습니다.');
+				}else{
+					alert('수정되지 않았습니다.\n데이터를 확인해주세요.');
+				}
+			})
+			.fail(err => console.log(err));			
+		};
+	
+		function getChallInfo(){
+			let formData= $('form[name="updateForm"]').serializeArray();
+			//console.log('1) serializeArray', formData);
+			
+			let objData = {};
+			$.each(formData, (idx, input) => {
+				//console.log('2) input', idx, input); //name:값이 아니라 key여야해서,value:
+				objData[input.name] = input.value;
+			});
+			
+			//console.log('3) objData', objData); //우리가 요구하는 이름으로서 나타날수있도록 변환한 작업
+			return objData;
+		}; */
+	</script>
+</body>
+</html>
