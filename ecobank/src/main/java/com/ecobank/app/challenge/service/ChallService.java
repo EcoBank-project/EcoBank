@@ -10,7 +10,7 @@ public interface ChallService {
 	//D1챌린지 조회
 	public List<ChallVO> getDList(String challState);
 	
-	//챌린지 카운트 가져오기
+	//챌린지 개수 가져오기
 	public int countChallengesByState(String challState);
 	
 	//챌린지 단건 조회
