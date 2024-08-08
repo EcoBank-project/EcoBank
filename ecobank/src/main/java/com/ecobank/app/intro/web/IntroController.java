@@ -2,10 +2,13 @@ package com.ecobank.app.intro.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecobank.app.intro.service.CarbonService;
 import com.ecobank.app.intro.service.CarbonVO;
@@ -51,5 +54,15 @@ public class IntroController {
 		// 3. 데이터를 출력할 페이지 결정
 		return "main/about";
 	}
-
+	
+	@GetMapping("get-ip")
+	@ResponseBody
+	public String getClientIp(HttpServletRequest request) {
+		String ipAddress = request.getHeader("X-Forwarded-For");
+		if (ipAddress == null) {
+			ipAddress = request.getRemoteAddr();
+		}
+		System.out.println(ipAddress);
+		return ipAddress;
+	}
 }

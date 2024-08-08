@@ -4,7 +4,10 @@
 <mapper namespace="com.ecobank.app.security.mapper.UserMapper">
 	<select id="getUserInfo" resultType="UserVO">
 	select use_id,
-	password,
+		   password,
+		   nickname,
+		   user_state,
+		   user_no,
 	'ROLE_'|| resp as role_name
 	from users
 	where use_id = #{useId}	
