@@ -27,6 +27,8 @@ public class ChallVO {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date challUpdateAt;		//챌린지 수정 일자
 	
+	private long daysUntilStart;  	//챌린지 시작까지 남은 D-Day
+	
 	//챌린지 좋아요
 	private int challLikeNo;		//챌린지 좋아요 번호
 	

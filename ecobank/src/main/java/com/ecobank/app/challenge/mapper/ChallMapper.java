@@ -9,6 +9,9 @@ public interface ChallMapper {
 	//챌린지 전체 조회 - (state) 예정/진행/종료
 	public List<ChallVO> selectChallAll(); //나중에 검색, 페이징 조건 매개값으로 넣어줘야함
 	
+	//챌린지 카운트 가져오기
+	public int countAllChallenges(String challState);
+	
 	//챌린지 단건 조회 - challNo
 	public ChallVO selectChallInfo(ChallVO challVO);
 	
