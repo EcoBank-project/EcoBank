@@ -81,6 +81,7 @@ function getAllPath() {
 	}
 		simplemaps_worldmap.hooks.zoomable_click_region=function(id){alert(simplemaps_worldmap_mapdata.regions[id].name);}
 		simplemaps_worldmap.hooks.click_region = function(id){console.log(id);}
+		simplemaps_worldmap.hooks.back=function(e){alert(e);}
 
 }
  
