@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ecobank.app.admin.mapper.AdminMapper;
 import com.ecobank.app.admin.service.AdminService;
 import com.ecobank.app.admin.service.ChallDeclareVO;
+import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
 
 @Service
@@ -50,6 +51,11 @@ public class AdminServiceImpl implements AdminService {
     public void deleteChallDeclare(int confirmDeclareNo) {
         adminMapper.deleteChallDeclare(confirmDeclareNo);
     }
+	@Override
+	public List<SnsDeclareVO> SnsReplyDeclareList() {
+		// TODO Auto-generated method stub
+		return adminMapper.SnsReplyDeclareList();
+	}
 
 	
 }
