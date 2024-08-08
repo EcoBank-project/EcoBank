@@ -34,7 +34,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		System.out.println("세션에 저장되는 정보들");
 		System.out.println("아이디 : " + userDetail.getUsername());
 		System.out.println("닉네임 : " + userDetail.getNickname());
-		System.out.println("닉네임 : " + userDetail.getUserState());
+		System.out.println("직급 : " + userDetail.getUserState());
 		System.out.println("유저번호 :" + userDetail.getUserNO());
 		
 		// 일반회원
