@@ -14,22 +14,26 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	
-	public Users create(String nickname, String useId, String password) {
+
+	public Users create(String nickname, String useId, String password, String tell) {
 		Users user = new Users();
-		user.setNickName(nickname);
 		user.setUseId(useId);
 		user.setPassword(passwordEncoder.encode(password));
+		user.setNickName(nickname);
+		user.setTell(tell);
 		this.userRepository.save(user);
-		
+
 		return user;
 	}
-	
-    public boolean authenticate(String useId, String password) {
-        Users user = userRepository.findByUseId(useId);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return true;
-        }
-        return false;
-    }
+
+	public boolean authenticate(String useId, String password) {
+		Users user = userRepository.findByUseId(useId);
+		if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+			return true;
+		}
+		return false;
+	}
+	public String checkID(String uid) { 
+    	  return userRepository.findByUseId(uid).getUseId();
+    };
 }

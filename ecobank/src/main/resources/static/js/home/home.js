@@ -1,44 +1,57 @@
 /**
  * 
  */
-// CSRF 토큰을 meta 태그에서 읽어옵니다.
+const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-async function getIP() {
-	let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-	let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+async function getLocation() {
+	//const access_key = '2602e3bc2e9211bd86fd5d25a426c36b';
 	try {
-		const response = await fetch('/get-ip', {
-			method: 'GET',
-			headers: {
-				[csrfHeader]: csrfToken // CSRF 토큰을 헤더에 포함시킵니다.
+		const response = await $.ajax({
+			url: '/ip-info', // 서버 측에서 프록시된 API 엔드포인트
+			type: 'GET',
+			dataType: 'json',
+			success: function(data) {
+				console.log('IP Checked!');
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.error('Error fetching IP information:', textStatus, errorThrown);
 			}
 		});
-		const ip = await response.text();
-		console.log(ip);
-		return ip;
-	} catch (error) {
-		console.error('Error fetching IP:', error);
-	}
-}
 
-async function getLocation(ip) {
-	try {
-		const response = await fetch(`https://ipapi.co/${ip}/json/`);
-		const data = await response.json();
-		return data;
+		return response;
 	} catch (error) {
 		console.error('Error fetching location:', error);
 	}
 }
-let count = 0;
-document.addEventListener('DOMContentLoaded', async () => {
-	count++;
-	if (count == 2) {
-		const ip = await getIP();
-		if (ip) {
-			const location = await getLocation(ip);
-			console.log('Location data:', location);
-			/*document.getElementById('result').textContent = JSON.stringify(location, null, 2);*/
-		}
-	}
+
+$().ready(async () => {
+	const location = await getLocation();
+
+
+
+
+	// 국가 코드
+	let countryCode = ''+location['country_code'];
+	// 로그인 아이디
+	let userID = $("input[id='userID']").val();
+	
+	if (userID !== null && userID !== undefined && userID.trim() !== '') {
+        $.ajax({
+            url: '/set-country',
+            type: 'POST',
+            contentType: 'application/json', // Content-Type을 application/json으로 설정
+            dataType: 'json',
+            data: JSON.stringify({ // data를 JSON 문자열로 변환
+                country_code: countryCode,
+                user_id: userID
+            }),
+            success: function(data) {
+                console.log('Update Success!' + data);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching set-country! Status: ' + status + ', Error: ' + error);
+            }
+        });
+    } 
 });

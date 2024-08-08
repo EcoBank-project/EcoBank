@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -35,19 +33,49 @@ public class ChallengController {
 		this.challService = challService;
 	}
 	
-	//챌린지 전체 조회 - 회원용
+	//챌린지 목록 - 회원용
+	//오픈 예정 챌린지(D1)
 	@GetMapping("ready")
-	public String challready(Model model) {
-		List<ChallVO> list = challService.challList();
-        int countD1 = challService.countChallengesByState("D1");
-        int countD2 = challService.countChallengesByState("D2");
-        int countD3 = challService.countChallengesByState("D3");
+	public String challready(Model model, String challState) {
+		List<ChallVO> list = challService.getDList("D1"); //리스트에 D1만 보이게
+        int countD1 = challService.countChallengesByState("D1"); //D1 챌린지 개수
 
-        model.addAttribute("countD1", countD1);
-        model.addAttribute("countD2", countD2);
-        model.addAttribute("countD3", countD3);
-		model.addAttribute("ready", list);
-		return "chall/ready";
+        model.addAttribute("count", countD1);
+        model.addAttribute("status", "D1");
+		model.addAttribute("list", list);
+		return "chall/challenge";
+	}
+	
+	//진행 중인 챌린지(D2)
+	@GetMapping("progress")
+	public String challprogress(Model model, String challState) {
+		List<ChallVO> list = challService.getDList("D2"); //리스트에 D2만 보이게
+        int countD2 = challService.countChallengesByState("D2"); //D2 챌린지 개수
+
+        model.addAttribute("count", countD2);
+        model.addAttribute("status", "D2");
+		model.addAttribute("list", list);
+		return "chall/challenge";
+	}
+	
+	//완료된 챌린지(D3)
+	@GetMapping("end") 
+	public String challend(Model model, String challState) {
+		List<ChallVO> list = challService.getDList("D3"); //리스트에 D3만 보이게
+        int countD3 = challService.countChallengesByState("D3"); //D3 챌린지 개수
+
+        model.addAttribute("count", countD3);
+        model.addAttribute("status", "D3");
+		model.addAttribute("list", list);
+		return "chall/challenge";
+	}
+	
+	//챌린지 단건 조회 - 회원
+	@GetMapping("detail")
+	public String challdetail(ChallVO challVO, Model model) {
+		ChallVO findVO = challService.challInfo(challVO);
+		model.addAttribute("detail", findVO);
+		return "chall/detail";
 	}
 	
 	//챌린지 목록 - 관리자
