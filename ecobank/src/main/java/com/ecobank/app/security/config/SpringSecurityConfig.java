@@ -1,5 +1,6 @@
 package com.ecobank.app.security.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,10 +9,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.ecobank.app.security.handler.CustomAuthenticationSuccessHandler;
+
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
-
+	
+	@Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	
 //1. 암호화/복호화에 사용하는 Bean 등록
 	@Bean
 	PasswordEncoder passwordEncoder() {
@@ -30,6 +36,7 @@ public class SpringSecurityConfig {
         .formLogin(formLogin -> formLogin
             .loginPage("/login") // 로그인 페이지 설정
             .defaultSuccessUrl("/", true) // 로그인 성공 시 리다이렉트 URL
+            .successHandler(customAuthenticationSuccessHandler) 
             .permitAll() // 로그인 페이지는 모든 사용자에게 허용
         )
         .logout(logout -> logout

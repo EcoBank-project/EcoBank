@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ecobank.app.admin.service.AdminService;
 import com.ecobank.app.admin.service.ChallDeclareVO;
+import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
 
 import java.util.List;
@@ -65,5 +66,12 @@ public class AdminController {
     public String deleteChallDeclare(@RequestParam int confirmNo) {
         adminService.deleteChallDeclare(confirmNo);
         return "redirect:/ChallDeclareList";
+    }
+    
+    @GetMapping("SnsReplyDeclareList")
+    public String SnsDeclareList(Model model) {
+        List<SnsDeclareVO> list = adminService.SnsReplyDeclareList();
+        model.addAttribute("SnsDeclareList", list);
+        return "admins/SnsReplyDeclareList";
     }
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{adminCommon/layouts/default_layout}"
+      layout:fragment="Content">
+<body>
+
+<div class="card-header">
+    <i class="fas fa-table me-1"></i>
+    DataTable Example
+</div>
+
+<div class="card-body">
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">신고 번호</th>
+                <th class="text-center">신고 분류</th>
+                <th class="text-center">신고 날짜</th>
+                <th class="text-center">신고한 회원번호</th>
+                <th class="text-center">인증번호</th>
+                <th class="text-center">작업</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <th:block th:each="ChallDeclare : ${ChallDeclareList}">
+                <tr>
+                    <td class="text-center" th:text="${ChallDeclare.confirmDeclareNo}"></td>
+                    <td class="text-center" th:text="${ChallDeclare.confirmDeclareType}"></td>
+                    <td class="text-center" th:text="${ChallDeclare.confirmDeclareat}"></td>
+                    <td class="text-center" th:text="${ChallDeclare.confirmUserNo}"></td>
+                    <td class="text-center" th:text="${ChallDeclare.cofirmNo}"></td>
+                    <td class="text-center">
+                        <form th:action="@{/deleteChallDeclare}" method="post">
+                            <input type="hidden" name="confirmNo" th:value="${ChallDeclare.confirmDeclareNo}" />
+                            <button type="submit" class="btn btn-primary btn-sm">삭제</button>
+                        </form>
+                    </td>
+                </tr>         
+            </th:block>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
