@@ -1,25 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<th:block xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="headerFragment">
-<head>
-    <meta charset="UTF-8">
-    <!-- csrf -->
-	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
- 	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <title>Header</title>
-    <!-- Add your CSS and other head elements here -->
-    <script>
-	 var token = $("meta[name='_csrf']").attr("content");
-	 var header = $("meta[name='_csrf_header']").attr("content");
-	  $.ajaxSetup({
-	      beforeSend: function(xhr, settings) {
-	          xhr.setRequestHeader(header, token);
-	      }
-	  });
- 	</script>
-</head>
-<body>
+
     <div class="container-fluid bg-dark p-0">
         <div class="row gx-0 d-none d-lg-flex">
             <div class="col-lg-7 px-5 text-start"></div>
@@ -71,5 +54,4 @@
             </div>
         </div>
     </nav>
-</body>
-</html>
+</th:block>
