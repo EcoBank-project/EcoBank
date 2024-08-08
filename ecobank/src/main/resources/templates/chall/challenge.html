@@ -84,13 +84,13 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	<div class="challenge-links">
 		<ul>
 			<li>
-				<a th:href="@{/ready}" title="오픈 예정 챌린지" th:classappend="${status=='D1' ? 'active' : ''}">오픈 예정 챌린지</a> 
+				<a th:href="@{/ready}" title="오픈 예정 챌린지" th:class="${status=='D1' ? 'active' : ''}">오픈 예정 챌린지</a> 
 			</li>
 			<li>
-				<a th:href="@{/progress}" title="진행 중인 챌린지" th:classappend="${status=='D2' ? 'active' : ''}">진행 중인 챌린지</a> 
+				<a th:href="@{/progress}" title="진행 중인 챌린지" th:class="${status=='D2' ? 'active' : ''}">진행 중인 챌린지</a> 
 			</li>
 			<li>
-				<a th:href="@{/end}" title="종료된 챌린지" th:classappend="${status=='D3' ? 'active' : ''}">종료된 챌린지</a> 
+				<a th:href="@{/end}" title="종료된 챌린지" th:class="${status=='D3' ? 'active' : ''}">종료된 챌린지</a> 
 			</li>
 		</ul>
     </div>
