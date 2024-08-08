@@ -35,27 +35,103 @@
 			<input type="text" th:value="${sns.feedContent}" readonly>
 				<!--/* [[${board.boardContent]] style="height:100px; widthL200px;" */-->
 		</div>
-		<div>
-			<label>댓글</label>
-			<input type="text" th:value="${snsReply.replyContent}" readonly>
-		</div> 
-		<div>
-			<label>댓글작성</label>
-			<input type="text" th:value="${sns.replyContent}">
-		</div> 
+ 
 		<div>
 			<button type="button" th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
 			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
 			<button type="button" th:onclick="|location.href='@{/snsDelete(feedNo=${sns.feedNo})}'|">삭제</button>
 		</div>
 		</form>
-	<script>
-	$(function(){
-		selectReplyList();
-		setInterval(selectReplyList,1000);
-		selectReviewList();
-	})
+		<!-- 댓글영역 -->
+		<div id="replyWrite">
+		<input type="hidden" th:value="${sns.feedNo}" id="feedNo" /> 
 
+<!-- 		<input type="hidden"  name="userNo" /> -->
+		<textarea rows="1" cols="30" th:text="${replyContent}" id="replyContent"></textarea>
+		<button id="writeBtn">댓글입력</button>
+	</div>
+
+	<div id="replyArea">
+
+	</div>
+	<script>
+	// ajax로 댓글 불러오기
+	let fno = $('#feedNo').val()
+	let replyContent = $('#replyContent');
+	reply();
+	function reply(){
+		$.ajax({
+			type : "GET",
+			url : "snsReply?feedNo="+fno ,
+			dataType : "json",
+			success : function(list){
+				// replyList() 함수 호출
+				console.log('getcon',replyContent);
+				replyList(list);
+			},
+			error :  function(){
+				alert("댓글 불러오기 통신 실패");
+			}
+		});
+	}
+	
+
+	// 댓글 입력(writeBtn) 버튼을 클릭할 경우
+	$('#writeBtn').click(function(){
+		//let userNo = $('#userNo').val()
+		let replyContent = $('#replyContent').val();
+		let fno = $('#feedNo').val();
+		
+		console.log('#feedNo',fno);
+		console.log('#replycontent',replyContent);
+		//console.log("cWriter : " + cWriter + ", cContent : " + cContent + ", cbNum : "+ cbNum);
+		
+		// ajax로  불러오기
+		$.ajax({
+			type : "POST",
+			url : "snsReply",
+			data : {
+				"feedNo" : fno,
+				"replyContent" : replyContent,
+			//	"userNo" : userNo
+			},
+			dataType : "json",
+			success : function(list){
+
+				$('#replyContent').val(""); //초기화
+				reply();
+			},
+			error :  function(){
+				alert("댓글 작성 통신 실패");
+			}
+		});
+	});
+	
+	function replyList(list){	
+		let output = "";
+		
+		output += "<table>";
+		output += "<tr>";
+		output += "<th>작성자</th>";
+		output += "<th>내용</th>";
+		output += "<th>작성일</th>";
+		output += "</tr>";
+		console.log(list,'postlist')
+		for(let i in list){
+			output += "<tr>";
+			//output += "<td>" + list[i].userNo+"</td>";
+			output += "<td>" + list[i].replyContent+"</td>";
+			output += "<td>" + list[i].replyCreateAt+"</td>";
+			output += "<td>수정</td>";
+			output += "<td>삭제</td>";
+
+			output += "</tr>";
+		}
+
+		output += "</table>";
+		$('#replyArea').html(output);
+	}
+	
 	</script>
 </body>
 
