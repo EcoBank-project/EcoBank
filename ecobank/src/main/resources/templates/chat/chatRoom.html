@@ -114,7 +114,7 @@
 		                <div class="input-group mt-3">
 		                    <input type="text" class="form-control" placeholder="메시지..." id="message">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button" id="send-button" onclick="sendMessage()">Send</button>
+                                <button class="btn btn-primary" type="button" th:attr="onclick=${'sendMessage(' + userNo + ')'}">보내기</button>
                             </div>                	
                 	    </div>
                     </div>
@@ -152,20 +152,22 @@
     // 소켓 열기
     let socket = new SockJS('/ws');
     let stompClient = Stomp.over(socket);
-    
+
+    const nickname = "[[${nickname}]]"; // 세션값
     // 메시지를 받음.
     stompClient.connect({}, function(frame) {
+//        let userName = frame.headers['user-name']; 헤더값 가지고 옴
         stompClient.subscribe('/topic/messages', function(message) {
             showMessage(JSON.parse(message.body));
         });
     });
 
     // 메시지 보냄
-    function sendMessage() {
+    function sendMessage(userId) {
         let input = document.getElementById("message");
         let today = new Date(); 
         const chatMessage = {
-            userNo: 1,	// 나중에 세션정보 넣으면됨.
+            userNo: userId,
             msgContent: input.value,
             msgType: 'CHAR',
             msgSendTime: today
@@ -178,12 +180,15 @@
     function showMessage(message) {
         let chatbox = document.getElementById("chatbox");
         let newMessage = document.createElement("div");
-        if(message.send === "User"){
+        if(message.userNo === Number("[[${userNo}]]")){
+        	// 나
         	newMessage.classList.add('message_right');
+            newMessage.textContent = message.userNo + " : " + message.msgContent;
         }else{
+        	// 상대방
         	newMessage.classList.add('message_left');
+            newMessage.textContent = message.userNo + " : " + message.msgContent;
         }
-        newMessage.textContent = message.msgContent;
         chatbox.appendChild(newMessage);
     }
     //채팅방 조회
