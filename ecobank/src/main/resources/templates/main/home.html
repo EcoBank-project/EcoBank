@@ -22,7 +22,9 @@
 			<p sec:authentication="principal.username"></p>
 			<p sec:authentication="principal.authorities"></p>
 		</div>
+		<input type="hidden" id="userID" th:value="${#authentication.principal.username}"/>
 	</th:block>
 	<script type="text/javascript" th:src="@{/js/home/home.js}"></script>
 </body>
 </html>
+<!-- EXECUTE UPDATECOUNTRYINFO('',''); -->
