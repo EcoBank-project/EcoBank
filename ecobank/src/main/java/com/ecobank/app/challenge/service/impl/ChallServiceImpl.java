@@ -1,6 +1,6 @@
 package com.ecobank.app.challenge.service.impl;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +23,9 @@ public class ChallServiceImpl implements ChallService{
 	//전체조회
 	@Override
 	public List<ChallVO> challList() {
-		Date now = new Date();        
-		String nowTime = now.toString();        
-		System.out.println(nowTime);
+		LocalDate now = LocalDate.now();
+		System.out.println(now);
+		
 		return challMapper.selectChallAll();
 	}
 	
@@ -72,6 +72,11 @@ public class ChallServiceImpl implements ChallService{
 	@Override
 	public int countChallengesByState(String challState) {
 		return challMapper.countAllChallenges(challState);
+	}
+
+	@Override
+	public List<ChallVO> getDList(String challState) {
+		return challMapper.getChallList(challState);
 	}
 
 //	@Override
