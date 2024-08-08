@@ -25,5 +25,4 @@ public class CarbonServiceImpl implements CarbonService {
 		// TODO Auto-generated method stub
 		return carbMapper.selectCarbonAll();
 	}
-
 }

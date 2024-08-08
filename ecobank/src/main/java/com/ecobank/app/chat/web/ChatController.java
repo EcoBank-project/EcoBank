@@ -22,8 +22,10 @@ public class ChatController {
 	// 채팅 화면
 	@GetMapping("/chatRoom")
 	public String chat(Model model) {
-		String userId = (String) httpSession.getAttribute("useId");
-		System.out.println(userId);
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		String nickname = (String) httpSession.getAttribute("nickname");
+		model.addAttribute("userNo", userNo);
+		model.addAttribute("nickname", nickname);
 		return "chat/chatRoom";
 	}
 	

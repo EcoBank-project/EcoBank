@@ -107,13 +107,13 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	            <p class="card-text">챌린지 가이드 : [[ ${challenge.challContent} ]]</p>
 	            <p th:if="${status=='D1'}" class="card-text">시작 일자 : [[ ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} ]]</p>
 	            <p th:if="${status=='D2'} OR ${status=='D3'}" class="card-text">진행 기간 : [[ ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} ]] ~ [[ ${#dates.format(challenge.challCloseAt, 'yyyy-MM-dd')} ]]</p>
-	            <a th:onclick="|location.href='@{readyDetail(challNo=${challenge.challNo})}'|" class="btn btn-primary">챌린지 둘러보기</a>
-		        <a th:if="${status=='D2'}" th:onclick="|location.href='@{}'|" class="btn btn-primary">도전하기</a>
+	            <a th:onclick="|location.href='@{detail(challNo=${challenge.challNo})}'|" class="btn btn-primary">챌린지 둘러보기</a>
+		        <a th:if="${status=='D2'}" class="btn btn-primary">도전하기</a>
 	        </div>
 	    </div>
 	</div>
 	<script>
-
+	
 	</script>
 </body>
 </html>
