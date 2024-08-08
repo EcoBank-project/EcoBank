@@ -20,20 +20,26 @@
 					<th>챌린지 시작 일자</th>
 					<td><label for="date"></label>
 						<input type="date"
-						        id="date"
+						        id="startDate"
 						        max="2030-08-06"
 						        min="2024-07-01"
-						        name="challStartAt"></td>
+						        name="challStartAt"
+						        onchange="calculateScore()"></td>
 				</tr>
 				<tr>
 					<th>챌린지 종료 일자</th>
 					<td><label for="date"></label>
 						<input type="date"
-						        id="date1"
+						        id="endDate"
 						        max="2030-08-06"
 						        min="2024-07-01"
-						        name="challCloseAt"></td>
+						        name="challCloseAt"
+						        onchange="calculateScore()"></td>
 				</tr>
+                <tr>
+                    <th>챌린지 인증 완료 후 받는 총 점수</th>
+                    <td><input type="text" id="challScore" name="challScore" readonly></td>
+                </tr>
 				<tr>
 					<th>내용</th>
 					<td><textarea name="challContent" cols="30" rows="5"></textarea></td>
@@ -50,8 +56,21 @@
 			<button type="submit" class="btn btn-primary">등록</button>
 		</form>
 	</div>
-	<script>
-		
+	<script>  
+	    function calculateScore() {
+	        const startDate = document.getElementById('startDate').value;
+	        const endDate = document.getElementById('endDate').value;
+	        const scoreInput = document.getElementById('challScore');
+	
+	        if (startDate && endDate) {
+	            const start = new Date(startDate);
+	            const end = new Date(endDate);
+	            const diffTime = Math.abs(end - start);
+	            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+	            const score = diffDays * 10;
+	            scoreInput.value = score;
+	        }
+	    }
 	</script>
 </body>
 </html>
