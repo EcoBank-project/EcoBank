@@ -47,7 +47,6 @@ public class SnsController {
 	public String snsList(Model model) {
 		List<SnsVO> list = snsService.snsList();
 		model.addAttribute("snsList",list);
-		
 		return "sns/sns";
 	}
 	
@@ -61,7 +60,6 @@ public class SnsController {
 		return "sns/snsInfo";
 	}
 	
-
 	//등록 페이지 이동
 	@GetMapping("snsInsert")
 	public String snsInsert() {
@@ -78,7 +76,6 @@ public class SnsController {
 		int fno = snsService.insertSns(snsVO);
 		System.out.println("인서트"+fno);
 		fileService.insertFile(images, snsCode,snsNum); //피드번호
-
 		return "redirect:snsInfo?feedNo=" + fno;
 	}
 	
@@ -97,13 +94,10 @@ public class SnsController {
 	@PostMapping("snsUpdate")
 	@ResponseBody
 	public Map<String, Object> snsUpdateAJAXJSON(@RequestBody SnsVO snsVO){
-		
 		return snsService.updateSns(snsVO);
 	}
-	
-	
-	
-	
+
+
 	//삭제
 	@GetMapping("snsDelete")
 	public String snsDelete(Integer feedNo) {
