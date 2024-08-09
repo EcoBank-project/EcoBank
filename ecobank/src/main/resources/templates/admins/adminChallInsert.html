@@ -58,17 +58,17 @@
 	</div>
 	<script>  
 	    function calculateScore() {
-	        const startDate = document.getElementById('startDate').value;
-	        const endDate = document.getElementById('endDate').value;
-	        const scoreInput = document.getElementById('challScore');
+	        const startDate = $('#startDate').val();
+	        const endDate = $('#endDate').val();
+	        const scoreInput = $('#challScore');
+	        //console.log(startDate, '시작날짜');
+	        //console.log(endDate, '종료날짜');
+	        //console.log(scoreInput, 'input태그 가져와');
 	
-	        if (startDate && endDate) {
-	            const start = new Date(startDate);
-	            const end = new Date(endDate);
-	            const diffTime = Math.abs(end - start);
-	            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-	            const score = diffDays * 10;
-	            scoreInput.value = score;
+	        if (startDate && endDate) {	        	
+	            const score = dateDiff(startDate, endDate) * 10;
+	            //console.log(score, '점수');
+	            scoreInput.val(score);
 	        }
 	    }
 	</script>

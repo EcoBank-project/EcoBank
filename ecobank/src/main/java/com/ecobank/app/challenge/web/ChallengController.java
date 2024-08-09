@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ecobank.app.challenge.service.ChallConfirmVO;
 import com.ecobank.app.challenge.service.ChallService;
 import com.ecobank.app.challenge.service.ChallVO;
+import com.ecobank.app.challenge.service.impl.ChallConfirmServiceImpl;
 
 @Controller
 public class ChallengController {
@@ -74,6 +76,9 @@ public class ChallengController {
 	@GetMapping("detail")
 	public String challdetail(ChallVO challVO, Model model) {
 		ChallVO findVO = challService.challInfo(challVO);
+		model.addAttribute("status", "D1");
+		model.addAttribute("status", "D2");
+		model.addAttribute("status", "D3");
 		model.addAttribute("detail", findVO);
 		return "chall/detail";
 	}
@@ -206,7 +211,4 @@ public class ChallengController {
 		model.addAttribute("scoreList", list);
 		return "admins/adminScoreList";
 	}
-	
-	
-	
 }
