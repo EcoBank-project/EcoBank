@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>채팅</title>
 <style>
+	/*메시지 상자*/
     .chatbox{
         flex: 1;
         overflow: auto;
@@ -21,22 +22,66 @@
         flex: 1;
     }
     .chatForm{
-        height: 400px;
+        height: 700px;
         overflow-y: auto;
         background-color: #f8f9fa;
         border: 1px solid #ccc;
         padding: 10px;
     }
+    
+    /*메시지*/
     .message_left {
-        align-self: flex-start;
-    }
-    .message_right {
-        align-self: flex-end;
-    }
+    	display: flex;
+    	align-items: flex-start;
+    	margin-bottom: 20px;
+    	align-self: flex-start;
+	}
+	.message_right {
+		display: flex;
+    	align-items: flex-start;
+    	margin-bottom: 20px;
+    	align-self: flex-end;
+	}
+
+	.profil_img {
+	    width: 40px;
+	    height: 40px;
+	    border-radius: 50%;
+	    margin-right: 10px;
+	}
+	
+	.message_content {
+	    max-width: 80%;
+	}
+	
+	.username {
+	    font-weight: bold;
+	    color: #7289da;
+	    margin-right: 10px;
+	}
+	
+	.sendtime {
+	    font-size: 12px;
+	    color: #72767d;
+	}
+	
+	.text {
+	    margin-top: 5px;
+	    background-color: #32C36C;
+	    padding: 10px;
+	    border-radius: 5px;
+	    line-height: 1.4;
+	    color: #FFFFFF;
+	    word-break: break-all;
+	}
+
+
+    /*아이콘*/
     .bi-plus-circle{
         font-size: 45px;
         line-height: 45px;
     }
+    
     /* 채팅방 모달 */
     .modal-chat {
         display: none; /* 초기에는 모달을 숨김 */
@@ -106,7 +151,7 @@
 		                <div class="chatForm flex-grow-1 border-bottom" id="chatForm" style="overflow-y: auto;">
 		                <!-- 메시지 로그 -->
                             <div class="chatbox" id="chatbox">
-
+		
                             </div>
 		                </div>
 		                <!-- 메시지 입력 -->
@@ -186,18 +231,35 @@
         if(message.userNo === Number("[[${userNo}]]")){
         	// 나
         	newMessage.classList.add('message_right');
-            newMessage.textContent = message.nickName + " : " + message.msgContent;
         }else{
         	// 상대방
         	newMessage.classList.add('message_left');
-            newMessage.textContent = message.nickName + " : " + message.msgContent;
         }
+        let img = document.createElement("img");
+        img.classList.add("profil_img");
+        img.src="https://via.placeholder.com/40";
+        newMessage.appendChild(img);
+        let content = document.createElement("div");
+        content.classList.add('message_content');
+        let uname = document.createElement("span");
+        uname.classList.add('username');
+        uname.textContent = message.nickName;
+        let totime = document.createElement("span");
+        totime.classList.add('sendtime');
+        let texts = document.createElement("div");
+        texts.classList.add('text');
+        texts.textContent = message.msgContent;
+        content.appendChild(uname);
+        content.appendChild(totime);
+        content.appendChild(texts);
+        newMessage.appendChild(content);
         chatbox.appendChild(newMessage);
         chatbox.scrollTop = chatbox.scrollHeight;
     }
     
     //채팅방 들어가기
     function enterRoom(event, roomId) {
+    	console.log("확인")
     	event.preventDefault();
         currentRoomId = roomId;
 
@@ -210,12 +272,27 @@
         if (stompClient !== null) {
             stompClient.disconnect(function() {
                 connect(roomId);
+                loadMessage(roomId);
             });
         } else {
             connect(roomId);
+            loadMessage(roomId);
         }
     }
-    
+    function loadMessage(roomId){
+    	$.ajax({
+        	url: "/chatRoom/" + roomId,
+        	method: "GET",
+        	success: function(result){
+        		result.forEach(function(message){
+        			showMessage(message);
+        		});
+        	},
+        	error: function(error){
+        		
+        	}
+        });
+    }
     
     //아이콘 기능 모음
     //채팅홈

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
 
@@ -25,7 +27,7 @@ public class ChatRoomController {
 	@Autowired
 	private HttpSession httpSession;
 	
-	// 채팅방 목록
+	// 채팅방 목록&채팅방 참여
 	@GetMapping("/chatRoom")
 	public String ChatRooms(Model model){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
@@ -38,10 +40,13 @@ public class ChatRoomController {
 		return "chat/chatRoom";
 	}
 	
-	// 특정 채팅방 조회
+	// 특정 채팅방 채팅로그 조회
 	@GetMapping("/chatRoom/{roomId}")
-	public String ChatRoom() {
-		return "chat/chatRoom";
+	@ResponseBody
+	public List<ChatMessageVO> ChatRoom(@PathVariable Integer roomId) {
+		List<ChatMessageVO> msgList = chatService.chatMessageList(roomId);
+		System.out.println("확인");
+		return msgList;
 	}
 	
 	// 채팅방 생성
