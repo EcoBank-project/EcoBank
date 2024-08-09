@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.chat.chat-mapper"></mapper>
+<mapper namespace="com.ecobank.app.chat.mapper.ChatMapper">
+	<select id="selectChatRoomAll" resultType="ChatRoomVO">
+		select ce.chat_no, chat_name, chat_enter_time 
+		from chat_entry ce join chat c 
+                     		 on ce.chat_no = c.chat_no
+		where user_no = #{userNo}
+	</select>
+</mapper>

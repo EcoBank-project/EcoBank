@@ -7,15 +7,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.ecobank.app.admin.service.UserVO;
-import com.ecobank.app.security.mapper.UserMapper;
+import com.ecobank.app.security.mapper.UserSecurityMapper;
 import com.ecobank.app.security.service.LoginUserVO;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService{
-	private UserMapper userMapper;
+	private UserSecurityMapper userMapper;
 
 	@Autowired
-	public CustomUserDetailService(UserMapper userMapper) {
+	public CustomUserDetailService(UserSecurityMapper userMapper) {
 		this.userMapper = userMapper;
 	}
 
