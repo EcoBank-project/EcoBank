@@ -74,6 +74,7 @@
 		        			, chall_closeAt
 							, main_img
 							, detail_img
+							, chall_score
 
 						)
 		VALUES 			(
@@ -84,6 +85,7 @@
 							, #{challCloseAt}
 							, #{mainImg}
 							, #{detailImg}
+							, #{challScore}
 						)		
 	</insert>
 	
@@ -93,6 +95,7 @@
 			, chall_content = #{challContent}
 			, chall_startAt = #{challStartAt}
 			, chall_closeAt = #{challCloseAt}
+			, chall_updateAt = #{challUpdateAt}
 			<if test="mainImg != null and mainImg != ''">
 			, main_img = #{mainImg}
 			, detail_img = #{detailImg}

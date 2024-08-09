@@ -30,18 +30,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		session.setAttribute("nickname", userDetail.getNickname());
 		session.setAttribute("userState", userDetail.getUserState());
 		session.setAttribute("userNo", userDetail.getUserNO());
+		session.setAttribute("resp", userDetail.getResp());
 		
 		System.out.println("세션에 저장되는 정보들");
 		System.out.println("아이디 : " + userDetail.getUsername());
 		System.out.println("닉네임 : " + userDetail.getNickname());
-		System.out.println("resp : " + userDetail.getUserState());
+		System.out.println("유저상태 : " + userDetail.getUserState());
 		System.out.println("유저번호 :" + userDetail.getUserNO());
 		
 		// 일반회원
-		if(userDetail.getUserState().equals("B1")) {
+		if(userDetail.getResp().equals("A1")) {
 			redirectUrl = "/";
 		// 관리자
-		}else if(userDetail.getUserState().equals("B2")) {
+		}else {
 			redirectUrl = "/admin";
 		}
 		

@@ -6,6 +6,7 @@
 	select use_id,
 		   password,
 		   nickname,
+		   resp,
 		   user_state,
 		   user_no,
 	'ROLE_'|| resp as role_name
