@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ecobank.app.chat.service.ChatMessageDTO;
+import com.ecobank.app.chat.service.ChatMessageVO;
 
 @Controller
 public class ChatMessageController {
@@ -30,11 +31,13 @@ public class ChatMessageController {
 	@MessageMapping("/chat.message/{roomId}")
 	@SendTo("/topic/messages/{roomId}")
 	public ChatMessageDTO sendUser(@Payload ChatMessageDTO message) {
+		ChatMessageVO chatMessage = new ChatMessageVO();
+		chatMessage.setMsgContent(message.getMsgContent());
+		chatMessage.setMsgType(message.getMsgType());
+		chatMessage.setMsgSendTime(message.getMsgSendTime());
+		chatMessage.setUserNo(message.getUserNo());
+		chatMessage.setChatNo(message.getChatNo());
 		
-		System.out.println(message.getChatNo());
-		System.out.println(message.getMsgContent());
-		System.out.println(message.getMsgSendTime());
-		System.out.println(message.getMsgType());
 		return message;
 	}
 	

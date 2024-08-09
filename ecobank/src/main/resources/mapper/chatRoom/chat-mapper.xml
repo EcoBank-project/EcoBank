@@ -7,4 +7,13 @@
                      		 on ce.chat_no = c.chat_no
 		where user_no = #{userNo}
 	</select>
+	<!-- <insert id="">
+		<selectKey keyProperty="ChatMessageVO"
+		           resultType="Integer"
+		           order="BEFORE">
+			SELECT NVL(MAX(msg_no), 0) + 1
+			FROM msg
+		</selectKey>
+	
+	</insert> -->
 </mapper>

@@ -149,6 +149,7 @@
     
     <script type="text/javascript">
   	var stompClient = null;
+    var currentRoomId = null;
     const userNo = "[[${userNo}]]";
     // 메시지를 받음.
     function connect(roomId) {
@@ -168,6 +169,7 @@
         let today = new Date(); 
         const chatMessage = {
             userNo: userId,
+            chatNo: currentRoomId,
             msgContent: input.value,
             msgType: 'CHAR',
             msgSendTime: today,
