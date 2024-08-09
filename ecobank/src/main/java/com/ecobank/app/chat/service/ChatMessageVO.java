@@ -1,15 +1,13 @@
 package com.ecobank.app.chat.service;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
 public class ChatMessageVO {
-	private int msgNo; 			//메시지 번호
-	private String msgContent;	//메시지 내용
-	private String msgType;		//메시지 타입
-	private Date msgSendTime;   //메시지 전송 시간
-	private int userNo;			//회원 번호
-	private int chatNo;			//채팅방 번호
+	private Integer msgNo;		//채팅방 번호
+	private String msgContent; 	//채팅 내용
+	private String msgType;		//채팅 타입
+	private String msgSendTime;	//채팅 시간
+	private Integer userNo;		//회원 번호
+	private Integer chatNo;		//채팅방 번호
 }

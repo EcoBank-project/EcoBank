@@ -68,11 +68,21 @@ public class UsersController {
 	
     @GetMapping("/user/api/check-duplicate")
     @ResponseBody
-    public Map<String, Boolean> checkDuplicate(@RequestParam String useId) {
+    public Map<String, Boolean> checkDuplicate(@RequestParam String useId) { 
         Map<String, Boolean> response = new HashMap<>();
-        boolean exists = userRepository.findByUseId(useId) != null;
-        response.put("exists", exists);
+        boolean exists = userRepository.findByUseId(useId) != null; // db에 입력받은 매개값 useId가 있는 지 확인
+        response.put("exists", exists); // 있으면 <exists, true> 없으면 <exists, false>
         return response;
     }
+    
+	@GetMapping("findid")
+	public String goFindId() {
+		return "users/findid";
+	}
+	
+	@GetMapping("findpw")
+	public String goFindPw() {
+		return "users/findpw";
+	}
 
 }

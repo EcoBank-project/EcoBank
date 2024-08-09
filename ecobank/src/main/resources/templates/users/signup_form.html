@@ -14,7 +14,12 @@
     <main class="main-content">
         <div class="signup-container">
             <h2>회원가입 페이지</h2>
-            <form th:action="@{/signup}" th:object="${userCreateForm}"
+            <!--
+            	 th:action : /signup 페이지로 요청 (post 방식으로 요청)
+            	 th:object : form 태그의 데이터가 userCreateForm 로 설정한 객체에 담아짐.
+            	 th:field : th:object에 설정해 준 객체의 내부와 매칭	
+             -->
+            <form th:action="@{/signup}" th:object="${userCreateForm}" 
                 method="post" onsubmit="return validateForm()">
                 <div class="mb-3">
                     <label for="useid" class="form-label">아이디(이메일)</label> 
@@ -24,6 +29,7 @@
                     <button type="button" id="sameCheckBtn">중복확인</button>
                     <button type="button" id="sendBtn" name="sendBtn" onclick="sendNumber()">인증번호</button>
                     <br>
+                    <!-- 인증번호 버튼 클릭 시 display:block  -->
                     <div id="mail_number" name="mail_number" style="display: none">
                         <input type="text" name="number" id="number" style="width: 250px; margin-top: -10px" placeholder="인증번호 입력">
                         <button type="button" name="confirmBtn" id="confirmBtn" onclick="confirmNumber()">이메일 인증</button>
