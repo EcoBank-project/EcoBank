@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
 		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  	layout:decorate="~{common/layouts/default_layout}"
+	  	layout:decorate="~{common/layouts/sns_layout}"
 	  	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
@@ -9,6 +9,7 @@
 <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script> 
 </head>
 <body>
+
 	<h3>sns 상세보기</h3>
 
 	<form  action="uploadForm" method="post"
@@ -18,12 +19,12 @@
 			<input type="number" th:value="${sns.feedNo}" readonly>
 		</div>
 		<div>
-		<input type="text" th:value="${sns.userNo}" readonly>
+		<input type="text" th:value="${sns.userNo}" hidden>
 			<label>작성자</label>
 			<input type="text" th:value="${sns.nickname}" readonly>
 		</div>
 		<div th:block th:each="file, sts : ${snsFileInfo}">
-			<img th:src =@{/images/{fileName}(fileName=${file.filePath})}
+			<img th:src =@{/images/{fileName}(fileName=${file.fileName})}
 					style="width : 40%;" >
 		</div>			
 		<div>
@@ -35,11 +36,16 @@
 			<input type="text" th:value="${sns.feedContent}" readonly>
 				<!--/* [[${board.boardContent]] style="height:100px; widthL200px;" */-->
 		</div>
- 
+ 		<div class="post-content-entry">
+				<div class="meta">
+						<span>좋아요 수 <a href="#" th:text=${sns.countLike}></a></span>
+						<span>댓글 수 <a href="#" th:text=${sns.countReply}></a></span>
+					</div>
+		</div>
 		<div>
-			<button type="button" th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
-			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
-			<button type="button" th:onclick="|location.href='@{/snsDelete(feedNo=${sns.feedNo})}'|">삭제</button>
+			<button class="btn btn-primary" type="button" th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
+			<button class="btn btn-primary" type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
+			<button class="btn btn-primary" type="button" th:onclick="|location.href='@{/snsDelete(feedNo=${sns.feedNo})}'|">삭제</button>
 		</div>
 		</form>
 		<!-- 댓글영역 -->
@@ -54,20 +60,22 @@
 	<div id="replyArea">
 
 	</div>
-	<script>
+	
+	<script th:inline="javascript">
 	// ajax로 댓글 불러오기
-	let fno = $('#feedNo').val();
+	let feedNo = $('#feedNo').val();
 	let rno = $('#replyNo').val();
 	let replyContent = $('#replyContent');
+	let userNo = [[${session.userNo}]];
 	reply();
 	function reply(){
 		$.ajax({
 			type : "GET",
-			url : "snsReply?feedNo="+fno ,
+			url : "snsReply?feedNo="+feedNo ,
 			dataType : "json",
 			success : function(list){
-				// replyList() 함수 호출
 				console.log('getcon',replyContent);
+				console.log(list,'ㅇㅇㅇ');
 				replyList(list);
 			},
 			error :  function(){
@@ -76,28 +84,16 @@
 		});
 	}
 	
-
 	// 댓글 입력(writeBtn) 버튼을 클릭할 경우
 	$('#writeBtn').click(function(){
-		//let userNo = $('#userNo').val()
 		let replyContent = $('#replyContent').val();
 		let fno = $('#feedNo').val();
-		let rno = $('#replyNo').val();
-		console.log('#feedNo',fno);
-		console.log('#replycontent',replyContent);
-		console.log('#replyNo',replyNo);
-		
-		//console.log("cWriter : " + cWriter + ", cContent : " + cContent + ", cbNum : "+ cbNum);
-		
-		// ajax로  불러오기
+
+		// ajax로  등록하기
 		$.ajax({
 			type : "POST",
 			url : "snsReply",
-			data : {
-				"feedNo" : fno,
-				"replyContent" : replyContent,
-			//	"userNo" : userNo
-			},
+			data : {feedNo, replyContent,userNo},
 			dataType : "json",
 			success : function(list){
 
@@ -110,45 +106,33 @@
 		});
 	});
 	//리뷰 삭제
-	function deleteBtn(){
-		console.log('ddddddd0');
-	
-		let rno = $('#replyNo').val();
-			console.log('rno',rno);
-				$.ajax({
-					url:"snsReply",
-			         type: 'delete',
-				     data: {
-				 		"replyNo" : rno
-					},
-			         success: function(result) {
-			        	 alert("리뷰가 삭제되었습니다");
+	function deleteBtn(rno){
+		$.ajax({
+			 url:"snsReply?replyNo="+rno,
+			 type: 'delete',
+			 data: {"replyNo" : rno},
+			 success: function(result) {
+			     	  	 alert("리뷰가 삭제되었습니다");
 			        	 location.reload();
-			          },
-			          error: function() {
+			        	},
+			  error: function() {
 			          	alert('리뷰 수정 실패');
-			          }
-				});	
+			          	}
+		});	
 				
 	};
+	
 	function replyList(list){	
 		let output = "";
 		
-		output += "<table>";
-		output += "<tr>";
-		output += "<th>작성자</th>";
-		output += "<th>내용</th>";
-		output += "<th>작성일</th>";
-		output += "</tr>";
-		console.log(list,'postlist')
 		for(let i in list){
 			output += "<tr>";
 			//output += "<td>" + list[i].userNo+"</td>";
-			
-			output += "<td>" + list[i].replyNo+"</td>";
+			console.log('닉네임을 찾자',list);
+			output += "<td>" + list[i].nickname+"</td>";
 			output += "<td>" + list[i].replyContent+"</td>";
 			output += "<td>" + list[i].replyCreateAt+"</td>";
-			output += "<td><button onclick='deleteBtn()'>삭제</button></td>";
+			output += "<td><button onclick='deleteBtn("+list[i].replyNo+")'>삭제</button></td>";
 
 			output += "</tr>";
 		}

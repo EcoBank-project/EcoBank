@@ -4,13 +4,17 @@
 
 	<!-- 단건조회 -->
 	<select id="selectSnsReplyInfo" resultType="SnsReplyVO">
-		SELECT  reply_no	
-			 	,reply_content
-				,reply_createAt
-				,user_no
-				,feed_no
-		FROM sns_reply 
-		WHERE feed_no = #{feedNo}
+		SELECT  s.reply_no	
+			 	,s.reply_content
+				,s.reply_createAt
+				,s.user_no
+				,s.feed_no
+                ,u.nickname
+		FROM sns_reply s 
+				LEFT JOIN users u
+                 	ON s.user_no = u.user_no
+		WHERE s.feed_no = #{feedNo}
+		ORDER BY s.reply_no DESC
 	</select>
 	
 	<!-- 등록 -->

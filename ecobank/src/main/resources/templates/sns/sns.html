@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/default_layout}"
+	layout:decorate="~{common/layouts/sns_layout}"
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-.imghover{
-	transition:background-img 0.5s;
+.imghover {
+	transition: background-img 0.5s;
 }
-.imghover:hover{
-filter:brightness(120%)
+
+.imghover:hover {
+	filter: brightness(120%)
 }
+
 .blind {
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  width: 1px;
-  height: 1px;
-  margin: -1px;
+	position: absolute;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	width: 1px;
+	height: 1px;
+	margin: -1px;
 }
+
 </style>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js">
@@ -29,38 +32,46 @@ filter:brightness(120%)
 </head>
 <body>
 	<div>
-		<h3>sns페이지</h3>
 		<div class="container">
-			<div class = "row" >
-			<th:block th:each="sns, sts : ${snsList}"
-					   th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|" >
-				<div class="post-entry col-12 col-sm-6 col-md-4 mb-4 mb-md-0">
-					<a href="#" th:text=${sns.nickname}></a>
-					<div class="imghover">
-						<div th:text=${sns.feedNo} class="blind"></div>
-						<a href="#" class="post-thumbnail transition">
-						<img th:src=@{/images/{fileName}(fileName=${sns.fileName})} alt="Image" class="img-fluid"></a>
-						<div class="post-content-entry">
-							<div class="meta">
-							    <span>좋아요 수 <a href="#" th:text=${sns.countLike}></a></span>
-							    <span>댓글 수 <a href="#" th:text=${sns.countReply}></a></span>
+			<div class="row">
+				<th:block th:each="sns, sts : ${snsList}"
+					th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
+					<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0">
+						<div class="author mb-4 d-flex align-items-center">
+							<a href="#" class="img"
+								style="background-image: url(images/person_2.jpg);"></a>
+							<div class="ml-3 info">
+								<a href="#" th:text=${sns.nickname}></a>
+							</div>
+							<button class="btn btn-primary">팔로우</button>
+						</div>
+						<div class="imghover">
+							<div th:text=${sns.feedNo} class="blind"></div>
+							<a href="#" class="post-thumbnail transition"> <img
+								th:src=@{/images/{fileName}(fileName=${sns.fileName})}
+								alt="Image" class="img-fluid"></a>
+							<div class="post-content-entry">
+								<div class="meta">
+									<span>좋아요 수 <a href="#" th:text=${sns.countLike}></a></span> <span>댓글
+										수 <a href="#" th:text=${sns.countReply}></a>
+									</span>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</th:block>
+				</th:block>
 			</div>
 		</div>
 	</div>
-<script>
-	$(".imghover").on('click', function(event) {
+	<script>
+		$(".imghover").on('click', function(event) {
 			/* if(event.target.tagName == 'BUTTON') return; */
-		let fno = $(event.currentTarget).children().first().text();
-		console.log(fno);
-		let url = '/snsInfo?feedNo=' + fno;
-		console.log('url : ' + url);
-		location.href = url;
-	});
-</script>
+			let fno = $(event.currentTarget).children().first().text();
+			console.log(fno);
+			let url = '/snsInfo?feedNo=' + fno;
+			console.log('url : ' + url);
+			location.href = url;
+		});
+	</script>
 </body>
 </html>

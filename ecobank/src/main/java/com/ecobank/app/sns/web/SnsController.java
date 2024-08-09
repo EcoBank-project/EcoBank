@@ -1,7 +1,10 @@
 package com.ecobank.app.sns.web;
 
+
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +24,8 @@ import com.ecobank.app.upload.service.FileVO;
 
 @Controller
 public class SnsController {
+	
+
 	//파일등록
 	@Value("${file.upload.path}")
 	private String uploadPath;
@@ -34,6 +39,8 @@ public class SnsController {
 	private SnsService snsService;
 	private FileService fileService;
 	
+	@Autowired
+	private HttpSession httpSession;
 	
 	//DI 생성자 주입 방식=> 생성자 선언하기
 	@Autowired
@@ -46,6 +53,7 @@ public class SnsController {
 	@GetMapping("sns")
 	public String snsList(Model model) {
 		List<SnsVO> list = snsService.snsList();
+		System.out.println("no찾기"+list);
 		model.addAttribute("snsList",list);
 		return "sns/sns";
 	}
@@ -73,9 +81,15 @@ public class SnsController {
 		String snsCode = "J1";
 		int snsNum = snsService.selectSnsNum();
 		System.out.println("번호생성"+snsNum);
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		snsVO.setUserNo(userNo);
 		int fno = snsService.insertSns(snsVO);
 		System.out.println("인서트"+fno);
 		fileService.insertFile(images, snsCode,snsNum); //피드번호
+		
+		//	System.out.println("내번호는"+userNo);
+		model.addAttribute("userNo",userNo);
+		System.out.println("아이디"+userNo);
 		return "redirect:snsInfo?feedNo=" + fno;
 	}
 	
@@ -105,4 +119,5 @@ public class SnsController {
 		return "redirect:sns";
 	}
 
+	
 }

@@ -2,55 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.sns.mapper.SnsMapper">
 	<!-- 전체조회 -->
-	<select id="selectSnsAll" resultType="SnsVO">
+	<select id="selectSnsAll" resultType="SnsVO"  >
 		SELECT s.feed_no    
-		       ,u.profile_img
-		       ,u.nickname
-		       ,s.feed_createAt
-		       ,s.user_no
-		       ,s.feed_state
-		       ,count(l.sns_like_no) as count_like
-		       ,count(r.reply_no) as count_reply
-		       ,f.file_name
-               ,f.file_code_no  
-		FROM sns s JOIN users u 
-						ON s.user_no = u.user_no
-		           LEFT OUTER JOIN sns_like l  
-		           		ON s.feed_no = l.feed_no                   
-		           LEFT OUTER JOIN sns_reply r  
-		           		ON s.feed_no = r.feed_no  
-		           LEFT OUTER JOIN files f
-                        ON s.feed_no = f.file_code_no
-		GROUP BY s.feed_no
-				,u.profile_img
-		        ,u.nickname
-		      	,s.feed_createAt
-	          	,s.user_no
-	          	,s.feed_state
-	          	,f.file_name
-               ,f.file_code_no  
-		ORDER BY s.feed_no DESC
+             ,u.profile_img
+             ,u.nickname
+             ,s.feed_createAt
+             ,s.user_no
+             ,s.feed_state
+             ,(SELECT count(feed_no) 
+                 FROM sns_like
+                 WHERE feed_no = s.feed_no) as countLike
+             ,(SELECT count(feed_no)
+                 FROM sns_reply
+                 WHERE feed_no = s.feed_no) as countReply
+               ,(SELECT file_name
+                 FROM files
+                 WHERE file_code_no = s.feed_no
+                 <![CDATA[
+                 and rownum < 2)  as fileName
+                 	]]>	
+      FROM sns s JOIN users u 
+                  ON s.user_no = u.user_no
+      GROUP BY s.feed_no
+            	,u.profile_img
+             	,u.nickname
+               	,s.feed_createAt
+                ,s.user_no
+                ,s.feed_state        
+      ORDER BY s.feed_no DESC
 	</select>
 	
 	<!-- 단건조회 -->
 	<select id="selectSnsInfo" resultType="SnsVO">
 		SELECT s.feed_no  
-				,u.profile_img
-		        ,u.nickname
-		   		,s.feed_content
-		        ,s.feed_createAt
-		        ,s.feed_updateAt
-			    ,s.user_no
-		        ,s.feed_state
-			    ,count(l.sns_like_no) as count_like
-                ,count(r.reply_no) as count_reply
+                ,u.profile_img
+                ,u.nickname
+                ,s.feed_content
+	     		,s.feed_createAt
+               	,s.feed_updateAt
+              	,s.user_no
+        		,s.feed_state
+		 		,(SELECT count(feed_no) 
+                 	FROM sns_like
+                  	WHERE feed_no = s.feed_no) as countLike
+             	,(SELECT count(feed_no)
+                  	FROM sns_reply
+                  	WHERE feed_no = s.feed_no) as countReply
                 ,s.hashtag 
 		FROM sns s JOIN users u 
 		                ON s.user_no = u.user_no
-		           LEFT OUTER JOIN sns_like l  
-		        		ON s.feed_no = l.feed_no                   
-		           LEFT OUTER JOIN sns_reply r  
-	                    ON s.feed_no = r.feed_no 
 		WHERE s.feed_no = #{feedNo}
 		GROUP BY s.feed_no
 		         ,u.profile_img
@@ -111,5 +111,7 @@
 		DELETE FROM sns
 		WHERE feed_no = #{feedNo}
 	</delete>
+	
 
+	
 </mapper>

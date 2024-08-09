@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+    <!-- csrf -->
+	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+ 	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Side</title>
+    <!-- Add your CSS and other head elements here -->
+ <title>Layout page</title>
+ <style>
+	.side {
+	list-style-type: none;
+	width: 100px;
+	padding: 0;
+	margin: 0;
+	position: fixed;
+	height: 100%;
+	overflow: auto;
+	margin-top: 50px;
+}
+
+.sideBtn {
+	text-decoration: none;
+	display: block;
+	padding: 8px 15px 8px 15px;
+	font-weight: bold;
+}
+
+.main{
+margin-left: 130px;
+min-height: 400px;
+margin-top: 50px;
+}
+	</style>
+<th:block th:replace="common/configs/config :: jQueryConfig"></th:block>
+<th:block th:replace="common/configs/config :: MainTemplateConfig"></th:block>
+<th:block th:replace="common/configs/config :: SweetAlertConfig"></th:block>
+
+</head>
+<body>
+	<header th:insert="common/fragments/header :: headerFragment"></header>
+
+			<th:block th:replace="common/fragments/snsSide ::snsSideFragment"></th:block>
+		<div class="main">	
+			<th:block layout:fragment="Content"></th:block>
+		</div>
+
+	<footer th:insert="common/fragments/footer :: footerFragment"></footer>
+	<script>
+	 var token = $("meta[name='_csrf']").attr("content");
+	 var header = $("meta[name='_csrf_header']").attr("content");
+	  $.ajaxSetup({
+	      beforeSend: function(xhr, settings) {
+	          xhr.setRequestHeader(header, token);
+	      }
+	  });
+ 	</script>
+</body>
+</html>
