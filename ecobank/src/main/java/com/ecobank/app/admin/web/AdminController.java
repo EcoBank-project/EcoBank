@@ -15,6 +15,7 @@ import com.ecobank.app.sns.service.SnsService;
 import com.ecobank.app.sns.service.SnsVO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class AdminController {
@@ -57,11 +58,21 @@ public class AdminController {
         return "redirect:/adminUser";
     }
 
-    // 챌린지 신고 목록 조회
     @GetMapping("ChallDeclareList")
     public String ChallDeclareList(Model model) {
         List<ChallDeclareVO> list = adminService.ChallDeclareList();
-        model.addAttribute("ChallDeclareList", list);
+
+        // 중복 제거 (confirmNo를 기준으로)
+        List<ChallDeclareVO> uniqueList = list.stream()
+            .collect(Collectors.toMap(
+                ChallDeclareVO::getConfirmNo, // 키: 인증번호
+                challDeclare -> challDeclare,  // 값: ChallDeclareVO 객체
+                (existing, replacement) -> existing)) // 중복 시 기존 객체 유지
+            .values()
+            .stream()
+            .collect(Collectors.toList());
+
+        model.addAttribute("ChallDeclareList", uniqueList);
         return "admins/ChallDeclareList";
     }
 
@@ -107,6 +118,14 @@ public class AdminController {
         List<SnsVO> list = snsService.snsList();
         model.addAttribute("adminSns", list);
         return "admins/adminSns";
+    }
+    
+    //SNS 업데이트
+    @PostMapping("updatefeedState")
+    public String updatefeedState(@RequestParam int feedNo, @RequestParam String feedState, Model model) {
+        int updatedCount = adminService.updatefeedState(feedNo, feedState);
+        model.addAttribute("updatefeedState", updatedCount > 0 ? "성공적으로 업데이트되었습니다." : "업데이트 실패.");
+        return "redirect:/adminSns";
     }
 
 }

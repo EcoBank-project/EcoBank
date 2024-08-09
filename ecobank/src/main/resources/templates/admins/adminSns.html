@@ -27,11 +27,21 @@
                 <tr>
 					<td class="text-center" th:text="${adminSns.feedNo}"></td>
                     <td class="text-center" th:text="${adminSns.feedContent}"></td>
-                    <td class="text-center" th:text="${adminSns.feedCreateAt}"></td>
+					<td class="text-center" th:text="${#dates.format(adminSns.feedCreateAt, 'yyyy/MM/dd')}"></td>
                     <td class="text-center" th:text="${adminSns.userNo}"></td>
-                    <td class="text-center" th:text="${adminSns.feedState}"></td>
-                    <td class="text-center" th:text="${adminSns.hashtag}"></td>
-                             
+                    <td class="text-center">
+                     <form th:action="@{/updatefeedState}" method="post">
+					    <input type="hidden" name="feedNo" th:value="${adminSns.feedNo}"/>
+					    <select name="feedState" class="form-select form-select-sm">
+					        <option th:value="${adminSns.feedState}" th:text="${adminSns.feedState}" selected></option>
+					        <option value="F1">F1 공개</option>
+					        <option value="F2">F2 비공개</option>
+					    </select>
+					    </td>
+					    <td class="text-center">
+					    <button type="submit" class="btn btn-primary btn-sm">업데이트</button>
+					    </td>
+					</form>
                 </tr>
             </th:block>
         </tbody>
