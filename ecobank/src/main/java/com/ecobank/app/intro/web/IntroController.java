@@ -72,6 +72,7 @@ public class IntroController {
 			String apiUrl = "https://api.ip.pe.kr/json/";
 			RestTemplate restTemplate = new RestTemplate();
 			ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
+			System.out.println(response.getBody());
 			return ResponseEntity.ok(response.getBody());
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching IP information.");
