@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.challenge.mapper.ChallConfirmMapper">
+
+	<select id="selectConfirmAll" resultType="ChallConfirmVO">
+		SELECT c.user_no
+		        , c.confirm_no
+		        , c.chall_no
+		        , ( select f.file_no
+		            from files f
+		            where f.file_code_no = c.confirm_no
+		            <![CDATA[
+		            and rownum < 2)  
+		            ]]>  
+		            )
+		FROM chall_confirm c
+		WHERE chall_no = #{challNo}
+	</select>
+
+</mapper>

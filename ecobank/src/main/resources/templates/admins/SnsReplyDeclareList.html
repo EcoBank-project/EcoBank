@@ -15,28 +15,21 @@
         <thead>
             <tr>
                 <th class="text-center">신고 번호</th>
-                <th class="text-center">신고 분류</th>
-                <th class="text-center">신고 날짜</th>
-                <th class="text-center">신고한 회원번호</th>
-                <th class="text-center">인증번호</th>
-                <th class="text-center">작업</th>
+                <th class="text-center">댓글 번호</th>
+                <th class="text-center">회원번호</th>
+                <th class="text-center">신고이유</th>      
+                <th class="text-center">신고 일자</th>
             </tr>
         </thead>
         
         <tbody>
-            <th:block th:each="ChallDeclare : ${ChallDeclareList}">
+            <th:block th:each="SnsReplyDeclare : ${SnsReplyDeclareList}">
                 <tr>
-                    <td class="text-center" th:text="${ChallDeclare.confirmDeclareNo}"></td>
-                    <td class="text-center" th:text="${ChallDeclare.confirmDeclareType}"></td>
-                    <td class="text-center" th:text="${ChallDeclare.confirmDeclareat}"></td>
-                    <td class="text-center" th:text="${ChallDeclare.confirmUserNo}"></td>
-                    <td class="text-center" th:text="${ChallDeclare.cofirmNo}"></td>
-                    <td class="text-center">
-                        <form th:action="@{/deleteChallDeclare}" method="post">
-                            <input type="hidden" name="confirmNo" th:value="${ChallDeclare.confirmDeclareNo}" />
-                            <button type="submit" class="btn btn-primary btn-sm">삭제</button>
-                        </form>
-                    </td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.declareNo}"></td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.replyNo}"></td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.confirmUserNo}"></td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.declareCode}"></td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.declareat}"></td>                
                 </tr>         
             </th:block>
         </tbody>

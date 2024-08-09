@@ -51,11 +51,31 @@ public class AdminServiceImpl implements AdminService {
     public void deleteChallDeclare(int confirmDeclareNo) {
         adminMapper.deleteChallDeclare(confirmDeclareNo);
     }
+    //sns 댓글 신고 조회 
 	@Override
 	public List<SnsDeclareVO> SnsReplyDeclareList() {
-		// TODO Auto-generated method stub
 		return adminMapper.SnsReplyDeclareList();
 	}
-
+	//sns 신고 조회;
+	@Override
+	public List<SnsDeclareVO> SnsDeclareList() {
+		return adminMapper.SnsDeclareList();
+	}
+	//sns 신고 삭제;
+	@Override
+	public void snsDeclareDelete(int declareNo) {
+		adminMapper.snsDeclareDelete(declareNo);
+	}
+	//sns 신고 삭제
+	@Override
+	public void snsReplyDeclareDelete(int declareNo) {
+		adminMapper.snsReplyDeclareDelete(declareNo);
+	}
+	@Override
+	public int updatefeedState(int feedNo, String feedState) {
+		// TODO Auto-generated method stub
+		return adminMapper.updatefeedState(feedNo, feedState);
+	}
+	
 	
 }

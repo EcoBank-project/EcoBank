@@ -1,76 +1,70 @@
 let isCodeVerified = false; // 인증번호 확인 상태 변수
 
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const submitButton = document.getElementById('submit-button');
+    const form = document.querySelector('form'); // form 태그
+    const submitButton = document.getElementById('submit-button'); // id가 'submit-button'인 버튼
 
-    function validatePassword() {
-        const password1 = document.getElementById("password1").value;
-        const password2 = document.getElementById("password2").value;
-        const passwordError = document.getElementById("password-error");
-        const isValid = password1 === password2;
+    function validatePassword() { // 패스워드 유효성 체크
+        const password1 = document.getElementById("password1").value; // id가 'password1'인 태그의 value
+        const password2 = document.getElementById("password2").value; // id가 'password2'인 태그의 value
+        const passwordError = document.getElementById("password-error");  // id가 'password-error'인 태그의 value
+        const isValid = password1 === password2; // password1,2 값 비교 (boolean)
 
-        passwordError.style.display = isValid ? "none" : "block";
-        return isValid;
+        passwordError.style.display = isValid ? "none" : "block"; // 패스워드가 같으면 display:none, 다르면 display:block
+        return isValid; // 
     }
 
-    function validateNickname() {
-        const nickname = document.getElementById("nickname").value.trim();
-        const nicknameError = document.getElementById("nickname-error");
-        const isValid = nickname.length >= 6 && nickname.length <= 20;
+    function validateNickname() { // 닉네임 유효성 체크
+        const nickname = document.getElementById("nickname").value.trim(); // id가 'nickname'인 태그의 value (양 옆 공백 제거)
+        const nicknameError = document.getElementById("nickname-error");  // id가 'nickname-error'인 태그
+        const isValid = nickname.length >= 6 && nickname.length <= 20; // nickname이 6자리 이상 20자리 이하면 true, 아니면 false
 
-        nicknameError.style.display = isValid ? "none" : "block";
+        nicknameError.style.display = isValid ? "none" : "block"; // 패스워드가 같으면 display:none, 다르면 display:block
         return isValid;
     }
 
     function validateTell() {
-        const tell = document.getElementById("tell").value.trim();
-        const tellError = document.getElementById("tell-error");
-        const isValid = tell !== "";
+        const tell = document.getElementById("tell").value.trim(); // id가 'tell'인 태그의 value (양 옆 공백 제거) 
+        const tellError = document.getElementById("tell-error"); // id가 'tell-error'인 태그
+        const isValid = tell !== ""; // tell이 공백이면 false 아니면 true 
 
         tellError.style.display = isValid ? "none" : "block";
         return isValid;
     }
 
     function validateForm() {
-        const isPasswordValid = validatePassword();
+        const isPasswordValid = validatePassword(); 
         const isNicknameValid = validateNickname();
         const isTellValid = validateTell();
 
         // 모든 유효성 검사 통과 시 회원가입 버튼 활성화
-        submitButton.disabled = !(isPasswordValid && isNicknameValid && isTellValid && isCodeVerified);
+        submitButton.disabled = !(isPasswordValid && isNicknameValid && isTellValid && isCodeVerified); 
+        // 비밀번호, 닉네임, 전화번호 유효성 체크 전부 true 나오면 버튼 활성화
     }
-
-    // 폼 제출 전 유효성 검증
-    form.addEventListener('submit', function(e) {
-        if (!validatePassword() || !validateNickname() || !validateTell() || !isCodeVerified) {
-            e.preventDefault(); // 폼 제출 방지
-        }
-    });
 
     // ID 중복 확인
     document.getElementById('sameCheckBtn').addEventListener('click', function() {
         const id = document.getElementById('useid').value;
 
-        if (!id || id.length === 0) {
-            document.getElementById('label1').style.color = 'red';
-            document.getElementById('label1').textContent = '아이디를 입력해주세요.';
+        if (!id || id.length === 0) { // if, id value가 입력이 안 되어있으면
+            document.getElementById('label1').style.color = 'red'; // id가 label1인 value인 값의 color : red
+            document.getElementById('label1').textContent = '아이디를 입력해주세요.'; 
+            // id가 value1인 태그의 text : '아이디를 입력해주세요' 
             return false;
         }
 
         $.ajax({
-            url: '/user/api/check-duplicate',
-            type: 'GET',
-            data: { useId: id },
-            dataType: 'json',
-            success: function(result) {
-                if (result.exists) {
+            url: '/user/api/check-duplicate', // /user/api/check-duplicate 에
+            type: 'GET', // GET 요청을 보냄
+            data: { useId: id }, // useId : '입력한 id 값' 
+            dataType: 'json', // json 방식으로
+            success: function(result) { // 성공하면
+                if (result.exists) { // result.exists가 true면 db에 값이 있다는 뜻
                     document.getElementById('label1').style.color = 'red';
                     document.getElementById('label1').textContent = '이미 사용중인 ID입니다.';
                 } else {
                     document.getElementById('label1').style.color = 'black';
                     document.getElementById('label1').textContent = '사용 가능한 ID 입니다.';
-                    validateForm(); // 모든 유효성 검사를 다시 실행하여 버튼 활성화 여부를 확인
                 }
             },
             error: function(xhr, status, error) {
@@ -83,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.sendNumber = function() {
         const useidValue = $("#useid").val();
-        console.log(useidValue); // useid 값을 콘솔에 출력
 
         $("#mail_number").css("display", "block");
         $.ajax({

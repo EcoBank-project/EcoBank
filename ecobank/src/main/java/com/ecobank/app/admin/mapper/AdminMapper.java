@@ -13,6 +13,8 @@ public interface AdminMapper {
     // 유저 목록 조회
     List<UserVO> userList();
     
+    
+    
     //가입한 회원수 조회
     int getusers();
     // 오늘 가입한 회원 수 조회
@@ -27,6 +29,20 @@ public interface AdminMapper {
     //챌린지 삭제
     int deleteChallDeclare (int confirmDeclareNo);
     
+    //sns 신고 조회
+    List<SnsDeclareVO> SnsDeclareList();
+    
     //sns 댓글 신고 조회 
     List<SnsDeclareVO> SnsReplyDeclareList();
+    
+    //sns 상태 변환 업데이트
+    int updatefeedState(@Param("feedNo") int feedNo, @Param("feedState") String feedState);
+    
+    //sns 신고 조회
+    int snsDeclareDelete (int declareNo);
+    
+    int snsReplyDeclareDelete (int declareNo);
+    
+    
+    
 }

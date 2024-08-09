@@ -11,7 +11,7 @@
 					confirm_no
             FROM chall_confirm_declare
 		</select>
-		
+		<!-- 챌린지 신고 삭제  -->
 		<delete id="deleteChallDeclare">
     DELETE FROM chall_confirm_declare
     WHERE confirm_declare_no = #{confirmDeclareNo}
@@ -19,12 +19,45 @@
 		
 		<!-- sns 댓글 신고 목록 -->
 		<select id="SnsReplyDeclareList" resultType="com.ecobank.app.admin.service.SnsDeclareVO">
-		select  DECLARE_NO,
-       			CONFIRM_USER_NO,
-       			DECLARE_CODE,
-        		REPLY_NO
-		from sns_declare
+		SELECT DECLARE_NO,
+        DECLAREAT,
+        CONFIRM_USER_NO,
+        DECLARE_CODE,
+        REPLY_NO
+        FROM sns_declare
+        WHERE  REPLY_NO IS NOT NULL AND  REPLY_NO != 0
 		</select>
+		
+		<!-- sns 신고 목록 -->
+		<select id="SnsDeclareList" resultType="com.ecobank.app.admin.service.SnsDeclareVO">
+		SELECT DECLARE_NO,
+        DECLAREAT,
+        CONFIRM_USER_NO,
+        DECLARE_CODE,
+        FEED_NO
+        FROM sns_declare
+        WHERE  FEED_NO IS NOT NULL AND  FEED_NO != 0
+		</select>
+		
+		<delete id="snsDeclareDelete">
+			 DELETE FROM sns_DECLARE
+ 			 WHERE DECLARE_NO = #{declareNO}		
+		</delete>
+		
+		<delete id="snsReplyDeclareDelete">
+			 DELETE FROM sns_DECLARE
+ 			 WHERE DECLARE_NO = #{declareNO}		
+		</delete>
+		
+	 <update id="updatefeedState">
+		UPDATE sns
+        SET FEED_STATE = #{feedState}
+        WHERE FEED_NO = #{feedNo}
+	</update>
+	
+		
+		
+		
 
 		
 </mapper>

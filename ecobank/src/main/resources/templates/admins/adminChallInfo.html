@@ -26,6 +26,10 @@
 						    <th class="table-warning">챌린지 기간</th>
 						    <td th:text="${#dates.format(challenge.challStartAt, 'yyyy/MM/dd')} + ' ~ ' + ${#dates.format(challenge.challCloseAt, 'yyyy/MM/dd')}"></td>
 						</tr>
+ 						<tr>
+                            <th class="table-warning">챌린지 인증 완료 후 받는 총 점수</th>
+                            <td th:text="${challenge.challScore}" id="challScore"></td>
+                        </tr>
                         <tr>
                             <th class="table-warning">내용</th>
                             <td th:text="${challenge.challContent}" style="height: 100px;"></td>
@@ -51,5 +55,8 @@
             </div>
         </div>
     </div>
+    <script>
+
+    </script>
 </body>
 </html>

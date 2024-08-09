@@ -29,8 +29,8 @@ public class SpringSecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
         .authorizeHttpRequests(authorize -> authorize
-            .antMatchers("/css/**", "/js/**", "/img/**").permitAll() // 정적 자원 허용
-            .antMatchers("/", "/login*", "/signup","/user/**","/about","/find*").permitAll() // 인증 필요 없는 경로
+            .antMatchers("/css/**", "/js/**", "/img/**", "/lib/**").permitAll() // 정적 자원 허용
+            .antMatchers("/", "/login*", "/signup","/user/**","/about","/find*", "/ip-info","/set-country").permitAll() // 인증 필요 없는 경로
             .anyRequest().authenticated() // 나머지 요청은 인증 필요
         )
         .formLogin(formLogin -> formLogin

@@ -44,6 +44,9 @@ public class LoginUserVO implements UserDetails{
 	public String getUserState() {
 		return userVO.getUserState();
 	}
+	public String getResp() {
+		return userVO.getResp();
+	}
 	
 	public int getUserNO() {
 		return userVO.getUserNo();

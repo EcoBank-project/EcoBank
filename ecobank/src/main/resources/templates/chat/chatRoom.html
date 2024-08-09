@@ -66,19 +66,16 @@
 </style>
 <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
-<style>
-</style>
 </head>
 <body>
     <h3>채팅</h3>
     <div class="container-fluid">
     	<div class="row">
-            
             <div class="col-md-2 col-sm-12">
                 <div class="row">
 	                <!-- 아이콘 -->
 	                <div class="col-md-3 col-sm-12 d-flex flex-column align-items-center">
-                	<h5>콘</h5>
+                		<h5>콘</h5>
 	                    <a href="#">S1</a>
 	                    <a href="#">
 	                    	<i class="bi bi-plus-circle"></i>
@@ -87,10 +84,12 @@
 	                </div>
 	                <!-- 채팅방 목록 -->
 	                <div class="col-md-9 col-sm-12">
-	                <h5>채팅방</h5>
-	                    <div>채팅1</div>
-	                    <div>채팅2</div>
-	                    <div>채팅3</div>
+	                	<h5>채팅방</h5>
+	                	<ul class="chat-room-list">
+	                    	<li th:each="room : ${chatRooms}">
+	                    		<a href="#" th:text="${room.chatName}" th:onclick="enterRoom(event, [[${room.chatNo}]])"></a>
+	                    	</li>
+	                    </ul>
 	                </div>   
                 </div>
             </div>
@@ -99,7 +98,7 @@
             <div class="col-md-10 col-sm-12 d-flex flex-column">
             	<div class="row">            	
 	                <div>
-	                    <h3>채팅창 제목</h3>
+	                    <h3 id="roomName">채팅창 제목</h3>
 	                </div>
             	</div>
                 <div class="row">
@@ -149,19 +148,20 @@
     </div>        
     
     <script type="text/javascript">
-    // 소켓 열기
-    let socket = new SockJS('/ws');
-    let stompClient = Stomp.over(socket);
-
-    const nickname = "[[${nickname}]]"; // 세션값
+  	var stompClient = null;
+    const userNo = "[[${userNo}]]";
     // 메시지를 받음.
-    stompClient.connect({}, function(frame) {
-//        let userName = frame.headers['user-name']; 헤더값 가지고 옴
-        stompClient.subscribe('/topic/messages', function(message) {
-            showMessage(JSON.parse(message.body));
-        });
-    });
-
+    function connect(roomId) {
+    	// 소켓 열기
+    	var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+	    stompClient.connect({}, function(frame) {
+	//        let userName = frame.headers['user-name']; 헤더값 가지고 옴
+	        stompClient.subscribe('/topic/messages/' + roomId, function(message) {
+	            showMessage(JSON.parse(message.body));
+	        });
+	    });
+    }
     // 메시지 보냄
     function sendMessage(userId) {
         let input = document.getElementById("message");
@@ -170,9 +170,10 @@
             userNo: userId,
             msgContent: input.value,
             msgType: 'CHAR',
-            msgSendTime: today
+            msgSendTime: today,
+            nickName: "[[${nickname}]]",
         };
-        stompClient.send("/app/chat.message", {}, JSON.stringify(chatMessage));
+        stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
         input.value = "";
     }
 
@@ -183,18 +184,36 @@
         if(message.userNo === Number("[[${userNo}]]")){
         	// 나
         	newMessage.classList.add('message_right');
-            newMessage.textContent = message.userNo + " : " + message.msgContent;
+            newMessage.textContent = message.nickName + " : " + message.msgContent;
         }else{
         	// 상대방
         	newMessage.classList.add('message_left');
-            newMessage.textContent = message.userNo + " : " + message.msgContent;
+            newMessage.textContent = message.nickName + " : " + message.msgContent;
         }
         chatbox.appendChild(newMessage);
+        chatbox.scrollTop = chatbox.scrollHeight;
     }
-    //채팅방 조회
-    function chatRoomList(){
-    	
+    
+    //채팅방 들어가기
+    function enterRoom(event, roomId) {
+    	event.preventDefault();
+        currentRoomId = roomId;
+
+        // 채팅방 UI 표시
+        $('#chatForm').show();
+        $('#roomName').text($(event.target).text());
+        $('#chatbox').empty(); // 이전 메시지 초기화
+
+        // WebSocket 연결
+        if (stompClient !== null) {
+            stompClient.disconnect(function() {
+                connect(roomId);
+            });
+        } else {
+            connect(roomId);
+        }
     }
+    
     
     //아이콘 기능 모음
     //채팅홈
