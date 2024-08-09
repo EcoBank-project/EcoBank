@@ -26,4 +26,6 @@ public class ChallConfirmVO {
 	private String confirmDeclareType;	//인증 신고 분류
 	private Date confirmDeclareAt;		//인증 신고 날짜
 	//private int confirmUserNo;		//신고한 회원 번호(회원번호랑 같지않나..? 굳이..?)
+	
+	private String fileName;			//파일이름
 }

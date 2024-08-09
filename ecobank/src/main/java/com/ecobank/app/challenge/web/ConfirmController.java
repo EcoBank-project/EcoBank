@@ -21,8 +21,9 @@ public class ConfirmController {
 	
 	//인증 목록
 	@GetMapping("others")
-	public String confirmList(Model model) {
-		List<ChallConfirmVO> list = challCofirmService.confirmList();
+	public String confirmList(Model model, ChallConfirmVO chalConfirmVO) {
+		List<ChallConfirmVO> list = challCofirmService.confirmList(chalConfirmVO);
+		System.out.println(list);
 		model.addAttribute("confirmList", list);
 		return "chall/confirm";
 	}

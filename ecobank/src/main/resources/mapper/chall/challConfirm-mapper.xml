@@ -6,15 +6,18 @@
 		SELECT c.user_no
 		        , c.confirm_no
 		        , c.chall_no
-		        , ( select f.file_no
+		        , ( select f.file_name
 		            from files f
 		            where f.file_code_no = c.confirm_no
 		            <![CDATA[
-		            and rownum < 2)  
+		            and rownum < 2 ) as file_name
 		            ]]>  
-		            )
 		FROM chall_confirm c
-		WHERE chall_no = #{challNo}
+		WHERE c.chall_no = #{challNo}
 	</select>
 
+	<select id="selectConfirmInfo" resultType="ChallConfirmVO" parameterType="ChallConfirmVO">
+		
+	</select>
+	
 </mapper>

@@ -19,7 +19,7 @@ public class ChallConfirmServiceImpl implements ChallCofirmService{
 	}
 
 	@Override
-	public List<ChallConfirmVO> confirmList() {
-		return challConfirmMapper.selectConfirmAll();
+	public List<ChallConfirmVO> confirmList(ChallConfirmVO chalConfirmVO) {
+		return challConfirmMapper.selectConfirmAll(chalConfirmVO);
 	}
 }

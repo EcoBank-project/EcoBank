@@ -14,23 +14,8 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 				<div class="col-lg-3 col-md-6">
 					<h3 class="text-black mb-4">참가자 인증 내역</h3>
 					<div class="row g-2">
-						<div class="col-4">
-							<img class="img-fluid rounded" src="img/gallery-1.jpg" alt="">
-						</div>
-						<div class="col-4">
-							<img class="img-fluid rounded" src="img/gallery-2.jpg" alt="">
-						</div>
-						<div class="col-4">
-							<img class="img-fluid rounded" src="img/gallery-3.jpg" alt="">
-						</div>
-						<div class="col-4">
-							<img class="img-fluid rounded" src="img/gallery-4.jpg" alt="">
-						</div>
-						<div class="col-4">
-							<img class="img-fluid rounded" src="img/gallery-5.jpg" alt="">
-						</div>
-						<div class="col-4">
-							<img class="img-fluid rounded" src="img/gallery-6.jpg" alt="">
+						<div th:each="confirm : ${confirmList}" class="col-4">
+							<img class="img-fluid rounded" th:onclick="|location.href='@{others(chall=${confirm.challNo})}'|" th:src="@{'/images/' + ${confirm.fileName}}" alt="챌린지 메인 이미지" style="width:100px; height:100px">
 						</div>
 					</div>
 				</div>
