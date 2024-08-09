@@ -14,9 +14,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
+import com.ecobank.app.chat.service.ChatService;
 
 @Controller
 public class ChatMessageController {
+	
+	private ChatService chatService;
+	
+	@Autowired
+	ChatMessageController(ChatService chatService){
+		this.chatService = chatService;
+	}
+	
 	@Autowired
 	private HttpSession httpSession;
 	
@@ -37,6 +46,8 @@ public class ChatMessageController {
 		chatMessage.setMsgSendTime(message.getMsgSendTime());
 		chatMessage.setUserNo(message.getUserNo());
 		chatMessage.setChatNo(message.getChatNo());
+		
+		chatService.ChatMessageInsert(chatMessage);
 		
 		return message;
 	}

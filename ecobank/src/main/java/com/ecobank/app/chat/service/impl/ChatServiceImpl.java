@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecobank.app.chat.mapper.ChatMapper;
+import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
 
@@ -29,11 +30,26 @@ public class ChatServiceImpl implements ChatService{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	// 채팅방 채팅 로그 기록
+	@Override
+	public int ChatMessageInsert(ChatMessageVO chatMessageVO) {
+		int result = chatMapper.insertChatMessage(chatMessageVO); 
+		return result;
+	}
+	// 채팅방 채팅 로그 조회
+	@Override
+	public List<ChatMessageVO> chatMessageList(Integer chatNo) {
+		return chatMapper.selectChatMessage(chatNo);
+	}
+	
 	@Override
 	public int ChatRoomInsert(ChatRoomVO chatRoomVO) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+
+	
+
 
 }
