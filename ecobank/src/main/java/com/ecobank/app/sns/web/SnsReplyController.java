@@ -2,6 +2,8 @@ package com.ecobank.app.sns.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +25,8 @@ public class SnsReplyController {
 	public SnsReplyController(SnsReplyService snsReplyService){
 		this.snsReplyService = snsReplyService;
 	}
+	@Autowired
+	private HttpSession httpSession;
 	
 	//피드별 댓글 조회
 	@GetMapping("snsReply")
@@ -35,6 +39,9 @@ public class SnsReplyController {
 	public SnsReplyVO snsReplyInsertProcess(SnsReplyVO snsReplyVO, Model model) {
 		int fReplyno = snsReplyService.insertSnsReply(snsReplyVO);
 		System.out.println("인서트"+ fReplyno);
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		snsReplyVO.setUserNo(userNo);
+		model.addAttribute("userNo",userNo);
 		return snsReplyVO;
 	}
 	

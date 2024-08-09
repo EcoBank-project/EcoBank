@@ -68,5 +68,10 @@ public class SnsServiceImpl implements SnsService{
 	public int selectSnsNum() {
 		return snsMapper.selectSnsNum();
 		}
+	
+    public int getUserNo() {
+        return snsMapper.getUserNo();
+    }
+    
 
 }
