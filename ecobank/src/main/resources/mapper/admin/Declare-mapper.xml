@@ -49,6 +49,11 @@
  			 WHERE DECLARE_NO = #{declareNO}		
 		</delete>
 		
+	 <update id="updatefeedState">
+		UPDATE sns
+        SET FEED_STATE = #{feedState}
+        WHERE FEED_NO = #{feedNo}
+	</update>
 	
 		
 		

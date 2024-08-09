@@ -71,6 +71,11 @@ public class AdminServiceImpl implements AdminService {
 	public void snsReplyDeclareDelete(int declareNo) {
 		adminMapper.snsReplyDeclareDelete(declareNo);
 	}
-
+	@Override
+	public int updatefeedState(int feedNo, String feedState) {
+		// TODO Auto-generated method stub
+		return adminMapper.updatefeedState(feedNo, feedState);
+	}
+	
 	
 }

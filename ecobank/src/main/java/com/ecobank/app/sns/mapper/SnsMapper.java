@@ -23,4 +23,8 @@ public interface SnsMapper {
 	
 	//sns 피드번호 생성
 	public int selectSnsNum();
+	
+	//로그인정보 저장
+	public int getUserNo();
+
 }

@@ -29,13 +29,7 @@
                     <td class="text-center" th:text="${SnsReplyDeclare.replyNo}"></td>
                     <td class="text-center" th:text="${SnsReplyDeclare.confirmUserNo}"></td>
                     <td class="text-center" th:text="${SnsReplyDeclare.declareCode}"></td>
-                    <td class="text-center" th:text="${SnsReplyDeclare.declareat}"></td>
-                    <td class="text-center">
-                        <form th:action="@{/snsDeclareDelete}" method="post">
-                            <input type="hidden" name="confirmNo" th:value="${SnsReplyDeclare.declareNo}" />
-                            <button type="submit" class="btn btn-primary btn-sm">삭제</button>
-                        </form>
-                    </td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.declareat}"></td>                
                 </tr>         
             </th:block>
         </tbody>

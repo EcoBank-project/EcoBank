@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  	layout:decorate="~{common/layouts/default_layout}"
+	  	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
+</head>
+<body>
+	<h3>sns 등록</h3>
+	<form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
+
+	<div>피드작성자<input name="userNo"></div>
+	<div>피드내용<input name="feedContent"></div>
+	
+	<input type="file" name="images" multiple>
+			
+		<div>
+			<button type="submit" >저장</button>
+			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
+			
+		</div>
+		</form>
+	<script>
+	
+	</script>
+</body>
+
+</html>

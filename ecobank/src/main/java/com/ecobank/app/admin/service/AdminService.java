@@ -33,5 +33,7 @@ public interface AdminService {
     
     public void snsReplyDeclareDelete (int declareNo);
     
+    public int updatefeedState(int feedNo, String feedState);
+    
     
 }
