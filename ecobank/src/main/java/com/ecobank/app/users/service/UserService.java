@@ -1,10 +1,11 @@
 package com.ecobank.app.users.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.ecobank.app.users.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +15,10 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-
+	
+	@Autowired
+	private UserMapper userMapper;
+	
 	public Users create(String nickname, String useId, String password, String tell) {
 		Users user = new Users();
 		user.setUseId(useId);
@@ -33,7 +37,13 @@ public class UserService {
 		}
 		return false;
 	}
+	
 	public String checkID(String uid) { 
     	  return userRepository.findByUseId(uid).getUseId();
     };
+    
+    public String getUserIdByPhoneNumber(String phoneNumber) {
+        return userMapper.findUserIdByPhoneNumber(phoneNumber);
+    }
+    
 }
