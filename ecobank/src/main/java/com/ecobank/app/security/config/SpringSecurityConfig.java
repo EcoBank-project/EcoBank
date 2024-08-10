@@ -19,7 +19,7 @@ public class SpringSecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 	
-	//2. 인증 및 인가 설정
+	// 2. 인증 및 인가 설정
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		// Security가 체크하는 경로 및 각 경로별 권한
