@@ -1,25 +1,57 @@
 <!DOCTYPE html>
 <th:block xmlns:th="http://www.thymeleaf.org"
-		  th:fragment="headerFragment">
-		  <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
-        <a href="index.html" class="navbar-brand d-flex align-items-center border-end px-4 px-lg-5">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="headerFragment">
+
+    <div class="container-fluid bg-dark p-0">
+        <div class="row gx-0 d-none d-lg-flex">
+            <div class="col-lg-7 px-5 text-start"></div>
+            <div class="col-lg-5 px-5 text-end">
+                <div class="h-100 d-inline-flex align-items-center mx-n2">
+                    <small class="fa fa-phone-alt text-primary me-2"></small>
+                    <small>+012 345 6789</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a th:href="@{/}" class="navbar-brand d-flex align-items-center border-end px-4 px-lg-5">
             <h2 class="m-0 text-primary">EcoBank</h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+                <sec:authorize access="isAuthenticated()">
+                    <span class="nav-item nav-link">안녕하세요 <span th:text="${#authentication.name}"> 님 </span></span>
+                </sec:authorize>
+        </th:block>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a th:href="@{/home}"class="nav-item nav-link active">Home</a>
-                <a th:href="@{/login}" class="nav-item nav-link">로그인</a>
+                <a th:href="@{/}" class="nav-item nav-link active">Home</a>    
+               <th:block th:if="${#authentication.principal != 'anonymousUser'}">
+               <form method="post" th:action="@{/logout}">
+                 <button type="submit" class="btn btn-link nav-item nav-link active">로그아웃</button>
+               </form>
+              
+               </th:block>
+               <th:block th:unless="${#authentication.principal != 'anonymousUser'}">
+                    <!-- 로그인되지 않은 상태 -->
+                    <a th:href="@{/login}" class="nav-item nav-link">로그인</a>
+                    
+                </th:block>
                 <a href="about.html" class="nav-item nav-link">공지사항</a>
                 <a href="about.html" class="nav-item nav-link">QnA</a>
-                <a href="about.html" class="nav-item nav-link">소개</a>
-                <a href="about.html" class="nav-item nav-link">챌린지</a>
-                <a href="service.html" class="nav-item nav-link">인증</a>
-                <a href="project.html" class="nav-item nav-link">SNS</a>
+                <a th:href="@{/about}" class="nav-item nav-link">소개</a>
+                <a th:href="@{/ready}" class="nav-item nav-link">챌린지</a>
+                <a th:href="@{/confirm}" class="nav-item nav-link">인증</a>
+                <a th:href="@{/sns}" class="nav-item nav-link">SNS</a>
+
+                <a class="btn btn-square btn-link rounded-0 border-0 " th:href="@{/chatRoom}"><i class="fas fa-comment-dots"></i></a>
+                <a class="btn btn-square btn-link rounded-0 border-0 " href=""><i class="fas fa-user"></i></a>
+                <a class="btn btn-square btn-link rounded-0 border-0 " href=""><i class="fas fa-bell"></i></a>
+
             </div>
-            <a href="" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Get A Quote<i class="fa fa-arrow-right ms-3"></i></a>
         </div>
     </nav>
 </th:block>

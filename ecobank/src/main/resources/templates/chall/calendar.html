@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<script>   
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+    	// new FullCalendar.Calendar(대상 DOM객체, {속성:속성값, 속성2:속성값2..})
+    	
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: ''
+          },
+          initialDate: new Date(), // 현재 날짜
+          editable: false,
+          displayEventTime : false,
+          events: function(info, successCallback, failureCallback) {
+              $.ajax({
+                  url: 'calendar', 
+                  method: 'get',
+                  success: function(result) {
+                	  console.log(result)
+                      // 서버로부터 데이터를 성공적으로 받았을 때 처리
+                      var events = [];
+                      result.forEach(function(event) {
+                    	  events.push({
+                              title: '인증 성공!',
+                              start: event.startDay, // 'YYYY-MM-DD' 또는 'YYYY-MM-DDTHH:mm:ss' 형식이어야 함
+                              borderColor : 'green'
+                          });
+                      });
+                      successCallback(events); // FullCalendar에 이벤트 바인딩
+                  }, 
+                  error: function(err) {
+                      console.log(err);
+                      failureCallback(err); // 오류 처리
+                  }
+              });
+          }
+      });
+        calendar.render();
+      });
+
+</script>
+</head>
+<body>
+	<h4><캘린더 API 테스트></h4>
+  	<div id='calendar'></div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.chat.mapper.ChatMapper">
+	<!-- 채팅방 조회 -->
+	<select id="selectChatRoomAll" resultType="ChatRoomVO">
+		select ce.chat_no, 
+			   chat_name, 
+			   chat_enter_time 
+		from chat_entry ce join chat c 
+                     		 on ce.chat_no = c.chat_no
+		where user_no = #{userNo}
+	</select>
+	
+	<!-- 채팅방 채팅 로그 조회 -->
+	<select id="selectChatMessage" resultType="ChatMessageVO">
+		select msg_no, 
+		       msg_content, 
+		       msg_type, 
+		       msg_send_time, 
+		       m.user_no, 
+		       chat_no,
+		       nickname
+		from msg m join users u 
+		           on m.user_no = u.user_no
+		where chat_no = #{chatNO}
+	</select>
+	<!-- 채팅방 채팅 로그 저장 -->
+	<insert id="insertChatMessage" parameterType="ChatMessageVO">
+		<selectKey keyProperty="msgNo"
+		           resultType="Integer"
+		           order="BEFORE">
+			SELECT NVL(MAX(msg_no), 0) + 1
+			FROM msg
+		</selectKey>
+		INSERT INTO msg
+			(
+				msg_no
+				,msg_content
+				,msg_type
+				,msg_send_time
+				,user_no
+				,chat_no
+			)
+		VALUES
+			(
+				#{msgNo}
+				,#{msgContent}
+				,#{msgType}
+				,#{msgSendTime}
+				,#{userNo}
+				,#{chatNo}
+			)	
+	</insert>
+</mapper>

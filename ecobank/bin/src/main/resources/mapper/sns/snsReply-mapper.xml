@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.sns.mapper.SnsReplyMapper">
+
+	<!-- 단건조회 -->
+	<select id="selectSnsReplyInfo" resultType="SnsReplyVO">
+		SELECT  reply_no	
+			 	,reply_content
+				,reply_createAt
+				,user_no
+				,feed_no
+		FROM sns_reply 
+		WHERE feed_no = #{feedNo}
+	</select>
+	
+	<!-- 등록 -->
+	<insert id="insertSnsReplyInfo" parameterType="SnsReplyVO">
+		<selectKey keyProperty="replyNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(reply_no),1)+1
+			FROM sns_reply
+		</selectKey>
+		INSERT INTO sns_reply 
+		(
+			 reply_no	
+			 ,reply_content
+			 ,reply_createAt
+			 ,user_no
+			 ,feed_no
+			 )
+		VALUES
+		(
+			#{replyNo}
+			,#{replyContent}
+			,#{replyCreateAt}
+			,#{userNo}
+			,#{feedNo}
+			)
+	</insert>
+	
+	
+	<!-- 삭제 -->
+	<delete id="deleteSnsReplyInfo" parameterType="int">
+		DELETE FROM sns_reply
+		WHERE reply_no = #{replyNo}
+	</delete>
+
+</mapper>

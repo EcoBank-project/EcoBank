@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{adminCommon/layouts/default_layout}"
+      layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container mt-5">
+        <h3 class="mb-4">점수 관리 - 관리자</h3>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="table-warning">
+                            <th>번호</th>
+                            <th>회원 번호</th>
+                            <th>챌린지 이름</th>
+                            <th>인증 참여 횟수</th>
+                            <th>챌린지 기간(시작 - 종료)</th>
+                            <th>지급 점수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th:block th:each="score : ${scoreList}">
+                            <tr>
+                                <td th:text="${score.scoreNo}"></td>
+                                <td th:text="${score.userNo}"></td>
+                                <td th:text="${score.challTitle}"></td>
+                                <td>[[ ${score.confirmCount} ]]회</td>
+                                <td th:text="${score.term}"></td>
+                                <td>[[ ${score.confirmCount} * 10 ]]점 지급</td>
+                            </tr>
+                        </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
