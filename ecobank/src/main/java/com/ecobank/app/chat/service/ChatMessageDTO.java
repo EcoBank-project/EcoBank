@@ -13,6 +13,6 @@ public class ChatMessageDTO {
 	private String nickName;	//회원 닉네임
 	private String msgContent;	//메시지 내용
 	private String msgType;		//메시지 타입
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date msgSendTime;   //메시지 전송 시간
+	private String msgSendTime; //메시지 포맷 시간
+	private Date formatTime;    //메시지 전송 시간
 }
