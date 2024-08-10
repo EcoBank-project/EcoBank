@@ -96,5 +96,15 @@ public class FileServiceImpl implements FileService{
 		public List<FileVO> selectFileInfo(int feedNo) {
 			return fileMapper.selectSnsFileInfo(feedNo);
 		}
+		
+		//이름은 같지만 다른 매개값을 가짐(메소드 오버라이딩)
+		@Override
+		public List<FileVO> selectFileInfo(int userNo, int challNo, String fileCode) {
+			FileVO fileVO = new FileVO();
+			fileVO.setUserNo(userNo);
+			fileVO.setFileCode(fileCode);
+			fileVO.setChallNo(challNo);
+			return fileMapper.selectConfirmFileInfo(fileVO);
+		}
 
 }
