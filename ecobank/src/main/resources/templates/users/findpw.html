@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>비밀번호 찾기</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #eaf2f4;
+	margin: 0;
+	padding: 0;
+}
+
+h2 {
+	text-align: center;
+	margin-top: 30px;
+	color: #333;
+	font-size: 24px;
+}
+
+.form-group {
+	max-width: 500px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+	margin-bottom: 20px;
+}
+
+.form-label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: bold;
+	color: #555;
+}
+
+.form-control {
+	width: calc(100% - 22px);
+	padding: 12px;
+	margin-bottom: 12px;
+	border: 1px solid #c8e0d8;
+	border-radius: 4px;
+}
+
+.form-control:focus {
+	border-color: #4CAF50;
+	box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+}
+
+button {
+	width: 100%;
+	padding: 12px;
+	background-color: #4CAF50;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: background-color 0.3s;
+	margin-top: 10px;
+}
+
+button:hover {
+	background-color: #45a049;
+}
+
+#mail_number {
+	display: none;
+}
+
+#label1 {
+	display: block;
+	margin-top: 10px;
+	color: #f44336; /* Red color for errors or messages */
+	font-size: 14px;
+}
+</style>
+</head>
+<body>
+	<h2>비밀번호 찾기</h2>
+	<div class="form-group">
+		<label for="useid" class="form-label">아이디(이메일)</label> <input
+			type="text" class="form-control" id="useid" placeholder="아이디 입력">
+		<label id="label1"></label>
+		<button type="button" id="sendBtn" name="sendBtn"
+			onclick="sendNumber()">인증번호 전송</button>
+	</div>
+	<div id="mail_number" name="mail_number">
+		<input type="text" name="number" id="number" class="form-control"
+			placeholder="인증번호 입력">
+		<button type="button" name="confirmBtn" id="confirmBtn"
+			onclick="confirmNumber()">이메일 인증</button>
+		<input type="text" id="Confirm" name="Confirm" style="display: none"
+			value="">
+	</div>
+
+	<script>
+		window.sendNumber = function() {
+			const useidValue = $("#useid").val();
+
+			$("#mail_number").css("display", "block");
+			$.ajax({
+				url : "/user/mail",
+				type : "post",
+				dataType : "json",
+				data : {
+					mail : useidValue
+				},
+				success : function(data) {
+					alert("인증번호 발송");
+					$("#Confirm").val(data); // 서버에서 받은 인증번호를 숨겨진 필드에 설정
+				},
+				error : function() {
+					alert("인증번호 발송에 실패했습니다.");
+				}
+			});
+		}
+
+		window.confirmNumber = function() {
+			const number1 = $("#number").val();
+			const number2 = $("#Confirm").val();
+			console.log(number1);
+			console.log(number2);
+
+			if (number1 === number2) {
+				alert("인증되었습니다.");
+			} else {
+				alert("번호가 다릅니다.");
+			}
+		}
+	</script>
+</body>
+</html>

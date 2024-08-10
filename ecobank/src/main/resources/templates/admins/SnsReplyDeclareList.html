@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{adminCommon/layouts/default_layout}"
+      layout:fragment="Content">
+<body>
+
+<div class="card-header">
+    <i class="fas fa-table me-1"></i>
+    DataTable Example
+</div>
+
+<div class="card-body">
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">신고 번호</th>
+                <th class="text-center">댓글 번호</th>
+                <th class="text-center">회원번호</th>
+                <th class="text-center">신고이유</th>      
+                <th class="text-center">신고 일자</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <th:block th:each="SnsReplyDeclare : ${SnsReplyDeclareList}">
+                <tr>
+                    <td class="text-center" th:text="${SnsReplyDeclare.declareNo}"></td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.replyNo}"></td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.confirmUserNo}"></td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.declareCode}"></td>
+                    <td class="text-center" th:text="${SnsReplyDeclare.declareat}"></td>                
+                </tr>         
+            </th:block>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

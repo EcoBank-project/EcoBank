@@ -1,40 +1,322 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="https://www.thymeleaf.org/"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>채팅</title>
+<style>
+	/*메시지 상자*/
+    .chatbox{
+        flex: 1;
+        overflow: auto;
+    }
+    .chatbox, .chatForm{
+        display: flex;
+        flex-direction: column;
+    }
+    .chatbox::before{
+        content: "";
+        display: block;
+        flex: 1;
+    }
+    .chatForm{
+        height: 700px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    
+    /*메시지*/
+    .message_left {
+    	display: flex;
+    	align-items: flex-start;
+    	margin-bottom: 20px;
+    	align-self: flex-start;
+	}
+	.message_right {
+		display: flex;
+    	align-items: flex-start;
+    	margin-bottom: 20px;
+    	align-self: flex-end;
+	}
+
+	.profil_img {
+	    width: 40px;
+	    height: 40px;
+	    border-radius: 50%;
+	    margin-right: 10px;
+	}
+	
+	.message_content {
+	    max-width: 80%;
+	}
+	
+	.username {
+	    font-weight: bold;
+	    color: #7289da;
+	    margin-right: 10px;
+	}
+	
+	.sendtime {
+	    font-size: 12px;
+	    color: #72767d;
+	}
+	
+	.text {
+	    margin-top: 5px;
+	    background-color: #32C36C;
+	    padding: 10px;
+	    border-radius: 5px;
+	    line-height: 1.4;
+	    color: #FFFFFF;
+	    word-break: break-all;
+	}
+
+
+    /*아이콘*/
+    .bi-plus-circle{
+        font-size: 45px;
+        line-height: 45px;
+    }
+    
+    /* 채팅방 모달 */
+    .modal-chat {
+        display: none; /* 초기에는 모달을 숨김 */
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        width: 500px; /* 모달의 너비 */
+        height: 500px;    
+    }
+
+    .modal-chat-overlay {
+        display: none; /* 초기에는 오버레이를 숨김 */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+</style>
 <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 </head>
 <body>
-	<h1>채팅방</h1>
-    <div id="chatbox"></div>
-    <input type="text" id="message" placeholder="Enter your message here..."/>
-    <button onclick="sendMessage()">Send</button>
+    <h3>채팅</h3>
+    <div class="container-fluid">
+    	<div class="row">
+            <div class="col-md-2 col-sm-12">
+                <div class="row">
+	                <!-- 아이콘 -->
+	                <div class="col-md-3 col-sm-12 d-flex flex-column align-items-center">
+                		<h5>콘</h5>
+	                    <a href="#">S1</a>
+	                    <a href="#">
+	                    	<i class="bi bi-plus-circle"></i>
+	                    </a>
+	                    <a href="#">S3</a>
+	                </div>
+	                <!-- 채팅방 목록 -->
+	                <div class="col-md-9 col-sm-12">
+	                	<h5>채팅방</h5>
+	                	<ul class="chat-room-list">
+	                    	<li th:each="room : ${chatRooms}">
+	                    		<a href="#" th:text="${room.chatName}" th:onclick="enterRoom(event, [[${room.chatNo}]])"></a>
+	                    	</li>
+	                    </ul>
+	                </div>   
+                </div>
+            </div>
+
+            <!-- 채팅 -->
+            <div class="col-md-10 col-sm-12 d-flex flex-column">
+            	<div class="row">            	
+	                <div>
+	                    <h3 id="roomName">채팅창 제목</h3>
+	                </div>
+            	</div>
+                <div class="row">
+                	<div class="col-md-9 col-sm-12">
+		                <div class="chatForm flex-grow-1 border-bottom" id="chatForm" style="overflow-y: auto;">
+		                <!-- 메시지 로그 -->
+                            <div class="chatbox" id="chatbox">
+		
+                            </div>
+		                </div>
+		                <!-- 메시지 입력 -->
+		                <div class="input-group mt-3">
+		                    <input type="text" class="form-control" placeholder="메시지..." id="message">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" th:attr="onclick=${'sendMessage(' + userNo + ')'}">보내기</button>
+                            </div>                	
+                	    </div>
+                    </div>
+                    <!-- 유저 -->
+                    <div class="col-md-3 col-sm-12">
+                		<!-- 세션을 이용-->
+                        <h5>접속중인 유저</h5>
+                        <div>
+                            <div>User1</div>
+                            <div>User2</div>
+                            <div>User3</div>
+                        </div>
+                        <!-- DB를 이용 -->
+                        <h5>오프라인 유저</h5>
+                        <div>
+                            <div>User1</div>
+                            <div>User2</div>
+                            <div>User3</div>
+                        </div>
+                	</div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- 채팅방 만들기 모달-->
+    <div class="modal-chat-overlay"></div>
+    <div class="modal-chat" id="myModal">
+        <h2>채팅방</h2>
+        <p>모달 내용입니다.</p>
+        <button id="closeModalBtn">모달 닫기</button>
+    </div>        
     
     <script type="text/javascript">
-        var socket = new SockJS('/ws');
-        var stompClient = Stomp.over(socket);
+  	var stompClient = null;
+    var currentRoomId = null;
+    const userNo = "[[${userNo}]]";
+    // 메시지를 받음.
+    function connect(roomId) {
+    	// 소켓 열기
+    	var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+	    stompClient.connect({}, function(frame) {
+	//        let userName = frame.headers['user-name']; 헤더값 가지고 옴
+	        stompClient.subscribe('/topic/messages/' + roomId, function(message) {
+	            showMessage(JSON.parse(message.body));
+	        });
+	    });
+    }
+    // 메시지 보냄
+    function sendMessage(userId) {
+        let input = document.getElementById("message");
+        let today = new Date(); 
+        const chatMessage = {
+            userNo: userId,
+            chatNo: currentRoomId,
+            msgContent: input.value,
+            msgType: 'CHAR',
+            msgSendTime: today,
+            nickName: "[[${nickname}]]",
+        };
+        stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
+        input.value = "";
+    }
 
-        stompClient.connect({}, function(frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/messages', function(message) {
-                showMessage(JSON.parse(message.body).content);
+    // 메시지를 보여줌
+    function showMessage(message) {
+        let chatbox = document.getElementById("chatbox");
+        let newMessage = document.createElement("div");
+        if(message.userNo === Number("[[${userNo}]]")){
+        	// 나
+        	newMessage.classList.add('message_right');
+        }else{
+        	// 상대방
+        	newMessage.classList.add('message_left');
+        }
+        let img = document.createElement("img");
+        img.classList.add("profil_img");
+        img.src="https://via.placeholder.com/40";
+        newMessage.appendChild(img);
+        let content = document.createElement("div");
+        content.classList.add('message_content');
+        let uname = document.createElement("span");
+        uname.classList.add('username');
+        uname.textContent = message.nickName;
+        let totime = document.createElement("span");
+        totime.classList.add('sendtime');
+        let texts = document.createElement("div");
+        texts.classList.add('text');
+        texts.textContent = message.msgContent;
+        content.appendChild(uname);
+        content.appendChild(totime);
+        content.appendChild(texts);
+        newMessage.appendChild(content);
+        chatbox.appendChild(newMessage);
+        chatbox.scrollTop = chatbox.scrollHeight;
+    }
+    
+    //채팅방 들어가기
+    function enterRoom(event, roomId) {
+    	console.log("확인")
+    	event.preventDefault();
+        currentRoomId = roomId;
+
+        // 채팅방 UI 표시
+        $('#chatForm').show();
+        $('#roomName').text($(event.target).text());
+        $('#chatbox').empty(); // 이전 메시지 초기화
+
+        // WebSocket 연결
+        if (stompClient !== null) {
+            stompClient.disconnect(function() {
+                connect(roomId);
+                loadMessage(roomId);
             });
+        } else {
+            connect(roomId);
+            loadMessage(roomId);
+        }
+    }
+    function loadMessage(roomId){
+    	$.ajax({
+        	url: "/chatRoom/" + roomId,
+        	method: "GET",
+        	success: function(result){
+        		result.forEach(function(message){
+        			showMessage(message);
+        		});
+        	},
+        	error: function(error){
+        		
+        	}
         });
+    }
+    
+    //아이콘 기능 모음
+    //채팅홈
+    	
+    //채팅방 만들기
+    $('.bi-plus-circle').on('click', function(event){
+    	$('.modal-chat-overlay').show();
+        $('#myModal').show();
+    })
+    
+    $('#closeModalBtn').on('click', function() {
+    	$('.modal-chat-overlay').hide();
+        $('#myModal').hide();
+    });
 
-        function sendMessage() {
-            var input = document.getElementById("message");
-            stompClient.send("/app/chatRoom", {}, JSON.stringify({'content': input.value}));
-            input.value = "";
-        }
-
-        function showMessage(message) {
-            var chatbox = document.getElementById("chatbox");
-            var newMessage = document.createElement("div");
-            newMessage.textContent = message;
-            chatbox.appendChild(newMessage);
-        }
-    </script>
+    // 오버레이 클릭 시 모달 닫기
+    $('.modal-chat-overlay').on('click', function() {
+        $('.modal-chat-overlay').hide();
+        $('#myModal').hide();
+    });
+    //오픈채팅 만들기
+    
+    //오픈채팅 검색
+    
+</script>
 </body>
 </html>

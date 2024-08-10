@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  	layout:decorate="~{common/layouts/default_layout}"
+	  	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script> 
+</head>
+<body>
+	<h3>sns 상세보기</h3>
+	<form  action="uploadForm" method="post"
+					enctype="multipart/form-data">
+		<div>
+			<label>번호</label>
+			<input type="number" th:value="${sns.feedNo}" readonly>
+		</div>
+		<div>
+			<label>작성자</label>
+			<input type="text" th:value="${sns.nickname}" readonly>
+		</div>
+		<img th:src =@{/images/{fileName}(fileName=${sns.fileName})}
+					style="width : 40%;" >
+		<div>
+			<label>작성일자</label>
+			<input type="date" th:value="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}" readonly>
+		</div>
+			<div>
+			<label>내용</label>
+			<input type="text" th:value="${sns.feedContent}" readonly>
+				<!--/* [[${board.boardContent]] style="height:100px; widthL200px;" */-->
+		</div>
+		<div>
+			<button type="button" th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
+			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
+			<button type="button" th:onclick="|location.href='@{/snsDelete(feedNo=${sns.feedNo})}'|">삭제</button>
+		</div>
+		</form>
+</body>
+
+</html>

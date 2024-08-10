@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<meta name="contextPath"
+	th:value="${#httpServletRequest.getContextPath()}">
+	
+<!--/* jsp = ${pageContext.request.contextPath} */-->
+
+<title>about.html</title>
+	<style type="text/css">
+.legend {
+	color: black;
+	width: 100%;
+	font-family: arial;
+	font-size: 14px;
+}
+
+.legend_color {
+	display: table;
+	width: 100%;
+	background: white;
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+.legend_color li {
+	width: 20%;
+	height: 20px;
+	display: table-cell;
+}
+
+.legend_label {
+	display: table;
+	width: 100%;
+	padding: 0px;
+	padding-left: 10%;
+	padding-right: 10%;
+	list-style: none;
+	margin: 0px;
+	box-sizing: border-box;
+}
+
+.legend_label li {
+	width: 25%;
+	height: 20px;
+	display: table-cell;
+	text-align: center;
+}
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    height: 40vh;
+    padding-top: 56.25%;
+    overflow: hidden;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* 사용자와의 상호작용을 차단하여, 클릭 등을 막음 */
+    object-fit: cover;
+}
+
+</style>
+</head>
+<body>
+<!--  BreadCrumb Start -->
+<div class="container-fluid page-header py-5">
+  <div class="container py-5">
+      <h1 class="display-3 text-white mb-3 animated slideInDown">About Us</h1>
+      <nav aria-label="breadcrumb animated slideInDown">
+          <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
+              <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
+              <li class="breadcrumb-item text-white active" aria-current="page">About</li>
+          </ol>
+      </nav>
+  </div>
+</div>
+<!--  BreadCrumb End -->
+
+<climate-clock></climate-clock>
+<div class="container-fluid page-header p-0 pb-5 wow fadeIn" data-wow-delay="0.1s"
+  style="visibility: visible; animation-delay: 0.1s; animation-name: fadeIn;">
+  <div class="position-relative">
+
+    <div class="position-relative">
+      <img class="img-fluid" src="img/carousel-3.jpg" alt="">
+      <div class="owl-carousel-inner">
+        <div class="container">
+          <div class="row justify-content-start">
+            <div class="col-10 col-lg-8">
+              <h1 class="display-2 text-white  slideInDown">Eco Bank</h1>
+              <p class="fs-5 fw-medium text-white mb-4 pb-3">The Ecobank is working to combat climate change We are urging a variety of activities and providing community.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--  Video Start -->
+<div class="container-sm p-0 pb-5 wow fadeIn">
+    <div class="video-wrapper">
+        <iframe class="bg-youtube loaded" 
+                data-youtube-embed='{"videoId":"myZAvqqp9Jc","startSeconds":1,"endSeconds":16}' 
+                frameborder="0" 
+                allowfullscreen="" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                title="Custom YouTube Video" 
+                src="https://www.youtube.com/embed/myZAvqqp9Jc?autoplay=1&mute=1&loop=1&playlist=myZAvqqp9Jc&controls=0&modestbranding=1&showinfo=0&rel=0" 
+                id="widget2">
+        </iframe>
+    </div>
+</div>
+<!--  Video End -->
+
+<!-- Our Acitivy Start  -->
+<div class="container-xxl py-5">
+        <div class="container">
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                <h6 class="text-primary">우리의 활동</h6>
+                <h1 class="mb-4">에코 뱅크에 가입한 회원들의 활동이 어떠한 영향을 끼쳤을까요?</h1>
+            </div>
+            <div class="row g-5 mb-5">
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeIn;">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-users text-white"></i>
+                        </div>
+                        <h1 class="mb-0" data-toggle="counter-up" th:text="${#numbers.formatInteger(3453, 3, 'COMMA')}"></h1>
+                    </div>
+                    <h5 class="mb-3">챌린지 참여</h5>
+                    <span><span th:text="${#numbers.formatInteger(3453, 3, 'COMMA')}"></span>명의 회원이 챌린지에 참여해주셨습니다.</span>
+                </div>
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeIn;">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-check text-white"></i>
+                        </div>
+                        <h1 class="mb-0"><span data-toggle="counter-up" th:text="${#numbers.formatInteger(4234, 3, 'COMMA')}"></span></h1>
+                    </div>
+                    <h5 class="mb-3">입금 환경 점수</h5>
+                    <span>에코 뱅크에 <span th:text="${#numbers.formatInteger(4234, 3, 'COMMA')}"></span>원 적립되었습니다.</span>
+                </div>
+                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.7s" style="visibility: visible; animation-delay: 0.7s; animation-name: fadeIn;">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="btn-lg-square bg-primary rounded-circle me-3">
+                            <i class="fa fa-users-cog text-white"></i>
+                        </div>
+                        <h1 class="mb-0"><span data-toggle="counter-up" th:text="${#numbers.formatInteger(1831, 3, 'COMMA')}"></span> TCo2</h1>
+                    </div>
+                    <h5 class="mb-3">예상 탄소 저감량</h5>
+                    <span><span th:text="${#numbers.formatInteger(1831, 3, 'COMMA')}"></span> Tco2/kWh 감소가 예상됩니다.</span>
+                </div>
+            </div>
+            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                <h6 class="text-secondary">활동 흥미 촉구를 위해 점수에 따른 탄소저감량은 배율조정이 되었습니다.</h6>
+                <h6 class="text-secondary">실제 데이터와 오차가 있습니다.</h6>
+            </div>
+        </div>
+    </div>
+    <!-- Our Acitivy End  -->
+    
+	<!-- Map div Start -->
+	<div id="map"></div>
+	<!-- Map div End -->
+	
+	<!-- Legend div Start -->
+	<div class="legend">
+		<ul class="legend_label">
+			<li>250</li>
+			<li>1,000</li>
+			<li>1,500</li>
+			<li>1,700</li>
+		</ul>
+		<ul class="legend_color">
+			<li style="background-color: #ff6666"></li>
+			<li style="background-color: #ff3333"></li>
+			<li style="background-color: #ff0000"></li>
+			<li style="background-color: #cc0000"></li>
+			<li style="background-color: #990000"></li>
+		</ul>
+	</div>
+	<!-- Legend div End -->
+	<input type="hidden" id="carbList" th:value="${carbList}">
+	
+	<!-- Explain Section Start -->
+	<div class="container-xxl py-5">
+	  <div class="container">
+	    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s"
+	      style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+	      <h1 class="mb-4">탄소 <span data-toggle="counter-up"
+	          th:text="${#numbers.formatInteger(352, 3, 'COMMA')}"></span>TonCo2/kWh를 절감한다면</h1>
+	    </div>
+	
+	    <div class="row g-5 mb-5">
+	      <div class="col-lg-4 col-md-6 wow fadeInLeft" data-wow-delay="0.1s"
+	        style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
+	        <div class="team-item overflow-hidden">
+	          <div class="">
+	            <img class="img-fluid" src="img/tree.png" alt="">
+	          </div>
+	
+	        </div>
+	      </div>
+	      <div class="col-lg-4 col-md-6 wow fadeInLeft d-flex justify-content-center align-items-center" 
+                data-wow-delay="0.5s"
+                style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
+                <i class="bi bi-arrow-right" style="font-size: 5rem; color: green;"></i>
+           </div>
+           
+           <div class="col-lg-4 col-md-6 wow fadeInLeft d-flex justify-content-center align-items-center" 
+                data-wow-delay="1.0s"
+                style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
+                <h1 class="mb-4"><span data-toggle="counter-up"
+	          th:text="${#numbers.formatInteger(352, 3, 'COMMA')}"></span>그루를 심은 효과!</h1>
+           </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- Explain Section End -->
+
+	<script src="https://climateclock.world/widget-v2.js" async></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script type="text/javascript" th:src="@{/js/mapdata.js}"></script>
+	<script type="text/javascript" th:src="@{/js/worldmap.js}"></script>
+	<script type="text/javascript" th:src="@{/js/about/mapcontrol.js}"></script>
+	<script type="text/javascript" th:src="@{/js/about/autoplay.js}"></script>
+	<script th:src="@{/lib/wow/wow.min.js}"></script>
+	<script th:src="@{/lib/easing/easing.min.js}"></script>
+	<script th:src="@{/lib/waypoints/waypoints.min.js}"></script>
+	<script th:src="@{lib/counterup/counterup.min.js}"></script>
+	<script th:src="@{/lib/owlcarousel/owl.carousel.min.js}"></script>
+	<script th:src="@{lib/isotope/isotope.pkgd.min.js}"></script>
+	<script th:src="@{lib/lightbox/js/lightbox.min.js}"></script>
+	<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
+

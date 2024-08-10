@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.admin.mapper.AdminMapper">
+		
+		<!-- 챌린지 신고 목록 조회  -->
+		<select id="ChallDeclareList" resultType="com.ecobank.app.admin.service.ChallDeclareVO">
+			SELECT  confirm_declare_no,
+					confirm_declare_type,
+					confirm_declareat,
+					confirm_user_no,
+					confirm_no
+            FROM chall_confirm_declare
+		</select>
+		<!-- 챌린지 신고 삭제  -->
+		<delete id="deleteChallDeclare">
+    DELETE FROM chall_confirm_declare
+    WHERE confirm_declare_no = #{confirmDeclareNo}
+		</delete>
+		
+		<!-- sns 댓글 신고 목록 -->
+		<select id="SnsReplyDeclareList" resultType="com.ecobank.app.admin.service.SnsDeclareVO">
+		SELECT DECLARE_NO,
+        DECLAREAT,
+        CONFIRM_USER_NO,
+        DECLARE_CODE,
+        REPLY_NO
+        FROM sns_declare
+        WHERE  REPLY_NO IS NOT NULL AND  REPLY_NO != 0
+		</select>
+		
+		<!-- sns 신고 목록 -->
+		<select id="SnsDeclareList" resultType="com.ecobank.app.admin.service.SnsDeclareVO">
+		SELECT DECLARE_NO,
+        DECLAREAT,
+        CONFIRM_USER_NO,
+        DECLARE_CODE,
+        FEED_NO
+        FROM sns_declare
+        WHERE  FEED_NO IS NOT NULL AND  FEED_NO != 0
+		</select>
+		
+		<delete id="snsDeclareDelete">
+			 DELETE FROM sns_DECLARE
+ 			 WHERE DECLARE_NO = #{declareNO}		
+		</delete>
+		
+		<delete id="snsReplyDeclareDelete">
+			 DELETE FROM sns_DECLARE
+ 			 WHERE DECLARE_NO = #{declareNO}		
+		</delete>
+		
+	 <update id="updatefeedState">
+		UPDATE sns
+        SET FEED_STATE = #{feedState}
+        WHERE FEED_NO = #{feedNo}
+	</update>
+	
+		
+		
+		
+
+		
+</mapper>

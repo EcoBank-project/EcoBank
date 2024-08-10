@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  	layout:decorate="~{common/layouts/sns_layout}"
+	  	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script> 
+</head>
+<body>
+
+	<h3>sns 상세보기</h3>
+
+	<form  action="uploadForm" method="post"
+					enctype="multipart/form-data">
+		<div>
+			<label>번호</label>
+			<input type="number" th:value="${sns.feedNo}" readonly>
+		</div>
+		<div>
+		<input type="text" th:value="${sns.userNo}" hidden>
+			<label>작성자</label>
+			<input type="text" th:value="${sns.nickname}" readonly>
+		</div>
+		<div th:block th:each="file, sts : ${snsFileInfo}">
+			<img th:src =@{/images/{fileName}(fileName=${file.fileName})}
+					style="width : 40%;" >
+		</div>			
+		<div>
+			<label>작성일자</label>
+			<input type="date" th:value="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}" readonly>
+		</div>
+		<div>
+			<label>내용</label>
+			<input type="text" th:value="${sns.feedContent}" readonly>
+				<!--/* [[${board.boardContent]] style="height:100px; widthL200px;" */-->
+		</div>
+ 		<div class="post-content-entry">
+				<div class="meta">
+						<span>좋아요 수 <a href="#" th:text=${sns.countLike}></a></span>
+						<span>댓글 수 <a href="#" th:text=${sns.countReply}></a></span>
+					</div>
+		</div>
+		<div>
+			<button class="btn btn-primary" type="button" th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
+			<button class="btn btn-primary" type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
+			<button class="btn btn-primary" type="button" th:onclick="|location.href='@{/snsDelete(feedNo=${sns.feedNo})}'|">삭제</button>
+		</div>
+		</form>
+		<!-- 댓글영역 -->
+		<div id="replyWrite">
+		<input type="hidden" th:value="${sns.feedNo}" id="feedNo" /> 
+
+<!-- 		<input type="hidden"  name="userNo" /> -->
+		<textarea rows="1" cols="30" th:text="${replyContent}" id="replyContent"></textarea>
+		<button id="writeBtn">댓글입력</button>
+	</div>
+
+	<div id="replyArea">
+
+	</div>
+	
+	<script th:inline="javascript">
+	// ajax로 댓글 불러오기
+	let feedNo = $('#feedNo').val();
+	let rno = $('#replyNo').val();
+	let replyContent = $('#replyContent');
+	let userNo = [[${session.userNo}]];
+	reply();
+	function reply(){
+		$.ajax({
+			type : "GET",
+			url : "snsReply?feedNo="+feedNo ,
+			dataType : "json",
+			success : function(list){
+				console.log('getcon',replyContent);
+				console.log(list,'ㅇㅇㅇ');
+				replyList(list);
+			},
+			error :  function(){
+				alert("댓글 불러오기 통신 실패");
+			}
+		});
+	}
+	
+	// 댓글 입력(writeBtn) 버튼을 클릭할 경우
+	$('#writeBtn').click(function(){
+		let replyContent = $('#replyContent').val();
+		let fno = $('#feedNo').val();
+
+		// ajax로  등록하기
+		$.ajax({
+			type : "POST",
+			url : "snsReply",
+			data : {feedNo, replyContent,userNo},
+			dataType : "json",
+			success : function(list){
+
+				$('#replyContent').val(""); //초기화
+				reply();
+			},
+			error :  function(){
+				alert("댓글 작성 통신 실패");
+			}
+		});
+	});
+	//리뷰 삭제
+	function deleteBtn(rno){
+		$.ajax({
+			 url:"snsReply?replyNo="+rno,
+			 type: 'delete',
+			 data: {"replyNo" : rno},
+			 success: function(result) {
+			     	  	 alert("리뷰가 삭제되었습니다");
+			        	 location.reload();
+			        	},
+			  error: function() {
+			          	alert('리뷰 수정 실패');
+			          	}
+		});	
+				
+	};
+	
+	function replyList(list){	
+		let output = "";
+		
+		for(let i in list){
+			output += "<tr>";
+			//output += "<td>" + list[i].userNo+"</td>";
+			console.log('닉네임을 찾자',list);
+			output += "<td>" + list[i].nickname+"</td>";
+			output += "<td>" + list[i].replyContent+"</td>";
+			output += "<td>" + list[i].replyCreateAt+"</td>";
+			output += "<td><button onclick='deleteBtn("+list[i].replyNo+")'>삭제</button></td>";
+
+			output += "</tr>";
+		}
+
+		output += "</table>";
+		$('#replyArea').html(output);
+	}
+	
+	</script>
+</body>
+
+</html>

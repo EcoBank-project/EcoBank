@@ -1,20 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.sns.mapper.SnsMapper">
+
 	<!-- 전체조회 -->
-	<select id="selectSnsAll" resultType="SnsVO">
-		SELECT feed_no    
-            	,feed_content
-            	,feed_createAt
-            	,feed_updateAt
-            	,user_no
-            	,feed_state
-            	,hashtag
-		FROM sns
-		ORDER BY feed_no
+	<select id="selectSnsAll" resultType="SnsVO"  >
+		SELECT s.feed_no    
+             ,u.profile_img
+             ,u.nickname
+             ,s.feed_createAt
+             ,s.user_no
+             ,s.feed_state
+             ,(SELECT count(feed_no) 
+                 FROM sns_like
+                 WHERE feed_no = s.feed_no) as countLike
+             ,(SELECT count(feed_no)
+                 FROM sns_reply
+                 WHERE feed_no = s.feed_no) as countReply
+               ,(SELECT file_name
+                 FROM files
+                 WHERE file_code_no = s.feed_no
+                 <![CDATA[
+                 and rownum < 2)  as fileName
+                 	]]>	
+      FROM sns s JOIN users u 
+                  ON s.user_no = u.user_no
+      GROUP BY s.feed_no
+            	,u.profile_img
+             	,u.nickname
+               	,s.feed_createAt
+                ,s.user_no
+                ,s.feed_state        
+      ORDER BY s.feed_no DESC
 	</select>
+	
+	<!-- 단건조회 -->
+	<select id="selectSnsInfo" resultType="SnsVO">
+		SELECT s.feed_no  
+                ,u.profile_img
+                ,u.nickname
+                ,s.feed_content
+	     		,s.feed_createAt
+               	,s.feed_updateAt
+              	,s.user_no
+        		,s.feed_state
+		 		,(SELECT count(feed_no) 
+                 	FROM sns_like
+                  	WHERE feed_no = s.feed_no) as countLike
+             	,(SELECT count(feed_no)
+                  	FROM sns_reply
+                  	WHERE feed_no = s.feed_no) as countReply
+                ,s.hashtag 
+		FROM sns s JOIN users u 
+		                ON s.user_no = u.user_no
+		WHERE s.feed_no = #{feedNo}
+		GROUP BY s.feed_no
+		         ,u.profile_img
+		         ,u.nickname
+		         ,s.feed_content
+		         ,s.feed_createAt
+		         ,s.feed_updateAt
+		         ,s.hashtag
+			     ,s.user_no
+			     ,s.feed_state
+ 
+	</select>
+	
+	<!-- 등록 -->
+	<insert id="insertSnsInfo" parameterType="SnsVO">
+		<selectKey keyProperty="feedNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(feed_no),1)+1
+			FROM sns
+		</selectKey>
+		INSERT INTO sns 
+		(
+			 feed_no	
+			 ,feed_content
+			 ,hashtag
+			 ,feed_createAt
+			 ,user_no )
+		VALUES
+		(
+			#{feedNo}
+			,#{feedContent}
+			,#{hashtag}
+			,#{feedCreateAt}
+			,#{userNo}
+			)
+	</insert>
+	
+	<!-- 번호생성 -->
+	 <select id="selectSnsNum" resultType="int">
+			SELECT NVL(MAX(feed_no),1)+1
+			FROM sns
+	</select> 
+	
+	<!-- 수정 -->
+	<update id="updateSnsInfo">
+		UPDATE sns
+		SET
+			feed_content = #{feedContent}
+			,hashtag = #{hashtag}
+			,feed_updateAt = sysdate
+		WHERE feed_no = #{feedNo}
+	</update>
+	
+	
+	<!-- 삭제 -->
+	<delete id="deleteSnsInfo" parameterType="int">
+		DELETE FROM sns
+		WHERE feed_no = #{feedNo}
+	</delete>
+	
+
+	<update id="updatefeedState">
+		UPDATE sns
+        SET FEED_STATE = #{feedState}
+        WHERE FEED_NO = #{feedNo}
+	</update>
 
 
-
-
+	
 </mapper>
