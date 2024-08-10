@@ -1,5 +1,7 @@
 package com.ecobank.app.chat.web;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ecobank.app.chat.service.ChatMessageVO;
+import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
 
@@ -43,9 +45,8 @@ public class ChatRoomController {
 	// 특정 채팅방 채팅로그 조회
 	@GetMapping("/chatRoom/{roomId}")
 	@ResponseBody
-	public List<ChatMessageVO> ChatRoom(@PathVariable Integer roomId) {
-		List<ChatMessageVO> msgList = chatService.chatMessageList(roomId);
-		System.out.println("확인");
+	public List<ChatMessageDTO> ChatRoom(@PathVariable Integer roomId) {
+		List<ChatMessageDTO> msgList = chatService.chatMessageList(roomId);
 		return msgList;
 	}
 	
