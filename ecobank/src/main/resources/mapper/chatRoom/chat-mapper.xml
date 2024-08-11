@@ -12,17 +12,18 @@
 	</select>
 	
 	<!-- 채팅방 채팅 로그 조회 -->
-	<select id="selectChatMessage" resultType="ChatMessageVO">
+	<select id="selectChatMessage" resultType="ChatMessageDTO">
 		select msg_no, 
 		       msg_content, 
 		       msg_type, 
-		       msg_send_time, 
+		       to_char(msg_send_time, 'yyyy.MM.DD am HH:MI') as msg_send_time, 
 		       m.user_no, 
 		       chat_no,
 		       nickname
 		from msg m join users u 
 		           on m.user_no = u.user_no
 		where chat_no = #{chatNO}
+		order by msg_send_time
 	</select>
 	<!-- 채팅방 채팅 로그 저장 -->
 	<insert id="insertChatMessage" parameterType="ChatMessageVO">

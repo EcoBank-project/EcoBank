@@ -76,9 +76,6 @@ public class ChallengController {
 	@GetMapping("detail")
 	public String challdetail(ChallVO challVO, Model model) {
 		ChallVO findVO = challService.challInfo(challVO);
-		model.addAttribute("status", "D1");
-		model.addAttribute("status", "D2");
-		model.addAttribute("status", "D3");
 		model.addAttribute("detail", findVO);
 		return "chall/detail";
 	}
@@ -165,7 +162,7 @@ public class ChallengController {
 	@PostMapping("challUpdate")
 	@ResponseBody
 	public Map<String, Object> challUpdateProcess(ChallVO challVO, @RequestPart MultipartFile[] images){ 
-		System.out.println("ddddddd");
+		//System.out.println("ddddddd");
 		int index = 0;
 		    	
 		for(MultipartFile image : images) {

@@ -18,4 +18,7 @@ public interface FileService {
 	
 	//파일조회
 	public List<FileVO> selectFileInfo(int feedNo);
+	
+	//나의 인증 내역 파일(userNo가 참여한 challConfirmNo별 파일 하나씩만 가져오려고(미리보기느낌))
+	public List<FileVO> selectFileInfo(int userNo, int challNo, String fileCode);
 }
