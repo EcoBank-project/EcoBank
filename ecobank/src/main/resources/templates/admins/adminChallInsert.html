@@ -6,6 +6,20 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+    /* 등록 버튼 색상 조정 */
+    .btn-custom {
+        background-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        border-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        color: white;
+    }
+
+    .btn-custom:hover {
+        background-color: #23272b; /* hover 효과 시 색상 변경 */
+        border-color: #23272b;
+        color: white;
+    }
+</style>
 </head>
 <body>
 	<div>
@@ -53,7 +67,7 @@
 					<td><input type="file" name="images"></td>
 				</tr>
 			</table>
-			<button type="submit" class="btn btn-primary">등록</button>
+			<button type="submit" class="btn btn-custom">등록</button>
 		</form>
 	</div>
 	<script>  

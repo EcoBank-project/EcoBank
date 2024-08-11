@@ -3,11 +3,16 @@ package com.ecobank.app.challenge.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ecobank.app.common.service.Criteria;
+
 public interface ChallService {
 	//챌린지 전체 조회
-	public List<ChallVO> challList();
+	public List<ChallVO> challList(Criteria criteria);
 	
-	//D1챌린지 조회
+	//챌린지 목록 개수(페이징)
+	public int getTotal();
+	
+	//상태에 따른 챌린지 조회 - 회원
 	public List<ChallVO> getDList(String challState);
 	
 	//챌린지 개수 가져오기

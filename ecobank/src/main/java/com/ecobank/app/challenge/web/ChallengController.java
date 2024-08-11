@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ecobank.app.challenge.service.ChallConfirmVO;
 import com.ecobank.app.challenge.service.ChallService;
 import com.ecobank.app.challenge.service.ChallVO;
-import com.ecobank.app.challenge.service.impl.ChallConfirmServiceImpl;
+import com.ecobank.app.common.service.Criteria;
+import com.ecobank.app.common.service.PageDTO;
 
 @Controller
 public class ChallengController {
@@ -82,9 +82,10 @@ public class ChallengController {
 	
 	//챌린지 목록 - 관리자
 	@GetMapping("challList")
-	public String challList(Model model) {
-		List<ChallVO> list = challService.challList();
+	public String challList(Model model, Criteria criteria) {
+		List<ChallVO> list = challService.challList(criteria);
 		model.addAttribute("challList", list);
+		model.addAttribute("page", new PageDTO(5, challService.getTotal(), criteria));
 		return "admins/adminChallList";
 	}
 	
