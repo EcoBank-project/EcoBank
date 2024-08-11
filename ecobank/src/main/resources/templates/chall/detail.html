@@ -29,9 +29,9 @@
     <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
         <div class="container about px-lg-0">
             <div class="row g-0 mx-lg-0">
-                <div class="col-lg-6 ps-lg-0 wow fadeIn" data-wow-delay="0.1s" style="min-height: 400px;">
-                    <div class="position-relative h-100">
-                        <img th:src="@{'/images/' + ${detail.mainImg}}" alt="대표 이미지" style="object-fit: cover;">
+                <div class="col-lg-6 d-flex justify-content-center align-items-center" data-wow-delay="0.1s" style="min-height: 400px;">
+                    <div class="position-relative">
+                        <img th:src="@{'/images/' + ${detail.mainImg}}" alt="대표 이미지" style="object-fit: cover; width:500px; height:500px">
                     </div>
                 </div>
                 <div class="col-lg-6 about-text py-5 wow fadeIn" data-wow-delay="0.5s">
@@ -46,7 +46,7 @@
                         </p>
                         <!--/* <p><i class="fa fa-check-circle text-primary me-3"></i>시작 일시 : [[${#dates.format(detail.challStartAt, 'yyyy/MM/dd')}]]</p> */-->
                         <p><i class="fa fa-check-circle text-primary me-3"></i>챌린지 기간 : [[${#dates.format(detail.challStartAt, 'yyyy/MM/dd')} + ' ~ ' + ${#dates.format(detail.challCloseAt, 'yyyy/MM/dd')}]]</p>
-                        <p><i class="fa fa-check-circle text-primary me-3"></i>챌린지 인증 성공 후 받는 점수 : [[${detail.challScore}]]</p>
+                        <p><i class="fa fa-check-circle text-primary me-3"></i>챌린지 인증 성공 후 받는 점수 : [[${detail.challScore}]]점 획득</p>
                         <div class="like-section">
 			                <i class="fas fa-heart"></i>
 			                <span th:text="${detail.challLikeNo}">50</span>
@@ -73,13 +73,13 @@
                 </div>
             </div>
             <div id="contents">
-				
+            	<!-- 상세이미지/리뷰 -->
             </div>
-			</div>
-	    </div>
-		<!-- Font Awesome for heart icon -->
-		<script src="<https://kit.fontawesome.com/a076d05399.js>" crossorigin="anonymous"></script>
-		<script>
+		</div>
+	 </div>
+	<!-- Font Awesome for heart icon -->
+	<script src="<https://kit.fontawesome.com/a076d05399.js>" crossorigin="anonymous"></script>
+	<script>
 		function toggleActive(buttonGroup, activeId) {
 		    // 주어진 버튼 그룹 내의 모든 버튼에서 'active' 클래스를 제거
 		    buttonGroup.forEach(function(id) {
@@ -88,7 +88,7 @@
 		    // 클릭된 버튼에 'active' 클래스를 추가
 		    $('#' + activeId).addClass('active');
 		}
-
+	
 		$(document).ready(function(){
 		    // 첫 번째 버튼 그룹
 		    const firstGroup = ['ready', 'end', 'progress'];
@@ -97,7 +97,7 @@
 		            toggleActive(firstGroup, id);
 		        });
 		    });
-
+	
 		    // 두 번째 버튼 그룹
 		    const secondGroup = ['detailImg', 'myConfirm', 'myCalendar', 'others'];
 		    secondGroup.forEach(function(id) {
@@ -107,83 +107,83 @@
 		    });
 		    detailImg(); //상세이미지 호출
 		});
-
-			$('#myConfirm').click(function(){
-				let cNo = $('#cNo').val();
-				$("#contents").load("getMyConfirm?challNo=" + cNo, function(){
-					console.log(1234);
-					$.ajax({
-						url : '/myConfirm',
-						method : 'get',
-						data : {
-							challNo : cNo
-						},
-						success : function(result){
-							console.log(result);
-							$('#myConfirmCnt').text(result.confirmCount);
-							$('#score').text(result.score);
-							$('#remainCnt').text(result.remainCount);
-						},
-						error : function(err){
-							console.log(err);
-						}
-					})
-				});
-			})
-			$('#others').click(function(){
-				$("#contents").load("others");
-			})
-			function detailImg(){
-				$("#contents").load("review");
-			}
-			$('#detailImg').click(function(){
-				detailImg();
-			})
-			$('#myCalendar').click(function(){
-				$('#contents').load("getMyCalendar", function(){ //controller(페이지처리)
-					var calendarEl = document.getElementById('calendar');
-			    	// new FullCalendar.Calendar(대상 DOM객체, {속성:속성값, 속성2:속성값2..})
-			    	let cNo = $('#cNo').val();
-			    	
-			        var calendar = new FullCalendar.Calendar(calendarEl, {
-			          headerToolbar: {
-			            left: 'prev,next today',
-			            center: 'title',
-			            right: ''
-			          },
-			          initialDate: new Date(), // 현재 날짜
-			          editable: false,
-			          displayEventTime : false,
-			          events: function(info, successCallback, failureCallback) {
-			              $.ajax({
-			                  url: '/calendar',  //restcontroller(불러오는 기능)
-			                  method: 'get',
-			                  data: {
-			                	  challNo : cNo
-			                  },
-			                  success: function(result) {
-			                	  console.log(result)
-			                      // 서버로부터 데이터를 성공적으로 받았을 때 처리
-			                      var events = [];
-			                      result.forEach(function(event) {
-			                    	  events.push({
-			                              title: '인증 성공!',
-			                              start: event, // 'YYYY-MM-DD' 또는 'YYYY-MM-DDTHH:mm:ss' 형식이어야 함
-			                              borderColor : 'green'
-			                          });
-			                      });
-			                      successCallback(events); // FullCalendar에 이벤트 바인딩
-			                  }, 
-			                  error: function(err) {
-			                      console.log(err);
-			                      failureCallback(err); // 오류 처리
-			                  }
-			              });
-			          }
-			      });
-			        calendar.render();
+	
+		$('#myConfirm').click(function(){
+			let cNo = $('#cNo').val();
+			$("#contents").load("getMyConfirm?challNo=" + cNo, function(){
+				console.log(1234);
+				$.ajax({
+					url : '/myConfirm',
+					method : 'get',
+					data : {
+						challNo : cNo
+					},
+					success : function(result){
+						console.log(result);
+						$('#myConfirmCnt').text(result.confirmCount);
+						$('#score').text(result.score);
+						$('#remainCnt').text(result.remainCount);
+					},
+					error : function(err){
+						console.log(err);
+					}
 				})
+			});
+		})
+		$('#others').click(function(){
+			$("#contents").load("others");
+		})
+		function detailImg(){
+			$("#contents").load("review");
+		}
+		$('#detailImg').click(function(){
+			detailImg();
+		})
+		$('#myCalendar').click(function(){
+			$('#contents').load("getMyCalendar", function(){ //controller(페이지처리)
+				var calendarEl = document.getElementById('calendar');
+		    	// new FullCalendar.Calendar(대상 DOM객체, {속성:속성값, 속성2:속성값2..})
+		    	let cNo = $('#cNo').val();
+		    	
+		        var calendar = new FullCalendar.Calendar(calendarEl, {
+		          headerToolbar: {
+		            left: 'prev,next today',
+		            center: 'title',
+		            right: ''
+		          },
+		          initialDate: new Date(), // 현재 날짜
+		          editable: false,
+		          displayEventTime : false,
+		          events: function(info, successCallback, failureCallback) {
+		              $.ajax({
+		                  url: '/calendar',  //restcontroller(불러오는 기능)
+		                  method: 'get',
+		                  data: {
+		                	  challNo : cNo
+		                  },
+		                  success: function(result) {
+		                	  console.log(result)
+		                      // 서버로부터 데이터를 성공적으로 받았을 때 처리
+		                      var events = [];
+		                      result.forEach(function(event) {
+		                    	  events.push({
+		                              title: '인증 성공!',
+		                              start: event, // 'YYYY-MM-DD' 또는 'YYYY-MM-DDTHH:mm:ss' 형식이어야 함
+		                              borderColor : 'green'
+		                          });
+		                      });
+		                      successCallback(events); // FullCalendar에 이벤트 바인딩
+		                  }, 
+		                  error: function(err) {
+		                      console.log(err);
+		                      failureCallback(err); // 오류 처리
+		                  }
+		              });
+		          }
+		      });
+		        calendar.render();
 			})
-		</script>
+		})
+	</script>
 </body>
 </html>

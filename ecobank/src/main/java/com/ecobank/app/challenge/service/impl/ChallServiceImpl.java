@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ecobank.app.challenge.mapper.ChallMapper;
 import com.ecobank.app.challenge.service.ChallService;
 import com.ecobank.app.challenge.service.ChallVO;
+import com.ecobank.app.common.service.Criteria;
 @Service
 public class ChallServiceImpl implements ChallService{
 	private ChallMapper challMapper;
@@ -22,11 +23,11 @@ public class ChallServiceImpl implements ChallService{
 	
 	//전체조회
 	@Override
-	public List<ChallVO> challList() {
+	public List<ChallVO> challList(Criteria criteria) {
 		LocalDate now = LocalDate.now();
 		System.out.println(now);
 		
-		return challMapper.selectChallAll();
+		return challMapper.selectChallAll(criteria);
 	}
 	
 	//단건조회
@@ -77,6 +78,11 @@ public class ChallServiceImpl implements ChallService{
 	@Override
 	public List<ChallVO> getDList(String challState) {
 		return challMapper.getChallList(challState);
+	}
+
+	@Override
+	public int getTotal() {
+		return challMapper.getTotal();
 	}
 
 //	@Override

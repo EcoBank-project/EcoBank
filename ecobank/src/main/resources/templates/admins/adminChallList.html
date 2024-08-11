@@ -6,6 +6,31 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+    /* 사이드바와 동일한 색상으로 변경 */
+    .pagination .page-item.active .page-link {
+        background-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        border-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        color: white;
+    }
+
+    /* 등록 버튼 색상 조정 */
+    .btn-custom {
+        background-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        border-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        color: white;
+    }
+
+    .btn-custom:hover {
+        background-color: #23272b; /* hover 효과 시 색상 변경 */
+        border-color: #23272b;
+        color: white;
+    }
+    .pagination {
+	  	display: flex;
+	  	justify-content: center;
+	}
+</style>
 </head>
 <body>
 	<div class="container mt-5">
@@ -34,8 +59,47 @@
                         </th:block>
                     </tbody>
                 </table>
-                <div class="d-flex justify-content-end mt-3">
-                    <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/challInsert}'|">등록</button>
+                <div th:object="${page}">
+				  <nav aria-label="Page navigation">
+				    <ul class="pagination">
+				      <!-- Previous Button -->
+				      <li class="page-item" th:classappend="*{prev} ? '' : 'disabled'">
+				        <a class="page-link changePage" th:href="*{startPage - 1}" aria-label="Previous" th:if="*{prev}">
+				          <span aria-hidden="true">&laquo;</span>
+				        </a>
+				        <span class="page-link" th:if="*{!prev}">
+				          <span aria-hidden="true">&laquo;</span>
+				        </span>
+				      </li>
+				
+				      <!-- Page Numbers -->
+				      <th:block th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}">
+				        <li class="page-item" th:classappend="${page.criteria.getPageNum() == num} ? 'active'">
+				          <a class="page-link changePage" th:href="@{/challList (pageNum=${num})}" th:text="${num}" th:unless="${page.criteria.getPageNum() == num}"></a>
+				          <span class="page-link" th:if="${page.criteria.getPageNum() == num}" th:text="${num}"></span>
+				        </li>
+				      </th:block>
+				
+				      <!-- Next Button -->
+				      <li class="page-item" th:classappend="*{next} ? '' : 'disabled'">
+				        <a class="page-link changePage" th:href="*{endPage + 1}" aria-label="Next" th:if="*{next}">
+				          <span aria-hidden="true">&raquo;</span>
+				        </a>
+				        <span class="page-link" th:if="*{!next}">
+				          <span aria-hidden="true">&raquo;</span>
+				        </span>
+				      </li>
+				    </ul>
+				  </nav>
+				
+				  <!-- Hidden Form for Page Parameters -->
+				  <form action="/challList" th:object="${criteria}" name="pageForm">
+				    <input type="hidden" name="pageNum" th:field="*{pageNum}">
+				    <input type="hidden" name="amount" th:field="*{amount}">
+				  </form>
+				</div>
+                <div class="text-end mt-3">
+                    <button type="button" class="btn btn-custom" th:onclick="|location.href='@{/challInsert}'|">등록</button>
                 </div>
             </div>
         </div>
