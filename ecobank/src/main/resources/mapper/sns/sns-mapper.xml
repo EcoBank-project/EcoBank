@@ -24,6 +24,7 @@
                  	]]>	
       FROM sns s JOIN users u 
                   ON s.user_no = u.user_no
+      WHERE feed_state = 'F1'
       GROUP BY s.feed_no
             	,u.profile_img
              	,u.nickname
