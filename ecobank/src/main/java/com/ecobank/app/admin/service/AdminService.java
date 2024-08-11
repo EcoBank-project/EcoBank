@@ -35,5 +35,14 @@ public interface AdminService {
     
     public int updatefeedState(int feedNo, String feedState);
     
+    //sns피드 신고당한 횟수
+    int getCountByFeedNo(int feedNo);
+    //sns댓글 신고당한 횟수
+    int getCountByReplyNo(int replyNo);
+    
+    
+    
+    
+    
     
 }

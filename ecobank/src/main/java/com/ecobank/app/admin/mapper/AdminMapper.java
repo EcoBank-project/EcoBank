@@ -3,6 +3,7 @@ package com.ecobank.app.admin.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
@@ -43,6 +44,9 @@ public interface AdminMapper {
     
     int snsReplyDeclareDelete (int declareNo);
     
+    //sns피드 신고당한횟수
+    int getCountByFeedNo(int feedNo);
     
-    
+    //sns댓글  신고당한횟수
+    int getCountByReplyNo(int replyNo);
 }

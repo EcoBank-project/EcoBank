@@ -4,7 +4,9 @@
     
     <!-- 유저 목록 조회 -->
     <select id="userList" resultType="com.ecobank.app.admin.service.UserVO">
-        SELECT use_Id,
+        SELECT
+        		user_no,
+         		use_Id,
                nickname,
                creaTeat,
                tell,
@@ -12,6 +14,7 @@
                country,
                user_State
         FROM users
+        ORDER BY user_no ASC
     </select>
     
     <!-- 오늘 가입한 회원 수 조회 -->

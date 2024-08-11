@@ -54,6 +54,19 @@
         SET FEED_STATE = #{feedState}
         WHERE FEED_NO = #{feedNo}
 	</update>
+	<!--sns신고횟수-->
+	<select id="getCountByFeedNo" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+    FROM sns_declare
+    WHERE feed_no = #{feedNo}
+	</select>
+	<!--sns댓글신고횟수-->
+	<select id="getCountByReplyNo" parameterType="int" resultType="int">
+  SELECT COUNT(*)
+    FROM sns_declare
+    WHERE reply_no = #{replyNo}
+	</select>
+
 	
 		
 		

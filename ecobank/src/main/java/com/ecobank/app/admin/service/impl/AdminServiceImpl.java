@@ -76,6 +76,19 @@ public class AdminServiceImpl implements AdminService {
 		// TODO Auto-generated method stub
 		return adminMapper.updatefeedState(feedNo, feedState);
 	}
+	@Override
+	public int getCountByFeedNo(int feedNo) {
+		// TODO Auto-generated method stub
+		 return adminMapper.getCountByFeedNo(feedNo);
+	}
+	@Override
+	public int getCountByReplyNo(int replyNo) {
+		// TODO Auto-generated method stub
+		return adminMapper.getCountByReplyNo(replyNo);
+	}
+	
+	
+	 
 	
 	
 }

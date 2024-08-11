@@ -15,23 +15,23 @@ import com.ecobank.app.sns.service.SnsService;
 import com.ecobank.app.sns.service.SnsVO;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
 public class AdminController {
 
     @Autowired
-    AdminService adminService;
+    private AdminService adminService;
 
-    // SnsService에 @Autowired 애노테이션 추가
     @Autowired
-    SnsService snsService;
+    private SnsService snsService;
 
     // 전체조회
     @GetMapping("admin")
     public String intro(Model model) {
-        List<UserVO> list = adminService.UserList();
-        model.addAttribute("userList", list);
+        List<UserVO> userList = adminService.UserList();
+        model.addAttribute("userList", userList);
 
         int todaySignUpCount = adminService.getcreaTeat();
         model.addAttribute("todaySignUpCount", todaySignUpCount);
@@ -42,11 +42,11 @@ public class AdminController {
         return "admins/admin";
     }
 
-    // 총 회원 수 
+    // 총 회원 수
     @GetMapping("adminUser")
     public String getusers(Model model) {
-        List<UserVO> list = adminService.UserList();
-        model.addAttribute("userList", list);
+        List<UserVO> userList = adminService.UserList();
+        model.addAttribute("userList", userList);
         return "admins/adminUser";
     }
 
@@ -83,32 +83,70 @@ public class AdminController {
         return "redirect:/ChallDeclareList";
     }
 
-    // SNS 신고 댓글 조회
+    // SNS 댓글 신고 조회
     @GetMapping("SnsReplyDeclareList")
     public String SnsReplyDeclareList(Model model) {
         List<SnsDeclareVO> list = adminService.SnsReplyDeclareList();
-        model.addAttribute("SnsReplyDeclareList", list);
+        
+        // 중복 제거 (replyNo를 기준으로)
+        List<SnsDeclareVO> uniqueList = list.stream()
+            .collect(Collectors.toMap(
+                SnsDeclareVO::getReplyNo, // 키: replyNo (SnsDeclareVO에서 가져옴)
+                snsDeclare -> snsDeclare,  // 값: SnsDeclareVO 객체
+                (existing, replacement) -> existing)) // 중복 시 기존 객체 유지
+            .values()
+            .stream()
+            .collect(Collectors.toList());
+        
+        Map<Integer, Integer> countMap = uniqueList.stream()
+                .collect(Collectors.toMap(
+                    SnsDeclareVO::getReplyNo,
+                    snsDeclare -> adminService.getCountByReplyNo(snsDeclare.getReplyNo()),
+                    (existing, replacement) -> existing));
+        
+        model.addAttribute("SnsReplyDeclareList", uniqueList); // 중복 제거된 리스트 전달
+        model.addAttribute("countMap", countMap);
         return "admins/SnsReplyDeclareList";
     }
 
     // SNS 신고 조회
     @GetMapping("SnsDeclareList")
-    public String SnsDeclareList(Model model) {
+    public String SnsDeclareList(@RequestParam(name = "feedNo", required = false, defaultValue = "0") int feedNo, Model model) {
         List<SnsDeclareVO> list = adminService.SnsDeclareList();
-        model.addAttribute("SnsDeclareList", list);
+
+        // 중복 제거 (feedNo를 기준으로)
+        List<SnsDeclareVO> uniqueList = list.stream()
+            .collect(Collectors.toMap(
+                SnsDeclareVO::getFeedNo,
+                snsDeclare -> snsDeclare,
+                (existing, replacement) -> existing))
+            .values()
+            .stream()
+            .collect(Collectors.toList());
+
+        // 각 feedNo에 대한 신고 개수를 조회
+        Map<Integer, Integer> countMap = uniqueList.stream()
+            .collect(Collectors.toMap(
+                SnsDeclareVO::getFeedNo,
+                snsDeclare -> adminService.getCountByFeedNo(snsDeclare.getFeedNo()),
+                (existing, replacement) -> existing));
+
+        model.addAttribute("SnsDeclareList", uniqueList);
+        model.addAttribute("countMap", countMap);
         return "admins/SnsDeclareList";
     }
 
     // SNS 신고 삭제
     @PostMapping("snsDeclareDelete")
-    public String snsDeclareDelete(@RequestParam int confirmNo) {
-        adminService.snsDeclareDelete(confirmNo);
+    public String snsDeclareDelete(@RequestParam int declareNo) {
+        adminService.snsDeclareDelete(declareNo);
         return "redirect:/SnsDeclareList";
     }
 
+    // SNS 댓글 신고 삭제
     @PostMapping("snsReplyDeclareDelete")
-    public String snsReplyDeclareDelete(@RequestParam int confirmNo) {
-        adminService.snsReplyDeclareDelete(confirmNo);
+    public String snsReplyDeclareDelete(@RequestParam int declareNo) {
+        adminService.snsReplyDeclareDelete(declareNo);
         return "redirect:/SnsReplyDeclareList";
     }
 
@@ -120,12 +158,11 @@ public class AdminController {
         return "admins/adminSns";
     }
     
-    //SNS 업데이트
+    // SNS 업데이트
     @PostMapping("updatefeedState")
     public String updatefeedState(@RequestParam int feedNo, @RequestParam String feedState, Model model) {
         int updatedCount = adminService.updatefeedState(feedNo, feedState);
         model.addAttribute("updatefeedState", updatedCount > 0 ? "성공적으로 업데이트되었습니다." : "업데이트 실패.");
         return "redirect:/adminSns";
     }
-
 }

@@ -14,23 +14,25 @@
     <table class="table table-dark table-striped">
         <thead>
             <tr>
-                <th class="text-center">신고번호</th>
-                <th class="text-center">댓글번호</th>
-                <th class="text-center">회원번호</th>
-                <th class="text-center">신고이유</th>      
-                <th class="text-center">신고일자</th>
+                <th class="text-center">신고 번호</th>
+                <th class="text-center">피드 번호</th>
+                <th class="text-center">신고한 회원번호</th>
+                <th class="text-center">신고 이유</th>
+                <th class="text-center">신고 날짜</th>
+                <th class="text-center">신고 개수</th>
             </tr>
         </thead>
         
         <tbody>
-            <th:block th:each="SnsDeclareList : ${SnsDeclareList}">
+            <th:block th:each="snsDeclare : ${SnsDeclareList}">
                 <tr>
-                    <td class="text-center" th:text="${SnsDeclareList.declareNo}"></td>
-                    <td class="text-center" th:text="${SnsDeclareList.feedNo}"></td>
-                    <td class="text-center" th:text="${SnsDeclareList.confirmUserNo}"></td>
-                    <td class="text-center" th:text="${SnsDeclareList.declareCode}"></td>
-                    <td class="text-center" th:text="${SnsDeclareList.declareat}"></td>
-      
+                    <td class="text-center" th:text="${snsDeclare.declareNo}"></td>
+                    <td class="text-center" th:text="${snsDeclare.feedNo}"></td>
+                    <td class="text-center" th:text="${snsDeclare.confirmUserNo}"></td>
+                    <td class="text-center" th:text="${snsDeclare.declareCode}"></td>
+                    <td class="text-center" th:text="${snsDeclare.declareat}"></td>
+                    <!-- 신고 개수 출력 -->
+                    <td class="text-center" th:text="${countMap[snsDeclare.feedNo]}"></td>
                 </tr>         
             </th:block>
         </tbody>
