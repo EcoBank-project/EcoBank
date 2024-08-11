@@ -13,4 +13,17 @@
 	from users
 	where use_id = #{useId}	
 	</select>
+	<!-- 사용자 ID로 사용자 조회 -->
+    <select id="findUserIdByPhoneNumber" parameterType="String" resultType="String">
+        SELECT useId
+        FROM users
+        WHERE tell = #{phoneNumber}
+    </select>
+
+    <!-- 비밀번호 업데이트 -->
+    <update id="updatePassword" parameterType="map">
+        UPDATE users
+        SET password = #{encodedPassword}
+        WHERE useId = #{useId}
+    </update>
 </mapper>
