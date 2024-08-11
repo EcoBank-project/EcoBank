@@ -20,4 +20,31 @@
 		
 	</select>
 	
+	<select id="myConfirm" resultType="MyConfirmDTO" parameterType="int">
+		SELECT e.user_no,
+		       COUNT(c.confirm_no) AS confirm_count, 
+		       e.chall_no,
+		       COUNT(c.confirm_no) * 10 AS score  
+		FROM chall_enter e
+		JOIN chall_confirm c
+		ON e.user_no = c.user_no
+		WHERE e.chall_no = #{challNo}
+		AND e.user_no = #{userNo}
+		GROUP BY e.user_no, e.chall_no
+	</select>
+	
+	<!-- 인증날짜 가져오려고 -->
+	<select id="getConfirmDate" resultType="java.util.Date" parameterType="int">
+		SELECT confirm_createAt
+		FROM chall_confirm
+		WHERE chall_no = #{challNo}
+		AND user_no = #{userNo}
+	</select>
+	
+	<select id="getConfirmCnt" resultType="int" parameterType="int">
+		SELECT TRUNC(chall_closeAt - SYSDATE) AS remaining_days
+		FROM chall
+		WHERE chall_no = #{challNo}
+	</select>
+	
 </mapper>

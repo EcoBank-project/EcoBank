@@ -2,6 +2,7 @@ package com.ecobank.app.chat.mapper;
 
 import java.util.List;
 
+import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 
@@ -12,7 +13,7 @@ public interface ChatMapper {
 	// 로그인한 회원 채팅방 정보 조회
 	public ChatRoomVO selectChatRoomInfo(ChatRoomVO chatRoomVO);
 	// 채팅방 채팅로그 조회
-	public List<ChatMessageVO> selectChatMessage(Integer chatNo);
+	public List<ChatMessageDTO> selectChatMessage(Integer chatNo);
 	// 채팅방 채팅로그 기록
 	public int insertChatMessage(ChatMessageVO chatMessageVO);
 	// 채팅방 만들기

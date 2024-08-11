@@ -15,5 +15,4 @@ public class ChatMessageVO {
 	private Date msgSendTime;	//채팅 시간
 	private Integer userNo;		//회원 번호
 	private Integer chatNo;		//채팅방 번호
-	private String nickName;	//회원 닉네임
 }

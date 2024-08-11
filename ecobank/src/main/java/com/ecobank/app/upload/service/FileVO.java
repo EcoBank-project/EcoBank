@@ -12,5 +12,5 @@ public class FileVO {
 	private Integer fileCodeNo;	//파일 분류 코드 번호
 	private Integer userNo;		//회원 번호
 
-	
+	private int challNo;			//챌린지 번호
 }

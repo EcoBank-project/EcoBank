@@ -1,0 +1,9 @@
+<div>
+	<p id="myConfirmCnt"></p>
+	<p id="score"></p>
+	<p id="remainCnt"></p>
+</div>
+<div th:each="file : ${fileList}">
+	<p th:text="${file.fileName}">
+	<p th:text="${file.filePath}">
+</div>
