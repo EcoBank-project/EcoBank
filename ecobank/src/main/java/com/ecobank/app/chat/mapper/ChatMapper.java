@@ -2,6 +2,7 @@ package com.ecobank.app.chat.mapper;
 
 import java.util.List;
 
+import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatRoomVO;
@@ -18,4 +19,6 @@ public interface ChatMapper {
 	public int insertChatMessage(ChatMessageVO chatMessageVO);
 	// 채팅방 만들기
 	public int insertChatRoomInfo(ChatRoomVO chatRoomVO);
+	// 팔로우 목록
+	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);
 }

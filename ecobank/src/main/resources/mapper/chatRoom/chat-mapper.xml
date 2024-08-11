@@ -16,7 +16,7 @@
 		select msg_no, 
 		       msg_content, 
 		       msg_type, 
-		       to_char(msg_send_time, 'yyyy.MM.DD am HH:MI') as msg_send_time, 
+		       to_char(msg_send_time, 'yyyy.MM.DD am HH:MI') as msgsendtime, 
 		       m.user_no, 
 		       chat_no,
 		       nickname
@@ -52,4 +52,13 @@
 				,#{chatNo}
 			)	
 	</insert>
+	<!-- 채팅방 팔로우 목록 -->
+	<select id="selectChatFollowAll" parameterType="ChatFollowVO">
+		select following_id,
+			   use_id, 
+			   nickname
+		from follow f join users u 
+		                on u.user_no = following_id
+		where f.follower_id = #{followingId}
+	</select>
 </mapper>
