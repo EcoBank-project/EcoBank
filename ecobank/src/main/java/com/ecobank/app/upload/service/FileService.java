@@ -21,4 +21,7 @@ public interface FileService {
 	
 	//나의 인증 내역 파일(userNo가 참여한 challConfirmNo별 파일 하나씩만 가져오려고(미리보기느낌))
 	public List<FileVO> selectFileInfo(int userNo, int challNo, String fileCode);
+	
+	//다른 참가자 인증 내역 파일
+	public List<FileVO> selectFileOtherInfo(int challNo);
 }

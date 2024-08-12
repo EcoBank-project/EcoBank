@@ -4,6 +4,13 @@
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
+
+
+function getCountry(e){
+	console.log(e);
+}
+
+
 async function getLocation() {
 	//const access_key = '2602e3bc2e9211bd86fd5d25a426c36b';
 	try {
