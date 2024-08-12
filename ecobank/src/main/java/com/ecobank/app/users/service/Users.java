@@ -40,4 +40,9 @@ public class Users {
 	
 	@Column(name = "resp")
 	private String resp = "A1"; // 일반회원
+	
+    private String provider;
+
+    private String providerId;
+    
 }

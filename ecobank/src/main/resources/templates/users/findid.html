@@ -116,6 +116,7 @@
                     phoneNumber : phoneNumber
                 }).done(function(response) {
                     alert(response.message);
+                    console.log("response : " + response);
                 }).fail(function() {
                     alert("전송 실패");
                 });
@@ -132,11 +133,15 @@
                     if (response.userId) {
                         $('#userId').text('회원 ID: ' + response.userId);
                         $('#searchPw').show(); // 비밀번호 찾기 버튼 표시
+                        $('#searchPw').off('click').on('click', function() {
+                            window.location.href = '/findpw?email=' + encodeURIComponent(response.userId);
+                        });
                     }
                 }).fail(function() {
                     alert("인증 실패!");
                 });
             });
+            
         });
     </script>
 </body>

@@ -17,8 +17,10 @@ public class UserVO {
 	private String prifileImg;  // 프로필 이미지
 	private String resp;        //권한
 	private String country;    //국가
-	private String regiPath;  //회원상태
-	private String userState;   //가입경로
+	private String regiPath;    //가입경로
+	private String userState;   //회원상태
+	private String provide;		// google
+	private String provideId;	// 구글 로그인 유저 고유 ID
 	public String roleName; 
 	
 	
