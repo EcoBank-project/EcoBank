@@ -61,6 +61,7 @@ public class FileServiceImpl implements FileService{
 				fileVO.setFileCodeNo(fileCodeNo);		//게시글번호
 				
 				result = fileMapper.insertFileInfo(fileVO);
+				
 				//3)*파일 작성(파일 업로드)
 				try {
 					image.transferTo(savePath); //*실제 경로 지정 /Path는 경로/transferTo=햇살
@@ -88,8 +89,8 @@ public class FileServiceImpl implements FileService{
 		
 		//삭제
 		@Override
-		public int deleteFile(int fileNo) {
-			return fileMapper.deleteFileInfo(fileNo);
+		public int deleteFile(int feedNo) {
+			return fileMapper.deleteFileInfo(feedNo);
 		}
 
 		@Override

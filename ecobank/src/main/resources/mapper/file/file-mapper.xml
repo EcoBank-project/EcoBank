@@ -5,13 +5,13 @@
 	<select id="selectSnsFileInfo" resultType="FileVO">
 		SELECT s.feed_no  
                ,f.file_no
-               ,f.file_path
+               ,f.file_name
 		FROM sns s RIGHT OUTER JOIN files f
                                     ON s.feed_no = f.file_code_no
         WHERE  f.file_code_no = #{feedNo}
 		GROUP BY s.feed_no  
                  ,f.file_no
-                 ,f.file_path
+                 ,f.file_name
 	</select>
 	
 	<!-- 등록 -->
@@ -42,7 +42,7 @@
 	<!-- 수정 및 삭제 -->
 	<delete id="deleteFileInfo" parameterType="int">
 		DELETE FROM files
-		WHERE file_no = #{fileNo}
+		WHERE file_code_no = #{feedNo} and file_code='J1'
 	</delete>
 	
 	<!-- 나의 인증내역에 해당 인증게시글에 사진 하나만 불러오게 -->
