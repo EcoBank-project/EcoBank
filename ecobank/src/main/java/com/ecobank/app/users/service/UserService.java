@@ -40,9 +40,9 @@ public class UserService {
         return userMapper.findUserIdByPhoneNumber(phoneNumber);
     }
 
-    public void updatePassword(String email, String newPassword) {
+    public void updatePassword(String useId, String newPassword) {
         String encodedPassword = passwordEncoder.encode(newPassword);
-        userMapper.updatePassword(email, encodedPassword); // MyBatis를 통한 비밀번호 업데이트
+        userMapper.updatePassword(useId, encodedPassword); // MyBatis를 통한 비밀번호 업데이트
     }
     
     public Users findByUseId(String useId) {

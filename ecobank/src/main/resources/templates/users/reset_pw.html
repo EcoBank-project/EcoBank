@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="https://www.thymeleaf.org/"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{common/layouts/default_layout}"
+    layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
     <title>비밀번호 재설정</title>
@@ -71,7 +74,7 @@
 <body>
     <h2>비밀번호 재설정</h2>
     <div class="form-group">
-		  <form id="resetForm" th:action="@{/reset_pw/{email}(email=${mail})}" method="post">
+		  <form id="resetForm" th:action="@{/reset_pw}" method="post">
 		    <input type="hidden" th:value="${mail}" name="email">
 		    <label for="newPassword" class="form-label">새 비밀번호</label>
 		    <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="새 비밀번호 입력">

@@ -3,6 +3,7 @@ package com.ecobank.app.security.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,10 +44,9 @@ public class SpringSecurityConfig {
             .logoutSuccessUrl("/") // 로그아웃 성공 시 리다이렉트 URL
             .permitAll() // 로그아웃은 모든 사용자에게 허용
         );
-        
-
+   /*     .oauth2Login(Customizer.withDefaults());
         //http.csrf().disable();
-        
+*/        
 
 		return http.build();
 	}

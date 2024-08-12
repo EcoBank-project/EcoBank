@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,23 +73,27 @@ public class UsersController {
 		return "users/findid";
 	}
 	
+	
+	
+	
 	@GetMapping("findpw")
 	public String goFindPw() {
 		return "users/findpw";
 	}
 	
 	@GetMapping("reset_pw")
-	public String showResetPasswordPage(@RequestParam("email") String mail) {
-	    return "users/reset_pw";  // Thymeleaf 템플릿 이름
+	public String showResetPasswordPage(@RequestParam("email") String mail, Model model) {
+	    model.addAttribute("mail", mail);
+	    return "users/reset_pw";
 	}
 	
-	@PostMapping("reset_pw/{email}")
-	public String resetPassword(@PathVariable String email, @RequestParam("password") String newPassword) {
+	@PostMapping("reset_pw")
+	public String resetPassword(@RequestParam("email") String email, @RequestParam("newPassword") String newPassword) {
 	    // 비밀번호 업데이트 로직 구현
-		System.out.println(email);
-		System.out.println(newPassword);
+		System.out.println("변경 할 아이디" + email);
+		System.out.println("변경 할 비밀번호" + newPassword);
 	    userService.updatePassword(email, newPassword);
-	    return "/login";
+	    return "redirect:/login";
 	}
 	
 

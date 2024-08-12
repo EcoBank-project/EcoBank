@@ -99,6 +99,12 @@ button:hover {
 	</div>
 
 	<script>
+		const urlParams = new URLSearchParams(window.location.search);
+		const email = urlParams.get('email');
+		if (email) {
+			$('#useid').val(email);
+		}
+
 		window.sendNumber = function() {
 			const useidValue = $("#useid").val();
 
@@ -123,16 +129,16 @@ button:hover {
 		window.confirmNumber = function() {
 			const number1 = $("#number").val();
 			const number2 = $("#Confirm").val();
-		    const useidValue = $("#useid").val();  // 이메일 정보 가져오기
+			const useidValue = $("#useid").val(); // 이메일 정보 가져오기
 
 			console.log(number1);
 			console.log(number2);
-		
-			
+
 			if (number1 === number2) {
 				alert("인증되었습니다.");
-				// 인증 성공 시 임시 비밀번호 
-				window.location.href = "/reset_pw?email=" + useidValue;
+				// 인증 성공 시 비밀번호 재설정 페이지로 이동
+				window.location.href = "/reset_pw?email="
+						+ encodeURIComponent(useidValue);
 			} else {
 				alert("번호가 다릅니다.");
 			}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<!-- csrf -->
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}" />
+<meta id="_csrf_header" name="_csrf_header"
+	th:content="${_csrf.headerName}" />
+<title>마이페이지</title>
+<style>
+/* 전체 레이아웃을 위한 스타일 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* main 스타일 */
+main {
+    margin-top: 50px; /* header 높이만큼 마진 */
+    margin-bottom: 50px; /* footer 높이만큼 마진 */
+    display: flex;
+    flex-direction: column;
+}
+
+.my-header {
+    background-color: yellow;
+    padding: 10px;
+    width: 100%;
+    height: 400px;
+}
+
+.layout {
+    display: flex;
+}
+
+.side {
+    width: 25%;
+    background-color: #f1f1f1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.content {
+    margin-left: 0; /* 사이드바 바로 옆에 붙이기 */
+    padding: 10px;
+    box-sizing: border-box;
+    flex: 1; /* 사이드바 옆에 콘텐츠가 유동적으로 조정됨 */
+}
+
+.my-content{
+	background-color:green;
+}
+
+.inner {
+	margin : 0 auto;
+    width: 90%; /* 전체 페이지 대비 조금 작게 */
+    max-width: 1200px; /* 최대 너비 설정 */
+}
+
+
+</style>
+<th:block th:replace="common/configs/config :: jQueryConfig"></th:block>
+<th:block th:replace="common/configs/config :: MainTemplateConfig"></th:block>
+<th:block th:replace="common/configs/config :: SweetAlertConfig"></th:block>
+</head>
+<body>
+	<header th:insert="common/fragments/header :: headerFragment"></header>
+<main>
+<div class="inner">
+    <section th:replace="common/fragments/myHeader :: myHeaderFragment"></section>
+    <div class="layout">
+        <aside class="side" th:replace="common/fragments/mySide :: mySideFragment"></aside>
+        <section layout:fragment="Content"></section>
+    </div>
+</div>
+</main>
+<footer th:insert="common/fragments/footer :: footerFragment"></footer>
+	<script>
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		$.ajaxSetup({
+			beforeSend : function(xhr, settings) {
+				xhr.setRequestHeader(header, token);
+			}
+		});
+	</script>
+</body>
+
+</html>
