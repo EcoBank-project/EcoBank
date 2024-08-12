@@ -223,11 +223,11 @@ color:white;
 	<!-- 모달영역 -->
  	<div class="modal">
         <div class="modal_body">
-            <h2>피드 신고하기</h2>
+            <h4>피드 신고하기</h4>
             <form method="post">
 					<th:block th:each="declare, sts : ${snsDeclare}">
-				<input type='radio' class='radioBtn' th:value="${declare.codeId}" id="${declare.codeId}"/>
-				<label  th:text="${declare.snsdeclare}" for="${declare.codeId}"></label> 
+				<input name="aaa" type='radio' class='radioBtn' th:value="${declare.codeId}" th:id="${declare.codeId}"/>
+				<label  th:text="${declare.snsdeclare}" th:for="${declare.codeId}"></label> 
 					</th:block>
 			</form>
           <button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">신고하기</button>
