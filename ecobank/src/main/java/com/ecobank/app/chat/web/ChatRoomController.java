@@ -1,7 +1,5 @@
 package com.ecobank.app.chat.web;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -29,7 +27,7 @@ public class ChatRoomController {
 	@Autowired
 	private HttpSession httpSession;
 	
-	// 채팅방 목록&채팅방 참여
+	// 채팅방 목록
 	@GetMapping("/chatRoom")
 	public String ChatRooms(Model model){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");

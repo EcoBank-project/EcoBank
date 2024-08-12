@@ -24,13 +24,12 @@ public class SpringSecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 
-//2. 인증 및 인가 설정
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
         .authorizeHttpRequests(authorize -> authorize
             .antMatchers("/css/**", "/js/**", "/img/**", "/lib/**").permitAll() // 정적 자원 허용
-            .antMatchers("/", "/login*", "/signup","/user/**","/about","/find*", "/ip-info","/set-country").permitAll() // 인증 필요 없는 경로
+            .antMatchers("/", "/login*", "/signup","/user/**","/about","/find*", "/ip-info","/set-country","/reset_pw").permitAll() // 인증 필요 없는 경로
             .anyRequest().authenticated() // 나머지 요청은 인증 필요
         )
         .formLogin(formLogin -> formLogin

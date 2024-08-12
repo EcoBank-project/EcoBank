@@ -11,6 +11,52 @@
 <body>
 
 	<h3>sns 상세보기</h3>
+	
+	    <!-- Quote Start -->
+    <div class="container-fluid bg-light overflow-hidden px-lg-0" style="margin: 6rem 0;">
+        <div class="container quote px-lg-0">
+            <div class="row g-0 mx-lg-0">
+                <div class="col-lg-6 ps-lg-0 wow fadeIn" data-wow-delay="0.1s" style="min-height: 1000px;">
+                	<div class="author mb-4 d-flex align-items-center">
+							<a href="#" class="img"
+								style="background-image: url(images/person_2.jpg);"></a>
+							<div class="ml-3 info">
+								<a href="#" th:text=${sns.nickname}></a>
+							</div>
+							<button class="btn btn-primary">팔로우</button>
+						</div>
+                    <div class="position-relative h-100">
+                    	<div th:block th:each="file, sts : ${snsFileInfo}">
+                       		<img class="position-absolute img-fluid w-100 h-50" src=@{/images/{fileName}(fileName=${file.filePath})} style="object-fit: cover;" alt="">
+                    	</div>	
+                    </div>
+                </div>
+                <div class="col-lg-6 quote-text py-5 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="p-lg-5 pe-lg-0">
+                        <h6 class="text-primary">Free Quote</h6>
+                        <h1 class="mb-4">Get A Free Quote</h1>
+                        <p class="mb-4 pb-2" th:text="${sns.feedContent}" ></p>
+                        <p class="mb-4 pb-2" th:text="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}"></p>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <textarea class="form-control border-0" placeholder="Special Note"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            	  <div class="col-12">
+                                    <textarea class="form-control border-0" placeholder="댓글작성"></textarea>
+                                </div>
+            
+            
+            
+        </div>
+    </div>
+    <!-- Quote End -->
 
 	<form  action="uploadForm" method="post"
 					enctype="multipart/form-data">
@@ -23,19 +69,9 @@
 			<label>작성자</label>
 			<input type="text" th:value="${sns.nickname}" readonly>
 		</div>
-		<div th:block th:each="file, sts : ${snsFileInfo}">
-			<img th:src =@{/images/{fileName}(fileName=${file.fileName})}
-					style="width : 40%;" >
-		</div>			
-		<div>
-			<label>작성일자</label>
-			<input type="date" th:value="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}" readonly>
-		</div>
-		<div>
-			<label>내용</label>
-			<input type="text" th:value="${sns.feedContent}" readonly>
-				<!--/* [[${board.boardContent]] style="height:100px; widthL200px;" */-->
-		</div>
+			
+
+
  		<div class="post-content-entry">
 				<div class="meta">
 						<span>좋아요 수 <a href="#" th:text=${sns.countLike}></a></span>
@@ -54,7 +90,7 @@
 
 <!-- 		<input type="hidden"  name="userNo" /> -->
 		<textarea rows="1" cols="30" th:text="${replyContent}" id="replyContent"></textarea>
-		<button id="writeBtn">댓글입력</button>
+		<button id="writeBtn" class="btn btn-primary">입력</button>
 	</div>
 
 	<div id="replyArea">
@@ -112,11 +148,11 @@
 			 type: 'delete',
 			 data: {"replyNo" : rno},
 			 success: function(result) {
-			     	  	 alert("리뷰가 삭제되었습니다");
+			     	  	 alert("댓글이 삭제되었습니다");
 			        	 location.reload();
 			        	},
 			  error: function() {
-			          	alert('리뷰 수정 실패');
+			          	alert('댓글 삭제가 실패되었습니다');
 			          	}
 		});	
 				

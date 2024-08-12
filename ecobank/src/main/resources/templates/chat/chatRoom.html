@@ -6,223 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>채팅</title>
-<style>
-	/*메시지 상자*/
-    .chatbox{
-        flex: 1;
-        overflow: auto;
-    }
-    .chatbox, .chatForm{
-        display: flex;
-        flex-direction: column;
-    }
-    .chatbox::before{
-        content: "";
-        display: block;
-        flex: 1;
-    }
-    .chatForm{
-        height: 700px;
-        overflow-y: auto;
-        background-color: #f8f9fa;
-        border: 1px solid #ccc;
-        padding: 10px;
-    }
-    
-    /*메시지*/
-    .message_left {
-    	display: flex;
-    	align-items: flex-start;
-    	margin-bottom: 20px;
-    	align-self: flex-start;
-	}
-	.message_right {
-		display: flex;
-    	align-items: flex-start;
-    	margin-bottom: 20px;
-    	align-self: flex-end;
-	}
-
-	.chat_profil_img {
-	    width: 40px;
-	    height: 40px;
-	    border-radius: 50%;
-	    margin-right: 10px;
-	}
-	
-	.message_content {
-	    max-width: 80%;
-	}
-	
-	.username {
-	    font-weight: bold;
-	    color: #7289da;
-	    margin-right: 10px;
-	}
-	
-	.sendtime {
-	    font-size: 12px;
-	    color: #72767d;
-	}
-	
-	.text {
-	    margin-top: 5px;
-	    background-color: #32C36C;
-	    padding: 10px;
-	    border-radius: 5px;
-	    line-height: 1.4;
-	    color: #FFFFFF;
-	    word-break: break-all;
-	}
-
-
-    /*아이콘*/
-    .bi-plus-circle{
-        font-size: 45px;
-        line-height: 45px;
-    }
-    
-	.chatRoom-list {
-	    
-	    display: flex;
-	    flex-direction: column;
-	    height: 100%;
-	}
-	.chat-room-list {
-		height: 680px;
-	    list-style-type: none;
-	    padding: 0;
-	    margin: 0;
-	    overflow-y: auto; /* 스크롤이 가능하도록 설정 */
-	    flex-grow: 1; /* 채팅방 목록이 유저 정보 위의 공간을 채우도록 설정 */
-	}
-	
-	.chat-room-list li {
-	    margin-bottom: 10px;
-	}
-	
-	.chat-room-list a {
-	    display: block;
-	    padding: 10px 15px;
-	    border-radius: 5px;
-	    background-color: #ffffff;
-	    color: #333;
-	    text-decoration: none;
-	    transition: background-color 0.3s, color 0.3s;
-	}
-	
-	.chat-room-list a:hover {
-	    background-color: #e0e0e0;
-	    color: #000;
-	}
-	
-	/* 채팅방 검색 */
-	.chat-room-search {
-	    padding: 10px 15px;
-	    margin-bottom: 15px;
-	    width: 100%;
-	    border: 1px solid #ddd;
-	    border-radius: 5px;
-	    font-size: 14px;
-	    background-color: #ffffff;
-	    color: #333;
-	    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-	    transition: border-color 0.3s, box-shadow 0.3s;
-	}
-	.chat-room-search::placeholder {
-	    color: #999;
-	}
-	.chat-room-search:focus {
-	    border-color: #5865f2;
-	    box-shadow: 0 0 5px rgba(88, 101, 242, 0.5);
-	    outline: none;
-	}	
-		
-	
-	
-	
-	
-	/* 유저 정보 */
-	.user-info {
-	    padding: 10px;
-	    background-color: #ffffff;
-	    border-top: 1px solid #ddd;
-	    display: flex;
-	    align-items: center;
-	}
-	
-	.profil_img {
-	    width: 32px;
-	    height: 32px;
-	    border-radius: 50%;
-	    background-color: #5865f2;
-	    margin-right: 10px;
-	}
-	
-	.user-details {
-	    flex: 1;
-	}
-	
-	.user-name {
-	    font-size: 14px;
-	    font-weight: bold;
-	}
-	
-	.user-status {
-	    font-size: 12px;
-	    color: #8e9297;
-	}
-	
-	.user-actions i {
-	    font-size: 20px;
-	    margin-left: 10px;
-	    cursor: pointer;
-	    color: #b9bbbe;
-	    transition: color 0.2s;
-	}
-	
-	.user-actions i:hover {
-	    color: #333;
-	}
-
-
-
-	/* 헤더 부분 수정*/
-    header{
-    	position: relative;
-    	width: 100%;
-    	z-index: 990;
-    }
-	/*모달*/
-	.modal {
-		display: none;
-		position: fixed;
-		z-index: 1000;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		overflow: auto;
-		background-color: rgba(0, 0, 0, 0.5); 
-	}
-	.modal-content {
-		background-color: #ffffff;
-		margin: 15% auto;
-		padding: 20px;
-		border-radius: 10px;
-		width: 400px;
-		color: #333; 
-		text-align: center;
-		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-	}
-	.modal-close {
-	    color: #aaa;
-	    float: right;
-	    font-size: 28px;
-	    font-weight: bold;
-	    cursor: pointer;
-	}
-</style>
+<link rel="stylesheet" href="../css/chatRoom/chat.css" />
 <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 </head>
@@ -230,10 +14,10 @@
     <h3>채팅</h3>
     <div class="container-fluid">
     	<div class="row">
-            <div class="col-md-3 col-sm-12">
+            <div class="col-md-2 col-sm-12">
                 <div class="row">
 	                <!-- 아이콘 -->
-	                <div class="col-md-3 col-sm-12 d-flex flex-column align-items-center">
+	                <div class="col-md-2 col-sm-12 d-flex flex-column align-items-center">
                 		<h5>콘</h5>
 	                    <a href="#">S1</a>
 	                    <a href="#">
@@ -242,7 +26,7 @@
 	                    <a href="#">S3</a>
 	                </div>
 	                <!-- 채팅방 목록 -->
-			        <div class="chatRoom-list col-md-9 col-sm-12 d-flex flex-column">
+			        <div class="chatRoom-list col-md-10 col-sm-12 d-flex flex-column">
 			        	<input type="text" class="chat-room-search" placeholder="채팅방 검색">
 			            <ul class="chat-room-list flex-grow-1">
 			                <li th:each="room : ${chatRooms}">
@@ -265,14 +49,14 @@
             </div>
 
             <!-- 채팅 -->
-            <div class="col-md-9 col-sm-12 d-flex flex-column">
+            <div class="col-md-10 col-sm-12 d-flex flex-column">
             	<div class="row">            	
 	                <div>
 	                    <h3 id="roomName">채팅창 제목</h3>
 	                </div>
             	</div>
                 <div class="row">
-                	<div class="col-md-9 col-sm-12">
+                	<div class="col-md-10 col-sm-12">
 		                <div class="chatForm flex-grow-1 border-bottom" id="chatForm" style="overflow-y: auto;">
 		                <!-- 메시지 로그 -->
                             <div class="chatbox" id="chatbox">
@@ -288,7 +72,7 @@
                 	    </div>
                     </div>
                     <!-- 유저 -->
-                    <div class="col-md-3 col-sm-12">
+                    <div class="col-md-2 col-sm-12">
                 		<!-- 세션을 이용-->
                         <h5>접속중인 유저</h5>
                         <div>
@@ -313,139 +97,238 @@
     <div id="chatModal" class="modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
-                 
+            <h2>채팅방 만들기</h2>
+            <div class="modal-options">
+                <div class="option-card">
+                    <button id="privateChat" class="option-button">1대1 채팅</button>
+                </div>
+                <div class="option-card">
+                    <button id="groupChat" class="option-button">그룹 채팅</button>
+                </div>
+            </div>     
 		</div>
     </div>
-
-    <script type="text/javascript">
-  	var stompClient = null;
-    var currentRoomId = null;
-    const userNo = "[[${userNo}]]"; // 세션정보
-    // 소켓 연결&메시지 받음 
-    function connect(roomId) {
-    	// 소켓 열기
-    	var socket = new SockJS('/ws');
-        // Stomp 프로토콜
-    	stompClient = Stomp.over(socket);
-   		 // 소켓 연결
+    
+	<div id="privateChatModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>1대1 채팅 만들기</h2>
+            <input type="text" placeholder="사용자명 입력" class="input-field">
+            <h4>팔로우 목록</h4>
+            <ul id="followListPrivate">
+                <!-- 친구 목록 항목 -->
+                <li class="follow-item">친구1 <button class="select-follow">선택</button></li>
+                <li class="follow-item">친구2 <button class="select-follow">선택</button></li>
+                <li class="follow-item">친구3 <button class="select-follow">선택</button></li>
+            </ul>
+            <button class="option-button">채팅 만들기</button>
+        </div>
+    </div>
+    
+    <div id="groupChatModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>그룹 채팅 만들기</h2>
+            <input type="text" placeholder="그룹 채팅방 이름 입력" class="input-field">
+            <input type="text" id="inviteUsernames" placeholder="초대할 사용자명 입력" class="input-field">
+            <h4>팔로우 목록</h4>
+            <ul id="friendListGroup">
+                <li class="follow-item">
+                	<div><img src="https://via.placeholder.com/40" class="profil_img">친구1</div> 
+                	<button class="select-follow">초대</button>
+                </li>
+                <li class="follow-item">친구2 <button class="select-follow">초대</button></li>
+                <li class="follow-item">친구3 <button class="select-follow">초대</button></li>
+            </ul>
+            <button class="option-button">그룹 채팅 만들기</button>
+        </div>
+    </div>
+    
+<script type="text/javascript">
+	var stompClient = null;
+	var currentRoomId = null;
+	const userNo = "[[${userNo}]]"; // 세션정보
+	// 소켓 연결&메시지 받음 
+	function connect(roomId) {
+		// 소켓 열기
+		var socket = new SockJS('/ws');
+	    // Stomp 프로토콜
+		stompClient = Stomp.over(socket);
+		 // 소켓 연결
 	    stompClient.connect({}, function(frame) {
 	//        let userName = frame.headers['user-name']; 헤더값 가지고 옴
-    		// 메시지를 받음.
+			// 메시지를 받음.
 	        stompClient.subscribe('/topic/messages/' + roomId, function(message) {
 	            showMessage(JSON.parse(message.body));
 	        });
 	    });
-    }
-    // 메시지 보냄
-    function sendMessage(userId) {
-        let input = document.getElementById("message");
-        let today = new Date(); 
-        const chatMessage = {
-            userNo: userId,
-            chatNo: currentRoomId,
-            msgContent: input.value,
-            msgType: 'CHAR',
-            formatTime: today,
-            nickName: "[[${nickname}]]",
-        };
-        stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
-        input.value = "";
-    }
-
-    // 메시지를 보여줌
-    function showMessage(message) {
-        let chatbox = document.getElementById("chatbox");
-        let newMessage = document.createElement("div");
-        if(message.userNo === Number("[[${userNo}]]")){
-        	// 나
-        	newMessage.classList.add('message_right');
-        }else{
-        	// 상대방
-        	newMessage.classList.add('message_left');
-        }
-        //채팅 프로필 이미지
-        let img = document.createElement("img");
-        img.classList.add("chat_profil_img");
-        img.src="https://via.placeholder.com/40";
-        newMessage.appendChild(img);
-        //메시지 덩어리
-        let content = document.createElement("div");
-        content.classList.add('message_content');
-        //닉네임
-        let uname = document.createElement("span");
-        uname.classList.add('username');
-        uname.textContent = message.nickName;
-        //시간
-        let totime = document.createElement("span");
-        totime.classList.add('sendtime');
-        totime.textContent = message.msgSendTime;
-        //내용
-        let texts = document.createElement("div");
-        texts.classList.add('text');
-        texts.textContent = message.msgContent;
-        
-        content.appendChild(uname);
-        content.appendChild(totime);
-        content.appendChild(texts);
-        newMessage.appendChild(content);
-        chatbox.appendChild(newMessage);
-        chatbox.scrollTop = chatbox.scrollHeight;
-    }
-    
-    //채팅방 들어가기
-    function enterRoom(event, roomId) {
-    	console.log("확인")
-    	event.preventDefault();
-        currentRoomId = roomId;
-
-        // 채팅방 UI 표시
-        $('#chatForm').show();
-        $('#roomName').text($(event.target).text());	// 채팅방 제목 바꿈
-        $('#chatbox').empty(); // 이전 메시지 초기화
-
-        // 소켓 연결중
-        if (stompClient !== null) {
-            stompClient.disconnect(function() {
-                connect(roomId);
-                loadMessage(roomId);
-            });
-        // 소켓 처음 연결
-        } else {
-            connect(roomId);
-            loadMessage(roomId);
-        }
-    }
-    // 이전 메시지 로드
-    function loadMessage(roomId){
-    	$.ajax({
-        	url: "/chatRoom/" + roomId,
-        	method: "GET",
-        	success: function(result){
-        		result.forEach(function(message){
-        			showMessage(message);
-        		});
-        	},
-        	error: function(error){
-        		
-        	}
-        });
-    }
-    
-    //아이콘 기능 모음
-    //채팅홈
-    	
-    //채팅방 만들기
-    $('.bi-plus-circle').on('click', function(event){
-        $('#chatModal').show();
-    })
-    
-    $('.modal-close').on('click', function() {
-        $('#chatModal').hide();
-    });
-    //오픈채팅 만들기
-    
-    //오픈채팅 검색
-    
+	}
+	// 메시지 보냄
+	function sendMessage(userId) {
+	    let input = document.getElementById("message");
+	    let today = new Date(); 
+	    const chatMessage = {
+	        userNo: userId,
+	        chatNo: currentRoomId,
+	        msgContent: input.value,
+	        msgType: 'CHAR',
+	        formatTime: today,
+	        nickName: "[[${nickname}]]",
+	    };
+	    stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
+	    input.value = "";
+	}
+	
+	// 메시지를 보여줌
+	function showMessage(message) {
+	    let chatbox = document.getElementById("chatbox");
+	    let newMessage = document.createElement("div");
+	    if(message.userNo === Number("[[${userNo}]]")){
+	    	// 나
+	    	newMessage.classList.add('message_right');
+	    }else{
+	    	// 상대방
+	    	newMessage.classList.add('message_left');
+	    }
+	    //채팅 프로필 이미지
+	    let img = document.createElement("img");
+	    img.classList.add("chat_profil_img");
+	    img.src="https://via.placeholder.com/40";
+	    newMessage.appendChild(img);
+	    //메시지 덩어리
+	    let content = document.createElement("div");
+	    content.classList.add('message_content');
+	    //닉네임
+	    let uname = document.createElement("span");
+	    uname.classList.add('username');
+	    uname.textContent = message.nickName;
+	    //시간
+	    let totime = document.createElement("span");
+	    totime.classList.add('sendtime');
+	    totime.textContent = message.msgSendTime;
+	    //내용
+	    let texts = document.createElement("div");
+	    texts.classList.add('text');
+	    texts.textContent = message.msgContent;
+	    
+	    content.appendChild(uname);
+	    content.appendChild(totime);
+	    content.appendChild(texts);
+	    newMessage.appendChild(content);
+	    chatbox.appendChild(newMessage);
+	    chatbox.scrollTop = chatbox.scrollHeight;
+	}
+	
+	//채팅방 들어가기
+	function enterRoom(event, roomId) {
+		console.log("확인")
+		event.preventDefault();
+	    currentRoomId = roomId;
+	
+	    // 채팅방 UI 표시
+	    $('#chatForm').show();
+	    $('#roomName').text($(event.target).text());	// 채팅방 제목 바꿈
+	    $('#chatbox').empty(); // 이전 메시지 초기화
+	
+	    // 소켓 연결중
+	    if (stompClient !== null) {
+	        stompClient.disconnect(function() {
+	            connect(roomId);
+	            loadMessage(roomId);
+	        });
+	    // 소켓 처음 연결
+	    } else {
+	        connect(roomId);
+	        loadMessage(roomId);
+	    }
+	}
+	// 이전 메시지 로드
+	function loadMessage(roomId){
+		$.ajax({
+	    	url: "/chatRoom/" + roomId,
+	    	method: "GET",
+	    	success: function(result){
+	    		result.forEach(function(message){
+	    			showMessage(message);
+	    		});
+	    	},
+	    	error: function(error){
+	    		
+	    	}
+	    });
+	}
+	
+	//아이콘 기능 모음
+	//채팅홈
+		
+	//채팅방 만들기
+	//채팅방 모달 기능
+	$('.bi-plus-circle').on('click', function(){
+	    $('#chatModal').show();
+	    $('#modalOverlay').show();
+	})
+	$('#privateChat').on('click', function(){
+		$('#chatModal').hide();
+		$('#privateChatModal').show()
+	});
+	$('#groupChat').on('click', function(){
+		$('#chatModal').hide();
+		$('#groupChatModal').show()
+	});
+	function allClose(){
+		$('#chatModal').hide();
+		$('#privateChatModal').hide();
+		$('#groupChatModal').hide();
+		$('#modalOverlay').hide();
+	}
+	$('.modal-close').on('click', function() {
+		allClose();
+		$('#privateChatModal .input-field').val('');
+		$('#inviteUsernames').val('');
+	});
+	$(window).click(function(event) {
+	    if ($(event.target).is($('.modal'))) {
+	    	allClose();
+	    	$('#privateChatModal .input-field').val('');
+	    	$('#inviteUsernames').val('');
+	    }
+	});
+	
+	//버튼
+	$('#followListPrivate .select-follow').each(function(){
+		$(this).on('click', function(){
+			const friendName = $(this).parent().text().trim().split(' ')[0];
+			const currentValue = $.trim($('#privateChatModal .input-field').val());
+			
+			if (currentValue === friendName) {
+				$('#privateChatModal .input-field').val('');
+			} else {
+				$('#privateChatModal .input-field').val(friendName);
+			}
+		})	
+	});
+	
+	$('#friendListGroup .select-follow').each(function() {
+		$(this).on('click', function() {
+			const friendName = $(this).parent().text().trim().split(' ')[0];
+			const currentValue = $.trim($('#inviteUsernames').val());
+			const inviteList = currentValue ? currentValue.split(', ').map(name => $.trim(name)) : [];
+			
+			if (inviteList.includes(friendName)) {
+	            const updatedInviteList = inviteList.filter(name => name !== friendName);
+	            $('#inviteUsernames').val(updatedInviteList.join(', '));
+	        } else {
+	            inviteList.push(friendName);
+	            $('#inviteUsernames').val(inviteList.join(', '));
+	        }
+	    });
+	});
+	//채팅방 만들기 기능
+	
+	
+	//오픈채팅 만들기
+	
+	//오픈채팅 검색
 </script>
 </body>
 </html>

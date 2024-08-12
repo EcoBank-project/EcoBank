@@ -14,5 +14,6 @@ public interface ChatService {
 	public int ChatMessageInsert(ChatMessageVO chatMessageVO);
 	//채팅방 만들기
 	public int ChatRoomInsert(ChatRoomVO chatRoomVO);
-
+	//팔로우 목록
+	public List<ChatFollowVO> chatFollowList(Integer userNo);
 }

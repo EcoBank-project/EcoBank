@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,15 +35,6 @@ public class UsersController {
 	public String goLogin() {
 		return "users/login";
 	}
-
-	/*
-	 * @PostMapping("login") public ModelAndView login(@RequestParam String
-	 * useId, @RequestParam String password) { boolean isAuthenticated =
-	 * userService.authenticate(useId, password); if (isAuthenticated) { return new
-	 * ModelAndView("redirect:/"); } else { ModelAndView mav = new
-	 * ModelAndView("users/login"); mav.addObject("error",
-	 * "로그인 실패: 사용자 이름 또는 비밀번호가 올바르지 않습니다."); return mav; } }
-	 */
 
 	@GetMapping("signup")
 	public String signUp(UserCreateForm userCreateForm) {
@@ -84,5 +76,20 @@ public class UsersController {
 	public String goFindPw() {
 		return "users/findpw";
 	}
+	
+	@GetMapping("reset_pw")
+	public String showResetPasswordPage(@RequestParam("email") String mail) {
+	    return "users/reset_pw";  // Thymeleaf 템플릿 이름
+	}
+	
+	@PostMapping("reset_pw/{email}")
+	public String resetPassword(@PathVariable String email, @RequestParam("password") String newPassword) {
+	    // 비밀번호 업데이트 로직 구현
+		System.out.println(email);
+		System.out.println(newPassword);
+	    userService.updatePassword(email, newPassword);
+	    return "/login";
+	}
+	
 
-}
+} 
