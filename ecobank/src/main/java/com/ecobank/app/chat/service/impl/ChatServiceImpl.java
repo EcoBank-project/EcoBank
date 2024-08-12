@@ -45,14 +45,20 @@ public class ChatServiceImpl implements ChatService{
 	}
 	// 채팅방 만들기
 	@Override
-	public int ChatRoomInsert(ChatRoomVO chatRoomVO) {
-		return chatMapper.insertChatRoom(chatRoomVO);
+	public int ChatRoomInsert(String chatName, Integer userNo) {
+		return chatMapper.insertChatRoom(chatName, userNo);
+	}
+	// 채팅방 만들기 - 참여자
+	@Override
+	public int ChatUserInsert(String chatName, Integer userNo) {
+		return chatMapper.insertChatUser(chatName, userNo);
 	}
 	// 채팅 팔로우 목록
 	@Override
 	public List<ChatFollowVO> chatFollowList(Integer userNo) {
 		return chatMapper.selectChatFollowAll(userNo);
 	}
+
 	
 	
 	
