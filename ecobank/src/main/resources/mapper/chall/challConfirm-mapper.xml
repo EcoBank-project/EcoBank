@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.challenge.mapper.ChallConfirmMapper">
 
-	<select id="selectConfirmAll" resultType="ChallConfirmVO">
+<!-- 	<select id="selectConfirmAll" resultType="ChallConfirmVO">
 		SELECT c.user_no
 		        , c.confirm_no
 		        , c.chall_no
@@ -14,13 +14,14 @@
 		            ]]>  
 		FROM chall_confirm c
 		WHERE c.chall_no = #{challNo}
-	</select>
+		ORDER BY c.confirm_no DESC
+	</select> -->
 
 	<select id="selectConfirmInfo" resultType="ChallConfirmVO" parameterType="ChallConfirmVO">
 		
 	</select>
 	
-	<select id="myConfirm" resultType="MyConfirmDTO" parameterType="int">
+	<select id="myConfirm" resultType="MyConfirmDTO" parameterType="MyConfirmDTO">
 		SELECT e.user_no,
 		       COUNT(c.confirm_no) AS confirm_count, 
 		       e.chall_no,
@@ -46,5 +47,26 @@
 		FROM chall
 		WHERE chall_no = #{challNo}
 	</select>
+	
+	<!-- 상세이미지/리뷰 가져오려고 -->
+	<select id="reviewList" resultType="ChallVO" parameterType="ChallVO">
+		SELECT detail_img
+		FROM chall
+		WHERE chall_no = #{challNo}
+	</select>
+	
+	<!-- 챌린지 참가 등록 -->
+	<insert id="challEnterInsert" parameterType="ChallVO">
+		INSERT INTO chall_enter(
+								chall_enterAt
+								, user_no
+								, chall_no
+								)
+		VALUES (
+				SYSDATE
+				, #{userNo}
+				, #{challNo}
+				)
+	</insert>
 	
 </mapper>

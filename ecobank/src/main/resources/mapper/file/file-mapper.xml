@@ -59,6 +59,22 @@
 	        AND f.file_code = #{fileCode}
 	    )
 	    WHERE rn = 1
+	    ORDER BY file_no desc
 	</select>
 	
+	<!-- 다른 참가자 인증 내역 -->
+	<select id="selectOtherConfirm" resultType="FileVO">
+		SELECT c.chall_no
+					, c.confirm_no,
+					( select f.file_name
+		            from files f
+		            where f.file_code_no = c.confirm_no
+		            --<![CDATA[
+		            and rownum < 2 ) as file_name
+		            --]]>  
+		FROM chall_confirm c
+		WHERE c.chall_no = #{challNo}
+        ORDER BY c.confirm_no DESC
+	</select>
+		
 </mapper>

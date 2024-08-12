@@ -15,7 +15,7 @@
 	<div class="challenge-links">
 		<ul>
 			<li>
-				<a th:href="@{/ready}" id="ready" title="오픈 예정 챌린지" class="active">오픈 예정 챌린지</a> 
+				<a th:href="@{/ready}" id="ready" title="오픈 예정 챌린지">오픈 예정 챌린지</a> 
 			</li>
 			<li>
 				<a th:href="@{/progress}" id="progress" title="진행 중인 챌린지" >진행 중인 챌린지</a> 
@@ -108,10 +108,10 @@
 		    detailImg(); //상세이미지 호출
 		});
 	
+		//나의 인증 내역
 		$('#myConfirm').click(function(){
 			let cNo = $('#cNo').val();
 			$("#contents").load("getMyConfirm?challNo=" + cNo, function(){
-				console.log(1234);
 				$.ajax({
 					url : '/myConfirm',
 					method : 'get',
@@ -130,15 +130,22 @@
 				})
 			});
 		})
+		//다른 참가자 인증 내역
 		$('#others').click(function(){
-			$("#contents").load("others");
+			let cNo = $('#cNo').val();
+			$("#contents").load("others?challNo=" + cNo);
 		})
-		function detailImg(){
-			$("#contents").load("review");
-		}
+		
+		//상세이미지+리뷰
 		$('#detailImg').click(function(){
 			detailImg();
 		})
+		function detailImg(){
+			let cNo = $('#cNo').val();
+			$("#contents").load("review?challNo=" + cNo);
+		}
+		
+		//나의 인증 캘린더
 		$('#myCalendar').click(function(){
 			$('#contents').load("getMyCalendar", function(){ //controller(페이지처리)
 				var calendarEl = document.getElementById('calendar');

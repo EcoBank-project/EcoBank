@@ -27,6 +27,7 @@ public class ChallengeRestController {
 	@GetMapping("myConfirm")
 	public MyConfirmDTO myConfirm(@RequestParam("challNo") int ChallNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
+		//System.out.println(userNo + "유저넘버");
 		return challConfirmService.myConfirm(userNo, ChallNo);
 	}
 	
