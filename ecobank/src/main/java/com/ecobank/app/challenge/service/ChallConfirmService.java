@@ -3,6 +3,8 @@ package com.ecobank.app.challenge.service;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface ChallConfirmService {
 	//인증 전체 조회 
 	//public List<ChallConfirmVO> confirmList(int challNo);
@@ -17,5 +19,8 @@ public interface ChallConfirmService {
 	public ChallVO reviewList(ChallVO challVO);
 	
 	//챌린지 참가 등록하기
-	public int insertChallEnter(ChallVO challVO);
+	public int insertChallEnter(int userNo, int challNo);
+	
+	//챌린지 참가 여부 확인
+	public boolean isUserParticipated(int userNo, int challNo);
 }
