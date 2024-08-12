@@ -46,18 +46,14 @@ public class ChatServiceImpl implements ChatService{
 	// 채팅방 만들기
 	@Override
 	public int ChatRoomInsert(ChatRoomVO chatRoomVO) {
-		// TODO Auto-generated method stub
-		return 0;
+		return chatMapper.insertChatRoom(chatRoomVO);
 	}
 	// 채팅 팔로우 목록
 	@Override
 	public List<ChatFollowVO> chatFollowList(Integer userNo) {
-		// TODO Auto-generated method stub
 		return chatMapper.selectChatFollowAll(userNo);
 	}
-
-
 	
-
-
+	
+	
 }
