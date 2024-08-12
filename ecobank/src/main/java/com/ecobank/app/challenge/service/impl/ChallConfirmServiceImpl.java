@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecobank.app.challenge.mapper.ChallConfirmMapper;
+import com.ecobank.app.challenge.mapper.ChallMapper;
 import com.ecobank.app.challenge.service.ChallConfirmService;
 import com.ecobank.app.challenge.service.ChallConfirmVO;
+import com.ecobank.app.challenge.service.ChallVO;
 import com.ecobank.app.challenge.service.MyConfirmDTO;
 
 @Service
@@ -22,10 +24,10 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 		this.challConfirmMapper = challConfirmMapper;
 	}
 
-	@Override
-	public List<ChallConfirmVO> confirmList(ChallConfirmVO chalConfirmVO) {
-		return challConfirmMapper.selectConfirmAll(chalConfirmVO);
-	}
+//	@Override
+//	public List<ChallConfirmVO> confirmList(int challNo) {
+//		return challConfirmMapper.selectConfirmAll(challNo);
+//	}
 
 	@Override
 	public MyConfirmDTO myConfirm(int userNo, int challNo) {
@@ -57,5 +59,16 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	@Override
 	public List<Date> myCalendar(int userNo, int challNo) {
 		return challConfirmMapper.getConfirmDate(userNo, challNo);
+	}
+
+	@Override
+	public ChallVO reviewList(ChallVO challVO) {
+		return challConfirmMapper.reviewList(challVO);
+	}
+	//수정해야함....
+	@Override
+	public int insertChallEnter(ChallVO challVO) {
+		int result = challConfirmMapper.challEnterInsert(challVO);
+		return 0;
 	}
 }

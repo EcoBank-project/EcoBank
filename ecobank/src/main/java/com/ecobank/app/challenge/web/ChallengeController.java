@@ -24,14 +24,14 @@ import com.ecobank.app.common.service.Criteria;
 import com.ecobank.app.common.service.PageDTO;
 
 @Controller
-public class ChallengController {
+public class ChallengeController {
 	@Value("${file.upload.path}")
 	private String uploadPath;
 	
 	private ChallService challService;
 	
 	@Autowired
-	public ChallengController(ChallService challService) {
+	public ChallengeController(ChallService challService) {
 		this.challService = challService;
 	}
 	

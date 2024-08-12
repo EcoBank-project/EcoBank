@@ -102,9 +102,18 @@ public class FileServiceImpl implements FileService{
 		public List<FileVO> selectFileInfo(int userNo, int challNo, String fileCode) {
 			FileVO fileVO = new FileVO();
 			fileVO.setUserNo(userNo);
-			fileVO.setFileCode(fileCode);
 			fileVO.setChallNo(challNo);
+			fileVO.setFileCode(fileCode);
+			//System.out.println(fileCode);
 			return fileMapper.selectConfirmFileInfo(fileVO);
 		}
+
+		@Override
+		public List<FileVO> selectFileOtherInfo(int challNo) {
+			List<FileVO> list = fileMapper.selectOtherConfirm(challNo);
+			return list;
+		}
+
+		
 
 }
