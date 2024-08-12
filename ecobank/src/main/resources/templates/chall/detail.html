@@ -51,8 +51,8 @@
 			                <i class="fas fa-heart"></i>
 			                <span th:text="${detail.challLikeNo}">50</span>
 			            </div>
-                        <a href="@{/}" class="btn btn-primary rounded-pill py-3 px-5 mt-3">도전하기</a>
-                        <a href="@{/}" class="btn btn-primary rounded-pill py-3 px-5 mt-3">인증하기</a>
+                        <a th:id="challBtn" class="btn btn-primary rounded-pill py-3 px-5 mt-3">도전하기</a>
+                        <a th:href="@{/confirmForm}" th:id="confirmBtn" class="btn btn-primary rounded-pill py-3 px-5 mt-3">인증하기</a>
                     </div>
                 </div>
             </div>
@@ -81,16 +81,16 @@
 	<script src="<https://kit.fontawesome.com/a076d05399.js>" crossorigin="anonymous"></script>
 	<script>
 		function toggleActive(buttonGroup, activeId) {
-		    // 주어진 버튼 그룹 내의 모든 버튼에서 'active' 클래스를 제거
+		    //주어진 버튼 그룹 내의 모든 버튼에서 'active' 클래스를 제거
 		    buttonGroup.forEach(function(id) {
 		        $('#' + id).removeClass('active');
 		    });
-		    // 클릭된 버튼에 'active' 클래스를 추가
+		    //클릭된 버튼에 'active' 클래스를 추가
 		    $('#' + activeId).addClass('active');
 		}
 	
 		$(document).ready(function(){
-		    // 첫 번째 버튼 그룹
+		    //첫 번째 버튼 그룹
 		    const firstGroup = ['ready', 'end', 'progress'];
 		    firstGroup.forEach(function(id) {
 		        $('#' + id).click(function() {
@@ -98,7 +98,7 @@
 		        });
 		    });
 	
-		    // 두 번째 버튼 그룹
+		    //두 번째 버튼 그룹
 		    const secondGroup = ['detailImg', 'myConfirm', 'myCalendar', 'others'];
 		    secondGroup.forEach(function(id) {
 		        $('#' + id).click(function() {
@@ -108,6 +108,30 @@
 		    detailImg(); //상세이미지 호출
 		});
 	
+		$(document).ready(function(){
+            let cNo = $('#cNo').val();
+            //console.log(cNo , "cno찍히나");
+            //챌린지 참여 여부 확인
+            $.ajax({
+                url: '/api/enterStatus',
+                method: 'get',
+                data: { challNo: cNo },
+                success: function(result) {
+                	console.log(result);
+                    if (result) {
+                        $('#challBtn').hide(); //도전하기 버튼 숨기기
+                        $('#confirmBtn').show(); //인증하기 버튼 보이기
+                    } else {
+                        $('#challBtn').show(); //도전하기 버튼 보이기
+                        $('#confirmBtn').hide(); //인증하기 버튼 숨기기
+                    }
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
+		
 		//나의 인증 내역
 		$('#myConfirm').click(function(){
 			let cNo = $('#cNo').val();
@@ -120,9 +144,9 @@
 					},
 					success : function(result){
 						console.log(result);
-						$('#myConfirmCnt').text(result.confirmCount);
-						$('#score').text(result.score);
-						$('#remainCnt').text(result.remainCount);
+						$('#myConfirmCnt').text(result.confirmCount || '0');
+						$('#score').text(result.score || '0');
+						$('#remainCnt').text(result.remainCount || '0');
 					},
 					error : function(err){
 						console.log(err);

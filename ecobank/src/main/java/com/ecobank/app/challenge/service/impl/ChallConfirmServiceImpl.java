@@ -65,10 +65,16 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	public ChallVO reviewList(ChallVO challVO) {
 		return challConfirmMapper.reviewList(challVO);
 	}
-	//수정해야함....
+	
 	@Override
-	public int insertChallEnter(ChallVO challVO) {
-		int result = challConfirmMapper.challEnterInsert(challVO);
-		return 0;
+	public int insertChallEnter(int userNo, int challNo) {
+		int result = challConfirmMapper.challEnterInsert(userNo, challNo);
+		return result;
+	}
+
+	@Override
+	public boolean isUserParticipated(int userNo, int challNo) {
+		int cnt = challConfirmMapper.enterStatus(userNo, challNo);
+		return cnt > 0;
 	}
 }
