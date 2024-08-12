@@ -10,7 +10,7 @@ public interface FileMapper {
 	//등록
 	public int insertFileInfo(FileVO fileVO);
 	
-	//수정
+	//삭제
 	public int deleteFileInfo(int fileVO);
 	
 	//파일조회
@@ -18,4 +18,7 @@ public interface FileMapper {
 	
 	//나의 인증 내역 파일(userNo가 참여한 challConfirmNo별 파일 하나씩만 가져오려고(미리보기느낌))
 	public List<FileVO> selectConfirmFileInfo(FileVO fileVO);
+	
+	//다른 참가자 인증 내역 파일
+	public List<FileVO> selectOtherConfirm(int challNo);
 }

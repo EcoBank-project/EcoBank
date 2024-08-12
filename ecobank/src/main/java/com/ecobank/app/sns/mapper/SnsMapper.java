@@ -26,5 +26,8 @@ public interface SnsMapper {
 	
 	//로그인정보 저장
 	public int getUserNo();
+	
+	// sns신고 조회
+	public List<SnsVO> selectSnsDeclare();
 
 }

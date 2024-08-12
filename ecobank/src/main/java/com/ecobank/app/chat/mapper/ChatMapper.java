@@ -18,7 +18,7 @@ public interface ChatMapper {
 	// 채팅방 채팅로그 기록
 	public int insertChatMessage(ChatMessageVO chatMessageVO);
 	// 채팅방 만들기
-	public int insertChatRoomInfo(ChatRoomVO chatRoomVO);
+	public int insertChatRoom(ChatRoomVO chatRoomVO);
 	// 팔로우 목록
 	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);
 }

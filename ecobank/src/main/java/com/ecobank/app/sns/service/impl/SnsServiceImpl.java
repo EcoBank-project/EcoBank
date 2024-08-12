@@ -72,6 +72,10 @@ public class SnsServiceImpl implements SnsService{
     public int getUserNo() {
         return snsMapper.getUserNo();
     }
+	@Override
+	public List<SnsVO> snsDeclareList() {
+		return snsMapper.selectSnsDeclare();
+	}
     
 
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.score.mapper.ScoreMapper">
+	
+	<!-- 사이트 총 사용 점수 조회 -->
+	<select id="selectTotalUseScore" resultType="int">
+		SELECT
+		SUM(use_score)
+		FROM use_score
+	</select>
+	
+	<!-- 사이트 총 점수 조회 -->
+	<select id="selectTotalScore" resultType="int">
+		SELECT
+		SUM(score)
+		FROM score
+	</select>
+	
+	<!-- 회원 아이디로부터 사용가능한 점수를 가져오는 쿼리 -->
+	<select id="selectScoreUsableByUserId" resultType="int"
+		parameterType="String">
+		SELECT s.total_score - NVL(u.total_use_score, 0) AS score_usable
+		FROM
+		(SELECT user_no, 
+			    SUM(score) AS total_score
+		 FROM score
+		 WHERE user_no = (SELECT user_no 
+		 				  FROM users 
+		 				  WHERE use_id = #{useId})
+		 GROUP BY user_no) s
+		LEFT JOIN
+		(SELECT user_no, 
+			    SUM(use_score) AS total_use_score
+		FROM use_score
+		WHERE user_no = (SELECT user_no 
+						 FROM users 
+						 WHERE use_id = #{useId})
+		GROUP BY user_no) u
+		ON s.user_no = u.user_no
+	</select>
+</mapper>
+	
