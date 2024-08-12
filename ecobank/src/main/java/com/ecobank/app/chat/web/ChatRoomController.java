@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageDTO;
+import com.ecobank.app.chat.service.ChatRoomDTO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
 
@@ -61,19 +61,24 @@ public class ChatRoomController {
 		return followList;
 	}
 	// 채팅방 목록
-	
-	
-	// 채팅방 생성 - 1대1 채팅
-	@PostMapping("/chatRoom/privateChat")
+	@GetMapping("/chatRoom/chatList")
 	@ResponseBody
-	public String chatPrivate(){
-		return "success";
+	public List<ChatRoomVO> chatRoomList(){
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		List<ChatRoomVO> roomlist = chatService.chatRoomList(userNo);
+		return roomlist;
 	}
-	// 채팅방 생성 - 그룹채팅
-	@PostMapping("/chatRoom/groupChat")
+	
+	// 채팅방 생성 - 1대1 채팅 & 그룹채팅
+	@PostMapping("/chatRoom/CreateChat")
 	@ResponseBody
-	public String chatGroup(@RequestBody ChatRoomVO chatRoomVO){
-		System.out.println(chatRoomVO);
+	public String chatGroup(@RequestBody ChatRoomDTO chatRoom){
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		chatService.ChatRoomInsert(chatRoom.getChatName(), userNo);
+		List<Integer> userIds = chatRoom.getUserId();
+		for(Integer userId : userIds) {
+			chatService.ChatUserInsert(chatRoom.getChatName(), userId);
+		};
 		return "success";
 	}
 }

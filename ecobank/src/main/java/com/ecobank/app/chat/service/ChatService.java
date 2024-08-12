@@ -13,7 +13,9 @@ public interface ChatService {
 	//채팅방 채팅로그 기록 저장
 	public int ChatMessageInsert(ChatMessageVO chatMessageVO);
 	//채팅방 만들기
-	public int ChatRoomInsert(ChatRoomVO chatRoomVO);
+	public int ChatRoomInsert(String chatName, Integer userNo);
+	//채팅방 참여자
+	public int ChatUserInsert(String chatName, Integer userNo);
 	//팔로우 목록
 	public List<ChatFollowVO> chatFollowList(Integer userNo);
 }

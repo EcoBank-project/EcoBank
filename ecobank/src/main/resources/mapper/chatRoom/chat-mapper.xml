@@ -61,7 +61,20 @@
 		                on u.user_no = following_id
 		where f.follower_id = #{followingId}
 	</select>
-	<insert id="insertChatRoom" parameterType="ChatRoomVO">
-		{CALL insertChatRoom(#{userNo},#{chatName})}
+	<!-- 채팅방 생성 -->
+	<insert id="insertChatRoom">
+		{call insertChatRoom(#{chatName},#{userNo})}
+	</insert>
+	<!-- 채팅방에 참여자 추가 -->
+	<insert id="insertChatUser" parameterType="chatRoomUserVO">
+		<selectKey keyProperty="chatNo"
+		           resultType="Integer"
+		           order="BEFORE">
+		SELECT chat_no
+		FROM chat
+		WHERE chat_name = #{chatName}
+		</selectKey>
+		INSERT INTO chat_entry (user_no, chat_no)
+		VALUES (#{userNo}, #{chatNo})
 	</insert>
 </mapper>
