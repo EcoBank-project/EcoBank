@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<th:block xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	th:fragment="mySideFragment">
+	<div class="my-side">
+		<h3>마이페이지</h3>
+		<p>챌린지</p>
+		<ul>
+			<li><a class="sideBtn btn btn-link" href="">신청한 챌린지</a></li>
+			<li><a class="sideBtn btn btn-link" href="">진행중인 챌린지</a></li>
+			<li><a class="sideBtn btn btn-link" href="">완료한 챌린지</a></li>
+		</ul>
+		<p>내 정보 관리</p>
+		<ul>
+			<li><a class="sideBtn btn btn-link" href="">회원정보수정</a></li>
+			<li><a class="sideBtn btn btn-link" href="">회원탈퇴</a></li>
+		</ul>
+
+	</div>
+</th:block>

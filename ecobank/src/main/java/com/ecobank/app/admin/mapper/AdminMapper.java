@@ -3,6 +3,7 @@ package com.ecobank.app.admin.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
@@ -12,8 +13,6 @@ public interface AdminMapper {
     
     // 유저 목록 조회
     List<UserVO> userList();
-    
-    
     
     //가입한 회원수 조회
     int getusers();
@@ -26,9 +25,6 @@ public interface AdminMapper {
     //챌린지 신고 조회 
     List<ChallDeclareVO> ChallDeclareList();
     
-    //챌린지 삭제
-    int deleteChallDeclare (int confirmDeclareNo);
-    
     //sns 신고 조회
     List<SnsDeclareVO> SnsDeclareList();
     
@@ -37,12 +33,17 @@ public interface AdminMapper {
     
     //sns 상태 변환 업데이트
     int updatefeedState(@Param("feedNo") int feedNo, @Param("feedState") String feedState);
+       
+    //sns피드 신고당한횟수
+    int getCountByFeedNo(int feedNo);
     
-    //sns 신고 조회
-    int snsDeclareDelete (int declareNo);
+    //sns댓글 신고당한횟수
+    int getCountByReplyNo(int replyNo);
     
-    int snsReplyDeclareDelete (int declareNo);
+    //챌린지 신고 횟수
+    int getCountBychallNos(int confirmNo);
     
-    
-    
+    //프로시저 호출
+    void UpdateSnsState();
+
 }

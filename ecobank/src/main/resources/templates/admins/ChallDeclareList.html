@@ -20,7 +20,7 @@
                 <th class="text-center">신고 분류</th>
                 <th class="text-center">신고 날짜</th>               
               
-                <th class="text-center">작업</th>
+                <th class="text-center">신고 횟수</th>
             </tr>
         </thead>
         
@@ -31,7 +31,9 @@
                     <td class="text-center" th:text="${challDeclare.confirmNo}"></td>
                     <td class="text-center" th:text="${challDeclare.confirmUserNo}"></td>
                     <td class="text-center" th:text="${challDeclare.confirmDeclareType}"></td>
-                    <td class="text-center" th:text="${challDeclare.confirmDeclareat}"></td>            
+                    <td class="text-center" th:text="${#dates.format(challDeclare.confirmDeclareat , 'yyyy/MM/dd')}"></td>  
+                    <!-- 신고 개수 출력 -->
+                    <td class="text-center" th:text="${countMap[challDeclare.confirmNo]}"></td>         
                 </tr>         
             </th:block>
         </tbody>

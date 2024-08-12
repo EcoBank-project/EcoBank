@@ -35,10 +35,16 @@ public class SmsController {
     }
 
     @PostMapping("/user/verify")
-    public ResponseEntity<Map<String, String>> verifySms(@RequestParam String phoneNumber, @RequestParam String verificationCode) {
+    public ResponseEntity<Map<String, String>> verifySms(
+    		@RequestParam String phoneNumber,
+    		@RequestParam String verificationCode
+    		) {
     	String storedCode = verificationCodes.get(phoneNumber);
         Map<String, String> response = new HashMap<>();
-    	if (storedCode != null && storedCode.equals(verificationCode)) {
+        System.out.println("Phone Number: " + phoneNumber);
+        System.out.println("Provided Code: " + verificationCode);
+        System.out.println("Stored Code: " + storedCode);        
+        if (storedCode != null && storedCode.equals(verificationCode)) {
             verificationCodes.remove(phoneNumber); // 인증번호 검증 후 삭제
             String userId = userService.getUserIdByPhoneNumber(phoneNumber); // 회원 ID 조회
             response.put("message", "인증 성공");
