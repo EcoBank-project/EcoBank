@@ -15,18 +15,16 @@
         <thead>
             <tr>
 				<th class="text-center">피드번호</th>
-                <th class="text-center">피드내용</th>
                 <th class="text-center">피드 작성 일자</th>
                 <th class="text-center">회원번호</th>
                 <th class="text-center">피드 상태</th>
-                <th class="text-center">해시태그</th>
+                <th class="text-center">업데이트</th>
             </tr>
         </thead>
         <tbody>
             <th:block th:each="adminSns : ${adminSns}">
                 <tr>
 					<td class="text-center" th:text="${adminSns.feedNo}"></td>
-                    <td class="text-center" th:text="${adminSns.feedContent}"></td>
 					<td class="text-center" th:text="${#dates.format(adminSns.feedCreateAt, 'yyyy/MM/dd')}"></td>
                     <td class="text-center" th:text="${adminSns.userNo}"></td>
                     <td class="text-center">
@@ -35,7 +33,7 @@
 					    <select name="feedState" class="form-select form-select-sm">
 					        <option th:value="${adminSns.feedState}" th:text="${adminSns.feedState}" selected></option>
 					        <option value="F1">F1 공개</option>
-					        <option value="F2">F2 비공개</option>
+					        <option value="F2 ">F2 비공개</option>
 					    </select>
 					    </td>
 					    <td class="text-center">

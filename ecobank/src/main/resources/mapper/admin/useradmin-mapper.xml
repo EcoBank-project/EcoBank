@@ -34,6 +34,7 @@
         UPDATE users
         SET USER_STATE = #{userState}
         WHERE use_id = #{useId}
+        
     </update>
     
 </mapper>

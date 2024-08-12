@@ -62,10 +62,22 @@
 	</select>
 	<!--sns댓글신고횟수-->
 	<select id="getCountByReplyNo" parameterType="int" resultType="int">
-  SELECT COUNT(*)
+ 	SELECT COUNT(*)
     FROM sns_declare
     WHERE reply_no = #{replyNo}
 	</select>
+	
+	<select id="getCountBychallNos" parameterType="int" resultType="int">
+ 	SELECT COUNT(*)
+    FROM chall_confirm_declare
+    WHERE confirm_no = #{confirmNo}
+	</select>
+	
+	 <select id="UpdateSnsState" statementType="CALLABLE">
+        CALL UpdateSnsState()
+    </select>
+
+		
 
 	
 		
