@@ -47,7 +47,7 @@ public class ChatMessageController {
 		chatMessage.setUserNo(message.getUserNo());
 		chatMessage.setChatNo(message.getChatNo());
 		chatService.ChatMessageInsert(chatMessage);
-		System.out.println(message);
+
 		// 날짜 포맷
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
 		String formatDate = dateFormat.format(message.getFormatTime());

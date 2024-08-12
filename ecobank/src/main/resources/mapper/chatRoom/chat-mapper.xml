@@ -61,4 +61,7 @@
 		                on u.user_no = following_id
 		where f.follower_id = #{followingId}
 	</select>
+	<insert id="insertChatRoom" parameterType="ChatRoomVO">
+		{CALL insertChatRoom(#{userNo},#{chatName})}
+	</insert>
 </mapper>

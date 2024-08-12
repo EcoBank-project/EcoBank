@@ -2,13 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.intro.mapper.CarbonMapper">
 	<!-- 챌린지 전체 조회 -->
-	<select id="selectCarbonAll" resultType="com.ecobank.app.intro.service.CarbonVO">
-		SELECT carbon_no,
-			   region_code,
-			   nation_code,
-			   NVL(carbon_emissions,0) as carbon_emissions 
-		FROM carbon 
-		ORDER BY carbon_emissions DESC
+	<select id="selectCarbonAll"
+		resultType="com.ecobank.app.intro.service.CarbonVO">
+		SELECT c.carbon_no,
+			   c.region_code,
+			   c.nation_code,
+			   GREATEST(NVL(c.carbon_emissions, 0) - NVL((SELECT SUM(s.score)
+			                                              FROM users u 
+			                                              JOIN score s ON u.user_no = s.user_no
+			                                              WHERE u.country = c.nation_code
+			                                              GROUP BY u.country
+			                                              ), 0)
+		                , 0) AS carbon_emissions
+		FROM 
+		    carbon c
+		ORDER BY 
+		    carbon_emissions
 	</select>
+
 </mapper>
 	

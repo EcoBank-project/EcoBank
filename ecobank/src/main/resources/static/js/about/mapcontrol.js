@@ -25,7 +25,19 @@ window.setTimeout(getAllPath, 500);
 5000 > data && data >= 0
 
 */
+	// 데이터 배열 정의
+    var labels = [50000000, 5000000, 1000000, 500000, 100000, 50000, 10000, 5000];
+	let colorsets = ['#ff0303', '#ff3903', '#ff8103', '#ffe203', '#9aff03', '#35ff03', '#03ff70', '#0385ff'];
 
+    // legend_label에 li 요소 추가
+    for(var i = 0; i < labels.length; i++) {
+        $('.legend_label').append('<li>' + (labels[i]+"").replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '</li>');
+    }
+
+    // legend_color에 li 요소 추가 및 배경색 지정
+    for(var j = 0; j < colorsets.length; j++) {
+        $('.legend_color').append('<li style="background-color: ' + colorsets[j] + '"></li>');
+    }
 function getAllPath() {
 
 	console.log("ready!");
@@ -35,7 +47,7 @@ function getAllPath() {
 	let test = $("path");
 	let className = '';
 
-	let colorsets = ['#ff0303', '#ff3903', '#ff8103', '#ffe203', '#9aff03', '#35ff03', '#03ff70', '#0385ff'];
+	
 
 	let dataAry = [];
 	$(test).each((idx, item) => {
@@ -81,8 +93,10 @@ function getAllPath() {
 
 	simplemaps_worldmap.hooks.zoomable_click_region = function(id) { alert(simplemaps_worldmap_mapdata.regions[id].name); }
 	simplemaps_worldmap.hooks.click_region = function(id) { console.log(id); }
-	simplemaps_worldmap.hooks.back = function(e) { alert(e); }
-
+	simplemaps_worldmap.hooks.back = function() { alert('Back button clicked!'); }
+	simplemaps_worldmap.hooks.click_state = function(id){
+     alert(id);
+   }
 }
 
 

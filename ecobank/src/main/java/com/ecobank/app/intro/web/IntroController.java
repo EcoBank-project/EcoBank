@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import com.ecobank.app.intro.service.CarbUserService;
 import com.ecobank.app.intro.service.CarbonService;
 import com.ecobank.app.intro.service.CarbonVO;
+import com.ecobank.app.score.service.ScoreService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,11 +28,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class IntroController {
 	private CarbonService carbService;
 	private CarbUserService userService;
-
+	private ScoreService scoreService;
+	
 	@Autowired
-	public IntroController(CarbonService carbService, CarbUserService userService) {
+	public IntroController(CarbonService carbService, CarbUserService userService, ScoreService scoreService) {
 		this.carbService = carbService;
 		this.userService = userService;
+		this.scoreService = scoreService;
 	}
 
 	@GetMapping("/")

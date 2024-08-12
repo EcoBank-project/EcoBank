@@ -1,9 +1,35 @@
-<div>
-	<p id="myConfirmCnt"></p>
-	<p id="score"></p>
-	<p id="remainCnt"></p>
+<html xmlns:th="https://www.thymeleaf.org/">
+<meta charset="UTF-8">
+<style>
+
+</style>
+<div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+	<h4 class="mb-2">나의 인증 횟수</h4>
+	<h1 class="text-primary" id="myConfirmCnt"></h1>
+	<h4 class="mb-2">챌린지 완료 후 얻는 점수</h4>
+	<h1 class="text-primary" id="score"></h1>
+	<h4 class="mb-2">남은 인증 횟수</h4>
+	<h1 class="text-primary" id="remainCnt"></h1>
 </div>
-<div th:each="file : ${fileList}">
+<!--/* <div th:each="file : ${fileList}">
 	<p th:text="${file.fileName}">
 	<p th:text="${file.filePath}">
+</div> */-->
+<div class="row g-4 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
+	<h4 class="text-center mb-2">♡ My Challenge Room ♡</h4>
+	<div class="row g-4 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
+		<div class="col-lg-4 col-md-6 portfolio-item first" th:each="file : ${fileList}">
+			<div class="portfolio-img rounded overflow-hidden">
+				<img class="img-fluid" th:src="@{/images/{fileName}(fileName=${file.fileName})}" alt="나의 인증 이미지" style="width:295px; height:197px">
+				<div class="portfolio-btn">
+					<a class="btn btn-lg-square btn-outline-light rounded-circle mx-1"
+						src="img/img-600x400-6.jpg" data-lightbox="portfolio"><i
+						class="fa fa-eye"></i></a> <a
+						class="btn btn-lg-square btn-outline-light rounded-circle mx-1"
+						href=""><i class="fa fa-link"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+</html>
