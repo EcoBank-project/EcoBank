@@ -31,6 +31,7 @@
 </script>
 </head>
 <body>
+	<form action="uploadForm" method="post" enctype="multipart/form-data">
 	<div>
 		<div class="container">
 			<div class="row">
@@ -47,8 +48,8 @@
 						</div>
 						<div class="imghover">
 							<div th:text=${sns.feedNo} class="blind"></div>
-							<a href="#" class="post-thumbnail transition"> <img
-								th:src=@{/images/{filePath}(filePath=${sns.filePath})}
+							<a href="#" class="post-thumbnail transition">
+							 <img th:src=@{/images/{fileName}(fileName=${sns.fileName})}
 								alt="Image" class="img-fluid"></a>
 							<div class="post-content-entry">
 								<div class="meta">
@@ -63,6 +64,7 @@
 			</div>
 		</div>
 	</div>
+	</form>
 	<script>
 		$(".imghover").on('click', function(event) {
 			/* if(event.target.tagName == 'BUTTON') return; */

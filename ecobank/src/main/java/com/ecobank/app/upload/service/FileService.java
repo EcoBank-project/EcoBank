@@ -14,7 +14,7 @@ public interface FileService {
 	
 
 	//삭제
-	public int deleteFile(int fileNo);
+	public int deleteFile(int feedNo);
 	
 	//파일조회
 	public List<FileVO> selectFileInfo(int feedNo);

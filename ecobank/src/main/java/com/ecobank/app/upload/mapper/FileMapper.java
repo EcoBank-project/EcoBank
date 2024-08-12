@@ -10,7 +10,7 @@ public interface FileMapper {
 	//등록
 	public int insertFileInfo(FileVO fileVO);
 	
-	//수정
+	//삭제
 	public int deleteFileInfo(int fileVO);
 	
 	//파일조회

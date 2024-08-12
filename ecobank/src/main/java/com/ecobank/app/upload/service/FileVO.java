@@ -13,5 +13,10 @@ public class FileVO {
 	private Integer userNo;		//회원 번호
 
 	private int challNo;			//챌린지 번호
+
+	
+	private Integer feedNo; 		//sns피드번호
+
 	private int confirmNo;			//챌린지 인증 번호
+
 }

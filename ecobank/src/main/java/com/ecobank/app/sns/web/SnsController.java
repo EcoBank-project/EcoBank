@@ -65,6 +65,11 @@ public class SnsController {
 		List<FileVO> list = fileService.selectFileInfo(snsVO.getFeedNo());
 		model.addAttribute("snsFileInfo",list);
 		model.addAttribute("sns", findVO);
+		
+		List<SnsVO> declarelist = snsService.snsDeclareList();
+		model.addAttribute("snsDeclare",declarelist);
+		
+		
 		return "sns/snsInfo";
 	}
 	
@@ -114,10 +119,11 @@ public class SnsController {
 
 	//삭제
 	@GetMapping("snsDelete")
-	public String snsDelete(Integer feedNo) {
+	public String snsDelete(MultipartFile[] images, Integer feedNo) {
+		fileService.deleteFile(feedNo);
 		snsService.deleteSns(feedNo);
-		return "redirect:sns";
+		return "sns/sns";
 	}
-
 	
+
 }
