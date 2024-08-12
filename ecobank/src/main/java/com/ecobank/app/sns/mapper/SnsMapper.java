@@ -29,5 +29,8 @@ public interface SnsMapper {
 	
 	// sns신고 조회
 	public List<SnsVO> selectSnsDeclare();
+	
+	//검색기능
+	
 
 }

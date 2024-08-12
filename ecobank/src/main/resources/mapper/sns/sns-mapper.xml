@@ -128,6 +128,13 @@
 		SELECT code_id, get_codename(code_id) as snsdeclare
 		FROM common_code
 		WHERE code_id like 'E%'
-</select>
+	</select>
+
+	<!-- 검색 -->
+	<select id="search" resultType="SnsVO">
+	SELECT * 
+	FROM sns
+	WHERE hashtag like '#%'||'메'||'%' AND feed_state='F1';
+	</select>
 	
 </mapper>

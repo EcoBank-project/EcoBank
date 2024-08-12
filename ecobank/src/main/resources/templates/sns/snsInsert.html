@@ -13,9 +13,10 @@
 	<h3>sns 등록</h3>
 	<form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
 
-	<div>피드내용<input name="feedContent"></div>
+	<input type="file" name="images" multiple><br>
+	<textarea rows="5" cols="30" name="feedContent" placeholder="내용작성"></textarea><br>
+	<textarea rows="1" cols="30" name="hashtag" placeholder="#해시태그"></textarea>
 	
-	<input type="file" name="images" multiple>
 			
 		<div>
 			<button class="btn btn-primary" type="submit" >저장</button>
