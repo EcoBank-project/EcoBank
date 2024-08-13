@@ -47,7 +47,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	        console.log('챌린지 번호', cNo);
 	        $.ajax({
 	            url: '/goChallenge',
-	            method: 'POST',
+	            method: 'post',
 	            data: { challNo: cNo },
 	            success: function(result){
 	                alert("챌린지 도전~!");

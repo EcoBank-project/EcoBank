@@ -139,16 +139,16 @@ public class AdminController {
 
     // SNS 전체 조회
     @GetMapping("adminSns")
-    public String adminsnsList(Model model) {
-        List<SnsVO> list = snsService.snsList();
+    public String adminsnsList(Model model, SnsVO snsVO) {
+        List<SnsVO> list = snsService.snsList(snsVO);
         model.addAttribute("adminSns", list);
         return "admins/adminSns";
     }
     
     // SNS 전체 조회
     @GetMapping("updateadminSns")
-    public String adminsnsList1(Model model) {
-        List<SnsVO> list = snsService.snsList();
+    public String adminsnsList1(SnsVO snsVO, Model model) {
+        List<SnsVO> list = snsService.snsList(snsVO);
         
         
         

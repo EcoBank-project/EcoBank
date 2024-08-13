@@ -7,15 +7,15 @@ import com.ecobank.app.sns.service.SnsVO;
 
 public interface SnsReplyMapper {
 
-	
 	//피드별 댓글 조회 
 	public List<SnsReplyVO> selectSnsReplyInfo(SnsReplyVO snsReplyVO);
 	
-	//등록
+	//댓글 등록
 	public int insertSnsReplyInfo(SnsReplyVO snsReplyVO);
 
+	//댓글 개별 삭제
+	public int deleteSnsReplyInfo(int replyNO);
 	
-	//삭제
-	public int deleteSnsReplyInfo(int snsReplyNO);
+
 
 }

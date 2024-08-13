@@ -11,7 +11,7 @@ public class ChallConfirmVO {
 	//챌린지 인증
 	private Integer confirmNo;			//인증번호
 	private int userNo;					//회원번호
-	private int challNo;				//챌린지번호
+	private Integer challNo;				//챌린지번호
 	private String confirmContent;		//인증내용
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date confirmCreateAt;		//인증 작성 일자
@@ -35,5 +35,5 @@ public class ChallConfirmVO {
 	private String fileName;			//파일이름
 	private String filePath;			//파일경로
 	private String fileCode;			//파일 분류 코드
-	private int fileCodeNo;				//파일 분류 코드 번호
+	private int fileCodeNo;				//파일 분류 코드 번호 = 챌린지 인증 번호 
 }

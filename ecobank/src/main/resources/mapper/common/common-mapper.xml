@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.common.mapper.CommonMapper">
+
+	
+	<select id="codeList" resultType="CodeVO">
+		SELECT code_id, code_name
+		FROM common_code
+		WHERE code_type = #{codeType}
+	</select>
+
+
+</mapper>
