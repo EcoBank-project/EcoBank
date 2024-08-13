@@ -233,7 +233,7 @@ padding: 20px;
  	<div class="modal">
         <div class="modal_body">
             <div class="inputleft">
-            <h4>피드 신고하기</h4>
+            <h4>신고하기</h4>
         	<hr style="width:100%;height:5px;border:none;"/>
             <form method="post">
 					<th:block th:each="declare, sts : ${snsDeclare}">
@@ -273,12 +273,13 @@ padding: 20px;
 	});
 
 	$('.nav-menu').on('click',function(){
+		event.preventDefault();
 		$('.dropdown-menu').show();
 	})	
 	
 	$(window).click(function(event){
-		if($(event.target).not($('.dropdown-menu'))){				
-			//$('.dropdown-menu').hide();
+		if(!$(event.target).hasClass('nav-menu') && !$(event.target).hasClass('menu')){				
+			$('.dropdown-menu').hide();   
 			console.log('확인1')
 		}
 		if($('.dropdown-menu').css('display') == 'block'){
@@ -345,6 +346,7 @@ padding: 20px;
 			}
 		});
 	});
+	
 	//댓글 삭제
 	function deleteBtn(rno){
 		console.log('삭제');
@@ -384,26 +386,44 @@ padding: 20px;
 						</td>`;
 
 			output += "<td><button onclick='deleteBtn("+list[i].replyNo+")'>삭제</button></td>";
-
+		
 			output += "</tr>";
 		}
 
 		output += "</table>";
 		$('#replyArea').html(output);
+
+		$('.nav-menu-reply').on('click',function(event){
+			event.preventDefault();
+			$('.dropdown-menu-reply').show();
+		})	
+		
+		$(window).click(function(event){
+			if(!$(event.target).hasClass('nav-menu-reply') && !$(event.target).hasClass('menu-reply')){				
+				$('.dropdown-menu-reply').hide();   
+				console.log('확인1')
+			}
+			if($('.dropdown-menu-reply').css('display') == 'block'){
+				console.log("확인2");
+			}
+		})
+		
+		$('#declareRModal').on('click', function(){
+			 modal.style.display="block";
+		});
+		
 	}
 	
 	//모달
 	  const modal = document.querySelector('.modal');
-      const btnOpenModal=document.querySelector('.declareModal');
-      const btnOpenRModal=document.querySelector('.declareRModal');
+    //  const btnOpenModal=document.querySelector('.declareModal');
+     // const btnOpenRModal=document.querySelector('.declareRModal');
       
 	$('#declareModal').on('click', function(){
 		 modal.style.display="block";
 	});
 	
-	$('#declareRModal').on('click', function(){
-		 modal.style.display="block";
-	});
+	
 
 	$('#btn-close').on('click', function(){
 		 modal.style.display="none";	
@@ -422,8 +442,8 @@ padding: 20px;
 		  })
 			$.ajax({
 				type : "POST",
-				url : "declareInsert?feedNo="+feedNo,
-				data : {feedNo, userNo, codeId},
+				url : "declareInsert?feedNo="+feedNo +"&replyNo="+rno,
+				data : {feedNo, userNo, codeId, replyNo},
 				success : function(list){
 					 alert("해당글이 신고되었습니다.");
 					 location.href="sns";
