@@ -144,30 +144,30 @@
                         <div class="btn-lg-square bg-primary rounded-circle me-3">
                             <i class="fa fa-users text-white"></i>
                         </div>
-                        <h1 class="mb-0" data-toggle="counter-up" th:text="${#numbers.formatInteger(3453, 3, 'COMMA')}"></h1>
+                        <h1 class="mb-0" data-toggle="counter-up" th:text="${#numbers.formatInteger(challEnterUserCount, 3, 'COMMA')}"></h1>
                     </div>
                     <h5 class="mb-3">챌린지 참여</h5>
-                    <span><span th:text="${#numbers.formatInteger(3453, 3, 'COMMA')}"></span>명의 회원이 챌린지에 참여해주셨습니다.</span>
+                    <span><span th:text="${#numbers.formatInteger(challEnterUserCount, 3, 'COMMA')}"></span>명의 회원이 챌린지에 참여해주셨습니다.</span>
                 </div>
                 <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeIn;">
                     <div class="d-flex align-items-center mb-4">
                         <div class="btn-lg-square bg-primary rounded-circle me-3">
                             <i class="fa fa-check text-white"></i>
                         </div>
-                        <h1 class="mb-0"><span data-toggle="counter-up" th:text="${#numbers.formatInteger(4234, 3, 'COMMA')}"></span></h1>
+                        <h1 class="mb-0"><span data-toggle="counter-up" th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span></h1>
                     </div>
                     <h5 class="mb-3">입금 환경 점수</h5>
-                    <span>에코 뱅크에 <span th:text="${#numbers.formatInteger(4234, 3, 'COMMA')}"></span>원 적립되었습니다.</span>
+                    <span>에코 뱅크에 <span th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span>점 적립되었습니다.</span>
                 </div>
                 <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.7s" style="visibility: visible; animation-delay: 0.7s; animation-name: fadeIn;">
                     <div class="d-flex align-items-center mb-4">
                         <div class="btn-lg-square bg-primary rounded-circle me-3">
                             <i class="fa fa-users-cog text-white"></i>
                         </div>
-                        <h1 class="mb-0"><span data-toggle="counter-up" th:text="${#numbers.formatInteger(1831, 3, 'COMMA')}"></span> TCo2</h1>
+                        <h1 class="mb-0"><span data-toggle="counter-up" th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span> TCo2</h1>
                     </div>
                     <h5 class="mb-3">예상 탄소 저감량</h5>
-                    <span><span th:text="${#numbers.formatInteger(1831, 3, 'COMMA')}"></span> Tco2/kWh 감소가 예상됩니다.</span>
+                    <span><span th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span> Tco2/kWh 감소가 예상됩니다.</span>
                 </div>
             </div>
             <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
@@ -229,7 +229,7 @@
 	    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s"
 	      style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
 	      <h1 class="mb-4">탄소 <span data-toggle="counter-up"
-	          th:text="${#numbers.formatInteger(352, 3, 'COMMA')}"></span>TonCo2/kWh를 절감한다면</h1>
+	          th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span>TonCo2/kWh를 절감한다면</h1>
 	    </div>
 	
 	    <div class="row g-5 mb-5">
@@ -252,7 +252,7 @@
                 data-wow-delay="1.0s"
                 style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
                 <h1 class="mb-4"><span data-toggle="counter-up"
-	          th:text="${#numbers.formatInteger(352, 3, 'COMMA')}"></span>그루를 심은 효과!</h1>
+	          th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span>그루를 심은 효과!</h1>
            </div>
 	    </div>
 	  </div>

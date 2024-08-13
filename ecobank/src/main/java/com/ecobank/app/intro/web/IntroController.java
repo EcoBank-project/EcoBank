@@ -51,13 +51,21 @@ public class IntroController {
 	@GetMapping("about")
 	public String about(Model model) {
 		// 1. 기능수행
+		// 탄소배출량 데이터
 		List<CarbonVO> carbList = carbService.CarbonList();
+		// 사이트 회원 총 사용점수
+		Integer totalScore = scoreService.selectTotalUseScore();
+		Integer challEnterUserCount = scoreService.getChallEnterUserCount();
+		// 회원 사용 가능 점수
+		
 		// 2. 클라이언트에 전달할 데이터 담기
 		ObjectMapper objectMapper = new ObjectMapper();
 		String myDataJson;
 		try {
 			myDataJson = objectMapper.writeValueAsString(carbList);
 			model.addAttribute("carbList", myDataJson);
+			model.addAttribute("totalScore",totalScore);
+			model.addAttribute("challEnterUserCount",challEnterUserCount);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

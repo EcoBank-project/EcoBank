@@ -1,8 +1,8 @@
 package com.ecobank.app.score.service;
 
 public interface ScoreService {
-	// 종료 챌린지 건수 조회
-	
+	// 챌린지 참여 인원 조회
+	public int getChallEnterUserCount();
 	// 사이트 총 사용 점수 조회
 	public int selectTotalUseScore();
 	

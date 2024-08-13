@@ -11,4 +11,7 @@ public interface ScoreMapper {
 	
 	// 회원 아이디로부터 사용 가능한 점수를 가져오는 메서드
 	public int selectScoreUsableByUserId(@Param("useId") String useId);
+	
+	// 종료 챌린지 건수 조회
+	public int selectChallEnterUserCount();
 }

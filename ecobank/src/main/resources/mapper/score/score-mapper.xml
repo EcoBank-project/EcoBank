@@ -38,5 +38,11 @@
 		GROUP BY user_no) u
 		ON s.user_no = u.user_no
 	</select>
+	
+	<!-- 종료 챌린지 건수 조회 -->
+	<select id="selectChallEnterUserCount" resultType="int">
+		SELECT count(1)
+		FROM chall_enter
+	</select>
 </mapper>
 	

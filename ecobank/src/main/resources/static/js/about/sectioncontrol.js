@@ -1,0 +1,11 @@
+/**
+ * 
+ */
+
+ $().ready(initializeSection);
+ 
+ 
+ 
+ function initializeSection(){
+	
+ }
