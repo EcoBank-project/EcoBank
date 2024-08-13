@@ -13,16 +13,13 @@ public interface ChallService {
 	public int getTotal();
 	
 	//상태에 따른 챌린지 조회 - 회원
-	public List<ChallVO> getDList(String challState);
+	public List<ChallVO> getDList(Criteria criteria, ChallVO challVO);
 	
 	//챌린지 개수 가져오기
-	public int countChallengesByState(String challState);
+	public int countChallengesByState(ChallVO challVO);
 	
 	//챌린지 단건 조회
 	public ChallVO challInfo(ChallVO challVO);
-	
-	//챌린지 번호 생성
-	//public int selectChallNum();
 	
 	//챌린지 등록
 	public int challInsert(ChallVO challVO);

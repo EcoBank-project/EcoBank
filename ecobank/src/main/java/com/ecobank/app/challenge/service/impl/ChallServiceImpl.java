@@ -71,13 +71,13 @@ public class ChallServiceImpl implements ChallService{
 	}
 
 	@Override
-	public int countChallengesByState(String challState) {
-		return challMapper.countAllChallenges(challState);
+	public int countChallengesByState(ChallVO challVO) {
+		return challMapper.countAllChallenges(challVO);
 	}
 
 	@Override
-	public List<ChallVO> getDList(String challState) {
-		return challMapper.getChallList(challState);
+	public List<ChallVO> getDList(Criteria criteria, ChallVO challVO) {
+		return challMapper.getChallList(criteria, challVO);
 	}
 
 	@Override
@@ -85,9 +85,4 @@ public class ChallServiceImpl implements ChallService{
 		return challMapper.getTotal();
 	}
 
-//	@Override
-//	public int selectChallNum() {
-//		return challMapper.selectChallNum();
-//	}
-	
 }

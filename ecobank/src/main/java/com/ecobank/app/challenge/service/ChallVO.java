@@ -29,6 +29,8 @@ public class ChallVO {
 	
 	private long daysUntilStart;  	//챌린지 시작까지 남은 D-Day
 	
+	private int confirmNo;			//인증번호
+	
 	//챌린지 좋아요
 	private int challLikeNo;		//챌린지 좋아요 번호
 	
