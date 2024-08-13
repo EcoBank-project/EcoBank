@@ -19,7 +19,7 @@ import lombok.Data;
 public class Users {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq") // 시퀀스 적용
 	private Integer userNo;
 	
 	@Column(name = "use_id")
