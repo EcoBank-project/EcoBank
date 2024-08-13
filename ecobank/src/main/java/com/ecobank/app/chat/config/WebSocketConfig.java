@@ -20,9 +20,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		//topic : 그룹 - 구독 , queue : 1대1 - 메시지 큐
-		config.enableSimpleBroker("/topic", "/queue"); //메시지를 받을 때 경로를 설정 
+		config.enableSimpleBroker("/topic", "/queue", "/user"); //메시지를 받을 때 경로를 설정 
 		config.setApplicationDestinationPrefixes("/app"); // 메시지를 보낼(publish) 경로를 설정
-		config.setUserDestinationPrefix("/user"); // 특정 사용자에게 메시지 전송시 사용할 경로
+		//config.setUserDestinationPrefix("/user"); // 특정 사용자에게 메시지 전송시 사용할 경로
 	}
 	
 }

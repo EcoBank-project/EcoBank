@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class ChatRoomDTO {
 	private String chatName;		//채팅방 이름
-	private List<Integer> userId;	//사용자 번호
+	private List<Integer> userNo;	//사용자 번호
 }
