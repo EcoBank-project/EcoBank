@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface SnsService {
 	//전체 sns 조회
-	public List<SnsVO> snsList();
+	public List<SnsVO> snsList(SnsVO snsVO);
 	
 	//단건 sns 조회
 	public SnsVO snsInfo(SnsVO snsVO);
@@ -19,13 +19,12 @@ public interface SnsService {
 	//삭제
 	public int deleteSns(int SnsNo);
 	
-	//피드 번호 생성
-	public int selectSnsNum();
-	
 	//로그인정보 저장
 	public int getUserNo();
 	
-	// sns신고 조회
+	// sns신고 사유 조회
 	public List<SnsVO> snsDeclareList();
 
+	// sns신고 등록
+	public int insertsnsDeclare(SnsVO snsVO);
 }

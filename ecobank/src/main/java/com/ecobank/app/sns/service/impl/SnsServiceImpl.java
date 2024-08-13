@@ -9,22 +9,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecobank.app.sns.mapper.SnsMapper;
+import com.ecobank.app.sns.mapper.SnsReplyMapper;
 import com.ecobank.app.sns.service.SnsService;
 import com.ecobank.app.sns.service.SnsVO;
+import com.ecobank.app.upload.mapper.FileMapper;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class SnsServiceImpl implements SnsService{
 	
-	private SnsMapper snsMapper;
+	private final SnsMapper snsMapper;
+	private final SnsReplyMapper snsReplyMapper;
+	private final FileMapper fileMapper;
 	
-	@Autowired
-	SnsServiceImpl(SnsMapper snsMapper){
-		this.snsMapper = snsMapper;
-	}
+	
 	//전체조회
 	@Override
-	public List<SnsVO> snsList() {
-		return snsMapper.selectSnsAll();
+	public List<SnsVO> snsList(SnsVO snsVO) {
+		return snsMapper.selectSnsAll(snsVO);
 	}
 	
 	//단건조회
@@ -60,21 +64,32 @@ public class SnsServiceImpl implements SnsService{
 	//삭제
 	@Override
 	public int deleteSns(int SnsNo) {
+		//댓글삭제
+		snsMapper.deleteSnsReplyAll(SnsNo);
+		//파일삭제
+		fileMapper.deleteFileInfo(SnsNo);
+		//sns지우기
 		return snsMapper.deleteSnsInfo(SnsNo);
 	}
-	
-	//번호 생성
-	@Override
-	public int selectSnsNum() {
-		return snsMapper.selectSnsNum();
-		}
-	
+
+	//세선로그인값
     public int getUserNo() {
         return snsMapper.getUserNo();
     }
+    
+    //신고사유목록
 	@Override
 	public List<SnsVO> snsDeclareList() {
 		return snsMapper.selectSnsDeclare();
+	}
+	
+	//신고등록
+	@Override
+	public int insertsnsDeclare(SnsVO snsVO) {
+		snsVO.setDeclareat(new Date());
+		int result = snsMapper.insertSnsDeclare(snsVO);
+		return result == 1 ? snsVO.getDeclareNo() : -1;
+		
 	}
     
 

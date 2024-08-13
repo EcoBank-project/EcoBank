@@ -7,7 +7,7 @@ import com.ecobank.app.sns.service.SnsVO;
 public interface SnsMapper {
 	
 	//전체조회
-	public List<SnsVO> selectSnsAll();
+	public List<SnsVO> selectSnsAll(SnsVO snsVO);
 	
 	//단건조회 
 	public SnsVO selectSnsInfo(SnsVO snsVO);
@@ -21,16 +21,16 @@ public interface SnsMapper {
 	//삭제
 	public int deleteSnsInfo(int snsVO);
 	
-	//sns 피드번호 생성
-	public int selectSnsNum();
+	//댓글 전체 삭제
+	public int deleteSnsReplyAll(int SnsNo);
 	
 	//로그인정보 저장
 	public int getUserNo();
 	
-	// sns신고 조회
+	// sns신고 사유 조회
 	public List<SnsVO> selectSnsDeclare();
 	
-	//검색기능
-	
+	// sns신고 등록
+	public int insertSnsDeclare(SnsVO snsVO);	
 
 }
