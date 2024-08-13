@@ -5,13 +5,13 @@
 	<select id="selectSnsFileInfo" resultType="FileVO">
 		SELECT s.feed_no  
                ,f.file_no
-               ,f.file_name
+               ,f.file_path
 		FROM sns s RIGHT OUTER JOIN files f
                                     ON s.feed_no = f.file_code_no
         WHERE  f.file_code_no = #{feedNo}
 		GROUP BY s.feed_no  
                  ,f.file_no
-                 ,f.file_name
+                 ,f.file_path
 	</select>
 	
 	<!-- 등록 -->
