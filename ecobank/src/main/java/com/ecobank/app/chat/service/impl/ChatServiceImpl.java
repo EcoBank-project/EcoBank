@@ -9,6 +9,7 @@ import com.ecobank.app.chat.mapper.ChatMapper;
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
+import com.ecobank.app.chat.service.ChatRoomDTO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
 
@@ -21,7 +22,7 @@ public class ChatServiceImpl implements ChatService{
 	ChatServiceImpl(ChatMapper chatMapper) {
 		this.chatMapper = chatMapper;
 	}
-	
+	// 채팅방 목록 조회
 	@Override
 	public List<ChatRoomVO> chatRoomList(Integer userNo) {
 		return chatMapper.selectChatRoomAll(userNo);
@@ -40,18 +41,23 @@ public class ChatServiceImpl implements ChatService{
 	}
 	// 채팅방 채팅 로그 조회
 	@Override
-	public List<ChatMessageDTO> chatMessageList(Integer chatNo) {
+	public List<ChatMessageVO> chatMessageList(Integer chatNo) {
 		return chatMapper.selectChatMessage(chatNo);
 	}
 	// 채팅방 만들기
 	@Override
-	public int ChatRoomInsert(String chatName, Integer userNo) {
-		return chatMapper.insertChatRoom(chatName, userNo);
+	public int ChatRoomInsert(ChatRoomDTO chatRoom, Integer userNo) {
+		ChatRoomVO chatRoomVO = new ChatRoomVO();
+		chatRoomVO.setUserNo(userNo);
+		chatRoomVO.setChatName(chatRoom.getChatName());
+		chatMapper.insertChatRoom(chatRoomVO);
+		
+		return chatRoomVO.getChatNo();
 	}
 	// 채팅방 만들기 - 참여자
 	@Override
-	public int ChatUserInsert(String chatName, Integer userNo) {
-		return chatMapper.insertChatUser(chatName, userNo);
+	public int ChatUserInsert(Integer chatNo, Integer userNo) {
+		return chatMapper.insertChatUser(chatNo, userNo);
 	}
 	// 채팅 팔로우 목록
 	@Override
