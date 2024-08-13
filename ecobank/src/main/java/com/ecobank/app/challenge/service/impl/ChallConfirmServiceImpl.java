@@ -77,7 +77,6 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	@Override
 	public boolean isUserParticipated(int userNo, int challNo) {
 		int cnt = challConfirmMapper.enterStatus(userNo, challNo);
-		//System.out.println(cnt + "cnt찍히나");
 		return cnt > 0;
 	}
 	
@@ -88,10 +87,10 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 		System.out.println(result);
 		return result == 1 ? challConfirmVO.getConfirmNo() : -1;
 	}
-	
-	//인증 번호 생성
+
+	//챌린지 인증 남겼는지 아닌지(여부)
 	@Override
-	public int selectConfirmNo() {
-		return challConfirmMapper.getConfirmNo();
+	public boolean isConfirmed(int userNo, int challNo) {
+		return challConfirmMapper.confirmStatus(userNo, challNo) > 0;
 	}
 }

@@ -59,7 +59,7 @@
 			                <span th:text="${detail.challLikeNo}">50</span>
 			            </div>
                         <a th:id="challBtn" class="btn btn-primary rounded-pill py-3 px-5 mt-3">도전하기</a>
-                        <a th:id="confirmBtn" th:onclick="|location.href='@{/confirmInsert(challNo=${detail.challNo})}'|" class="btn btn-primary rounded-pill py-3 px-5 mt-3">인증하기</a>
+                        <a th:id="confirmBtn" class="btn btn-primary rounded-pill py-3 px-5 mt-3">인증하기</a>
                     </div>
                 </div>
             </div>
@@ -164,6 +164,29 @@
             });
         });
 		
+		//당일 인증 완료 후에 다시 인증하기 버튼을 클릭했을때
+		$('#confirmBtn').click(function(event){
+		    event.preventDefault();
+		
+		    $.ajax({
+		        url : '/confirmStatus',
+		        method : 'get',
+		        data : { challNo : cNo },
+		        success : function(isConfirmed){
+		            console.log("isConfirmed:", isConfirmed); 
+		            if(isConfirmed){
+		                alert("이미 오늘 인증되었습니다.");
+		            } else {
+		                location.href = 'confirmInsert?challNo=' + cNo;
+		            }
+		        },
+		        error : function(err){
+		            console.log(err); 
+		            alert("인증 오류");
+		        }
+		    });
+		});
+		
 		//나의 인증 내역
 		$('#myConfirm').click(function(){
 			$("#contents").load("getMyConfirm?challNo=" + cNo, function(){
@@ -241,7 +264,7 @@
 		              });
 		          }
 		          , eventContent: {
-		        	  html: `<div><img src="/img/congratulation.jpg" class="event-icon" /><br><b>인증 성공!</b></div>`,
+		        	  html: `<div><img src="/img/congratulation.jpg" class="event-icon" /><br><b>오늘 인증 성공!</b></div>`,
 		        	},
 		      });
 		        calendar.render();

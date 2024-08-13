@@ -1,45 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{common/layouts/default_layout}"
-	  layout:fragment="Content">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default_layout}"
+      layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	.form-container {
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    height: 100vh;
+	    background-color: #f8f9fa;
+	}
+	
+	.form-box {
+	    width: 100%;
+		max-width: 1000px;
+		max-height: 1000px;
+		padding: 20px;
+		border: 1px solid grey;
+		background-color: #fff;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		border-radius: 8px;
+	}
+</style>
 </head>
 <body>
-    <div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
-        <div class="container quote px-lg-0">
-                <div class="col-lg-6 quote-text py-5 wow fadeIn" data-wow-delay="0.5s">
-                    <div class="p-lg-5 pe-lg-0">
-                        <h6 class="text-primary">To Do My Challenge</h6>
-                        <h1 class="mb-4">Challenge Certification Form</h1>
-                        <p class="mb-2 pb-2">챌린지 인증 내용을 작성해주세요.</p>
-                        <form name="insertForm" th:action="@{/confirmInsert}" method="post" enctype="multipart/form-data">
-                            <div class="row g-3">
-								<!--/*<div class="col-12 col-sm-6">
-                                    <input type="text" class="form-control border-0" placeholder="Your Name" style="height: 55px;">
-                                </div> */-->
-                                <div>
-                                	<input type="hidden" name="challNo" id="challNo" th:value="${param.challNo}">
-                                </div>
-                                <div class="col-12">
-                                    <textarea class="form-control border-0" rows="5" cols="30" name="confirmContent" placeholder="Challenge Note"></textarea>
-                                </div>
-                               	<input type="file" name="images" multiple><br>
-                                <div class="col-12">
-                                    <button class="btn btn-primary rounded-pill py-3 px-5" type="submit">Submit</button>
-									<button class="btn btn-primary rounded-pill py-3 px-5" type="button" th:onclick="|location.href='@{/confirm}'|">Cancel</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+    <div class="form-container">
+        <div class="form-box">
+            <h6 class="text-primary">To Do My Challenge</h6>
+            <h1 class="mb-4">Challenge Certification Form</h1>
+            <p class="mb-2 pb-2">챌린지 인증 내용을 작성해주세요.</p>
+            <form name="insertForm" th:action="@{/confirmInsert}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="challNo" id="challNo" th:value="${param.challNo}">
+                <div class="mb-3">
+                    <textarea class="form-control border-0" rows="5" name="confirmContent" placeholder="Challenge Note"></textarea>
                 </div>
-            </div>
+                <div class="mb-3">
+                    <input type="file" name="images" multiple>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-secondary" type="button" th:onclick="|location.href='@{/detail(challNo=${param.challNo})}'|">Cancel</button>
+                    <!--/* <button class="btn btn-secondary" type="button" th:onclick="|location.href='@{/confirm}'|">Cancel</button> */-->
+                </div>
+            </form>
         </div>
-        <script>
-			let uNo = $('#userNo').val();
-			console.log(uNo);
-        </script>
+    </div>
 </body>
 </html>
