@@ -1,16 +1,18 @@
 package com.ecobank.app.chat.web;
 
 
+import java.security.Principal;
 import java.text.SimpleDateFormat;
-
-import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.ecobank.app.chat.service.ChatMessageDTO;
@@ -27,8 +29,9 @@ public class ChatMessageController {
 	ChatMessageController(ChatService chatService){
 		this.chatService = chatService;
 	}
+	
 	@Autowired
-	private HttpSession httpSession;
+	private SimpMessagingTemplate messagingTemplate;
 	
 	// 채팅방 입장
 	@MessageMapping("/chat.enter")
@@ -38,31 +41,35 @@ public class ChatMessageController {
 	}
 		
 	//채팅방 목록
-	@MessageMapping("/update.roomList")
-	@SendToUser("/queue/roomListUpdate")
-    public ChatRoomDTO updateRoomList(ChatRoomDTO chatRoom) {
-		System.out.println(chatRoom);
-        return chatRoom;
+	@MessageMapping("/update.chatList")
+
+    public void updateRoomList(ChatRoomDTO chatRoom, Principal principal) {
+		List<String> receiverIds = chatRoom.getUserName();
+		messagingTemplate.convertAndSendToUser(principal.getName(),"/queue/chatList", chatRoom);
+		for(String receiverId : receiverIds) {
+			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", chatRoom);
+		}
     }
+	
+	// 채팅방 1대1 대화
+	@MessageMapping("/chat.private/{receiverId}")
+	public void sendPrivateMessage(@DestinationVariable String receiverId, @Payload ChatMessageVO message) {
+		message.setForMatTime(formatMessageDate(message.getMsgSendTime()));
+		messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages", message);
+	}
 	
 	// 채팅방 그룹대화
 	@MessageMapping("/chat.message/{roomId}")
-	@SendTo("/topic/messages/{roomId}")
-	public ChatMessageVO sendUser(@Payload ChatMessageVO message) {
+	public void sendUser(@Payload ChatMessageVO message) {
 		// 메시지 저장
 		ChatMessageVO chatMessage = new ChatMessageVO();
 		BeanUtils.copyProperties(message, chatMessage);
 		chatService.ChatMessageInsert(chatMessage);
 
-		// 날짜 포맷
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
-		String formatDate = dateFormat.format(message.getMsgSendTime());
-		message.setForMatTime(formatDate);
+		message.setForMatTime(formatMessageDate(message.getMsgSendTime()));
 		
-		return message;
+		messagingTemplate.convertAndSend("/topic/messages/" + message.getChatNo(), message);
 	}
-	
-	// 채팅방 1대1 대화
 	
 	
 	
@@ -71,5 +78,13 @@ public class ChatMessageController {
 	@SendTo("/topic/messages")
 	public ChatMessageDTO exitUser(@Payload ChatMessageDTO message) {
 		return message;
+	}
+	
+	
+	
+	// 날짜 포맷
+	private String formatMessageDate(Date msgSendTime) {
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
+	    return dateFormat.format(msgSendTime);
 	}
 }
