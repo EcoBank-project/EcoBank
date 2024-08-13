@@ -111,7 +111,15 @@ public class AdminController {
         model.addAttribute("SnsReplyDeclareList", uniqueList); // 중복 제거된 리스트 전달
         return "admins/SnsReplyDeclareList";
     }
-
+    
+    // SNS 전체 조회
+    @GetMapping("adminSns") // 'adminSns' URL로 GET 요청이 들어오면 이 메서드가 호출됩니다.
+    public String adminsnsList(Model model ,SnsVO snsVO) {
+        List<SnsVO> list = snsService.snsList(snsVO); // 전체 SNS 목록을 조회합니다.
+        model.addAttribute("adminSns", list); // 조회한 SNS 목록을 뷰에 전달합니다.
+        return "admins/adminSns"; // 'admins/adminSns' 뷰를 반환합니다.
+    }
+    
     // SNS 신고 조회
     @GetMapping("SnsDeclareList")
     public String SnsDeclareList(@RequestParam(name = "feedNo", required = false, defaultValue = "0") int feedNo, Model model) {
