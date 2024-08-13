@@ -7,8 +7,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-.menu{
+.menu, .menu-reply{
 	text-align: right;
+
 }
 
 .a {
@@ -16,7 +17,7 @@
 	color: #333;
 }
 
-.dropdown-menu {
+.dropdown-menu, .dropdown-menu-reply{
 	width: 20rem;
 	padding: .5rem;
 	background: #eee;
@@ -25,16 +26,16 @@
 	display: none; /* 추가 */
 }
 
-.dropdown-menu a {
+.dropdown-menu a , .dropdown-menu-reply a{
 	display: block;
 	transition: .3s;
 }
 
-.dropdown-menu a:hover {
+.dropdown-menu a:hover, .dropdown-menu-reply a:hover {
 	background-color: #ccc;
 }
 
-.dropdown-menu a i {
+.dropdown-menu a i , .dropdown-menu-reply a i{
 	margin-right: .5rem;
 }
    /*모달*/
@@ -133,7 +134,7 @@ opacity : 0;
 }
 
 .radioBtn>label{
-padding: 5px 10px;
+padding: 10px 10px;
 border:1px solid #ccc;
 border-radius:3px;
 }
@@ -141,6 +142,17 @@ border-radius:3px;
 input[type=radio]:checked + label{
 background: #ccc;
 color:white;
+width:  93%;
+height: 100%;
+}
+
+.inputleft{
+text-align: left;
+padding: 20px;
+}
+
+.aaa , .inputleft{
+	height: 100%;
 }
 </style>
 
@@ -178,17 +190,15 @@ color:white;
 									<a href="#" class="nav-menu">...</a>
 									<div class="dropdown-menu">
 										<a href="#" id="declareModal">게시글 신고하기</a> 
-										<a th:href="@{/sns}">수정하기</a> 
+										<a href="#" id="updateA">수정하기</a> 
 										<a href='#' id="deleteA">삭제하기</a>
 									</div>
 								</div>
 							</div>
 							<p class="mb-4 pb-2" th:text="${sns.feedContent}"></p>
+							<p class="mb-4 pb-2" th:text="${sns.hashtag}"></p>
 							<p class="mb-4 pb-2" th:text="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}"></p>
 							<div class="row g-3">
-								<div class="col-12">
-									<textarea class="form-control border-0" placeholder="Special Note"></textarea>
-								</div>
 								<span>좋아요 수 <a href="#" th:text=${sns.countLike}></a></span>
 								<span>댓글 수 <a href="#" th:text=${sns.countReply}></a>
 								</span>
@@ -204,13 +214,6 @@ color:white;
 	</form>
 	<!-- Quote End -->
 
-	<div>
-		<button class="btn btn-primary" type="button"
-			th:onclick="|location.href='@{/snsUpdate(feedNo=${sns.feedNo})}'|">수정</button>
-		<button class="btn btn-primary" type="button"
-			th:onclick="|location.href='@{/sns}'|">목록</button>
-	</div>
-
 	<!-- 댓글영역 -->
 	<div id="replyWrite">
 		<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
@@ -218,23 +221,31 @@ color:white;
 		<button id="writeBtn" class="btn btn-primary">입력</button>
 	</div>
 
-	<div id="replyArea"></div>
+	<div id="replyArea">
+	
+			
+	
+	</div>
 
 	<!-- 모달영역 -->
  	<div class="modal">
         <div class="modal_body">
+            <div class="inputleft">
             <h4>피드 신고하기</h4>
+        	<hr style="width:100%;height:5px;border:none;"/>
             <form method="post">
 					<th:block th:each="declare, sts : ${snsDeclare}">
 				<input name="aaa" type='radio' class='radioBtn' th:value="${declare.codeId}" th:id="${declare.codeId}"/>
-				<label  th:text="${declare.snsdeclare}" th:for="${declare.codeId}"></label> 
+				<label  th:text="${declare.snsdeclare}" th:for="${declare.codeId}"></label> <hr  style="margin : 0px;"/>
 					</th:block>
 			</form>
-          <button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">신고하기</button>
+				</div>
+          <button type="button"  class="btn btn-primary" id="btn-declare" aria-label="Close">신고하기</button>
           <button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
         </div>
     </div>
-
+	<button class="btn btn-primary" type="button"
+			th:onclick="|location.href='@{/sns}'|">목록</button>
 <script th:inline="javascript">
 	let feedNo = $('#feedNo').val();
 	let rno = $('#replyNo').val();
@@ -263,6 +274,29 @@ color:white;
 	$('.nav-menu').on('click',function(){
 		$('.dropdown-menu').show();
 	})		
+
+	$('.nav-menu-reply').on('click',function(){
+		$('.dropdown-menu-reply').show();
+	})		
+
+	//게시글수정
+	$('#updateA').on('click', function(){
+		if(confirm("수정하시겠습니까 ?") == true){   
+			$.ajax({
+				 url:"snsUpdate?feedNo="+feedNo,
+				 type: 'GET',
+				 success: function(result) {
+		    	  	 location.href="snsUpdate?feedNo="+feedNo;
+				 },
+				  error: function(error) {
+					  console.log(error);
+				       alert('수정에 실패되었습니다');
+				  }
+			});	
+		}
+	});
+	
+
 	// ajax로 댓글 불러오기
 	reply();
 	function reply(){
@@ -330,11 +364,11 @@ color:white;
 			output += "<td>" + list[i].replyContent+"</td>";
 			output += "<td>" + list[i].replyCreateAt+"</td>";
 			output += `<td>
-							<div class="menu">
-							<a href="#" class="nav-menu">...</a>
-							<div class="dropdown-menu">
-								<a href="#" id="declareModal">댓글 신고하기</a> 
-								<a href='#' id="deleteA">삭제하기</a>
+							<div class="menu-reply">
+							<a href="#" class="nav-menu-reply">...</a>
+							<div class="dropdown-menu-reply">
+								<a href="#" id="declareRModal">댓글 신고하기</a> 
+								<a href='#' id="deleteR">삭제하기</a>
 							</div>
 							</div>
 						</td>`;
@@ -351,18 +385,22 @@ color:white;
 	//모달
 	  const modal = document.querySelector('.modal');
       const btnOpenModal=document.querySelector('.declareModal');
-
+      const btnOpenRModal=document.querySelector('.declareRModal');
 	$('#declareModal').on('click', function(){
 		 modal.style.display="block";
 		
 	});
-	
+	$('#declareRModal').on('click', function(){
+		 modal.style.display="block";
+		
+	});
 
 	$('#btn-close').on('click', function(){
 		 modal.style.display="none";
 		
 	});
 	
+
 
 	
 </script>

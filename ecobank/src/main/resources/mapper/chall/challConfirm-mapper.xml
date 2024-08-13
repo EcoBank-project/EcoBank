@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.challenge.mapper.ChallConfirmMapper">
-
 <!-- 	<select id="selectConfirmAll" resultType="ChallConfirmVO">
 		SELECT c.user_no
 		        , c.confirm_no
@@ -56,7 +55,7 @@
 	</select>
 	
 	<!-- 챌린지 참가 등록 -->
-	<insert id="challEnterInsert" parameterType="ChallVO">
+	<insert id="challEnterInsert">
 		INSERT INTO chall_enter(
 								chall_enterAt
 								, user_no
@@ -67,6 +66,24 @@
 				, #{userNo}
 				, #{challNo}
 				)
+	</insert>
+	
+	<!-- 챌린지 참가 여부 -->
+	<select id="enterStatus" resultType="int">
+		SELECT COUNT(*) 
+		FROM chall_enter
+		WHERE user_no = #{userNo}
+		AND chall_no = #{challNo}
+	</select>
+	
+	<!-- 인증 등록 -->
+	<insert id="insertChallInfo" parameterType="ChallConfirmVO">
+		<selectKey keyProperty="confirmNo"
+			resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(confirm_no), 0) + 1
+			FROM chall_confirm
+		</selectKey>
 	</insert>
 	
 </mapper>

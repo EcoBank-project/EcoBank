@@ -29,6 +29,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	    <div class="challenge-card" th:each="challenge : ${list}">
 	        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 
 	        <div class="card-body">
+	        	<input type="hidden" th:value="${challenge.challNo}" class="cNo">
 	            <!--/* <div class="d-day" th:text="'D-' + (${#dates.format(challenge.challStartAt, 'yyyy/MM/dd')} - ${#dates.format(challenge.challCreateAt, 'yyyy/MM/dd')})">D-날짜차이</div> */-->
 	            <div class="d-day" id="dDay"  th:text="'D-' + ${challenge.daysUntilStart}"></div>
 	            <h5 class="card-title">챌린지 제목 : [[ ${challenge.challTitle} ]]</h5>
@@ -36,9 +37,28 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	            <p th:if="${status=='D1'}" class="card-text">시작 일자 : [[ ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} ]]</p>
 	            <p th:if="${status=='D2'} OR ${status=='D3'}" class="card-text">진행 기간 : [[ ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} ]] ~ [[ ${#dates.format(challenge.challCloseAt, 'yyyy-MM-dd')} ]]</p>
 	            <a th:onclick="|location.href='@{detail(challNo=${challenge.challNo})}'|" class="btn btn-primary">챌린지 둘러보기</a>
-		        <a th:if="${status=='D2'}" class="btn btn-primary">도전하기</a>
+		        <a th:if="${status=='D2'}" class="btn btn-primary go-challenge">도전하기</a>
 	        </div>
 	    </div>
 	</div>
+	<script>
+		$(document).on('click', '.go-challenge', function(){
+	        let cNo = $(this).closest('.card-body').find('.cNo').val();
+	        console.log('챌린지 번호', cNo);
+	        $.ajax({
+	            url: '/goChallenge',
+	            method: 'POST',
+	            data: { challNo: cNo },
+	            success: function(result){
+	                alert("챌린지 도전~!");
+	                console.log(result);
+	            },
+	            error: function(err){
+	                alert("이미 도전 중인 챌린지입니다.");
+	                console.log(err);
+	            }
+	        });
+	    });
+	</script>
 </body>
 </html>

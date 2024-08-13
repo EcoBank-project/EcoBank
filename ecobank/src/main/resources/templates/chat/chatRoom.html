@@ -213,10 +213,9 @@
 	
 	//채팅방 들어가기
 	function enterRoom(event, roomId) {
-		console.log("확인")
 		event.preventDefault();
 	    currentRoomId = roomId;
-	
+	    
 	    // 채팅방 UI 표시
 	    $('#chatForm').show();
 	    $('#roomName').text($(event.target).text());	// 채팅방 제목 바꿈
@@ -233,6 +232,33 @@
 	        connect(roomId);
 	        loadMessage(roomId);
 	    }
+	}
+	// 채팅방 로드
+	function loadRoom(){
+		$.ajax({
+			url: "/chatRoom/chatList",
+			method: "GET",
+			success: function(result){
+				$('.chat-room-list').empty();
+				result.forEach(function(list){
+					showRoom(list);
+				});
+			},
+			error: function(error){
+				
+			}
+		})
+	}
+	function showRoom(list){
+		console.log(list)
+		let tagli = $('<li />');
+		let tagA = $('<a />').prop('href','#').text(list.chatName);
+		tagA.on('click', function(event){
+			enterRoom(event,list.chatNo)
+		});
+		tagli.append(tagA);
+		$('.chat-room-list').append(tagli);
+
 	}
 	// 이전 메시지 로드
 	function loadMessage(roomId){
@@ -271,7 +297,7 @@
 			}
 		});
 	}
-	
+	//채팅방 모달 
 	function showFollow(follow){
 		let label1 = $('<label />').prop('for','private_'+follow.followingId).addClass('follow-item');
 		let span1 = $('<span />')
@@ -301,7 +327,7 @@
 	}
 	
 	
-	//채팅방 모달 기능
+	//채팅방 모달 on/off
 	$('.bi-plus-circle').on('click', function(){
 	    $('#chatModal').show();
 	    $('#modalOverlay').show();
@@ -319,6 +345,7 @@
 		$('#privateChatModal').hide();
 		$('#groupChatModal').hide();
 		$('#modalOverlay').hide();
+		$('.select-follow').prop("checked",false);
 	}
 	$('.modal-close').on('click', function() {
 		allClose();
@@ -334,17 +361,21 @@
 	});
 	
 
-	//채팅방 만들기 기능
+	// 1대1 채팅
 	function insertPrivate(){
-		//채팅방 모달 버튼
+		let formObj = {};
+		formObj['userId'] = [];
 		$('#followListPrivate .select-follow').each(function() {
 			if($(this).is(":checked")){
-				console.log($(this).val());		
+				console.log($(this).val());
+				console.log($(this).prev().text());
+				formObj['chatName'] = $(this).prev().text();
+				formObj['userId'].push(Number($(this).val()));
 			}
 		});
-	
+		insertChatRoom(formObj);
 	}
-	
+	// 그룹 채팅
 	function insertGroup(){
 		let formObj = {};
 		let chatName = $('#groupChatname').val();
@@ -355,19 +386,23 @@
 				formObj['userId'].push(Number($(this).val()));
 			}
 		});
-		console.log(formObj);
+		insertChatRoom(formObj);		
+	}
+	// 채팅만들기 함수
+	function insertChatRoom(formObj){
 		$.ajax({
-			url: '/chatRoom/groupChat',
+			url: '/chatRoom/CreateChat',
 			method: 'POST',
 			data : JSON.stringify(formObj),
 			contentType: 'application/json',
 			success: function(result){
-				console.log(result);
+				allClose();
+				loadRoom();
 			},
 			err: function(error){
 				console.log(error);
 			}
-		}); 		
+		}); 
 	}
 	//오픈채팅 만들기
 	

@@ -25,6 +25,8 @@ public class SnsVO {
 	private String fileName;		//파일이름
 	private String filePath;		//파일이름
 	private int fileCodeNo;			//파일코드번호
-	private String codeId;			//파일코드번호
-	private String snsdeclare;			//파일코드번호
+	private String codeId;			//신고코드
+	private String snsdeclare;			//신고목록
+	
+	
 }

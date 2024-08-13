@@ -3,13 +3,19 @@
 <style>
 
 </style>
-<div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-	<h4 class="mb-2">나의 인증 횟수</h4>
-	<h1 class="text-primary" id="myConfirmCnt"></h1>
-	<h4 class="mb-2">챌린지 완료 후 얻는 점수</h4>
-	<h1 class="text-primary" id="score"></h1>
-	<h4 class="mb-2">남은 인증 횟수</h4>
-	<h1 class="text-primary" id="remainCnt"></h1>
+<div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 1000px; border: 1px solid #ccc; padding: 20px; border-radius: 5px;">
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h4 class="mb-2" style="display: inline-block;">나의 인증 횟수 : </h4>
+        <h4 class="text-primary" id="myConfirmCnt" style="display: inline-block;"></h4><h4 class="mb-2" style="display: inline-block;">회</h4>
+    </div>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h4 class="mb-2" style="display: inline-block; ">챌린지 완료 후 얻는 점수 : </h4>
+        <h4 class="text-primary" id="score" style="display: inline-block;"></h4><h4 class="mb-2" style="display: inline-block;">점</h4>
+    </div>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h4 class="mb-2" style="display: inline-block; ">남은 인증 횟수 : </h4>
+        <h4 class="text-primary" id="remainCnt" style="display: inline-block;"></h4><h4 class="mb-2" style="display: inline-block;">회</h4>
+    </div>
 </div>
 <!--/* <div th:each="file : ${fileList}">
 	<p th:text="${file.fileName}">

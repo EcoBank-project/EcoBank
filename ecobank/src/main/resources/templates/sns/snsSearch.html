@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
 		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  	layout:decorate="~{common/layouts/default_layout}"
+	  	layout:decorate="~{common/layouts/sns_default_layout}"
 	  	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +9,7 @@
  <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
 </head>
 <body>
-	<h3>sns 등록</h3>
+	<h3>sns 검색</h3>
 	<form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
 
 	<div>피드작성자<input name="userNo"></div>
