@@ -16,10 +16,10 @@
              ,(SELECT count(feed_no)
                  FROM sns_reply
                  WHERE feed_no = s.feed_no) as countReply
-               ,(SELECT file_name
+               ,(SELECT file_path
                  FROM files
                  WHERE file_code_no = s.feed_no
-                 and rownum = 1)  as fileName
+                 and rownum = 1)  as filePath
       FROM sns s JOIN users u 
                   ON s.user_no = u.user_no
       WHERE feed_state = 'F1'  
