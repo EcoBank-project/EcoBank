@@ -29,7 +29,7 @@
 		FROM chall_enter e
 							JOIN chall_confirm c
 							ON e.user_no = c.user_no
-							
+							AND e.chall_no = c.chall_no
 		WHERE e.chall_no = #{challNo}
 		  AND e.user_no = #{userNo}
 		  
@@ -37,7 +37,7 @@
 	</select>
 	
 	<!-- 인증날짜 가져오려고 -->
-	<select id="getConfirmDate" resultType="java.util.Date" parameterType="int">
+	<select id="getConfirmDate" resultType="java.util.Date" parameterType="map">
 		SELECT confirm_createAt
 		FROM chall_confirm
 		WHERE chall_no = #{challNo}
@@ -79,12 +79,6 @@
 		AND chall_no = #{challNo}
 	</select>
 	
-	<!-- 챌린지 인증 번호 조회 -->
-	<select id="getConfirmNo">
-		SELECT NVL(MAX(confirm_no), 0) + 1
-		FROM chall_confirm
-	</select>
-	
 	<!-- 챌린지 인증 등록 -->
 	<insert id="insertConfirmInfo" parameterType="ChallConfirmVO">
 		<selectKey keyProperty="confirmNo"
@@ -108,5 +102,14 @@
 				, #{challNo}
 				)		
 	</insert>
+	
+	<!-- 챌린지 인증 참가 여부 -->
+	<select id="confirmStatus" resultType="int">
+		SELECT COUNT(*)
+		FROM chall_confirm
+		WHERE chall_no = #{challNo}
+		AND user_no = #{userNo}
+		AND TRUNC(confirm_createAt) = TRUNC(SYSDATE)
+	</select>
 	
 </mapper>

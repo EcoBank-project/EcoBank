@@ -40,7 +40,7 @@ public class ConfirmController {
 	public String confirmList(Model model, int challNo) {
 		//List<ChallConfirmVO> list = challCofirmService.confirmList(challNo);
 		List<FileVO> list = fileService.selectFileOtherInfo(challNo);
-		System.out.println(list);
+		//System.out.println(list);
 		model.addAttribute("confirmList", list);
 		return "chall/others";
 	}
@@ -52,7 +52,7 @@ public class ConfirmController {
 		//detailImg를 여기에 따로 추가해야해
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		List<FileVO> list = fileService.selectFileInfo(userNo, challNo, "J3");	
-		System.out.println(list + "찍히나");
+		//System.out.println(list + "찍히나");
 		model.addAttribute("fileList", list);
 		return "chall/myConfirm";
 	}
@@ -94,7 +94,8 @@ public class ConfirmController {
 		//상세
 		ChallVO findVO = challService.challInfo(challVO);
 		model.addAttribute("detail", findVO);
-		System.out.println(findVO);
+		//System.out.println(findVO);
+		
 		//리뷰
 		return "chall/review";
 	}

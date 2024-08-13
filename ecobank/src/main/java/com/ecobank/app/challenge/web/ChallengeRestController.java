@@ -28,14 +28,12 @@ public class ChallengeRestController {
 	@GetMapping("myConfirm")
 	public MyConfirmDTO myConfirm(@RequestParam("challNo") int ChallNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
-		//System.out.println(userNo + "유저넘버");
 		return challConfirmService.myConfirm(userNo, ChallNo);
 	}
 	
 	@GetMapping("calendar")
 	public List<Date> myCalendar(@RequestParam("challNo") int challNo){
 		int userNo = (Integer) httpSession.getAttribute("userNo");
-		
 		return challConfirmService.myCalendar(userNo, challNo);
 	}
 	
@@ -49,7 +47,13 @@ public class ChallengeRestController {
 	@GetMapping("enterStatus")
 	public boolean isUserParticipated(@RequestParam("challNo") int challNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
-		//System.out.println(challNo);
 		return challConfirmService.isUserParticipated(userNo, challNo);
+	}
+	
+	@GetMapping("confirmStatus")
+	public boolean isConfirmed(@RequestParam("challNo") int challNo) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		boolean isConfirmed = challConfirmService.isConfirmed(userNo, challNo);
+		return isConfirmed;
 	}
 }
