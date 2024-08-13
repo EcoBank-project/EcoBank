@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/"
+<html xmlns:th="http://www.thymeleaf.org/"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{adminCommon/layouts/default_layout}"
       layout:fragment="Content">
+
 <body>
 
 <div class="card-header">
     <i class="fas fa-table me-1"></i>
     DataTable Example
 </div>
+
+<!-- 플래시 메시지 표시 -->
+<div class="alert alert-info" role="alert" th:if="${updateMessage}" th:text="${updateMessage}"></div>
+
+
 
 <div class="card-body">
     <table class="table table-dark table-striped">
@@ -18,27 +24,22 @@
                 <th class="text-center">인증번호</th>
                 <th class="text-center">신고한 회원번호</th>
                 <th class="text-center">신고 분류</th>
-                <th class="text-center">신고 날짜</th>               
-              
+                <th class="text-center">신고 날짜</th>
                 <th class="text-center">신고 횟수</th>
             </tr>
         </thead>
-        
+
         <tbody>
-            <th:block th:each="challDeclare : ${ChallDeclareList}">
-                <tr>
-                    <td class="text-center" th:text="${challDeclare.confirmDeclareNo}"></td>
-                    <td class="text-center" th:text="${challDeclare.confirmNo}"></td>
-                    <td class="text-center" th:text="${challDeclare.confirmUserNo}"></td>
-                    <td class="text-center" th:text="${challDeclare.confirmDeclareType}"></td>
-                    <td class="text-center" th:text="${#dates.format(challDeclare.confirmDeclareat , 'yyyy/MM/dd')}"></td>  
-                    <!-- 신고 개수 출력 -->
-                    <td class="text-center" th:text="${countMap[challDeclare.confirmNo]}"></td>         
-                </tr>         
-            </th:block>
+            <tr th:each="challDeclare : ${ChallDeclareList}">
+                <td class="text-center" th:text="${challDeclare.confirmDeclareNo}"></td>
+                <td class="text-center" th:text="${challDeclare.confirmNo}"></td>
+                <td class="text-center" th:text="${challDeclare.confirmUserNo}"></td>
+                <td class="text-center" th:text="${challDeclare.confirmDeclareType}"></td>
+                <td class="text-center" th:text="${#dates.format(challDeclare.confirmDeclareat, 'yyyy/MM/dd')}"></td>
+            </tr>
         </tbody>
     </table>
-</div>
+</div> 
 
 </body>
 </html>

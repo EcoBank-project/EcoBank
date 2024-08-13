@@ -23,7 +23,8 @@
         DECLAREAT,
         CONFIRM_USER_NO,
         DECLARE_CODE,
-        REPLY_NO
+        REPLY_NO,
+        FEED_NO
         FROM sns_declare
         WHERE  REPLY_NO IS NOT NULL AND  REPLY_NO != 0
 		</select>
@@ -76,13 +77,11 @@
 	 <select id="UpdateSnsState" statementType="CALLABLE">
         CALL UpdateSnsState()
     </select>
-
-		
-
 	
-		
-		
-		
+	 <select id="UpdateChallengeUserState" statementType="CALLABLE">
+        CALL UpdateChallengeUserState()
+    </select>
+    
 
 		
 </mapper>

@@ -13,7 +13,10 @@ import com.ecobank.app.admin.service.UserVO;
 
 @Service
 public class AdminServiceImpl implements AdminService {
+	
+	//AdminServiceimpl.java
 
+	
     @Autowired
     AdminMapper adminMapper;
 
@@ -84,4 +87,11 @@ public class AdminServiceImpl implements AdminService {
     public void UpdateSnsState() {
         adminMapper.UpdateSnsState();
     }
+
+	@Override
+	public void UpdateChallengeUserState() {
+		
+		adminMapper.UpdateChallengeUserState();
+	}
+	
 }

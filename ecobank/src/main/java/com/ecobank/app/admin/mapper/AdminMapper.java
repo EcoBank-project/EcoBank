@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
+import com.ecobank.app.sns.service.SnsVO;
 
 public interface AdminMapper {
     
@@ -34,10 +35,10 @@ public interface AdminMapper {
     //sns 상태 변환 업데이트
     int updatefeedState(@Param("feedNo") int feedNo, @Param("feedState") String feedState);
        
-    //sns피드 신고당한횟수
+    //sns 피드 신고당한횟수
     int getCountByFeedNo(int feedNo);
     
-    //sns댓글 신고당한횟수
+    //sns 댓글 신고당한횟수
     int getCountByReplyNo(int replyNo);
     
     //챌린지 신고 횟수
@@ -45,5 +46,9 @@ public interface AdminMapper {
     
     //프로시저 호출
     void UpdateSnsState();
+    void UpdateChallengeUserState();
+    
+    //챌린지 테이블 회원상태
+
 
 }
