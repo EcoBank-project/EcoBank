@@ -30,18 +30,17 @@ public class SnsReplyController {
 	
 	//피드별 댓글 조회
 	@GetMapping("snsReply")
-	public List<SnsReplyVO> snsReplyInfo(SnsReplyVO snsReplyVO, Model model) {
+	public List<SnsReplyVO> snsReplyInfo(SnsReplyVO snsReplyVO) {
 		 return snsReplyService.snsReplyInfo(snsReplyVO);
 	}
 	
 	//등록 처리
 	@PostMapping("snsReply")
-	public SnsReplyVO snsReplyInsertProcess(SnsReplyVO snsReplyVO, Model model) {
-		int fReplyno = snsReplyService.insertSnsReply(snsReplyVO);
-		System.out.println("인서트"+ fReplyno);
+	public SnsReplyVO snsReplyInsertProcess(SnsReplyVO snsReplyVO) {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		snsReplyVO.setUserNo(userNo);
-		model.addAttribute("userNo",userNo);
+		int fReplyno = snsReplyService.insertSnsReply(snsReplyVO);
+		System.out.println("인서트"+ fReplyno);
 		return snsReplyVO;
 	}
 	

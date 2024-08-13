@@ -129,9 +129,9 @@ ul{
     text-align: left;
 }
 
-.radioBtn{
+/* .radioBtn{
 opacity : 0;
-}
+} */
 
 .radioBtn>label{
 padding: 10px 10px;
@@ -171,7 +171,7 @@ padding: 20px;
 						<div class="position-relative h-100">
 							<div th:block th:each="file, sts : ${snsFileInfo}">
 								<img class="position-absolute img-fluid w-100 h-100"
-									th:src=@{/images/{fileName}(fileName=${file.fileName})}
+									th:src=@{/images/{filePath}(filePath=${file.filePath})}
 									style="object-fit: cover;">
 							</div>
 						</div>
@@ -186,6 +186,8 @@ padding: 20px;
 							<div class="ml-3 info">
 								<a href="#" th:text=${sns.nickname}></a>
 								<button class="btn btn-primary">팔로우</button>
+	
+					
 								<div class="menu">
 									<a href="#" class="nav-menu">...</a>
 									<div class="dropdown-menu">
@@ -231,16 +233,16 @@ padding: 20px;
  	<div class="modal">
         <div class="modal_body">
             <div class="inputleft">
-            <h4>피드 신고하기</h4>
+            <h4>신고하기</h4>
         	<hr style="width:100%;height:5px;border:none;"/>
             <form method="post">
 					<th:block th:each="declare, sts : ${snsDeclare}">
 				<input name="aaa" type='radio' class='radioBtn' th:value="${declare.codeId}" th:id="${declare.codeId}"/>
-				<label  th:text="${declare.snsdeclare}" th:for="${declare.codeId}"></label> <hr  style="margin : 0px;"/>
+				<label  th:text="${declare.codeName}" th:for="${declare.codeId}"></label> <hr  style="margin : 0px;"/>
 					</th:block>
 			</form>
 				</div>
-          <button type="button"  class="btn btn-primary" id="btn-declare" aria-label="Close">신고하기</button>
+          <button onclick='getDeclare()' class="btn btn-primary" id="btn-declare" aria-label="Close">신고하기</button>
           <button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
         </div>
     </div>
@@ -251,7 +253,6 @@ padding: 20px;
 	let rno = $('#replyNo').val();
 	let replyContent = $('#replyContent');
 	let userNo = [[${session.userNo}]];
-	
 	//게시글 삭제
 	$('#deleteA').on('click', function(){
 		if(confirm("정말 삭제하시겠습니까 ?") == true){   
@@ -272,13 +273,22 @@ padding: 20px;
 	});
 
 	$('.nav-menu').on('click',function(){
+		event.preventDefault();
 		$('.dropdown-menu').show();
-	})		
-
-	$('.nav-menu-reply').on('click',function(){
-		$('.dropdown-menu-reply').show();
-	})		
-
+	})	
+	
+	$(window).click(function(event){
+		if(!$(event.target).hasClass('nav-menu') && !$(event.target).hasClass('menu')){				
+			$('.dropdown-menu').hide();   
+			console.log('확인1')
+		}
+		if($('.dropdown-menu').css('display') == 'block'){
+			console.log("확인2");
+		}
+	})
+	
+	
+	
 	//게시글수정
 	$('#updateA').on('click', function(){
 		if(confirm("수정하시겠습니까 ?") == true){   
@@ -336,8 +346,10 @@ padding: 20px;
 			}
 		});
 	});
-	//리뷰 삭제
+	
+	//댓글 삭제
 	function deleteBtn(rno){
+		console.log('삭제');
 		$.ajax({
 			 url:"snsReply?replyNo="+rno,
 			 type: 'delete',
@@ -374,35 +386,76 @@ padding: 20px;
 						</td>`;
 
 			output += "<td><button onclick='deleteBtn("+list[i].replyNo+")'>삭제</button></td>";
-
+		
 			output += "</tr>";
 		}
 
 		output += "</table>";
 		$('#replyArea').html(output);
+
+		$('.nav-menu-reply').on('click',function(event){
+			event.preventDefault();
+			$('.dropdown-menu-reply').show();
+		})	
+		
+		$(window).click(function(event){
+			if(!$(event.target).hasClass('nav-menu-reply') && !$(event.target).hasClass('menu-reply')){				
+				$('.dropdown-menu-reply').hide();   
+				console.log('확인1')
+			}
+			if($('.dropdown-menu-reply').css('display') == 'block'){
+				console.log("확인2");
+			}
+		})
+		
+		$('#declareRModal').on('click', function(){
+			 modal.style.display="block";
+		});
+		
 	}
 	
 	//모달
 	  const modal = document.querySelector('.modal');
-      const btnOpenModal=document.querySelector('.declareModal');
-      const btnOpenRModal=document.querySelector('.declareRModal');
+    //  const btnOpenModal=document.querySelector('.declareModal');
+     // const btnOpenRModal=document.querySelector('.declareRModal');
+      
 	$('#declareModal').on('click', function(){
 		 modal.style.display="block";
-		
 	});
-	$('#declareRModal').on('click', function(){
-		 modal.style.display="block";
-		
-	});
+	
+	
 
 	$('#btn-close').on('click', function(){
-		 modal.style.display="none";
-		
+		 modal.style.display="none";	
 	});
 	
-
-
-	
+	//신고하기
+	let declareId = [[${snsDeclare}]];
+	function getDeclare() {
+		let codeId = "";
+		console.log('id',declareId);
+		$('.radioBtn').each(function(){
+		  if($(this).is(":checked")){
+			    codeId=$(this).val();
+				console.log($(this).val());
+			  }
+		  })
+			$.ajax({
+				type : "POST",
+				url : "declareInsert?feedNo="+feedNo +"&replyNo="+rno,
+				data : {feedNo, userNo, codeId, replyNo},
+				success : function(list){
+					 alert("해당글이 신고되었습니다.");
+					 location.href="sns";
+				},
+				error :  function(error){
+					console.log('에러',error);
+					alert("신고 실패");
+				}
+			});
+	}
+    
+    
 </script>
 </body>
 

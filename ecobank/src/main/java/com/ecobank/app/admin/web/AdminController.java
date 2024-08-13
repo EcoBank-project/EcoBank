@@ -127,16 +127,10 @@ public class AdminController {
             .stream()
             .collect(Collectors.toList());
 
-        model.addAttribute("SnsDeclareList", uniqueList);
-        return "admins/SnsDeclareList";
-    }
+     
 
-    // SNS 전체 조회
-    @GetMapping("adminSns")
-    public String adminsnsList(Model model) {
-        List<SnsVO> list = snsService.snsList();
-        model.addAttribute("adminSns", list);
-        return "admins/adminSns";
+        model.addAttribute("SnsDeclareList", uniqueList);
+        return "redirect:/updateadminSns";
     }
  
     // SNS 업데이트
@@ -146,19 +140,4 @@ public class AdminController {
         model.addAttribute("updatefeedState", updatedCount > 0 ? "성공적으로 업데이트되었습니다." : "업데이트 실패.");
         return "redirect:/adminSns";
     }
-    
-    // SNS 상태 업데이트
-    @GetMapping("updateSnsState")
-    public String updateSnsState(Model model) {
-        try {
-            adminService.UpdateSnsState();
-            model.addAttribute("updateStatus", "SNS 상태 업데이트 완료");
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("updateStatus", "SNS 상태 업데이트 실패: " + e.getMessage());
-        }
-        return "redirect:/adminSns";
-    }
-    
-  
 }

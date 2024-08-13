@@ -26,7 +26,12 @@ public class SnsVO {
 	private String filePath;		//파일이름
 	private int fileCodeNo;			//파일코드번호
 	private String codeId;			//신고코드
-	private String snsdeclare;			//신고목록
+	private String snsdeclare;		//신고목록
+	private int declareNo;			//신고번호
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date declareat ;			//신고날짜
+	private String declareCode;			//신고코드
+	private int replyNo;			//댓글번호
 	
 	
 }

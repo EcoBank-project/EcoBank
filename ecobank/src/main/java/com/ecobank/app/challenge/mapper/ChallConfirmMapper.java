@@ -15,13 +15,13 @@ public interface ChallConfirmMapper {
 	//public List<ChallConfirmVO> selectConfirmAll(int challNo);
 	
 	//인증 단건 조회 - 챌린지 상세에서 다른 참가자 인증 상세
-	public ChallConfirmVO selectConfirmInfo(ChallConfirmVO chalConfirmVO);
+	public ChallConfirmVO selectConfirmInfo(ChallConfirmVO challConfirmVO);
 	
 	//나의 인증 내역
 	public MyConfirmDTO myConfirm(int userNo, int challNo); 
 	
 	//나의 인증 상세
-	//public ChallConfirmVO selectSnsInfo(ChallConfirmVO chalConfirmVO);
+	public ChallConfirmVO confirmDetail(ChallConfirmVO challConfirmVO);
 	
 	//인증날짜 가져오기(남은 인증 횟수가져오려고)
 	public List<Date> getConfirmDate(int userNo, int challNo);
@@ -39,5 +39,9 @@ public interface ChallConfirmMapper {
 	public int enterStatus(@Param("userNo") int userNo, @Param("challNo") int challNo);
 	
 	//챌린지 인증 등록(userNo, confirmNo, confirmContent, file)
-	public int insertChallInfo(ChallConfirmVO chalConfirmVO);
+	public int insertConfirmInfo(ChallConfirmVO challConfirmVO);
+	
+	//챌린지 인증 번호 생성
+	public int getConfirmNo();
+	
 }

@@ -76,7 +76,9 @@ public class FileServiceImpl implements FileService{
 			String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
 			// LocalDate를 문자열로 포멧
 			//String folderPath = str.replace("/", File.separator);
-			File uploadPathFoler = new File(str);
+			String folderPath = str.replace("/", File.separator);
+	        File uploadPathFoler = new File(uploadPath, folderPath);
+			//File uploadPathFoler = new File(str);
 			// File newFile= new File(dir,"파일명");
 			if (uploadPathFoler.exists() == false) {
 				uploadPathFoler.mkdirs();

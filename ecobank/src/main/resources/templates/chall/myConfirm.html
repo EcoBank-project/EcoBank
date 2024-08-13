@@ -1,8 +1,5 @@
 <html xmlns:th="https://www.thymeleaf.org/">
 <meta charset="UTF-8">
-<style>
-
-</style>
 <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 1000px; border: 1px solid #ccc; padding: 20px; border-radius: 5px;">
     <div style="text-align: center; margin-bottom: 20px;">
         <h4 class="mb-2" style="display: inline-block;">나의 인증 횟수 : </h4>
@@ -26,7 +23,7 @@
 	<div class="row g-4 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
 		<div class="col-lg-4 col-md-6 portfolio-item first" th:each="file : ${fileList}">
 			<div class="portfolio-img rounded overflow-hidden">
-				<img class="img-fluid" th:src="@{/images/{fileName}(fileName=${file.fileName})}" alt="나의 인증 이미지" style="width:295px; height:197px">
+				<img class="img-fluid" th:src="@{/images/{filePath}(filePath=${file.filePath})}" alt="나의 인증 이미지" style="width:295px; height:197px">
 				<div class="portfolio-btn">
 					<a class="btn btn-lg-square btn-outline-light rounded-circle mx-1"
 						src="img/img-600x400-6.jpg" data-lightbox="portfolio"><i

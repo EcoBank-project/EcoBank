@@ -8,12 +8,12 @@
 			   c.region_code,
 			   c.nation_code,
 			   GREATEST(NVL(c.carbon_emissions, 0) - NVL((SELECT SUM(s.score)
-			                                              FROM users u 
-			                                              JOIN score s ON u.user_no = s.user_no
+			                                              FROM users u JOIN score s 
+			                                              			   ON u.user_no = s.user_no
 			                                              WHERE u.country = c.nation_code
 			                                              GROUP BY u.country
 			                                              ), 0)
-		                , 0) AS carbon_emissions
+		       , 0) AS carbon_emissions
 		FROM 
 		    carbon c
 		ORDER BY 

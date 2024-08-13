@@ -12,11 +12,11 @@
 	</select>
 	
 	<!-- 채팅방 채팅 로그 조회 -->
-	<select id="selectChatMessage" resultType="ChatMessageDTO">
+	<select id="selectChatMessage" resultType="ChatMessageVO">
 		select msg_no, 
 		       msg_content, 
 		       msg_type, 
-		       to_char(msg_send_time, 'yyyy.MM.DD am HH:MI') as msgsendtime, 
+		       msg_send_time, 
 		       m.user_no, 
 		       chat_no,
 		       nickname
@@ -62,8 +62,13 @@
 		where f.follower_id = #{followingId}
 	</select>
 	<!-- 채팅방 생성 -->
-	<insert id="insertChatRoom">
-		{call insertChatRoom(#{chatName},#{userNo})}
+	<insert id="insertChatRoom" statementType="CALLABLE">
+		{call insertChatRoom(
+		    #{chatName, mode=IN},
+		    #{userNo, mode=IN},
+		    #{chatNo, mode=OUT, jdbcType=INTEGER}
+		    )
+		}
 	</insert>
 	<!-- 채팅방에 참여자 추가 -->
 	<insert id="insertChatUser" parameterType="chatRoomUserVO">
@@ -72,7 +77,7 @@
 		           order="BEFORE">
 		SELECT chat_no
 		FROM chat
-		WHERE chat_name = #{chatName}
+		WHERE chat_no = #{chatNo}
 		</selectKey>
 		INSERT INTO chat_entry (user_no, chat_no)
 		VALUES (#{userNo}, #{chatNo})
