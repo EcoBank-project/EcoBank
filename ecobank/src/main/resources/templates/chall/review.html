@@ -4,7 +4,7 @@
 	<h3 class="text-primary">Challenge Guide</h3>
 	<h1 class="mb-2">How To Challenge Yourself Everyday</h1>
 	<div class="detail-image">
-		<img th:src="@{'/images/' + ${detail}}" alt="상세 이미지" style="object-fit: cover; width:1000px; height:800px">
+		<img th:src="@{/images/{img}(img=${detail.detailImg})}" alt="상세 이미지" style="object-fit: cover; width:1000px; height:800px">
 	</div>
 </div>
 </html>
