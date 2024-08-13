@@ -44,7 +44,7 @@ public class UsersController {
 
 	@PostMapping("signup")
 	public String signUp(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) { // 
 			return "users/signup_form";
 		}
 
@@ -53,8 +53,7 @@ public class UsersController {
 			return "users/signup_form";
 		}
 
-		userService.create(userCreateForm.getNickName(), userCreateForm.getUseId(), userCreateForm.getPassword1(),
-				userCreateForm.getTell());
+		userService.create(userCreateForm);
 
 		return "redirect:/";
 	}
@@ -73,9 +72,6 @@ public class UsersController {
 		return "users/findid";
 	}
 	
-	
-	
-	
 	@GetMapping("findpw")
 	public String goFindPw() {
 		return "users/findpw";
@@ -90,11 +86,9 @@ public class UsersController {
 	@PostMapping("reset_pw")
 	public String resetPassword(@RequestParam("email") String email, @RequestParam("newPassword") String newPassword) {
 	    // 비밀번호 업데이트 로직 구현
-		System.out.println("변경 할 아이디" + email);
-		System.out.println("변경 할 비밀번호" + newPassword);
 	    userService.updatePassword(email, newPassword);
 	    return "redirect:/login";
 	}
 	
-
+	
 } 
