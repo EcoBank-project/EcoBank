@@ -22,14 +22,17 @@
 	
 	<select id="myConfirm" resultType="MyConfirmDTO" parameterType="MyConfirmDTO">
 		SELECT e.user_no,
-		       COUNT(c.confirm_no) AS confirm_count, 
 		       e.chall_no,
+		       COUNT(c.confirm_no) AS confirm_count, 
 		       COUNT(c.confirm_no) * 10 AS score  
+		       
 		FROM chall_enter e
-		JOIN chall_confirm c
-		ON e.user_no = c.user_no
+							JOIN chall_confirm c
+							ON e.user_no = c.user_no
+							
 		WHERE e.chall_no = #{challNo}
-		AND e.user_no = #{userNo}
+		  AND e.user_no = #{userNo}
+		  
 		GROUP BY e.user_no, e.chall_no
 	</select>
 	
@@ -76,14 +79,34 @@
 		AND chall_no = #{challNo}
 	</select>
 	
-	<!-- 인증 등록 -->
-	<insert id="insertChallInfo" parameterType="ChallConfirmVO">
+	<!-- 챌린지 인증 번호 조회 -->
+	<select id="getConfirmNo">
+		SELECT NVL(MAX(confirm_no), 0) + 1
+		FROM chall_confirm
+	</select>
+	
+	<!-- 챌린지 인증 등록 -->
+	<insert id="insertConfirmInfo" parameterType="ChallConfirmVO">
 		<selectKey keyProperty="confirmNo"
 			resultType="Integer"
 			order="BEFORE">
 			SELECT NVL(MAX(confirm_no), 0) + 1
 			FROM chall_confirm
 		</selectKey>
+		INSERT INTO chall_confirm (	
+									confirm_no
+									, confirm_content
+									, confirm_createAt
+									, user_no
+									, chall_no
+									)
+		VALUES (
+				#{confirmNo}
+				, #{confirmContent}
+				, SYSDATE
+				, #{userNo}
+				, #{challNo}
+				)		
 	</insert>
 	
 </mapper>

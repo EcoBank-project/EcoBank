@@ -16,20 +16,17 @@ public interface ChallMapper {
 	public int getTotal();
 	
 	//챌린지 조회 - 회원용(상태값에 따라)
-	public List<ChallVO> getChallList(String challState);
-	//public List<ChallVO> getChallList(@Param("criteria") Criteria criteria, @Param("challState") String challState);
+	//public List<ChallVO> getChallList();
+	public List<ChallVO> getChallList(@Param("criteria") Criteria criteria, @Param("challVO") ChallVO challVO);
 	
 	//챌린지 목록 개수(페이징) - 상태에 따른..
 	//public int getTotalByState(String challState);
 	
 	//챌린지 개수 가져오기
-	public int countAllChallenges(String challState);
+	public int countAllChallenges(ChallVO challVO);
 	
 	//챌린지 단건 조회 - 관리자용
 	public ChallVO selectChallInfo(ChallVO challVO);
-	
-	//챌린지 번호 생성
-	//public int selectChallNum();
 	
 	//챌린지 단건 조회 - 회원용
 	//public ChallVO getChallInfo(ChallVO challVO);

@@ -66,15 +66,32 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 		return challConfirmMapper.reviewList(challVO);
 	}
 	
+	//챌린지 참가
 	@Override
 	public int insertChallEnter(int userNo, int challNo) {
 		int result = challConfirmMapper.challEnterInsert(userNo, challNo);
 		return result;
 	}
-
+	
+	//챌린지 참가했는지 안했는지(여부)
 	@Override
 	public boolean isUserParticipated(int userNo, int challNo) {
 		int cnt = challConfirmMapper.enterStatus(userNo, challNo);
+		//System.out.println(cnt + "cnt찍히나");
 		return cnt > 0;
+	}
+	
+	//인증 등록
+	@Override
+	public int confirmInsert(ChallConfirmVO challConfirmVO) {
+		int result = challConfirmMapper.insertConfirmInfo(challConfirmVO);
+		System.out.println(result);
+		return result == 1 ? challConfirmVO.getConfirmNo() : -1;
+	}
+	
+	//인증 번호 생성
+	@Override
+	public int selectConfirmNo() {
+		return challConfirmMapper.getConfirmNo();
 	}
 }

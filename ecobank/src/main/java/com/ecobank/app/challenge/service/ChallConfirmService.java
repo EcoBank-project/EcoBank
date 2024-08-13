@@ -23,4 +23,10 @@ public interface ChallConfirmService {
 	
 	//챌린지 참가 여부 확인
 	public boolean isUserParticipated(int userNo, int challNo);
+	
+	//챌린지 인증 등록
+	public int confirmInsert(ChallConfirmVO challConfirmVO);
+	
+	//챌린지 인증 번호 생성
+	public int selectConfirmNo();
 }
