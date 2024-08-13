@@ -10,6 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<style>
+	.event-icon {
+	  max-width: 50px;
+	  margin: 0 auto;
+	}
+</style>
 </head>
 <body>
 	<div class="challenge-links">
@@ -38,6 +44,7 @@
                     <div class="p-lg-5 pe-lg-0">
                         <h6 class="text-primary">About Challenge</h6>
                         <input type="hidden" th:value="${detail.challNo}" id="cNo">
+                        <input type="hidden" th:value="${detail.confirmNo}" id="fNo">
                         <h1 class="mb-4" th:text="${detail.challTitle}"></h1>
                         <!--/* <p th:text="${detail.challContent}"></p> 이거로 해야함*/-->
                         <h6>Challenge Guide</h6>
@@ -52,7 +59,7 @@
 			                <span th:text="${detail.challLikeNo}">50</span>
 			            </div>
                         <a th:id="challBtn" class="btn btn-primary rounded-pill py-3 px-5 mt-3">도전하기</a>
-                        <a th:href="@{/confirmForm}" th:id="confirmBtn" class="btn btn-primary rounded-pill py-3 px-5 mt-3">인증하기</a>
+                        <a th:id="confirmBtn" th:onclick="|location.href='@{/confirmInsert(challNo=${detail.challNo})}'|" class="btn btn-primary rounded-pill py-3 px-5 mt-3">인증하기</a>
                     </div>
                 </div>
             </div>
@@ -80,6 +87,11 @@
 	<!-- Font Awesome for heart icon -->
 	<script src="<https://kit.fontawesome.com/a076d05399.js>" crossorigin="anonymous"></script>
 	<script>
+		let cNo = $('#cNo').val();
+		let fNo = $('#fNo').val();
+		console.log(fNo,"fNo");
+		console.log(cNo,"cNo");
+		
 		function toggleActive(buttonGroup, activeId) {
 		    //주어진 버튼 그룹 내의 모든 버튼에서 'active' 클래스를 제거
 		    buttonGroup.forEach(function(id) {
@@ -107,13 +119,33 @@
 		    });
 		    detailImg(); //상세이미지 호출
 		});
-	
+		
+		$('#challBtn').click(function(){
+			goToChallenge();
+		})
+		
+		//챌린지 도전하기
+		function goToChallenge(){
+			$.ajax({
+	            url: '/goChallenge',
+	            method: 'post',
+	            data: { challNo: cNo },
+	            success: function(result){
+	                alert("챌린지 도전~!");
+	                $('#confirmBtn').show();
+	                console.log(result);
+	            },
+	            error: function(err){
+	            	alert("이미 도전 중인 챌린지입니다.");
+	                console.log(err);
+	            }
+	        });
+		} 
+		
 		$(document).ready(function(){
-            let cNo = $('#cNo').val();
-            //console.log(cNo , "cno찍히나");
             //챌린지 참여 여부 확인
             $.ajax({
-                url: '/api/enterStatus',
+                url: '/enterStatus',
                 method: 'get',
                 data: { challNo: cNo },
                 success: function(result) {
@@ -134,7 +166,6 @@
 		
 		//나의 인증 내역
 		$('#myConfirm').click(function(){
-			let cNo = $('#cNo').val();
 			$("#contents").load("getMyConfirm?challNo=" + cNo, function(){
 				$.ajax({
 					url : '/myConfirm',
@@ -156,7 +187,6 @@
 		})
 		//다른 참가자 인증 내역
 		$('#others').click(function(){
-			let cNo = $('#cNo').val();
 			$("#contents").load("others?challNo=" + cNo);
 		})
 		
@@ -165,7 +195,6 @@
 			detailImg();
 		})
 		function detailImg(){
-			let cNo = $('#cNo').val();
 			$("#contents").load("review?challNo=" + cNo);
 		}
 		
@@ -211,6 +240,9 @@
 		                  }
 		              });
 		          }
+		          , eventContent: {
+		        	  html: `<div><img src="/img/congratulation.jpg" class="event-icon" /><br><b>인증 성공!</b></div>`,
+		        	},
 		      });
 		        calendar.render();
 			})

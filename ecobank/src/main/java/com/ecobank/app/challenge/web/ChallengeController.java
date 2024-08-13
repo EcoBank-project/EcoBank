@@ -38,9 +38,10 @@ public class ChallengeController {
 	//챌린지 목록 - 회원용
 	//오픈 예정 챌린지(D1)
 	@GetMapping("ready")
-	public String challready(Model model, String challState) {
-		List<ChallVO> list = challService.getDList("D1"); //리스트에 D1만 보이게
-        int countD1 = challService.countChallengesByState("D1"); //D1 챌린지 개수
+	public String challready(Model model, ChallVO challVO, Criteria criteria) {
+		challVO.setChallState("D1");
+		List<ChallVO> list = challService.getDList(criteria, challVO); //리스트에 D1만 보이게
+        int countD1 = challService.countChallengesByState(challVO); //D1 챌린지 개수
 
         model.addAttribute("count", countD1);
         model.addAttribute("status", "D1");
@@ -50,9 +51,10 @@ public class ChallengeController {
 	
 	//진행 중인 챌린지(D2)
 	@GetMapping("progress")
-	public String challprogress(Model model, String challState) {
-		List<ChallVO> list = challService.getDList("D2"); //리스트에 D2만 보이게
-        int countD2 = challService.countChallengesByState("D2"); //D2 챌린지 개수
+	public String challprogress(Model model, ChallVO challVO, Criteria criteria) {
+		challVO.setChallState("D2");
+		List<ChallVO> list = challService.getDList(criteria, challVO); //리스트에 D2만 보이게
+        int countD2 = challService.countChallengesByState(challVO); //D2 챌린지 개수
 
         model.addAttribute("count", countD2);
         model.addAttribute("status", "D2");
@@ -62,9 +64,10 @@ public class ChallengeController {
 	
 	//완료된 챌린지(D3)
 	@GetMapping("end") 
-	public String challend(Model model, String challState) {
-		List<ChallVO> list = challService.getDList("D3"); //리스트에 D3만 보이게
-        int countD3 = challService.countChallengesByState("D3"); //D3 챌린지 개수
+	public String challend(Model model, ChallVO challVO, Criteria criteria) {
+		challVO.setChallState("D3");
+		List<ChallVO> list = challService.getDList(criteria, challVO); //리스트에 D3만 보이게
+        int countD3 = challService.countChallengesByState(challVO); //D3 챌린지 개수
 
         model.addAttribute("count", countD3);
         model.addAttribute("status", "D3");
@@ -103,52 +106,15 @@ public class ChallengeController {
 	public String challInsertForm() {
 		return "admins/adminChallInsert";
 	}
-	
-	//@PostMapping("challInsert")
-	public String challInsertProcess(ChallVO challVO) {
-		int cno = challService.challInsert(challVO);
-		return "redirect:challInfo?challNo=" + cno;
-	}
 	    
 	// 등록 - 처리 : URI - boardInsert / PARAMETER - BoardVO(QueryString)
 	//             RETURN - 단건조회 다시 호출
 	@PostMapping("challInsert")
 	public String challInsertProcess(ChallVO challVO, @RequestPart MultipartFile[] images) {
-		int index = 0;
-		
-		for(MultipartFile image : images) {
-			//1)원래 파일이름
-			String fileName = image.getOriginalFilename();
-			//System.out.println(fileName);
-			//고유한 식별자로 이미지 저장해서 클라이언트가 업로드했을때 파일이름이 겹치지 않도록 하는거
-			UUID uuid = UUID.randomUUID();
-			String uniqueFileName = uuid + "_" + fileName;
-			
-			//2)실제로 저장할 경로를 생성 : 서버의 업로드 경로 + 파일이름
-			String saveName = uploadPath + File.separator + uniqueFileName; //""가 /와 같아
-			//System.out.println(saveName);
-			Path savePath = Paths.get(saveName); //여기에 경로 담았음
-			//System.out.println(savePath);
-			if(index == 0) {
-				challVO.setMainImg(uniqueFileName); //파일의 정보를 가져와서 challVO에 파일의 이름을 넣어줌
-			}else {
-				challVO.setDetailImg(uniqueFileName);
-			}
-			index++;
-			
-			//3)*파일 작성(파일 업로드)
-			try {
-				image.transferTo(savePath); //*실제 경로 지정 /Path는 경로/transferTo=햇살
-			}catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
-//		String challCode = "J2";
-//		int challNo = challService.selectChallNum();
-//		
-//		fileService.insertFile(images, challCode, challNo); //피드번호
+		commonFile(challVO, images);
+
 		int cno = challService.challInsert(challVO);
-		return "redirect:challInfo?challNo=" + cno;
+		return "redirect:adminChallInfo?challNo=" + cno;
 	}
 	
 	// 수정 - 페이지
@@ -163,9 +129,13 @@ public class ChallengeController {
 	@PostMapping("challUpdate")
 	@ResponseBody
 	public Map<String, Object> challUpdateProcess(ChallVO challVO, @RequestPart MultipartFile[] images){ 
-		//System.out.println("ddddddd");
+		commonFile(challVO, images);
+
+		return challService.challUpdate(challVO);
+	}
+	//공통 파일 코드 함수화
+	private void commonFile(ChallVO challVO, MultipartFile[] images) {
 		int index = 0;
-		    	
 		for(MultipartFile image : images) {
 			//1)원래 파일이름
 			String fileName = image.getOriginalFilename();
@@ -194,11 +164,6 @@ public class ChallengeController {
 				e.printStackTrace();
 			}
 		}
-//		String challCode = "J2";
-//		int challNo = challService.selectChallNum();
-//		
-//		fileService.insertFile(images, challCode, challNo); //피드번호
-		return challService.challUpdate(challVO);
 	}
 	
 	//챌린지 목록 - 관리자

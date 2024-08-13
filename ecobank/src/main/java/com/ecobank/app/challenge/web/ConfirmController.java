@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.challenge.service.ChallConfirmService;
 import com.ecobank.app.challenge.service.ChallConfirmVO;
@@ -20,13 +21,13 @@ import com.ecobank.app.upload.service.FileVO;
 
 @Controller
 public class ConfirmController {
-	private ChallConfirmService challCofirmService;
+	private ChallConfirmService challConfirmService;
 	private FileService fileService;
 	private ChallService challService;
 	
 	@Autowired
-	public ConfirmController(ChallConfirmService challCofirmService, FileService fileService, ChallService challService) {
-		this.challCofirmService = challCofirmService;
+	public ConfirmController(ChallConfirmService challConfirmService, FileService fileService, ChallService challService) {
+		this.challConfirmService = challConfirmService;
 		this.fileService = fileService;
 		this.challService = challService;
 	}
@@ -51,18 +52,9 @@ public class ConfirmController {
 		//detailImg를 여기에 따로 추가해야해
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		List<FileVO> list = fileService.selectFileInfo(userNo, challNo, "J3");	
-		//System.out.println(list + "찍히나");
+		System.out.println(list + "찍히나");
 		model.addAttribute("fileList", list);
 		return "chall/myConfirm";
-	}
-	
-	//상세이미지(+리뷰)
-	@GetMapping("review")
-	public String reviewList(ChallVO challVO, Model model) {
-		ChallVO findVO = challService.challInfo(challVO);
-		model.addAttribute("detail", findVO.getDetailImg());
-		//review도 여기에 해야함
-		return "chall/review";
 	}
 	
 	//나의 캘린더(페이지)
@@ -70,5 +62,37 @@ public class ConfirmController {
 	public String getMyCalendar() {
 		return "chall/calendar";
 	}
+	
+	//인증 등록 페이지
+	@GetMapping("confirmInsert")
+	public String confirmInsert() {
+		return "chall/confirmForm";
+	}
+	
+	//인증 등록 처리
+	@PostMapping("confirmInsert")
+	public String confirmInsertProcess(MultipartFile[] images, ChallConfirmVO challConfirmVO) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		challConfirmVO.setUserNo(userNo);
+		int confirmNo = challConfirmService.confirmInsert(challConfirmVO);
+		
+		String confirmCode = "J3";
+		fileService.insertFile(images, confirmCode, confirmNo);
+		
+		return "redirect:detail?challNo=" + challConfirmVO.getChallNo();
+	}
+	
+	//메인에서 인증 페이지
+	@GetMapping("confirm")
+	public String confirmList(Model model) {
+		return "chall/confirm";
+	}
+	
+	//챌린지 상세에서 상세 이미지(+리뷰)
+	@GetMapping("review")
+	public String reviewList(Model model) {
+		return "chall/review";
+	}
+	
 	
 }
