@@ -79,9 +79,9 @@ public class ChatRoomController {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		Integer chatNo = chatService.ChatRoomInsert(chatRoom, userNo);
 		
-		List<Integer> userIds = chatRoom.getUserId();
-		for(Integer userId : userIds) {
-			chatService.ChatUserInsert(chatNo, userId);
+		List<Integer> userNos = chatRoom.getUserNo();
+		for(Integer user : userNos) {
+			chatService.ChatUserInsert(chatNo, user);
 		};
 		return chatNo;
 	}

@@ -2,7 +2,6 @@ package com.ecobank.app.chat.web;
 
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -11,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
 import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
+import com.ecobank.app.chat.service.ChatRoomDTO;
 import com.ecobank.app.chat.service.ChatService;
 
 @Controller
@@ -35,11 +36,13 @@ public class ChatMessageController {
 	public ChatMessageDTO enterUser(@Payload ChatMessageDTO message) {
 		return message;
 	}
+		
+	//채팅방 목록
 	@MessageMapping("/update.roomList")
-    @SendTo("/topic/roomListUpdate")
-    public String updateRoomList() {
-		System.out.println("여기오나?");
-        return "check";
+	@SendToUser("/queue/roomListUpdate")
+    public ChatRoomDTO updateRoomList(ChatRoomDTO chatRoom) {
+		System.out.println(chatRoom);
+        return chatRoom;
     }
 	
 	// 채팅방 그룹대화

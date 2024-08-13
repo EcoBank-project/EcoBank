@@ -155,7 +155,7 @@
 	            showMessage(JSON.parse(message.body));	     
 	        });
 	
-	        stompClient.subscribe('/topic/roomListUpdate', function(message) {
+	        stompClient.subscribe('/user/queue/roomListUpdate', function(message) {
 	        	loadRoom();
 	        });
 	    });
@@ -240,7 +240,6 @@
 	}
 	// 채팅방 로드
 	function loadRoom(){
-		console.log(chatList);
 		$.ajax({
 			url: "/chatRoom/chatList",
 			method: "GET",
@@ -384,10 +383,10 @@
 		let formObj = {};
 		let chatName = $('#groupChatname').val();
 		formObj['chatName'] = chatName;
-		formObj['userId'] = [];
+		formObj['userNo'] = [];
 		$('#followListGroup .select-follow').each(function() {
 			if($(this).is(":checked")){
-				formObj['userId'].push(Number($(this).val()));
+				formObj['userNo'].push(Number($(this).val()));
 			}
 		});
 		insertChatRoom(formObj);		
