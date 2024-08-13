@@ -16,14 +16,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper; // MyBatis를 통한 추가적인 쿼리
 
-    public Users create(String nickname, String useId, String password, String tell) {
-        Users user = new Users();
-        user.setUseId(useId);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setNickName(nickname);
-        user.setTell(tell);
-        this.userRepository.save(user);
-
+    
+    public Users create(UserCreateForm userCreateForm) {
+        Users user = new Users(); // user 인스턴스 만들어서
+        user.setUseId(userCreateForm.getUseId());
+        user.setPassword(passwordEncoder.encode(userCreateForm.getPassword1()));
+        user.setNickName(userCreateForm.getNickName());
+        user.setTell(userCreateForm.getTell()); // 값을 넣어주고
+        this.userRepository.save(user); // db에 insert 됨
         return user;
     }
 
@@ -33,11 +33,11 @@ public class UserService {
     }
 
     public String checkID(String uid) {
-        return userRepository.findByUseId(uid).getUseId();
+        return userRepository.findByUseId(uid).getUseId(); // JPA를 톹ㅇ한 
     }
 
     public String getUserIdByPhoneNumber(String phoneNumber) {
-        return userMapper.findUserIdByPhoneNumber(phoneNumber);
+        return userMapper.findUserIdByPhoneNumber(phoneNumber); // MyBatis를 통한 사용자 조회
     }
 
     public void updatePassword(String useId, String newPassword) {

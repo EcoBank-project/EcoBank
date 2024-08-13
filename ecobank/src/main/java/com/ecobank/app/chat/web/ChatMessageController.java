@@ -2,9 +2,11 @@ package com.ecobank.app.chat.web;
 
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -24,7 +26,6 @@ public class ChatMessageController {
 	ChatMessageController(ChatService chatService){
 		this.chatService = chatService;
 	}
-	
 	@Autowired
 	private HttpSession httpSession;
 	
@@ -34,24 +35,26 @@ public class ChatMessageController {
 	public ChatMessageDTO enterUser(@Payload ChatMessageDTO message) {
 		return message;
 	}
-
+	@MessageMapping("/update.roomList")
+    @SendTo("/topic/roomListUpdate")
+    public String updateRoomList() {
+		System.out.println("여기오나?");
+        return "check";
+    }
+	
 	// 채팅방 그룹대화
 	@MessageMapping("/chat.message/{roomId}")
 	@SendTo("/topic/messages/{roomId}")
-	public ChatMessageDTO sendUser(@Payload ChatMessageDTO message) {
+	public ChatMessageVO sendUser(@Payload ChatMessageVO message) {
 		// 메시지 저장
 		ChatMessageVO chatMessage = new ChatMessageVO();
-		chatMessage.setMsgContent(message.getMsgContent());
-		chatMessage.setMsgType(message.getMsgType());
-		chatMessage.setMsgSendTime(message.getFormatTime());
-		chatMessage.setUserNo(message.getUserNo());
-		chatMessage.setChatNo(message.getChatNo());
+		BeanUtils.copyProperties(message, chatMessage);
 		chatService.ChatMessageInsert(chatMessage);
 
 		// 날짜 포맷
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
-		String formatDate = dateFormat.format(message.getFormatTime());
-		message.setMsgSendTime(formatDate);
+		String formatDate = dateFormat.format(message.getMsgSendTime());
+		message.setForMatTime(formatDate);
 		
 		return message;
 	}

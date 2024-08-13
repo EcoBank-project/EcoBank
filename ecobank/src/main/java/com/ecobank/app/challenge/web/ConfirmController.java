@@ -90,7 +90,12 @@ public class ConfirmController {
 	
 	//챌린지 상세에서 상세 이미지(+리뷰)
 	@GetMapping("review")
-	public String reviewList(Model model) {
+	public String reviewList(ChallVO challVO, Model model) {
+		//상세
+		ChallVO findVO = challService.challInfo(challVO);
+		model.addAttribute("detail", findVO);
+		System.out.println(findVO);
+		//리뷰
 		return "chall/review";
 	}
 	

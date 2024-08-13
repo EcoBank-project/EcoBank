@@ -80,6 +80,7 @@ public class ChallengeController {
 	public String challdetail(ChallVO challVO, Model model) {
 		ChallVO findVO = challService.challInfo(challVO);
 		model.addAttribute("detail", findVO);
+		System.out.println(findVO);
 		return "chall/detail";
 	}
 	

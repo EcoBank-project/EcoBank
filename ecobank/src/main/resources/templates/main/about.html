@@ -70,6 +70,10 @@
     object-fit: cover;
 }
 
+.swal-footer {
+            display: flex;
+            justify-content: center; /* 버튼 중앙 정렬 */
+        }
 </style>
 </head>
 <body>
@@ -174,20 +178,47 @@
     </div>
     <!-- Our Acitivy End  -->
     
+    <div class="text-center mx-auto mb-5" 
+    	 style="max-width: 600px; 
+    	 visibility: visible; 
+    	 display: none;"
+    	 id="regionDataDiv">
+          <h5 class="mb-4">Carbon Emission in <span id="regionName"></span> today is : <span id="totalEmission"></span> tCo2/kWh</h5>
+    </div>
+    
 	<!-- Map div Start -->
 	<div id="map"></div>
 	<!-- Map div End -->
 	<div class="legend">
-		<p>data: carbon emission(TonCO2/kWh)</p>
+		<h6 id="datatype">data: carbon emission(TonCO2/kWh)</h6>
 	</div>
 	<!-- Legend div Start -->
-	<div class="legend">
+	<div class="legend mb-5">
 		<ul class="legend_label">
 
 		</ul>
 		<ul class="legend_color">
 
 		</ul>
+	</div>
+	<div class="mx-auto mb-5" 
+    	 style="max-width: 600px;
+    	 		display: none;" 
+    	 id="dataSelectTab">
+		<div class="d-flex justify-content-center align-items-center gap-3">
+	        <div class="form-check">
+	            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+	            <label class="form-check-label" style="color: black;" for="flexRadioDefault1">
+	                Sea Level ratio
+	            </label>
+	        </div>
+	        <div class="form-check">
+	            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+	            <label class="form-check-label" style="color: black;" for="flexRadioDefault2">
+	                Air Pollution ratio
+	            </label>
+	        </div>
+    	</div>
 	</div>
 	<!-- Legend div End -->
 	<input type="hidden" id="carbList" th:value="${carbList}">

@@ -107,24 +107,40 @@ button:hover {
 
 		window.sendNumber = function() {
 			const useidValue = $("#useid").val();
-
-			$("#mail_number").css("display", "block");
-			$.ajax({
-				url : "/user/mail",
-				type : "post",
-				dataType : "json",
-				data : {
-					mail : useidValue
-				},
-				success : function(data) {
-					alert("인증번호 발송");
-					$("#Confirm").val(data); // 서버에서 받은 인증번호를 숨겨진 필드에 설정
-				},
-				error : function() {
-					alert("인증번호 발송에 실패했습니다.");
-				}
-			});
-		}
+			// 등록된 아이디인지 체크
+			   $.ajax({
+	                url: '/user/api/check-duplicate',
+	                type: 'GET',
+	                data: { useId: useidValue },
+	                dataType: 'json',
+	                success: function(result) {
+	                    if (result.exists) {
+	                        // 등록된 아이디인 경우
+	                        $("#mail_number").css("display", "block");
+	                        $.ajax({
+	                            url: "/user/mail",
+	                            type: "post",
+	                            dataType: "json",
+	                            data: { mail: useidValue },
+	                            success: function(data) {
+	                                alert("인증번호 발송");
+	                                $("#Confirm").val(data); // 서버에서 받은 인증번호를 숨겨진 필드에 설정
+	                            },
+	                            error: function() {
+	                                alert("인증번호 발송에 실패했습니다.");
+	                            }
+	                        });
+	                    } else {
+	                        // 등록된 아이디가 아닌 경우
+	                        alert("등록되지 않은 아이디입니다.");
+	                    }
+	                },
+	                error: function(xhr, status, error) {
+	                    console.error('Error:', error);
+	                    alert("서버 오류가 발생했습니다.");
+	                }
+	            });
+	        }
 
 		window.confirmNumber = function() {
 			const number1 = $("#number").val();
