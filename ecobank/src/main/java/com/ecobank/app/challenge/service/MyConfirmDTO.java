@@ -13,5 +13,5 @@ public class MyConfirmDTO {		//바구니
 	private int score;			//챌린지 점수
 	private int confirmCount;	//인증 횟수
 	private int remainCount; 	//남은 인증 횟수
-	//private int confirmNo;		//챌린지 인증 번호
+	private int confirmNo;		//챌린지 인증 번호
 }
