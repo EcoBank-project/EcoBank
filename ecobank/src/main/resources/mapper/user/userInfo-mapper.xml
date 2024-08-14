@@ -8,6 +8,13 @@
         FROM users
         WHERE tell = #{phoneNumber}
     </select>
+    
+    <!-- 구글 로그인 시 회원정보 등록여부 확인 절차  -->
+    <select id="findUserInfoByUseId" parameterType="String">
+    	SELECT nickname
+    	FROM users
+		WHERE use_id = #{useId}
+    </select>
 
     <!-- 비밀번호 업데이트 -->
     <update id="updatePassword" parameterType="map">
@@ -15,4 +22,7 @@
         SET password = #{encodedPassword}
         WHERE use_Id = #{useId}
     </update>
+    
+    <!-- 구글 회원 가입정보 기입  -->
+    
 </mapper>

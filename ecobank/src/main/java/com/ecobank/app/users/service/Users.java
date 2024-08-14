@@ -11,11 +11,17 @@ import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Users {
 	
 	@Id
@@ -31,6 +37,9 @@ public class Users {
 	@Column(name = "nickname")
 	private String nickName;
 
+	@Column(name = "user_state")
+	private String userState;
+	
 	@Column(name = "tell")
 	private String tell;
 	

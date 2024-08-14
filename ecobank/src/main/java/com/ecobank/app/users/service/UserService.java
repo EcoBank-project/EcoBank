@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ecobank.app.googleuser.service.GoogleUserInfoForm;
 import com.ecobank.app.users.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,21 @@ public class UserService {
         return user;
     }
 
+    public Users googleUpdate(GoogleUserInfoForm googleUserInfoForm) {
+        Users user = new Users(); // user 인스턴스 만들어서
+        user.setNickName(googleUserInfoForm.getNickName());
+        user.setTell(googleUserInfoForm.getTell()); // 값을 넣어주고
+        this.userRepository.save(user); // db에 insert 됨
+        return user;
+    }
+    
     public boolean authenticate(String useId, String password) {
-        Users user = userRepository.findByUseId(useId);
+        Users user = userRepository.findByUseId(useId).get();
         return user != null && passwordEncoder.matches(password, user.getPassword());
     }
 
     public String checkID(String uid) {
-        return userRepository.findByUseId(uid).getUseId(); // JPA를 톹ㅇ한 
+        return userRepository.findByUseId(uid).get().getUseId(); // JPA를 톹ㅇ한 
     }
 
     public String getUserIdByPhoneNumber(String phoneNumber) {
@@ -46,6 +55,6 @@ public class UserService {
     }
     
     public Users findByUseId(String useId) {
-        return userRepository.findByUseId(useId); // JPA를 통한 사용자 조회
+        return userRepository.findByUseId(useId).get(); // JPA를 통한 사용자 조회
     }
 }

@@ -9,7 +9,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.ecobank.app.googleuser.service.CustomOAuth2UserService;
 import com.ecobank.app.security.handler.CustomAuthenticationSuccessHandler;
+import com.ecobank.app.security.handler.GoogleAuthenticationSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +23,11 @@ public class SpringSecurityConfig {
 	
 	@Autowired
 	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+	@Autowired
+	private GoogleAuthenticationSuccessHandler googleAuthenticationSuccessHandler;
+	
+    private final CustomOAuth2UserService customOAuth2UserService;
 
 //1. 암호화/복호화에 사용하는 Bean 등록
 	@Bean
@@ -45,8 +52,14 @@ public class SpringSecurityConfig {
             .logout()
                 .logoutUrl("/logout") // 로그아웃 URL 설정
                 .logoutSuccessUrl("/") // 로그아웃 성공 시 리다이렉트 URL
-                .permitAll(); // 로그아웃은 모든 사용자에게 허용
-
+                .permitAll() // 로그아웃은 모든 사용자에게 허용
+        	.and()
+        		.oauth2Login()
+                .loginPage("/login") // 로그인 페이지 설정
+        		.successHandler(googleAuthenticationSuccessHandler)
+	        		.userInfoEndpoint()
+	        		.userService(customOAuth2UserService);
+        			
         return http.build();
     }
 }
