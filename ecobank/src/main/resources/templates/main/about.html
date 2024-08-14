@@ -74,6 +74,13 @@
             display: flex;
             justify-content: center; /* 버튼 중앙 정렬 */
         }
+canvas {
+            display: block;
+        }
+.chart-container {
+            text-align: center;
+        }
+
 </style>
 </head>
 <body>
@@ -83,8 +90,6 @@
       <h1 class="display-3 text-white mb-3 animated slideInDown">About Us</h1>
       <nav aria-label="breadcrumb animated slideInDown">
           <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a class="text-white" href="#">Home</a></li>
-              <li class="breadcrumb-item"><a class="text-white" href="#">Pages</a></li>
               <li class="breadcrumb-item text-white active" aria-current="page">About</li>
           </ol>
       </nav>
@@ -222,6 +227,17 @@
 	</div>
 	<!-- Legend div End -->
 	<input type="hidden" id="carbList" th:value="${carbList}">
+	<!-- 당일 점수는 추후 반영(데이터가 너무 적음) -->
+	<input type="hidden" id="totalEmissionPoint" th:value="${totalScore}">
+	
+	<!-- chart div Start -->
+	<!-- <div class="chart-container">
+        <canvas id="reductionChart"></canvas>
+    </div> -->
+	<div id="curve_chart" class="container-xxl py-5 wow fadeInUp d-flex justify-content-center align-items-center" style="height:600px;"></div>
+	 <!-- Tooltip 요소를 HTML에 추가 -->
+    <div id="tooltip" style="display:none; position: absolute; background-color: white; border: 1px solid #ccc; padding: 10px; font-size: 14px;"></div>
+	<!-- chart div End -->
 	
 	<!-- Explain Section Start -->
 	<div class="container-xxl py-5">
@@ -252,9 +268,20 @@
                 data-wow-delay="1.0s"
                 style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
                 <h1 class="mb-4"><span data-toggle="counter-up"
-	          th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span>그루를 심은 효과!</h1>
+	          th:text="${#numbers.formatInteger(treeCount, 3, 'COMMA')}"></span>그루를 심은 효과!</h1>
            </div>
+           
+           <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                <h6 class="text-secondary">나무 한 그루가 연평균 20kg의 CO2를 흡수한다고 가정하여 산정되었습니다.</h6>
+            </div>
 	    </div>
+	    <div class="text-center mx-auto mb-1 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                <h1 class="mb-1">해수면 상승을 <span data-toggle="counter-up"
+	          th:text="${seaLevel}"></span>mm 방지할 수 있습니다.</h1>
+            </div>
+	    <div class="container-xxl py-5 wow fadeInUp d-flex justify-content-center align-items-center" 
+                data-wow-delay="1.0s"
+                style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;" id="container"></div>
 	  </div>
 	</div>
 	<!-- Explain Section End -->
@@ -274,6 +301,14 @@
 	<script th:src="@{lib/isotope/isotope.pkgd.min.js}"></script>
 	<script th:src="@{lib/lightbox/js/lightbox.min.js}"></script>
 	<script th:src="@{/js/main.js}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/konva/8.3.5/konva.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+    <script th:src="@{/js/about/sectioncontrol.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script th:src="@{/js/about/carbongraph.js}"></script>
+    
+    
 </body>
 </html>
 
