@@ -23,14 +23,20 @@
       FROM sns s JOIN users u 
                    ON s.user_no = u.user_no
       WHERE feed_state = 'F1'  
-      <if test="hashtag != null and hashtag != ''">
-      and hashtag like '%'||#{hashtag}||'%'      
-      </if>
-       <if test="nickname != null and nickname != ''">
-      and nickname like '%'||#{nickname}||'%'      
-      </if>    
-      
-      ORDER BY s.feed_no DESC
+      	<if test="hashtag != null and hashtag != ''">
+      		and hashtag like '%'||#{hashtag}||'%'      
+      	</if>
+       	<if test="nickname != null and nickname != ''">
+      		and nickname like '%'||#{nickname}||'%'      
+      	</if>    
+      <choose>
+      	<when test="orderSns == 1">
+      		ORDER BY countLike DESC
+      	</when>
+      	<otherwise>
+        	ORDER BY s.feed_no DESC
+      	</otherwise>
+      </choose>
 	</select>
 	
 	<!-- 단건조회 -->
