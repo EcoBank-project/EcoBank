@@ -11,4 +11,5 @@ public class ChallDeclareVO {
 		private Date  confirmDeclareat;  		//챌린지 인증 신고 날짜
 		private int confirmUserNo;  			//신고한 회원 번호
 		private int confirmNo; 	                //인증 번호
+		private int userNo;              		//유저번호
 }

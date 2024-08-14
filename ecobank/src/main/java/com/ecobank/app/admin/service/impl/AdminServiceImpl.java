@@ -1,6 +1,7 @@
 package com.ecobank.app.admin.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.ecobank.app.admin.service.AdminService;
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
+import com.ecobank.app.sns.service.SnsVO;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -93,5 +95,23 @@ public class AdminServiceImpl implements AdminService {
 		
 		adminMapper.UpdateChallengeUserState();
 	}
+    //챌린지 신고 내용 조회 
+
+	@Override
+	public Map<String,Object> selectChallDeclare(int confirmNo) {
+		return adminMapper.selectChallDeclare(confirmNo);
+	}
+
+	@Override
+	public List<SnsVO> selectSns(SnsVO snsVO) {
+		// TODO Auto-generated method stub
+		return adminMapper.selectSns(snsVO);
+	}
+
+
+
+
+
+	
 	
 }

@@ -21,8 +21,11 @@ public class UserVO {
 	private String userState;   //회원상태
 	private String provide;		// google
 	private String provideId;	// 구글 로그인 유저 고유 ID
-	public String roleName; 
-	
+	private String roleName; 
+	private int cnt;
+	private int n1;
+	private int n2;
+	private Date confirmCreateat;
 	
 
 

@@ -6,40 +6,83 @@
 
 <body>
 
-<div class="card-header">
-    <i class="fas fa-table me-1"></i>
-    DataTable Example
-</div>
-
-<!-- 플래시 메시지 표시 -->
-<div class="alert alert-info" role="alert" th:if="${updateMessage}" th:text="${updateMessage}"></div>
-
-
-
-<div class="card-body">
-    <table class="table table-dark table-striped">
-        <thead>
-            <tr>
-                <th class="text-center">신고 번호</th>
-                <th class="text-center">인증번호</th>
-                <th class="text-center">신고한 회원번호</th>
-                <th class="text-center">신고 분류</th>
-                <th class="text-center">신고 날짜</th>
-                <th class="text-center">신고 횟수</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr th:each="challDeclare : ${ChallDeclareList}">
-                <td class="text-center" th:text="${challDeclare.confirmDeclareNo}"></td>
-                <td class="text-center" th:text="${challDeclare.confirmNo}"></td>
-                <td class="text-center" th:text="${challDeclare.confirmUserNo}"></td>
-                <td class="text-center" th:text="${challDeclare.confirmDeclareType}"></td>
-                <td class="text-center" th:text="${#dates.format(challDeclare.confirmDeclareat, 'yyyy/MM/dd')}"></td>
-            </tr>
-        </tbody>
-    </table>
-</div> 
-
+	<div class="col-lg-8">
+		<div class="card">
+			<div class="card-header">
+		    	<i class="fas fa-table me-1"></i>
+		    	DataTable Example
+			</div>
+			<div class="card-body">
+			    <table class="table table-dark table-striped">
+			        <thead>
+			            <tr>
+			                <th class="text-center">신고 번호</th>
+			                <th class="text-center">회원 번호</th>
+			                <th class="text-center">인증번호</th>
+			                <th class="text-center">신고한 회원번호</th>
+			                <th class="text-center">신고 분류</th>
+			                <th class="text-center">신고 날짜</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            <tr th:each="challDeclare : ${ChallDeclareList}">
+			                <td class="text-center" th:text="${challDeclare.confirmDeclareNo}"></td>
+			                <td class="text-center" th:text="${challDeclare.userNo}"></td>
+			                <td class="text-center" th:text="${challDeclare.confirmNo}"></td>
+			                <td class="text-center">
+			                    <a href="#" th:onclick="'declareonclick(' + ${challDeclare.confirmNo} + ')'" th:text="${challDeclare.confirmUserNo}"></a>
+			                </td>
+			                <td class="text-center" th:text="${challDeclare.confirmDeclareType}"></td>
+			                <td class="text-center" th:text="${#dates.format(challDeclare.confirmDeclareat, 'yyyy/MM/dd')}"></td>
+			            </tr>
+			        </tbody>
+			    </table>
+			</div> 
+		</div>
+	</div>
+	
+	<div class="col-lg-4">
+		<table class="table table-dark table-striped">
+			<tbody>
+				<tr>
+					<td>챌린지 제목</td>
+				</tr>
+				<tr>	
+					<td id="challtitle"></td>
+				</tr>
+				<tr>	
+					<td>챌린지 내용</td>
+				</tr>
+				<tr>	
+					<td id="challcontent"></td>
+				</tr>
+				<tr>	
+					<td>인증내용</td>
+				</tr>
+				<tr>	
+					<td id="confirmcontent"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<script>
+		function declareonclick(confirmNo) {
+		    $.ajax({
+		        url: '/selectChallDeclare/'+confirmNo,
+		        method: 'get',
+		        success: function(result) {
+		            console.log(result);
+		            
+		            $('#challtitle').text(result.challTitle);
+		            $('#challcontent').text(result.challContent);
+		           	$('#confirmcontent').text(result.confirmContent);
+		        },
+		        error: function(err) {
+		            console.log(err);
+		        }
+		    });
+		}
+	</script>
 </body>
 </html>
