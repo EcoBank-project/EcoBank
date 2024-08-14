@@ -91,6 +91,12 @@ public class SnsServiceImpl implements SnsService{
 		return result == 1 ? snsVO.getDeclareNo() : -1;
 		
 	}
+	
+	//마이피드 조회
+	@Override
+	public List<SnsVO> mySns(int userNo) {
+		return snsMapper.selectMySns(userNo);
+	}
     
 
 }

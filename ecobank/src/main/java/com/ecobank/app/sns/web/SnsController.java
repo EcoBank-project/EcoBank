@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,7 +75,7 @@ public class SnsController {
 		List<FileVO> list = fileService.selectFileInfo(snsVO.getFeedNo());
 		model.addAttribute("snsFileInfo",list);
 		model.addAttribute("sns", findVO);
-		
+		System.out.println("언제"+findVO);
 		//신고사유목록
 		List<CodeVO> declarelist = commonService.codeList("0E");
 		model.addAttribute("snsDeclare",declarelist);
@@ -132,8 +133,23 @@ public class SnsController {
 	public String snsDeclareProcess(SnsVO snsVO) {
 		//신고하기
 		int declareNo = snsService.insertsnsDeclare(snsVO);
-
 		return "redirect:sns";
+	}
+	
+	//마이피드 조회
+	@GetMapping("mySns")
+	public String mySns(@RequestParam Integer userNo) {
+		Integer userNo1 = (Integer) httpSession.getAttribute("userNo");
+		
+		List<SnsVO> list = snsService.mySns(userNo1);
+	
+		System.out.println("누구야"+userNo1);
+		System.out.println("누구야"+list);
+	
+			 
+		return "sns/mySns";
+		
+		
 	}
 
 }
