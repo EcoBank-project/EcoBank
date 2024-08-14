@@ -24,4 +24,7 @@ public interface FileService {
 	
 	//다른 참가자 인증 내역 파일
 	public List<FileVO> selectFileOtherInfo(int challNo);
+	
+	//나의 인증 내역 파일 상세
+	public List<FileVO> selectGetMyInfo(int confirmNo);
 }

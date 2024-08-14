@@ -11,4 +11,7 @@ public interface UserMapper {
     
 	// 비밀번호 재설정(이메일 인증)
     public int updatePassword(@Param("useId") String useId, @Param("encodedPassword") String encodedPassword);
+    
+    // 구글 회원가입 여부
+    public String findUserInfoByUseId(@Param("useId") String useId);
 }

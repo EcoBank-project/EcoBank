@@ -1,9 +1,9 @@
 package com.ecobank.app.admin.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
@@ -48,7 +48,9 @@ public interface AdminMapper {
     void UpdateSnsState();
     void UpdateChallengeUserState();
     
-    //챌린지 테이블 회원상태
-
+   //챌린지 신고 내용 조회 
+   Map<String,Object> selectChallDeclare(int confirmNo);
+   
+   List<SnsVO> selectSns(SnsVO snsVO);
 
 }

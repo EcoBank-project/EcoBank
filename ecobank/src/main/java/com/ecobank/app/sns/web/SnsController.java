@@ -47,11 +47,17 @@ public class SnsController {
 	@GetMapping("sns")
 	public String snsList(SnsVO snsVO, Model model) {
 		List<SnsVO> list = snsService.snsList(snsVO);
-		System.out.println("no찾기"+list);
 		model.addAttribute("snsList",list);
 		return "sns/sns";
 	}
-	
+	//전체인기조회
+	@GetMapping("snsP")
+	public String snsPList(SnsVO snsVO, Model model) {
+		snsVO.setOrderSns(1);
+		List<SnsVO> list = snsService.snsList(snsVO);
+		model.addAttribute("snsList",list);
+		return "sns/sns";
+	}	
 	
 	/*
 	 * //검색조회

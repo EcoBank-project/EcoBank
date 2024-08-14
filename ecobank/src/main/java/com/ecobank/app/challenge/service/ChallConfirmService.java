@@ -12,6 +12,9 @@ public interface ChallConfirmService {
 	//나의 인증 내역
 	public MyConfirmDTO myConfirm(int userNo, int challNo);
 	
+	//나의 인증 상세
+	public ChallConfirmVO myConfirmInfo(ChallConfirmVO challConfirmVO);
+	
 	//인증날짜 가져오려고(캘린더에 쓸)
 	public List<Date> myCalendar(int userNo, int challNo);
 	
@@ -29,4 +32,8 @@ public interface ChallConfirmService {
 	
 	//챌린지 참가 인증 등록
 	public boolean isConfirmed(int userNo, int challNo);
+	
+	//인증 댓글 목록
+	public List<ChallConfirmVO> confirmReplyList(ChallConfirmVO challConfirmVO);
+	
 }

@@ -19,10 +19,9 @@
 			<h4>로그인 정보</h4>
 
 			<p sec:authentication="name"></p>
-			<p sec:authentication="principal.username"></p>
 			<p sec:authentication="principal.authorities"></p>
+		<input type="hidden" id="userID"/> <!--   th:value="${#authentication.principal.name}"  -->
 		</div>
-		<input type="hidden" id="userID" th:value="${#authentication.principal.username}"/>
 	</th:block>
 	<script type="text/javascript" th:src="@{/js/home/home.js}"></script>
 </body>

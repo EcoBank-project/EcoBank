@@ -1,11 +1,18 @@
 package com.ecobank.app.admin.web;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecobank.app.admin.service.AdminService;
 import com.ecobank.app.admin.service.ChallDeclareVO;
@@ -13,10 +20,6 @@ import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
 import com.ecobank.app.sns.service.SnsService;
 import com.ecobank.app.sns.service.SnsVO;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 public class AdminController {
@@ -30,6 +33,7 @@ public class AdminController {
     // 전체조회
     @GetMapping("admin")
     public String intro(Model model) {
+    	//오늘 가입한 회원 리스트
         List<UserVO> userList = adminService.UserList();
         model.addAttribute("userList", userList);
        
@@ -37,13 +41,14 @@ public class AdminController {
         int todaySignUpCount = adminService.getcreaTeat();
         model.addAttribute("todaySignUpCount", todaySignUpCount);
         
+        //총 회원수
         int users = adminService.getusers();
         model.addAttribute("users", users);
         
         return "admins/admin";
     }
 
-    // 총 회원 수
+    // 회원목록
     @GetMapping("adminUser")
     public String getusers(Model model) {
         List<UserVO> userList = adminService.UserList();
@@ -53,12 +58,13 @@ public class AdminController {
 
     // 회원 상태 업데이트
     @PostMapping("adminUserUpdate")
-    public String updateUserState(@RequestParam String useId, @RequestParam String userState, Model model) {
-        int updatedCount = adminService.updateUserState(useId, userState);
-        model.addAttribute("updateStatus", updatedCount > 0 ? "성공적으로 업데이트되었습니다." : "업데이트 실패.");
+    public String updateUserState(@RequestParam String useId, @RequestParam String userState ,RedirectAttributes rttr) {
+        int updatedCount = adminService.updateUserState(useId, userState);     
+        rttr.addFlashAttribute("updateStatus", updatedCount > 0 ? "성공적으로 업데이트되었습니다." : "업데이트 실패.");
         return "redirect:/adminUser";
     }
 
+    //챌린지 신청목록
     @GetMapping("/ChallDeclareList")
     public String ChallDeclareList(Model model) {
         List<ChallDeclareVO> list = adminService.ChallDeclareList();
@@ -84,6 +90,22 @@ public class AdminController {
         model.addAttribute("ChallDeclareList", uniqueList);
         return "admins/ChallDeclareList";
     }
+    
+    @GetMapping("/selectChallDeclare/{confirmNo}")
+    @ResponseBody
+    public Map<String,Object> selectChallDeclare(@PathVariable int confirmNo) {
+        return adminService.selectChallDeclare(confirmNo);
+    }
+    
+//    @GetMapping("/selectChallDeclare/{userNo}")
+//    @ResponseBody
+//    public Map<String,Object> selectChallCount() {
+//        return adminService.selectChallCount();
+//    }
+    
+    
+    
+    
 
     // SNS 댓글 신고 조회
     @GetMapping("SnsReplyDeclareList")
@@ -115,7 +137,7 @@ public class AdminController {
     // SNS 전체 조회
     @GetMapping("adminSns") // 'adminSns' URL로 GET 요청이 들어오면 이 메서드가 호출됩니다.
     public String adminsnsList(Model model ,SnsVO snsVO) {
-        List<SnsVO> list = snsService.snsList(snsVO); // 전체 SNS 목록을 조회합니다.
+        List<SnsVO> list =  adminService.selectSns(snsVO);//snsService.snsList(snsVO); // 전체 SNS 목록을 조회합니다.
         model.addAttribute("adminSns", list); // 조회한 SNS 목록을 뷰에 전달합니다.
         return "admins/adminSns"; // 'admins/adminSns' 뷰를 반환합니다.
     }
@@ -135,12 +157,10 @@ public class AdminController {
             .stream()
             .collect(Collectors.toList());
 
-     
-
         model.addAttribute("SnsDeclareList", uniqueList);
         return "redirect:/updateadminSns";
+        
     }
- 
     // SNS 업데이트
     @PostMapping("updatefeedState")
     public String updatefeedState(@RequestParam int feedNo, @RequestParam String feedState, Model model) {
@@ -148,4 +168,6 @@ public class AdminController {
         model.addAttribute("updatefeedState", updatedCount > 0 ? "성공적으로 업데이트되었습니다." : "업데이트 실패.");
         return "redirect:/adminSns";
     }
+    
+    
 }

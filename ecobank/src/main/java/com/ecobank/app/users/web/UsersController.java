@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Controller
-@CrossOrigin(origins = "http://localhost:8080") // 클라이언트 URL을 설정합니다.
 public class UsersController {
 
 	private final UserService userService;
@@ -62,7 +61,7 @@ public class UsersController {
     @ResponseBody
     public Map<String, Boolean> checkDuplicate(@RequestParam String useId) { 
         Map<String, Boolean> response = new HashMap<>();
-        boolean exists = userRepository.findByUseId(useId) != null; // db에 입력받은 매개값 useId가 있는 지 확인
+        boolean exists = !userRepository.findByUseId(useId).isEmpty(); // db에 입력받은 매개값 useId가 있는 지 확인
         response.put("exists", exists); // 있으면 <exists, true> 없으면 <exists, false>
         return response;
     }
@@ -90,5 +89,6 @@ public class UsersController {
 	    return "redirect:/login";
 	}
 	
+
 	
 } 

@@ -21,4 +21,7 @@ public interface FileMapper {
 	
 	//다른 참가자 인증 내역 파일
 	public List<FileVO> selectOtherConfirm(int challNo);
+	
+	//나의 인증 내역 상세 파일
+	public List<FileVO> getMyConfirmFile(int confirmNo);
 }
