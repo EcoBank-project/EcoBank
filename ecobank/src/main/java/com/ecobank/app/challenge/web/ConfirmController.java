@@ -19,18 +19,14 @@ import com.ecobank.app.challenge.service.ChallVO;
 import com.ecobank.app.upload.service.FileService;
 import com.ecobank.app.upload.service.FileVO;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class ConfirmController {
-	private ChallConfirmService challConfirmService;
-	private FileService fileService;
-	private ChallService challService;
-	
-	@Autowired
-	public ConfirmController(ChallConfirmService challConfirmService, FileService fileService, ChallService challService) {
-		this.challConfirmService = challConfirmService;
-		this.fileService = fileService;
-		this.challService = challService;
-	}
+	private final ChallConfirmService challConfirmService;
+	private final FileService fileService;
+	private final ChallService challService;
 	
 	@Autowired
 	private HttpSession httpSession;
@@ -38,23 +34,41 @@ public class ConfirmController {
 	//인증 목록
 	@GetMapping("others")
 	public String confirmList(Model model, int challNo) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		System.out.println(userNo + "유저넘버");
 		//List<ChallConfirmVO> list = challCofirmService.confirmList(challNo);
 		List<FileVO> list = fileService.selectFileOtherInfo(challNo);
-		//System.out.println(list);
+		System.out.println(list + "파일 vo");
 		model.addAttribute("confirmList", list);
 		return "chall/others";
 	}
 	
 	//나의 인증 내역
 	@GetMapping("getMyConfirm")
-	public String myConfirm(Model model, @RequestParam("challNo") Integer challNo) {
+	public String myConfirm(Model model, @RequestParam("challNo") Integer challNo, FileVO fileVO) {
 		//model에 review.html안에 th에 넣는 ""값이 여기에 있는거 기억하기
 		//detailImg를 여기에 따로 추가해야해
 		int userNo = (Integer) httpSession.getAttribute("userNo");
+		System.out.println(userNo);
 		List<FileVO> list = fileService.selectFileInfo(userNo, challNo, "J3");	
-		//System.out.println(list + "찍히나");
 		model.addAttribute("fileList", list);
+		//System.out.println(list + "파일리스트 확인");
 		return "chall/myConfirm";
+	}
+	
+	//나의 인증 상세
+	@GetMapping("confirmInfo")
+	public String myConfirmInfo(Model model, ChallConfirmVO challConfirmVO, FileVO fileVO) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		challConfirmVO.setUserNo(userNo);
+		ChallConfirmVO findVO = challConfirmService.myConfirmInfo(challConfirmVO);
+		
+		List<FileVO> list = fileService.selectGetMyInfo(challConfirmVO.getConfirmNo());
+		System.out.println(list);
+		System.out.println(findVO);
+		model.addAttribute("list", list);
+		model.addAttribute("myConfirm", findVO);
+		return "chall/myConfirmDetail";
 	}
 	
 	//나의 캘린더(페이지)
@@ -83,7 +97,7 @@ public class ConfirmController {
 	}
 	
 	//메인에서 인증 페이지
-	@GetMapping("confirm")
+	//@GetMapping("confirm")
 	public String confirmList(Model model) {
 		return "chall/confirm";
 	}
@@ -99,6 +113,5 @@ public class ConfirmController {
 		//리뷰
 		return "chall/review";
 	}
-	
 	
 }

@@ -21,7 +21,7 @@ public interface ChallConfirmMapper {
 	public MyConfirmDTO myConfirm(int userNo, int challNo); 
 	
 	//나의 인증 상세
-	public ChallConfirmVO confirmDetail(ChallConfirmVO challConfirmVO);
+	public ChallConfirmVO myConfirmDetail(ChallConfirmVO challConfirmVO);
 	
 	//인증날짜 가져오기(남은 인증 횟수가져오려고)
 	public List<Date> getConfirmDate(@Param("userNo") int userNo, @Param("challNo") int challNo);
@@ -43,5 +43,8 @@ public interface ChallConfirmMapper {
 	
 	//챌린지 인증 여부 확인(결과가 있으면 1/ 참여한적 없으면 0)
 	public int confirmStatus(@Param("userNo") int userNo, @Param("challNo") int challNo);
+	
+	//인증 댓글 목록
+	public List<ChallConfirmVO> selectReplyList(ChallConfirmVO challConfirmVO);
 	
 }

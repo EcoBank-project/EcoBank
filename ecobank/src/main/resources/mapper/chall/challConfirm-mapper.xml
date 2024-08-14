@@ -20,11 +20,12 @@
 		
 	</select>
 	
+	<!-- 나의 인증 내역 -->
 	<select id="myConfirm" resultType="MyConfirmDTO" parameterType="MyConfirmDTO">
 		SELECT e.user_no,
 		       e.chall_no,
 		       COUNT(c.confirm_no) AS confirm_count, 
-		       COUNT(c.confirm_no) * 10 AS score  
+		       COUNT(c.confirm_no) * 10 AS score
 		       
 		FROM chall_enter e
 							JOIN chall_confirm c
@@ -34,6 +35,28 @@
 		  AND e.user_no = #{userNo}
 		  
 		GROUP BY e.user_no, e.chall_no
+	</select>
+	
+	<!-- 나의 인증 상세 -->
+	<select id="myConfirmDetail" resultType="ChallConfirmVO" parameterType="ChallConfirmVO">
+		SELECT c.confirm_no
+		        , u.nickname
+		        , u.user_no
+		        , c.chall_no
+		        , c.confirm_content
+		        , c.confirm_createAt
+		        ,(SELECT count(confirm_no) 
+		            FROM chall_confirm_like
+		           WHERE confirm_no = c.confirm_no
+		          ) as cntLike
+		        ,(SELECT count(confirm_no)
+		            FROM chall_confirm_reply
+		           WHERE confirm_no = c.confirm_no
+		          ) as cntReply
+		FROM chall_confirm c JOIN users u
+		                    	ON c.user_no = u.user_no
+		WHERE c.confirm_no = #{confirmNo}
+		AND c.user_no = #{userNo}
 	</select>
 	
 	<!-- 인증날짜 가져오려고 -->
@@ -110,6 +133,20 @@
 		WHERE chall_no = #{challNo}
 		AND user_no = #{userNo}
 		AND TRUNC(confirm_createAt) = TRUNC(SYSDATE)
+	</select>
+	
+	<!-- 댓글 목록 -->
+	<select id="selectReplyList" resultType="ChallConfirmVO">
+		SELECT r.confirm_reply_no
+			        , r.confirm_reply_content
+			        , r.confirm_reply_createAt
+			        , u.user_no
+			        , u.nickname
+			        , r.confirm_no
+		FROM chall_confirm_reply r LEFT JOIN users u
+		                            	ON r.user_no = u.user_no
+		WHERE r.confirm_no = 28
+		ORDER BY r.confirm_reply_no DESC
 	</select>
 	
 </mapper>
