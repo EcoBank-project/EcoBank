@@ -16,6 +16,8 @@ public interface ChatService {
 	public int ChatRoomInsert(ChatRoomDTO chatRoom, Integer userNo);
 	//채팅방 참여자
 	public int ChatUserInsert(Integer chatNo, Integer userNo);
+	//채팅방 참여자 아이디
+	public List<String> ChatUserList(Integer chatNo);
 	//팔로우 목록
 	public List<ChatFollowVO> chatFollowList(Integer userNo);
 }

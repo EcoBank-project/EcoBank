@@ -5,7 +5,8 @@
 	<select id="selectChatRoomAll" resultType="ChatRoomVO">
 		select ce.chat_no, 
 			   chat_name, 
-			   chat_enter_time 
+			   chat_enter_time,
+			   chat_type 
 		from chat_entry ce join chat c 
                      		 on ce.chat_no = c.chat_no
 		where user_no = #{userNo}
@@ -66,6 +67,7 @@
 		{call insertChatRoom(
 		    #{chatName, mode=IN},
 		    #{userNo, mode=IN},
+		    #{chatType, mode=IN},
 		    #{chatNo, mode=OUT, jdbcType=INTEGER}
 		    )
 		}
@@ -82,4 +84,12 @@
 		INSERT INTO chat_entry (user_no, chat_no)
 		VALUES (#{userNo}, #{chatNo})
 	</insert>
+	<!-- 채팅방에 아이디 조회 -->
+	<select id="selectChatUser">
+		SELECT use_id
+		FROM users
+		WHERE user_no IN (SELECT user_no
+                  		  FROM chat_entry
+                  		  WHERE chat_no = #{chatNo})
+	</select>
 </mapper>

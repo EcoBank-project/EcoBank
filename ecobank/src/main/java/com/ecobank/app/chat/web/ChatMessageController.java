@@ -42,12 +42,10 @@ public class ChatMessageController {
 		
 	//채팅방 목록
 	@MessageMapping("/update.chatList")
-
-    public void updateRoomList(ChatRoomDTO chatRoom, Principal principal) {
-		List<String> receiverIds = chatRoom.getUserName();
-		messagingTemplate.convertAndSendToUser(principal.getName(),"/queue/chatList", chatRoom);
+    public void updateRoomList(Integer chatNo, Principal principal) { 
+		List<String> receiverIds = chatService.ChatUserList(chatNo);
 		for(String receiverId : receiverIds) {
-			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", chatRoom);
+			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", chatNo);
 		}
     }
 	
@@ -71,16 +69,12 @@ public class ChatMessageController {
 		messagingTemplate.convertAndSend("/topic/messages/" + message.getChatNo(), message);
 	}
 	
-	
-	
 	// 채팅방 퇴장
 	@MessageMapping("/chat.exit")
 	@SendTo("/topic/messages")
 	public ChatMessageDTO exitUser(@Payload ChatMessageDTO message) {
 		return message;
 	}
-	
-	
 	
 	// 날짜 포맷
 	private String formatMessageDate(Date msgSendTime) {
