@@ -50,6 +50,7 @@ public class ChatServiceImpl implements ChatService{
 		ChatRoomVO chatRoomVO = new ChatRoomVO();
 		chatRoomVO.setUserNo(userNo);
 		chatRoomVO.setChatName(chatRoom.getChatName());
+		chatRoomVO.setChatType(chatRoom.getChatType());
 		chatMapper.insertChatRoom(chatRoomVO);
 		
 		return chatRoomVO.getChatNo();
@@ -58,6 +59,11 @@ public class ChatServiceImpl implements ChatService{
 	@Override
 	public int ChatUserInsert(Integer chatNo, Integer userNo) {
 		return chatMapper.insertChatUser(chatNo, userNo);
+	}
+	// 채팅방 참여자 조회
+	@Override
+	public List<String> ChatUserList(Integer chatNo) {
+		return chatMapper.selectChatUser(chatNo);
 	}
 	// 채팅 팔로우 목록
 	@Override

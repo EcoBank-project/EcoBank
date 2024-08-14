@@ -23,6 +23,8 @@ public interface ChatMapper {
 	public int insertChatRoom(ChatRoomVO chatRoomVO);
 	// 채팅방 참여자
 	public int insertChatUser(@Param("chatNo") Integer chatName, @Param("userNo") Integer userNo);
+	// 채팅방 참여자 아이디 조회
+	public List<String> selectChatUser(Integer chatNo);
 	// 팔로우 목록
 	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);
 }
