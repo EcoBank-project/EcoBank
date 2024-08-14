@@ -32,5 +32,8 @@ public interface SnsMapper {
 	
 	// sns신고 등록
 	public int insertSnsDeclare(SnsVO snsVO);	
+	
+	//마이피드 조회
+	public List<SnsVO> selectMySns(int userNo);
 
 }

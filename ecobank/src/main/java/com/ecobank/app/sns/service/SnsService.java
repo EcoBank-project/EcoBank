@@ -27,4 +27,7 @@ public interface SnsService {
 
 	// sns신고 등록
 	public int insertsnsDeclare(SnsVO snsVO);
+	
+	//마이피드 조회
+	public List<SnsVO> mySns(int userNo);
 }
