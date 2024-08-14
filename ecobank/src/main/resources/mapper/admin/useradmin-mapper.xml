@@ -9,7 +9,8 @@ with declare as(
     	select a.user_no,
        count(*) cnt, 
        count( case b.CONFIRM_DECLARE_SITUATION when 'N1' then 1 else  null end) N1,
-       count( case b.CONFIRM_DECLARE_SITUATION when 'N2' then 1 else  null end) N2,
+       count( case b.CONFIRM_DECLARE_SITUATION when 'N2' then 1 else  null end) N2
+       
 		from chall_confirm a
 		join chall_confirm_declare b 
 		on a.confirm_no = b.confirm_no

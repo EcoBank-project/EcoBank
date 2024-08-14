@@ -20,7 +20,7 @@
 
 			<p sec:authentication="name"></p>
 			<p sec:authentication="principal.authorities"></p>
-		<input type="hidden" id="userID"  th:value="${#authentication.principal.name}"/>
+		<input type="hidden" id="userID"/> <!--   th:value="${#authentication.principal.name}"  -->
 		</div>
 	</th:block>
 	<script type="text/javascript" th:src="@{/js/home/home.js}"></script>
