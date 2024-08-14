@@ -22,9 +22,11 @@ public class ChallConfirmVO {
 	private String confirmReplyContent;	//인증 댓글 내용
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date confirmReplyCreateAt;	//인증 댓글 작성 일자
+	private Integer cntReply;			//댓글 갯수
 	
 	//챌린지 인증 좋아요
 	private int confirmLikeNo;			//인증 좋아요
+	private Integer cntLike;			//좋아요 갯수
 	
 	//챌린지 인증 신고
 	private int confirmDeclareNo;		//인증 신고 번호
