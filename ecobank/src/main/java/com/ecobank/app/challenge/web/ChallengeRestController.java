@@ -61,6 +61,7 @@ public class ChallengeRestController {
 	//인증 댓글 목록
 	@GetMapping("replyList")
 	public List<ChallConfirmVO> replyList(ChallConfirmVO challConfirmVO) {
+		System.out.println(challConfirmVO);
 		return challConfirmService.confirmReplyList(challConfirmVO);
 	}
 }

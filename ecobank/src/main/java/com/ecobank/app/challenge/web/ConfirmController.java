@@ -64,10 +64,14 @@ public class ConfirmController {
 		ChallConfirmVO findVO = challConfirmService.myConfirmInfo(challConfirmVO);
 		
 		List<FileVO> list = fileService.selectGetMyInfo(challConfirmVO.getConfirmNo());
+		List<ChallConfirmVO> replyList = challConfirmService.confirmReplyList(challConfirmVO);
 		System.out.println(list);
 		System.out.println(findVO);
+		System.out.println(replyList);
+		
 		model.addAttribute("list", list);
 		model.addAttribute("myConfirm", findVO);
+		model.addAttribute("replyList", replyList);
 		return "chall/myConfirmDetail";
 	}
 	

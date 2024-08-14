@@ -131,9 +131,10 @@ public class ChallengeController {
 	@ResponseBody
 	public Map<String, Object> challUpdateProcess(ChallVO challVO, @RequestPart MultipartFile[] images){ 
 		commonFile(challVO, images);
-
+		
 		return challService.challUpdate(challVO);
 	}
+	
 	//공통 파일 코드 함수화
 	private void commonFile(ChallVO challVO, MultipartFile[] images) {
 		int index = 0;
