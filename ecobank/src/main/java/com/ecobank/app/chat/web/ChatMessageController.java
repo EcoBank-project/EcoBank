@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 
 import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
-import com.ecobank.app.chat.service.ChatRoomDTO;
 import com.ecobank.app.chat.service.ChatService;
 
 @Controller

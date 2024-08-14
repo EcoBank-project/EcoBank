@@ -297,7 +297,7 @@
 	//채팅홈
 	
 	//채팅방 팔로우 목록
-	
+	loadFollow();
 	function loadFollow(){
 		$.ajax({
 			url: "/chatRoom/follow",
@@ -352,14 +352,14 @@
 	$('#privateChat').on('click', function(){
 		$('#chatModal').hide();
 		$('#privateChatModal').show();
-		$('#followListPrivate').empty();
-		loadFollow();
+		//$('#followListPrivate').empty();
+		
 	});
 	$('#groupChat').on('click', function(){
 		$('#chatModal').hide();
 		$('#groupChatModal').show();
-		$('#followListGroup').empty();
-		loadFollow();
+		//$('#followListGroup').empty();
+		
 	});
 	function allClose(){
 		$('#chatModal').hide();
@@ -404,7 +404,7 @@
 				//insertChatRoom(formObj);
 			});			
 			if(!process){
-
+				insertChatRoom(formObj);
 			}else{
 				allClose();
 				process.get(0).click();
@@ -428,10 +428,12 @@
 				formObj['userName'].push($(this).prev().text());
 			}
 		});
+		
 		insertChatRoom(formObj);
 	}
 	// 채팅 만들기 함수
 	function insertChatRoom(formObj){
+		console.log(formObj);
 		$.ajax({
 			url: '/chatRoom/CreateChat',
 			method: 'POST',
@@ -441,7 +443,7 @@
 				allClose();
 				stompClient.send("/app/update.chatList", {}, JSON.stringify(result));			
 			},
-			err: function(error){
+			error: function(error){
 				console.log(error);
 			}
 		}); 
