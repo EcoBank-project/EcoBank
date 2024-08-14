@@ -48,18 +48,18 @@
 	<!-- 나의 인증내역에 해당 인증게시글에 사진 하나만 불러오게 -->
 	<select id="selectConfirmFileInfo" resultType="FileVO">
 		SELECT *
-	    FROM (
-	        SELECT f.*
-	               , ROW_NUMBER() OVER (PARTITION BY f.file_code_no ORDER BY f.file_no ASC) AS rn
-	        FROM files f 
-	        JOIN chall_confirm c 
-	        ON f.file_code_no = c.confirm_no
-	        WHERE c.chall_no = #{challNo}
-	        AND c.user_no = #{userNo}
-	        AND f.file_code = #{fileCode}
-	    )
-	    WHERE rn = 1
-	    ORDER BY file_no desc
+		FROM (
+		    SELECT f.*, c.confirm_no, c.user_no, c.chall_no
+		           , ROW_NUMBER() OVER (PARTITION BY f.file_code_no ORDER BY f.file_no ASC) AS rn
+		    FROM files f 
+		                JOIN chall_confirm c 
+		                    ON f.file_code_no = c.confirm_no
+		    WHERE c.chall_no = #{challNo}
+		    AND c.user_no = #{userNo}
+		    AND f.file_code = #{fileCode}
+		)
+		WHERE rn = 1
+		ORDER BY file_no desc
 	</select>
 	
 	<!-- 다른 참가자 인증 내역 -->
@@ -75,6 +75,18 @@
 		FROM chall_confirm c
 		WHERE c.chall_no = #{challNo}
         ORDER BY c.confirm_no DESC
+	</select>
+	
+	<select id="getMyConfirmFile" resultType="FileVO">
+		SELECT c.confirm_no
+		       	,f.file_no
+		       	,f.file_path
+		FROM chall_confirm c RIGHT OUTER JOIN files f
+                        		ON c.confirm_no = f.file_code_no
+		WHERE  f.file_code_no = #{confirmNo}
+		GROUP BY c.confirm_no
+		         	,f.file_no
+		         	,f.file_path
 	</select>
 		
 </mapper>

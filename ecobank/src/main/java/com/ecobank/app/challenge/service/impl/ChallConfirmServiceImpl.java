@@ -55,7 +55,14 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 		//System.out.println(isTodayPresent);
 		return dto;
 	}
-
+	
+	//나의 인증 상세
+	@Override
+	public ChallConfirmVO myConfirmInfo(ChallConfirmVO challConfirmVO) {
+		return challConfirmMapper.myConfirmDetail(challConfirmVO);
+	}
+	
+	//나의 캘린더
 	@Override
 	public List<Date> myCalendar(int userNo, int challNo) {
 		return challConfirmMapper.getConfirmDate(userNo, challNo);
@@ -88,9 +95,16 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 		return result == 1 ? challConfirmVO.getConfirmNo() : -1;
 	}
 
-	//챌린지 인증 남겼는지 아닌지(여부)
+	//챌린지 인증글 남겼는지 아닌지(여부)
 	@Override
 	public boolean isConfirmed(int userNo, int challNo) {
 		return challConfirmMapper.confirmStatus(userNo, challNo) > 0;
 	}
+
+	//댓글 목록
+	@Override
+	public List<ChallConfirmVO> confirmReplyList(ChallConfirmVO challConfirmVO) {
+		return challConfirmMapper.selectReplyList(challConfirmVO);
+	}
+
 }

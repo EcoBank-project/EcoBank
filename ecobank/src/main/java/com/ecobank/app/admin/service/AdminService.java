@@ -1,8 +1,11 @@
 package com.ecobank.app.admin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+
+import com.ecobank.app.sns.service.SnsVO;
 
 public interface AdminService {
     
@@ -41,6 +44,12 @@ public interface AdminService {
     void UpdateSnsState();
     
     void UpdateChallengeUserState();
+    
+    //챌린지 신고 내용 조회 
+    Map<String,Object> selectChallDeclare(int confirmNo);
+
+	List<SnsVO> selectSns(SnsVO snsVO);
+
     
 
 

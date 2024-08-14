@@ -7,20 +7,16 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-	.profile-img {
-	    width: 60px;
-	    height: 60px;
-	    border-radius: 50%;
-	    object-fit: cover;
-	    margin-right: 15px;
-	}
-	
 	.action-buttons button {
 	    margin-right: 10px;
 	}
 	
 	.content-container {
-	    margin: 6rem 0;
+	    border: 1px solid grey;
+	    width: 100%;
+		max-width: 1000px;
+		max-height: 1000px;
+		padding: 20px;
 	}
 	
 	.image-preview {
@@ -58,64 +54,77 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 </style>
 </head>
 <body>
-	<h3>나의 인증 글 상세 화면</h3>
 	<div class="container-fluid content-container">
-        <div class="container">
-            <!-- Profile and Actions -->
-            <div class="row mb-4">
-                <div class="col-lg-12 d-flex align-items-center">
-                    <img src="profile.jpg" alt="Profile Image" class="profile-img">
-                    <div>
-                        <h4 class="mb-1">Nickname</h4>
-                        <small class="text-muted">Created on: YYYY-MM-DD</small>
-                    </div>
-                    <div class="ms-auto action-buttons">
-                        <button class="btn btn-warning btn-sm">Edit</button>
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Image Preview -->
-            <div class="row mb-4">
+		<div class="container">
+			<h3>나의 인증 글 상세 화면</h3>
+			<!-- Profile and Actions -->
+			<div class="row mb-4">
+				<div class="col-lg-12 d-flex align-items-center">
+					<div>
+						<h4 class="mb-1" th:text="${myConfirm.nickname}"></h4>
+						<small class="text-muted"
+							th:text="${#dates.format(myConfirm.confirmCreateAt, 'yyyy-MM-dd')}"></small>
+					</div>
+					<div class="ms-auto action-buttons">
+						<button class="btn btn-warning btn-sm">Edit</button>
+						<button class="btn btn-danger btn-sm">Delete</button>
+					</div>
+				</div>
+			</div>
+			<!-- Image Preview -->
+			<div class="row mb-4">
+				<div class="col-lg-12">
+					<th:block th:each="file : ${list}">
+						<div class="position-relative h-100">
+							<img class="image-preview"
+								th:src="@{/images/{filePath}(filePath=${file.filePath})}"
+								alt="confirm Images">
+						</div>
+					</th:block>
+				</div>
+			</div>
+			<!-- Confirm Content -->
+			<div class="row mb-4">
+				<div class="col-lg-12">
+					<div class="border p-4 bg-light rounded">
+						<p class="mb-0" th:text="${myConfirm.confirmContent}"></p>
+					</div>
+				</div>
+			</div>
+			<!-- Like and Comment Section -->
+			<div class="row like-comment">
+				<div class="col-lg-12">
+					<div class="d-flex align-items-center">
+						<button class="btn btn-outline-primary">
+							<i class="bi bi-hand-thumbs-up"></i>
+						</button>
+						<span class="likes-count">123 Likes</span>
+						<button class="btn btn-outline-secondary ms-3">
+							<i class="bi bi-chat-dots"></i>
+						</button>
+						<span class="comments-count">45 Comments</span>
+					</div>
+				</div>
+			</div>
+			<!-- Comments Section -->
+			<div class="row comment-section">
                 <div class="col-lg-12">
-                    <div class="position-relative h-100">
-                        <img class="image-preview" src="img/quote.jpg" alt="Attached Image">
+                    <!-- Comments List -->
+                    <div id="commentList" class="comment-list">
+                        <!-- Existing comments will be dynamically inserted here -->
+                        <!--/* <input type="hidden" th:value="${reply.confirmNo}" id="confirmNo"> */-->
+                    </div>
+                    <!-- Comment Input and Submit Button -->
+                    <div class="d-flex">
+                        <textarea id="confirmReplyContent" th:text="${confirmReplyContent}" class="form-control comment-input" placeholder="Add a comment..."></textarea>
+                        <button id="commentSubmit" class="btn btn-primary comment-submit-btn">Submit</button>
                     </div>
                 </div>
             </div>
-            <!-- Confirm Content -->
-            <div class="row mb-4">
-                <div class="col-lg-12">
-                    <div class="border p-4 bg-light rounded">
-                        <p class="mb-0">This is the confirmation content. It provides detailed information about the challenge or task.</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Like and Comment Section -->
-            <div class="row like-comment">
-                <div class="col-lg-12">
-                    <div class="d-flex align-items-center">
-                        <button class="btn btn-outline-primary">
-                            <i class="bi bi-hand-thumbs-up"></i>
-                        </button>
-                        <span class="likes-count">123 Likes</span>
-                        <button class="btn btn-outline-secondary ms-3">
-                            <i class="bi bi-chat-dots"></i>
-                        </button>
-                        <span class="comments-count">45 Comments</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Comments Section -->
-            <div class="row comment-section">
-                <div class="col-lg-12">
-                    <textarea class="form-control comment-input" placeholder="Add a comment..."></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
+		</div>
+	</div>
 
-    <!-- Bootstrap JavaScript and Icons -->
+	<!-- Bootstrap JavaScript and Icons -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.js"></script>

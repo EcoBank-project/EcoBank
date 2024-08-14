@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecobank.app.challenge.service.ChallConfirmService;
+import com.ecobank.app.challenge.service.ChallConfirmVO;
 import com.ecobank.app.challenge.service.MyConfirmDTO;
 
 @RestController
@@ -55,5 +56,11 @@ public class ChallengeRestController {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		boolean isConfirmed = challConfirmService.isConfirmed(userNo, challNo);
 		return isConfirmed;
+	}
+	
+	//인증 댓글 목록
+	@GetMapping("replyList")
+	public List<ChallConfirmVO> replyList(ChallConfirmVO challConfirmVO) {
+		return challConfirmService.confirmReplyList(challConfirmVO);
 	}
 }
