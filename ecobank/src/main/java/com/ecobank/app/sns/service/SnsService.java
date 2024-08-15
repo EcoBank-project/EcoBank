@@ -29,5 +29,5 @@ public interface SnsService {
 	public int insertsnsDeclare(SnsVO snsVO);
 	
 	//마이피드 조회
-	public List<SnsVO> mySns(int userNo);
+	public List<SnsVO> mySns(SnsVO snsVO);
 }
