@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -138,14 +139,14 @@ public class SnsController {
 	
 	//마이피드 조회
 	@GetMapping("mySns")
-	public String mySns(@RequestParam Integer userNo) {
-		Integer userNo1 = (Integer) httpSession.getAttribute("userNo");
-		
-		List<SnsVO> list = snsService.mySns(userNo1);
+	public String mySns(SnsVO snsVO,Model model) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		List<SnsVO> list = snsService.mySns(snsVO);
 	
-		System.out.println("누구야"+userNo1);
+		System.out.println("누구야"+userNo);
 		System.out.println("누구야"+list);
-	
+		model.addAttribute("userNo", userNo);
+		model.addAttribute("mySns", list);
 			 
 		return "sns/mySns";
 		
