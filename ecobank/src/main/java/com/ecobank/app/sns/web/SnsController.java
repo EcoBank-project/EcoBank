@@ -12,8 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -141,14 +139,22 @@ public class SnsController {
 	@GetMapping("mySns")
 	public String mySns(SnsVO snsVO,Model model) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
+		snsVO.setUserNo(userNo);
 		List<SnsVO> list = snsService.mySns(snsVO);
 	
+		System.out.println("보"+snsVO);
 		System.out.println("누구야"+userNo);
 		System.out.println("누구야"+list);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("mySns", list);
 			 
 		return "sns/mySns";
+	}
+	
+	//좋아요 등록
+	@PostMapping("likeInsert")
+	public void insertSnsLike(SnsVO snsVO, Model model) {
+		int snsLikeNo = snsService.insertSnsLike(snsVO);
 		
 		
 	}

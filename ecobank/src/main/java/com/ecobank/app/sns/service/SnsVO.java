@@ -33,6 +33,7 @@ public class SnsVO {
 	private String declareCode;			//신고코드
 	private Integer replyNo;			//댓글번호
 	private Integer orderSns;			//정렬기준
+	private Integer snsLikeNo;			//좋아요 번호
 	
 	
 }

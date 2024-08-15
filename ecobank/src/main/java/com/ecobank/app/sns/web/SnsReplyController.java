@@ -49,5 +49,7 @@ public class SnsReplyController {
 	public int snsReplyDelete(Integer replyNo) {
 		return snsReplyService.deleteSnsReply(replyNo);
 	}
+	
+	
 
 }
