@@ -59,13 +59,9 @@ public class ChatMessageController {
 	@MessageMapping("/chat.message/{roomId}")
 	public void sendUser(@Payload ChatMessageVO message) {
 		// 메시지 저장
-		ChatMessageVO chatMessage = new ChatMessageVO();
-		BeanUtils.copyProperties(message, chatMessage);
-		chatService.ChatMessageInsert(chatMessage);
-
-		message.setForMatTime(formatMessageDate(message.getMsgSendTime()));
-		
-		messagingTemplate.convertAndSend("/topic/messages/" + message.getChatNo(), message);
+		//BeanUtils.copyProperties(message, chatMessage);
+		ChatMessageVO chatMessage = chatService.ChatMessageInsert(message);		
+		messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatNo(), message);
 	}
 	
 	// 채팅방 퇴장
