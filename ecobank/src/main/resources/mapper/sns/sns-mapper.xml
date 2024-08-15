@@ -164,6 +164,28 @@
       ORDER BY s.feed_no DESC
 	</select>
 	
-	
-	
+	<!-- 좋아요 -->
+	<insert id="insertSnsLike" parameterType="SnsVO">
+		<selectKey keyProperty="snsLikeNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(declare_no),1)+1
+			FROM sns_declare
+		</selectKey>
+	Insert INTO sns_like(sns_like_no
+                    	,user_no
+                   		,feed_no) 
+	VALUES(
+			#{snsLikeNo}
+            ,#{userNo}
+            ,#{feedNo}
+			)
+	</insert>
+			
+	<!-- 좋아요 삭제 -->	
+	<delete id="deleteSnsLike" parameterType="int">		
+		DELETE FROM sns_like
+		 WHERE sns_like_no = #{snsLikeNo}
+	</delete>		
+
 </mapper>

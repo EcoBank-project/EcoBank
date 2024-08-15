@@ -30,4 +30,11 @@ public interface SnsService {
 	
 	//마이피드 조회
 	public List<SnsVO> mySns(SnsVO snsVO);
+	
+	//좋아요 등록
+	public int insertSnsLike(SnsVO snsVO);
+	
+	//좋아요 삭제
+	public int deleteSnsLike(int SnsNO);
+	
 }

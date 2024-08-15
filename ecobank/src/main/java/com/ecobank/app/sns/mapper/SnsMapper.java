@@ -36,5 +36,11 @@ public interface SnsMapper {
 	
 	//마이피드 조회
 	public List<SnsVO> selectMySns(SnsVO snsVO);
-
+	
+	//좋아요 등록
+	public int insertSnsLike(SnsVO snsVO);
+	
+	//좋아요 삭제
+	public int deleteSnsLike(int snsVO);
+	
 }

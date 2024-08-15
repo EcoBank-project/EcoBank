@@ -492,7 +492,20 @@ padding: 20px;
   	var btn = document.getElementById("like")
 
   	btn.addEventListener('click',function(){
-    	btn.classList.toggle('active')
+    	btn.classList.toggle('active');
+		$.ajax({
+			type : "POST",
+			url : "likeInsert?feedNo="+feedNo,
+			data : {feedNo},
+			success : function(list){
+				 alert("해당글이 좋아요되었습니다.");
+				
+			},
+			error :  function(error){
+				console.log('에러',error);
+				alert("신고 실패");
+			}
+		});
     })
 
     
