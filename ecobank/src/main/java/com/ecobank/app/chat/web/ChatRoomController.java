@@ -2,6 +2,7 @@ package com.ecobank.app.chat.web;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecobank.app.chat.service.ChatFollowVO;
@@ -33,25 +34,21 @@ public class ChatRoomController {
 	@GetMapping("/chatRoom")
 	public String ChatRooms(HttpSession httpSession, Model model){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
-		String nickname = (String) httpSession.getAttribute("nickname");
+		String nickName = (String) httpSession.getAttribute("nickname");
 		
-		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo);
+		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo, nickName);
+		
 		model.addAttribute("userNo", userNo);
-		model.addAttribute("nickname", nickname);
+		model.addAttribute("nickname", nickName);
 		model.addAttribute("chatRooms", chatList);
 		return "chat/chatRoom";
 	}
 	
 	// 특정 채팅방 채팅로그 조회
-	@GetMapping("/chatRoom/{roomId}")
+	@PostMapping("/chatRoom/logs")
 	@ResponseBody
-	public List<ChatMessageVO> ChatRoom(@PathVariable Integer roomId) {
+	public List<ChatMessageVO> ChatRoom(@RequestParam Integer roomId) {
 		List<ChatMessageVO> msgList = chatService.chatMessageList(roomId);
-		for(ChatMessageVO msg : msgList) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
-			String formatDate = dateFormat.format(msg.getMsgSendTime());
-			msg.setForMatTime(formatDate);
-		}
 		return msgList;
 	}
 	
@@ -68,7 +65,8 @@ public class ChatRoomController {
 	@ResponseBody
 	public List<ChatRoomVO> chatRoomList(HttpSession httpSession){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
-		List<ChatRoomVO> roomlist = chatService.chatRoomList(userNo);
+		String nickName = (String) httpSession.getAttribute("nickname");
+		List<ChatRoomVO> roomlist = chatService.chatRoomList(userNo, nickName);
 		return roomlist;
 	}
 	

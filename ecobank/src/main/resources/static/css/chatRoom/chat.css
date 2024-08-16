@@ -68,45 +68,71 @@
 
 
     /*아이콘*/
-    .bi-plus-circle{
+    .bi-plus-circle , .bi-chat{
         font-size: 45px;
         line-height: 45px;
     }
     
 	.chatRoom-list {
-	    
 	    display: flex;
 	    flex-direction: column;
 	    height: 100%;
 	}
+	
 	.chat-room-list {
-		height: 340px;
+	    height: 340px;
 	    list-style-type: none;
 	    padding: 0;
 	    margin: 0;
-	    overflow-y: auto; 
-	    flex-grow: 1; 
+	    overflow-y: auto;
+	    display: flex;
+	    flex-direction: column;
 	}
 	
 	.chat-room-list li {
+	    display: flex;
+	    align-items: center;
 	    margin-bottom: 10px;
+	    padding: 5px;
+	    border-radius: 5px;
+	    transition: background-color 0.3s, box-shadow 0.3s;
+	}
+	
+	.chat-room-list li:hover {
+	    background-color: #e0e0e0;
+	    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	}
+	
+	.chat-room-list img.profil_img {
+	    border-radius: 50%;
+	    margin-right: 10px;
 	}
 	
 	.chat-room-list a {
+	    flex-grow: 1;
 	    display: block;
 	    padding: 10px 15px;
-	    border-radius: 5px;
-	    background-color: #ffffff;
+	    border-radius: 5px; 
 	    color: #333;
 	    text-decoration: none;
 	    transition: background-color 0.3s, color 0.3s;
 	}
-	
-	.chat-room-list a:hover {
-	    background-color: #e0e0e0;
-	    color: #000;
+	.chat-room-list i.fa-sign-out-alt {
+	    margin-left: auto;
+	    cursor: pointer;
+	    transition: color 0.3s;
 	}
 	
+	.chat-room-list i.fa-sign-out-alt:hover {
+	    color: #333;
+	}
+	.chat-room-list i.bi-gear {
+		margin-right: 10px;
+		cursor: pointer;
+	}
+	.chat-room-list i.bi-gear:hover {
+	    color: #333;
+	}
 	/* 채팅방 검색 */
 	.chat-room-search {
 	    padding: 10px 15px;
@@ -224,8 +250,13 @@
 	    cursor: pointer;
 	    width: 100%; 
 	    text-align: center;
+	    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
 	}
-	
+	.option-button:hover {
+    	background-color: #28a745; /* 버튼 색상 변경 */
+    	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+    	transform: scale(1.05); /* 버튼 크기 약간 확대 */
+	}
 	.input-field {
 	    width: 100%;
 	    padding: 10px;
@@ -285,3 +316,5 @@
 	    cursor: pointer;
 	    transition: background-color 0.3s;
 	}    
+	
+	
