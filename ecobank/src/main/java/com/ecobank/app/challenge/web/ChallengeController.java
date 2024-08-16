@@ -96,6 +96,7 @@ public class ChallengeController {
 	//챌린지 단건 조회 - 관리자
 	@GetMapping("challInfo")
 	public String challInfo(ChallVO challVO, Model model) {
+		//sSystem.out.println(challVO.getChallNo() + "challno");
 		ChallVO findVO = challService.challInfo(challVO);
 		model.addAttribute("challenge", findVO);
 		return "admins/adminChallInfo";
@@ -115,7 +116,7 @@ public class ChallengeController {
 		commonFile(challVO, images);
 
 		int cno = challService.challInsert(challVO);
-		return "redirect:adminChallInfo?challNo=" + cno;
+		return "redirect:challInfo?challNo=" + cno;
 	}
 	
 	// 수정 - 페이지

@@ -117,7 +117,7 @@ public class FileServiceImpl implements FileService{
 			return list;
 		}
 
-		//나의 인증 내역 상세 파일
+		//인증 내역 상세 파일
 		@Override
 		public List<FileVO> selectGetMyInfo(int confirmNo) {
 			return fileMapper.getMyConfirmFile(confirmNo);

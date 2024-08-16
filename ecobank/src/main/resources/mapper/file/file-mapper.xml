@@ -77,6 +77,7 @@
         ORDER BY c.confirm_no DESC
 	</select>
 	
+	<!-- 인증 내역 상세 파일 -->
 	<select id="getMyConfirmFile" resultType="FileVO">
 		SELECT c.confirm_no
 		       	,f.file_no

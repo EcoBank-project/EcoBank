@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 public interface ChallConfirmService {
 	//인증 전체 조회 
-	//public List<ChallConfirmVO> confirmList(int challNo);
+	public List<ChallConfirmVO> confirmList(int challNo);
 	
 	//나의 인증 내역
 	public MyConfirmDTO myConfirm(int userNo, int challNo);
@@ -36,4 +36,9 @@ public interface ChallConfirmService {
 	//인증 댓글 목록
 	public List<ChallConfirmVO> confirmReplyList(ChallConfirmVO challConfirmVO);
 	
+	//인증 댓글 등록
+	public int replyInsert(int userNo, ReplyVO replyVO);
+	
+	//인증 댓글 삭제
+	public int replyDelete(int nowUserNo, int confirmReplyNo);
 }

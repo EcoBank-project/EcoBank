@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecobank.app.challenge.service.ChallConfirmService;
-import com.ecobank.app.challenge.service.ChallConfirmVO;
 import com.ecobank.app.challenge.service.MyConfirmDTO;
+import com.ecobank.app.challenge.service.ReplyVO;
 
 @RestController
 public class ChallengeRestController {
@@ -58,10 +58,20 @@ public class ChallengeRestController {
 		return isConfirmed;
 	}
 	
-	//인증 댓글 목록
-	@GetMapping("replyList")
-	public List<ChallConfirmVO> replyList(ChallConfirmVO challConfirmVO) {
-		System.out.println(challConfirmVO);
-		return challConfirmService.confirmReplyList(challConfirmVO);
+	//댓글 등록(아작스로 보낼거라서)
+	@PostMapping("replyInsert")
+	public int replyInsert(ReplyVO replyVO) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		int result = challConfirmService.replyInsert(userNo, replyVO);
+		return result;
 	}
+	
+	//인증 댓글 삭제
+	@PostMapping("replyDelete")
+	public int replyDelete(@RequestParam("confirmReplyNo") int confirmReplyNo) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		int result = challConfirmService.replyDelete(userNo, confirmReplyNo);
+		return result;
+	}
+	
 }
