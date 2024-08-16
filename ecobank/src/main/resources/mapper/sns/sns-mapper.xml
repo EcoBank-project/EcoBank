@@ -138,4 +138,54 @@
 				,#{replyNo})
 	</insert>
 	
+	
+	<!-- 마이피드 -->
+	<select id="selectMySns" resultType="SnsVO">
+		SELECT s.feed_no    
+        		,u.profile_img
+         		,u.nickname
+         		,s.feed_createAt
+         		,s.user_no
+        		,s.feed_state
+         		,(SELECT count(feed_no) 
+        			FROM sns_like
+        		   WHERE feed_no = s.feed_no) as countLike
+        		,(SELECT count(feed_no)
+           		    FROM sns_reply
+                   WHERE feed_no = s.feed_no) as countReply
+                ,(SELECT file_path
+                    FROM files
+                   WHERE file_code_no = s.feed_no
+                 	 and rownum = 1)  as filePath
+      FROM sns s JOIN users u 
+                   ON s.user_no = u.user_no
+      WHERE feed_state = 'F1' 
+      	and u.user_no= #{userNo}
+      ORDER BY s.feed_no DESC
+	</select>
+	
+	<!-- 좋아요 -->
+	<insert id="insertSnsLike" parameterType="SnsVO">
+		<selectKey keyProperty="snsLikeNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(declare_no),1)+1
+			FROM sns_declare
+		</selectKey>
+	Insert INTO sns_like(sns_like_no
+                    	,user_no
+                   		,feed_no) 
+	VALUES(
+			#{snsLikeNo}
+            ,#{userNo}
+            ,#{feedNo}
+			)
+	</insert>
+			
+	<!-- 좋아요 삭제 -->	
+	<delete id="deleteSnsLike" parameterType="int">		
+		DELETE FROM sns_like
+		 WHERE sns_like_no = #{snsLikeNo}
+	</delete>		
+
 </mapper>

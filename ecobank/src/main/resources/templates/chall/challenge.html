@@ -30,7 +30,6 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 
 	        <div class="card-body">
 	        	<input type="hidden" th:value="${challenge.challNo}" class="cNo">
-	            <!--/* <div class="d-day" th:text="'D-' + (${#dates.format(challenge.challStartAt, 'yyyy/MM/dd')} - ${#dates.format(challenge.challCreateAt, 'yyyy/MM/dd')})">D-날짜차이</div> */-->
 	            <div class="d-day" id="dDay"  th:text="'D-' + ${challenge.daysUntilStart}"></div>
 	            <h5 class="card-title">챌린지 제목 : [[ ${challenge.challTitle} ]]</h5>
 	            <p class="card-text">챌린지 가이드 : [[ ${challenge.challContent} ]]</p>

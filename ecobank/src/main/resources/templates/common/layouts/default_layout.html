@@ -14,7 +14,7 @@
 <th:block th:replace="common/configs/config :: SweetAlertConfig"></th:block>
 </head>
 <body>
-	<header th:insert="common/fragments/header :: headerFragment"></header>
+	<header class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0" th:insert="common/fragments/header :: headerFragment"></header>
 	<main>
 		<th:block layout:fragment="Content"></th:block>
 	</main>

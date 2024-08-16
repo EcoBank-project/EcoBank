@@ -26,31 +26,69 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	    border-radius: 8px;
 	}
 	
+	/* 전체 컨테이너 스타일 */
 	.like-comment {
 	    display: flex;
 	    align-items: center;
 	    gap: 15px;
 	}
 	
+	/* 버튼 기본 스타일 */
 	.like-comment button {
 	    border: none;
 	    background: none;
 	    cursor: pointer;
 	}
 	
+	/* 카운트 텍스트 스타일 */
 	.like-comment .likes-count,
 	.like-comment .comments-count {
 	    margin-left: 5px;
+	    font-size: 1rem; /* 필요에 따라 조정 가능 */
 	}
 	
-	.comment-section {
-	    margin-top: 20px;
+	/* 하트 아이콘 기본 색상 */
+	.bi-heart {
+	    color: pink; /* 기본 하트 색상 */
 	}
 	
-	.comment-input {
-	    width: 100%;
-	    margin-bottom: 10px;
+	/* 하트 아이콘이 채워졌을 때 색상 */
+	.bi-heart-fill {
+	    color: hotpink; /* 채워진 하트 색상 */
 	}
+
+    .comment-section {
+        margin-top: 20px;
+    }
+
+    .comment-input {
+        margin-bottom: 10px;
+    }
+
+    .comment-submit-btn {
+        width: 100px;
+    }
+
+    .comment-list {
+        margin-bottom: 20px;
+    }
+
+    .comment-item {
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+    }
+
+    .comment-item:last-child {
+        border-bottom: none;
+    }
+
+    .comment-item .comment-author {
+        font-weight: bold;
+    }
+
+    .comment-item .comment-text {
+        margin-top: 5px;
+    }
 </style>
 </head>
 <body>
@@ -61,12 +99,12 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 			<div class="row mb-4">
 				<div class="col-lg-12 d-flex align-items-center">
 					<div>
+						<input type="hidden" th:value="${myConfirm.confirmNo}" id="fNo">
 						<h4 class="mb-1" th:text="${myConfirm.nickname}"></h4>
 						<small class="text-muted"
-							th:text="${#dates.format(myConfirm.confirmCreateAt, 'yyyy-MM-dd')}"></small>
+							th:text="${#dates.format(myConfirm.confirmCreateAt, 'yyyy-MM-dd HH:mm:ss')}"></small>
 					</div>
 					<div class="ms-auto action-buttons">
-						<button class="btn btn-warning btn-sm">Edit</button>
 						<button class="btn btn-danger btn-sm">Delete</button>
 					</div>
 				</div>
@@ -95,29 +133,34 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 			<div class="row like-comment">
 				<div class="col-lg-12">
 					<div class="d-flex align-items-center">
-						<button class="btn btn-outline-primary">
-							<i class="bi bi-hand-thumbs-up"></i>
+						<button id="likeButton" class="btn btn-outline-primary">
+							<i id="likeIcon" class="bi bi-heart"></i>
 						</button>
-						<span class="likes-count">123 Likes</span>
+						<span class="likes-count" th:text="${myConfirm.cntLike} + ' Likes'"></span>
 						<button class="btn btn-outline-secondary ms-3">
 							<i class="bi bi-chat-dots"></i>
 						</button>
-						<span class="comments-count">45 Comments</span>
+						<span class="comments-count" th:text="${myConfirm.cntReply} + ' Comments'"></span>
 					</div>
 				</div>
 			</div>
-			<!-- Comments Section -->
 			<div class="row comment-section">
                 <div class="col-lg-12">
-                    <!-- Comments List -->
                     <div id="commentList" class="comment-list">
-                        <!-- Existing comments will be dynamically inserted here -->
-                        <!--/* <input type="hidden" th:value="${reply.confirmNo}" id="confirmNo"> */-->
+						<th:block th:each="reply : ${replyList}">
+							<div class="comment-item">
+								<!--/* <input type="hidden" th:value="${confirmReplyNo}" id="confirmReplyNo"> */-->
+                                <strong th:text="${reply.nickname}"></strong>
+                               	<div>
+	                                <p style="display: inline;" th:text="${reply.confirmReplyContent}"></p>
+       		            			<p style="display: inline; margin-left: 10px;" th:text="${#dates.format(reply.confirmReplyCreateAt, 'yyyy-MM-dd')}"></p>
+                               	</div>
+                            </div>
+						</th:block>
                     </div>
-                    <!-- Comment Input and Submit Button -->
                     <div class="d-flex">
                         <textarea id="confirmReplyContent" th:text="${confirmReplyContent}" class="form-control comment-input" placeholder="Add a comment..."></textarea>
-                        <button id="commentSubmit" class="btn btn-primary comment-submit-btn">Submit</button>
+                        <button id="replyBtn" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
                     </div>
                 </div>
             </div>
@@ -128,5 +171,26 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.js"></script>
+    <script>
+    	let fNo = $('#fNo').val();
+		console.log(fNo);
+    	
+    	//댓글 목록 ajax로 부르기 - 페이지가 로드되었을때(요청)
+    	reply();
+    	function reply(){
+    		$.ajax({
+    			url : 'replyList?confirmNo=' + fNo,
+    			type : 'get',
+    			success : function(result){
+    				console.log(result, "결과는");
+    				//console.log(result[0].confirmReplyNo);
+    				//console.log(result[1].confirmReplyNo);
+    			},
+    			error : function(err){
+    				console.log(err);
+    			}
+    		})
+    	}
+    </script>
 </body>
 </html>

@@ -91,6 +91,26 @@ public class SnsServiceImpl implements SnsService{
 		return result == 1 ? snsVO.getDeclareNo() : -1;
 		
 	}
+	
+	//마이피드 조회
+	@Override
+	public List<SnsVO> mySns(SnsVO snsVO) {
+		System.out.println("서비"+snsVO);
+		return snsMapper.selectMySns(snsVO);
+	}
+
+	//좋아요 등록
+	@Override
+	public int insertSnsLike(SnsVO snsVO) {
+		int result = snsMapper.insertSnsLike(snsVO);
+		return result == 1 ? snsVO.getSnsLikeNo() : -1;
+	}
+
+	//좋아요 삭제
+	@Override
+	public int deleteSnsLike(int SnsNO) {
+		return snsMapper.deleteSnsLike(SnsNO);
+	}
     
 
 }

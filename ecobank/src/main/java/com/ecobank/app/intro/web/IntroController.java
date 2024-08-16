@@ -58,6 +58,11 @@ public class IntroController {
 		Integer challEnterUserCount = scoreService.getChallEnterUserCount();
 		// 회원 사용 가능 점수
 		
+		// 나무
+		Integer treeCount = (totalScore*1000)/20;
+		// 해수면
+		double seaLevel = ((totalScore*1000.0)/100000000.0)*0.5;
+		System.out.println(seaLevel);
 		// 2. 클라이언트에 전달할 데이터 담기
 		ObjectMapper objectMapper = new ObjectMapper();
 		String myDataJson;
@@ -66,6 +71,9 @@ public class IntroController {
 			model.addAttribute("carbList", myDataJson);
 			model.addAttribute("totalScore",totalScore);
 			model.addAttribute("challEnterUserCount",challEnterUserCount);
+			model.addAttribute("treeCount",treeCount);
+			model.addAttribute("seaLevel",seaLevel);
+			
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

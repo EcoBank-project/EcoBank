@@ -145,7 +145,7 @@
 			        , r.confirm_no
 		FROM chall_confirm_reply r LEFT JOIN users u
 		                            	ON r.user_no = u.user_no
-		WHERE r.confirm_no = 28
+		WHERE r.confirm_no = #{confirmNo}
 		ORDER BY r.confirm_reply_no DESC
 	</select>
 	

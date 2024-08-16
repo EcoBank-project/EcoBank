@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ecobank.app.sns.service.SnsVO;
 
+
 public interface SnsMapper {
 	
 	//전체조회
@@ -32,5 +33,14 @@ public interface SnsMapper {
 	
 	// sns신고 등록
 	public int insertSnsDeclare(SnsVO snsVO);	
-
+	
+	//마이피드 조회
+	public List<SnsVO> selectMySns(SnsVO snsVO);
+	
+	//좋아요 등록
+	public int insertSnsLike(SnsVO snsVO);
+	
+	//좋아요 삭제
+	public int deleteSnsLike(int snsVO);
+	
 }

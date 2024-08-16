@@ -233,7 +233,7 @@ function setAllDataPath() {
 }
 
 
-
+     
 function focusToRegion(regionName,actionCode){
 	// regionCode로부터 region 이름 추출
 	latestClickedRegion = regionName;
@@ -241,29 +241,31 @@ function focusToRegion(regionName,actionCode){
 	// dataAry 배열에서 region 필드가 id와 일치하는 객체들만 필터링
     let filteredData = dataAry.filter(item => item.region === latestClickedRegion);
     
+    // 나라별 해수면 색상정보 mapdata에 저장
+    // 해수면에 해당하는 legend label 세팅
     if(actionCode === SEA_LEVEL){
 		filteredData.forEach(item=>simplemaps_worldmap_mapdata.state_specific[item.code].color = item.seacolorset);
 		setMapLabel(sealabels,seacolorset);
     	$("h6[id='datatype']").text('data: sea level(m)');
 	}
+	
+    // 나라별 대기오염도 색상정보 mapdata에 저장
+    // 대기오염도에 해당하는 legend label 세팅
     else{
 		filteredData.forEach(item=>simplemaps_worldmap_mapdata.state_specific[item.code].color = item.aircolorset);
 		setMapLabel(airlabels,aircolorset);
     	$("h6[id='datatype']").text('data: PM2.5(μg/m³)');
 	}
+	
+	// mapdata 정보 갱신 후 맵 리로드
     simplemaps_worldmap.refresh();
-    //;
-    // 화면 
-    // 탄소배출량 레이블
-    // 라디오박스 div 표시
-    // 라디오박스가 변경될때 각각 표현해줘야할 데이터가 다르기 때문에 기능 분리해야함.
     
     // 1. 해당 region 총 탄소배출량(공통)
     let totalEmissions = filteredData.reduce((accumulator, currentValue) => 
     										(accumulator + currentValue.emission)
     										, 0);
-
-	// 지도위에 표시해줄 label 설정
+    							
+	// 지도위에 표시해줄 label 설정(탄소배출량 레이블)
 	$("span[id='regionName']").text(latestClickedRegion);
 	$("span[id='totalEmission']").text((totalEmissions+'').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
 	
@@ -273,10 +275,6 @@ function focusToRegion(regionName,actionCode){
 	
 	// 사용자 선택 메뉴 활성화
 	$("div[id='dataSelectTab']").css('display','block');
-	
-    // 2. 해수면이면 해수면
-    // 3. 대기오염도면 대기오염도
-    // 2,3번에 해당하는 legend label
 }
 
 // 세계 지도 그리는 함수

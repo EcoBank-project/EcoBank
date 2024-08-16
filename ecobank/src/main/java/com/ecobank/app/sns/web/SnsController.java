@@ -74,7 +74,7 @@ public class SnsController {
 		List<FileVO> list = fileService.selectFileInfo(snsVO.getFeedNo());
 		model.addAttribute("snsFileInfo",list);
 		model.addAttribute("sns", findVO);
-		
+		System.out.println("언제"+findVO);
 		//신고사유목록
 		List<CodeVO> declarelist = commonService.codeList("0E");
 		model.addAttribute("snsDeclare",declarelist);
@@ -132,8 +132,31 @@ public class SnsController {
 	public String snsDeclareProcess(SnsVO snsVO) {
 		//신고하기
 		int declareNo = snsService.insertsnsDeclare(snsVO);
-
 		return "redirect:sns";
+	}
+	
+	//마이피드 조회
+	@GetMapping("mySns")
+	public String mySns(SnsVO snsVO,Model model) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		snsVO.setUserNo(userNo);
+		List<SnsVO> list = snsService.mySns(snsVO);
+	
+		System.out.println("보"+snsVO);
+		System.out.println("누구야"+userNo);
+		System.out.println("누구야"+list);
+		model.addAttribute("userNo", userNo);
+		model.addAttribute("mySns", list);
+			 
+		return "sns/mySns";
+	}
+	
+	//좋아요 등록
+	@PostMapping("likeInsert")
+	public void insertSnsLike(SnsVO snsVO, Model model) {
+		int snsLikeNo = snsService.insertSnsLike(snsVO);
+		
+		
 	}
 
 }
