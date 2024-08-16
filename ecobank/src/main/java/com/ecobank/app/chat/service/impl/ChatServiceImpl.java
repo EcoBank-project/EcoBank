@@ -53,6 +53,12 @@ public class ChatServiceImpl implements ChatService{
 		message.setForMatTime(formatMessageDate(message.getMsgSendTime()));
 		return message;
 	}
+	// 채팅방 타입 조회
+	@Override
+	public String chatRoomType(Integer chatNo) {
+		return chatMapper.getChatRoomType(chatNo);
+	}
+	
 	// 채팅방 채팅 로그 조회
 	@Override
 	public List<ChatMessageVO> chatMessageList(Integer chatNo) {
@@ -84,10 +90,10 @@ public class ChatServiceImpl implements ChatService{
 	}
 	
 	
-	// 채팅방 참여자 조회
+	// 채팅방 전체참여자 조회
 	@Override
 	public List<String> ChatUserList(Integer chatNo) {
-		return chatMapper.selectChatUser(chatNo);
+		return chatMapper.selectAllChatUser(chatNo);
 	}
 	
 	
@@ -105,5 +111,6 @@ public class ChatServiceImpl implements ChatService{
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
 	    return dateFormat.format(msgSendTime);
 	}
+	
 	
 }

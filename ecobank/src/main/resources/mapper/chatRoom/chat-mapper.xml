@@ -84,12 +84,19 @@
 		INSERT INTO chat_entry (user_no, chat_no)
 		VALUES (#{userNo}, #{chatNo})
 	</insert>
-	<!-- 채팅방에 아이디 조회 -->
-	<select id="selectChatUser">
+	<!-- 채팅방 아이디 조회 -->
+	<select id="selectAllChatUser">
 		SELECT use_id
 		FROM users
 		WHERE user_no IN (SELECT user_no
                   		  FROM chat_entry
                   		  WHERE chat_no = #{chatNo})
 	</select>
+	<!-- 채팅방 타입 조회 -->
+	<select id="getChatRoomType">
+		SELECT chat_type
+		FROM chat
+		WHERE chat_no = #{chatNo}
+	</select>
+		
 </mapper>

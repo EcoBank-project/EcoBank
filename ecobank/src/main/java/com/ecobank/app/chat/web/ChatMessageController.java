@@ -41,27 +41,27 @@ public class ChatMessageController {
 		
 	//채팅방 목록
 	@MessageMapping("/update.chatList")
-    public void updateRoomList(Integer chatNo, Principal principal) { 
+    public void updateRoomList(Integer chatNo) { 
 		List<String> receiverIds = chatService.ChatUserList(chatNo);
 		for(String receiverId : receiverIds) {
 			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", chatNo);
 		}
     }
-	
-	// 채팅방 1대1 대화
-	@MessageMapping("/chat.private/{receiverId}")
-	public void sendPrivateMessage(@DestinationVariable String receiverId, @Payload ChatMessageVO message) {
-		message.setForMatTime(formatMessageDate(message.getMsgSendTime()));
-		messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages", message);
-	}
-	
-	// 채팅방 그룹대화
+
+	// 채팅방 대화
 	@MessageMapping("/chat.message/{roomId}")
 	public void sendUser(@Payload ChatMessageVO message) {
 		// 메시지 저장
-		//BeanUtils.copyProperties(message, chatMessage);
-		ChatMessageVO chatMessage = chatService.ChatMessageInsert(message);		
-		messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatNo(), message);
+		ChatMessageVO chatMessage = chatService.ChatMessageInsert(message);
+		String chatType = chatService.chatRoomType(message.getChatNo());
+		if("O1".equals(chatType)) {
+			List<String> receiverIds = chatService.ChatUserList(message.getChatNo());
+			for(String receiverId : receiverIds) {
+				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), message);
+			}
+		}else if("O2".equals(chatType)){
+			messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatNo(), message);			
+		}
 	}
 	
 	// 채팅방 퇴장

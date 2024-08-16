@@ -14,6 +14,8 @@ public interface ChatService {
 	public ChatMessageVO ChatMessageInsert(ChatMessageVO chatMessageVO);
 	//채팅방 만들기
 	public int ChatRoomInsert(ChatRoomDTO chatRoom, Integer userNo);
+	//채팅방 타입 조회
+	public String chatRoomType(Integer chatNo);
 	//채팅방 참여자
 	public int ChatUserInsert(Integer chatNo, Integer userNo);
 	//채팅방 참여자 아이디
