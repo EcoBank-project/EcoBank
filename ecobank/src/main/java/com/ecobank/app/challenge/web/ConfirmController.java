@@ -31,16 +31,27 @@ public class ConfirmController {
 	@Autowired
 	private HttpSession httpSession;
 	
-	//인증 목록
+	//참가자 인증 전체 목록
 	@GetMapping("others")
 	public String confirmList(Model model, int challNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
-		System.out.println(userNo + "유저넘버");
-		//List<ChallConfirmVO> list = challCofirmService.confirmList(challNo);
-		List<FileVO> list = fileService.selectFileOtherInfo(challNo);
-		System.out.println(list + "파일 vo");
-		model.addAttribute("confirmList", list);
+		List<ChallConfirmVO> confirmList = challConfirmService.confirmList(challNo);
+
+		model.addAttribute("confirmList", confirmList);
 		return "chall/others";
+	}
+	
+	//참가자 인증 상세(같은 service 호출, 같은 html)
+	@GetMapping("othersInfo")
+	public String othersInfo(Model model, ChallConfirmVO challConfirmVO, int userNo) {
+		challConfirmVO.setUserNo(userNo);
+		ChallConfirmVO findVO = challConfirmService.myConfirmInfo(challConfirmVO);
+		
+		List<FileVO> list = fileService.selectGetMyInfo(challConfirmVO.getConfirmNo());
+		
+		model.addAttribute("myConfirm", findVO);
+		model.addAttribute("list", list);
+		return "chall/myConfirmDetail";
 	}
 	
 	//나의 인증 내역
@@ -49,30 +60,33 @@ public class ConfirmController {
 		//model에 review.html안에 th에 넣는 ""값이 여기에 있는거 기억하기
 		//detailImg를 여기에 따로 추가해야해
 		int userNo = (Integer) httpSession.getAttribute("userNo");
-		System.out.println(userNo);
 		List<FileVO> list = fileService.selectFileInfo(userNo, challNo, "J3");	
 		model.addAttribute("fileList", list);
-		//System.out.println(list + "파일리스트 확인");
 		return "chall/myConfirm";
 	}
 	
 	//나의 인증 상세
 	@GetMapping("confirmInfo")
-	public String myConfirmInfo(Model model, ChallConfirmVO challConfirmVO, FileVO fileVO) {
+	public String myConfirmInfo(Model model, ChallConfirmVO challConfirmVO) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		challConfirmVO.setUserNo(userNo);
 		ChallConfirmVO findVO = challConfirmService.myConfirmInfo(challConfirmVO);
 		
 		List<FileVO> list = fileService.selectGetMyInfo(challConfirmVO.getConfirmNo());
-		List<ChallConfirmVO> replyList = challConfirmService.confirmReplyList(challConfirmVO);
-		System.out.println(list);
-		System.out.println(findVO);
-		System.out.println(replyList);
-		
+		System.out.println(list + "리스트");
 		model.addAttribute("list", list);
 		model.addAttribute("myConfirm", findVO);
-		model.addAttribute("replyList", replyList);
 		return "chall/myConfirmDetail";
+	}
+	
+	//인증 댓글 목록
+	@GetMapping("replyList")
+	public String replyList(Model model, ChallConfirmVO challConfirmVO) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		List<ChallConfirmVO> list = challConfirmService.confirmReplyList(challConfirmVO);
+		model.addAttribute("userNo", userNo);
+		model.addAttribute("replyList", list);
+		return "chall/reply";
 	}
 	
 	//나의 캘린더(페이지)
@@ -112,7 +126,6 @@ public class ConfirmController {
 		//상세
 		ChallVO findVO = challService.challInfo(challVO);
 		model.addAttribute("detail", findVO);
-		//System.out.println(findVO);
 		
 		//리뷰
 		return "chall/review";
