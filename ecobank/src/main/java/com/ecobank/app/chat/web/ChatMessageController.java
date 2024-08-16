@@ -1,12 +1,8 @@
 package com.ecobank.app.chat.web;
 
 
-import java.security.Principal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,6 +10,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
@@ -65,15 +62,28 @@ public class ChatMessageController {
 	}
 	
 	// 채팅방 퇴장
-	@MessageMapping("/chat.exit")
-	@SendTo("/topic/messages")
-	public ChatMessageDTO exitUser(@Payload ChatMessageDTO message) {
-		return message;
+	@MessageMapping("/chat.exit/{roomId}")
+	@Transactional
+	public void exitUser(@DestinationVariable Integer roomId, ChatMessageVO message) {
+		// 채팅방 참가자 나가기
+		chatService.chatEntryUpdate(message.getUserNo(), roomId);
+		Integer countUser = chatService.getUsersChatRoom(roomId);
+		if(countUser < 1) {
+			// 채팅방 메시지 삭제
+			chatService.chatAllMessageDelete(roomId);
+			// 채팅방 참여자 삭제
+			chatService.ChatPartDelete(roomId);
+			// 채팅방 삭제
+			chatService.chatRoomDelete(roomId);
+		}else {
+			// 채팅방 나가는 메시지 저장
+			chatService.ChatMessageInsert(message);
+			// 채팅방 남은 사람에게 메시지
+			List<String> receiverIds = chatService.chatLeaveUser(message.getUserNo(), roomId);
+			for(String receiverId : receiverIds) {
+				messagingTemplate.convertAndSendToUser(receiverId, "/queue/leaveChatRoom", message);
+			}
+		}
 	}
 	
-	// 날짜 포맷
-	private String formatMessageDate(Date msgSendTime) {
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
-	    return dateFormat.format(msgSendTime);
-	}
 }

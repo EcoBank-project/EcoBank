@@ -10,6 +10,7 @@
 		from chat_entry ce join chat c 
                      		 on ce.chat_no = c.chat_no
 		where user_no = #{userNo}
+		AND chat_user_state = 'Q1'
 	</select>
 	
 	<!-- 채팅방 채팅 로그 조회 -->
@@ -90,7 +91,8 @@
 		FROM users
 		WHERE user_no IN (SELECT user_no
                   		  FROM chat_entry
-                  		  WHERE chat_no = #{chatNo})
+                  		  WHERE chat_no = #{chatNo}
+                  		  AND chat_user_state = 'Q1')
 	</select>
 	<!-- 채팅방 타입 조회 -->
 	<select id="getChatRoomType">
@@ -98,5 +100,46 @@
 		FROM chat
 		WHERE chat_no = #{chatNo}
 	</select>
-		
+	
+	<!-- 채팅방 참가자 수 -->
+	<select id="selectUsersChatRoom">
+		SELECT count(*)
+		FROM chat_entry
+		WHERE chat_no = #{chatNo}
+		AND chat_user_state = 'Q1'
+	</select>
+	<!-- 채팅방 나가기 -->
+	<update id="updateChatEntry">
+		UPDATE chat_entry
+		SET chat_user_state = 'Q2'
+		WHERE user_no = #{userNo} 
+		AND chat_no = #{chatNo}
+	</update>
+	<!-- 참가자 없으면 채팅방 삭제 -->
+	<delete id="deleteChatRoom">
+		DELETE FROM chat
+		WHERE chat_no = #{chatNo}
+	</delete>
+	<!-- 참가자 삭제 -->
+	<delete id="deleteChatPart">
+		DELETE FROM chat_entry
+		WHERE chat_no = #{chatNo}
+	</delete>
+	<!-- 채팅방 메시지 전부 삭제 -->
+	<delete id="deleteAllMessage">
+		DELETE FROM msg
+		WHERE chat_no = #{chatNo}
+	</delete>
+	<!-- 채팅방 남은 사람 조회 -->
+	<select id="selectLeaveUser">
+		SELECT use_id
+		FROM users
+		WHERE user_no IN (SELECT user_no
+                  		  FROM chat_entry
+                  		  WHERE chat_no = #{chatNo}
+                  		  AND chat_user_state = 'Q1'
+						  <![CDATA[
+						  AND user_no <> #{userNo})
+						  ]]>
+	</select>	
 </mapper>

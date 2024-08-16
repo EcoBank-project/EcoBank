@@ -4,13 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecobank.app.chat.mapper.ChatMapper;
 import com.ecobank.app.chat.service.ChatFollowVO;
-import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatRoomDTO;
 import com.ecobank.app.chat.service.ChatRoomVO;
@@ -53,6 +51,7 @@ public class ChatServiceImpl implements ChatService{
 		message.setForMatTime(formatMessageDate(message.getMsgSendTime()));
 		return message;
 	}
+	
 	// 채팅방 타입 조회
 	@Override
 	public String chatRoomType(Integer chatNo) {
@@ -90,13 +89,42 @@ public class ChatServiceImpl implements ChatService{
 	}
 	
 	
-	// 채팅방 전체참여자 조회
+	// 채팅방 전체참여자 이름 조회
 	@Override
 	public List<String> ChatUserList(Integer chatNo) {
 		return chatMapper.selectAllChatUser(chatNo);
 	}
 	
-	
+	// 채팅방 참여자 숫자 조회
+	@Override
+	public int getUsersChatRoom(Integer chatNo) {
+		return chatMapper.selectUsersChatRoom(chatNo);
+	}
+	// 채팅방 참여자 나가기
+	@Override
+	public int chatEntryUpdate(Integer userNo, Integer chatNo) {
+		return chatMapper.updateChatEntry(userNo, chatNo);
+	}
+	// 채팅방 삭제
+	@Override
+	public int chatRoomDelete(Integer chatNo) {
+		return chatMapper.deleteChatRoom(chatNo);
+	}
+	// 채팅방 참여자 삭제
+	@Override
+	public int ChatPartDelete(Integer chatNo) {
+		return chatMapper.deleteChatPart(chatNo);
+	}
+	// 채팅방 메시지 전부 삭제
+	@Override
+	public int chatAllMessageDelete(Integer chatNo) {
+		return chatMapper.deleteAllMessage(chatNo);
+	}
+	// 채팅방 남은 사람 조회
+	@Override
+	public List<String> chatLeaveUser(Integer userNo, Integer chatNo) {
+		return chatMapper.selectLeaveUser(userNo, chatNo);
+	}
 	// 채팅 팔로우 목록
 	@Override
 	public List<ChatFollowVO> chatFollowList(Integer userNo) {
@@ -104,13 +132,14 @@ public class ChatServiceImpl implements ChatService{
 	}
 
 	
-	
-	
 	// 날짜 포맷
 	private String formatMessageDate(Date msgSendTime) {
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
 	    return dateFormat.format(msgSendTime);
 	}
+	
+	
+	
 	
 	
 }
