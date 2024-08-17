@@ -497,8 +497,9 @@ padding: 20px;
 			type : "POST",
 			url : "likeInsert?feedNo="+feedNo,
 			data : {feedNo},
-			success : function(list){
-				 alert("해당글이 좋아요되었습니다.");
+			success : function(result){
+				alert("좋아요");
+				 location.reload();
 				
 			},
 			error :  function(error){

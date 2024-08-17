@@ -13,5 +13,10 @@ public interface SnsReplyService {
 
 	//삭제
 	public int deleteSnsReply(int replyNo);
-
+	
+	//좋아요 등록
+	public int insertSnsLike(SnsReplyVO snsReplyVO);
+		
+	//좋아요 삭제
+	public int deleteSnsLike(int SnsNO);
 }

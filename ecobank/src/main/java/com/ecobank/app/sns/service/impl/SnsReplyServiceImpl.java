@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ecobank.app.sns.mapper.SnsReplyMapper;
 import com.ecobank.app.sns.service.SnsReplyService;
 import com.ecobank.app.sns.service.SnsReplyVO;
+import com.ecobank.app.sns.service.SnsVO;
 
 @Service
 public class SnsReplyServiceImpl implements SnsReplyService{
@@ -38,6 +39,19 @@ public class SnsReplyServiceImpl implements SnsReplyService{
 	@Override
 	public int deleteSnsReply(int replyNo) {
 		return snsReplyMapper.deleteSnsReplyInfo(replyNo);
+	}
+	
+	//좋아요 등록
+	@Override
+	public int insertSnsLike(SnsReplyVO snsReplyVO) {
+		int result = snsReplyMapper.insertSnsLike(snsReplyVO);
+		return result == 1 ? snsReplyVO.getSnsLikeNo() : -1;
+	}
+
+	//좋아요 삭제
+	@Override
+	public int deleteSnsLike(int SnsNO) {
+		return snsReplyMapper.deleteSnsLike(SnsNO);
 	}
 	
 }

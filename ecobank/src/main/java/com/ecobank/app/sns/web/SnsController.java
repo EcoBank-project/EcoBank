@@ -151,12 +151,6 @@ public class SnsController {
 		return "sns/mySns";
 	}
 	
-	//좋아요 등록
-	@PostMapping("likeInsert")
-	public void insertSnsLike(SnsVO snsVO, Model model) {
-		int snsLikeNo = snsService.insertSnsLike(snsVO);
-		
-		
-	}
+
 
 }
