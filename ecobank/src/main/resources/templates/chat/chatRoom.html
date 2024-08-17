@@ -208,18 +208,24 @@
 	
 	// 채팅방 - 메시지 입력 - 보내기
 	function sendMessage(userNo) {
-	    let input = document.getElementById("message");
-	    let today = new Date(); 
-	    const chatMessage = {
-	        userNo: userNo,
-	        chatNo: currentRoomId,
-	        msgContent: input.value,
-	        msgType: 'I1',
-	        msgSendTime: today,
-	        nickName: "[[${nickname}]]",
-	    };
-	    stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
-	    input.value = "";
+		if(chatSubScription){
+		    let input = document.getElementById("message");
+		    let today = new Date(); 
+		    const chatMessage = {
+		        userNo: userNo,
+		        chatNo: currentRoomId,
+		        msgContent: input.value,
+		        msgType: 'I1',
+		        msgSendTime: today,
+		        nickName: "[[${nickname}]]",
+		    };
+		    stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
+		    input.value = "";			
+		}else{
+			alert("채팅방에 입장하세요");
+			let input = document.getElementById("message");
+			input.value = "";				
+		}
 	}
 	
 	// 메시지를 보여줌
@@ -301,6 +307,7 @@
 			}
 		})
 	}
+	// 채팅방 폼
 	function showRoom(list){
 		let tagli = $('<li />');
 		let tagA = $('<a />').prop('href','#').text(list.chatName);
@@ -438,54 +445,67 @@
 
 	// 1대1 채팅방 만들기
 	function insertPrivate(){
-		let process = null;
-		let formObj = {};
-		formObj['userNo'] = [];
-		formObj['userName'] = [];
-		formObj['chatType'] = 'O1';
-		let checkName = null;
-		$('#followListPrivate .select-follow').each(function() {
-			if($(this).is(":checked")){
-				formObj['chatName'] = "[[${nickname}]]" + '-' + $(this).prev().text();
-				checkName = $(this).prev().text(); 
-				formObj['userNo'].push(Number($(this).val()));
-				formObj['userName'].push($(this).prev().text());
-			}
-		});
-		if($('.chat-room-list.private li a').length > 0){
-			$('.chat-room-list.private li a').each(function() {
-				if($(this).text() == checkName){
-					process = $(this);
+		let isRadioCheck = $('#followListPrivate .select-follow').is(":checked");
+		if(isRadioCheck){
+			let process = null;
+			let formObj = {};
+			formObj['userNo'] = [];
+			formObj['userName'] = [];
+			formObj['chatType'] = 'O1';
+			let checkName = null;
+			$('#followListPrivate .select-follow').each(function() {
+				if($(this).is(":checked")){
+					formObj['chatName'] = "[[${nickname}]]" + '-' + $(this).prev().text();
+					checkName = $(this).prev().text(); 
+					formObj['userNo'].push(Number($(this).val()));
+					formObj['userName'].push($(this).prev().text());
 				}
-				//insertChatRoom(formObj);
-			});			
-			if(!process){
-				insertChatRoom(formObj);
+			});
+			if($('.chat-room-list.private li a').length > 0){
+				$('.chat-room-list.private li a').each(function() {
+					if($(this).text() == checkName){
+						process = $(this);
+					}
+					//insertChatRoom(formObj);
+				});			
+				if(!process){
+					insertChatRoom(formObj);
+				}else{
+					allClose();
+					process.get(0).click();
+				};
 			}else{
-				allClose();
-				process.get(0).click();
-			};
+				insertChatRoom(formObj);
+			}			
 		}else{
-			insertChatRoom(formObj);
+			alert("채팅방 초대할 사람을 체크하세요");
 		}
 	}
 	 
 	// 그룹 채팅방 만들기
 	function insertGroup(){
-		let formObj = {};
-		let chatName = $('#groupChatname').val();
-		formObj['chatName'] = chatName;
-		formObj['userNo'] = [];
-		formObj['userName'] = [];
-		formObj['chatType'] = 'O2';
-		$('#followListGroup .select-follow').each(function() {
-			if($(this).is(":checked")){
-				formObj['userNo'].push(Number($(this).val()));
-				formObj['userName'].push($(this).prev().text());
-			}
-		});
-		
-		insertChatRoom(formObj);
+		let isCheckbox = $('#followListGroup .select-follow').is(":checked");
+		if(isCheckbox){
+			let chatName = $('#groupChatname').val();
+			if(!chatName){
+				alert("채팅방 제목을 입력하세요");
+			}else{
+				let formObj = {};
+				formObj['chatName'] = chatName;
+				formObj['userNo'] = [];
+				formObj['userName'] = [];
+				formObj['chatType'] = 'O2';
+				$('#followListGroup .select-follow').each(function() {
+					if($(this).is(":checked")){
+						formObj['userNo'].push(Number($(this).val()));
+						formObj['userName'].push($(this).prev().text());
+					}
+				});	
+				insertChatRoom(formObj);			
+			}			
+		}else{
+			alert("채팅방 초대할 사람을 체크하세요");
+		}
 	}
 	// 채팅 만들기 함수
 	function insertChatRoom(formObj){
@@ -503,6 +523,7 @@
 			}
 		}); 
 	}
+	
 	// 채팅방 나가기
 	function leaveRoom(chatType, chatNo, userNo){
 		if(confirm("나가겠습니까?")){
