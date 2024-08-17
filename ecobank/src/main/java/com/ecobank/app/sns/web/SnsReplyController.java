@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecobank.app.sns.service.SnsReplyService;
 import com.ecobank.app.sns.service.SnsReplyVO;
+import com.ecobank.app.sns.service.SnsVO;
 
 @RestController
 public class SnsReplyController {
@@ -50,6 +51,14 @@ public class SnsReplyController {
 		return snsReplyService.deleteSnsReply(replyNo);
 	}
 	
-	
+	//좋아요 등록
+	@PostMapping("likeInsert")
+	public void insertSnsLike(SnsReplyVO snsReplyVO, Model model) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		snsReplyVO.setUserNo(userNo);
+		System.out.println("좋아요"+snsReplyVO);
+		int snsLikeNo = snsReplyService.insertSnsLike(snsReplyVO);
+		
+	}
 
 }

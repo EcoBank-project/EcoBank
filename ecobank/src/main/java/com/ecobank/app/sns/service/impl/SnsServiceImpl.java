@@ -99,18 +99,7 @@ public class SnsServiceImpl implements SnsService{
 		return snsMapper.selectMySns(snsVO);
 	}
 
-	//좋아요 등록
-	@Override
-	public int insertSnsLike(SnsVO snsVO) {
-		int result = snsMapper.insertSnsLike(snsVO);
-		return result == 1 ? snsVO.getSnsLikeNo() : -1;
-	}
 
-	//좋아요 삭제
-	@Override
-	public int deleteSnsLike(int SnsNO) {
-		return snsMapper.deleteSnsLike(SnsNO);
-	}
     
 
 }

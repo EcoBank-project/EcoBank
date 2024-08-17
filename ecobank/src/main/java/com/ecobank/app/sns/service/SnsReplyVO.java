@@ -16,5 +16,6 @@ public class SnsReplyVO {
 	private Date replyCreateAt;		//댓글 작성 일자
 	private Integer feedNo;			//피드번호
 	private String nickname;		//닉네임
+	private Integer snsLikeNo;			//좋아요 번호
 
 }

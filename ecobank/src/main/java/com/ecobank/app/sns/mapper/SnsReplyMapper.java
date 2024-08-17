@@ -16,6 +16,11 @@ public interface SnsReplyMapper {
 	//댓글 개별 삭제
 	public int deleteSnsReplyInfo(int replyNO);
 	
-
+	//좋아요 등록
+	public int insertSnsLike(SnsReplyVO snsReplyVO);
+	
+	//좋아요 삭제
+	public int deleteSnsLike(int snsVO);
+	
 
 }
