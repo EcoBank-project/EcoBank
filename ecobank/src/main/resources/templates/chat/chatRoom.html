@@ -34,15 +34,17 @@
 			                <li th:each="room : ${chatRooms}" th:if="${room.chatType} == 'O1'">
 			                	<!-- <img src="https://via.placeholder.com/40" class="profil_img"> -->
 			                    <a href="#" th:text="${room.chatName}" th:onclick="enterRoom(event, [[${room.chatNo}]], [[${room.chatType}]])"></a>
-			                    <i class="fa fa-sign-out-alt" th:onclick="leaveRoom([[${room.chatNo}]],[[${userNo}]])"></i>
+			                    <i class="fa fa-sign-out-alt" th:onclick="leaveRoom([[${room.chatType}]],[[${room.chatNo}]],[[${userNo}]])"></i>
 			                </li>
 			            </ul>
 			            <div>그룹 메시지</div>
 			            <ul class="chat-room-list group flex-grow-2">
 			            	<li th:each="room : ${chatRooms}" th:if="${room.chatType} == 'O2'">
 			                    <a href="#" th:text="${room.chatName}" th:onclick="enterRoom(event, [[${room.chatNo}]], [[${room.chatType}]])"></a>
-			                    <i class="bi bi-gear"></i>			                    		                
-			                    <i class="fa fa-sign-out-alt" th:onclick="leaveRoom([[${room.chatNo}]],[[${userNo}]])"></i>
+			                    <th:block th:if="${room.chatCreateUser == userNo}">
+				                    <i class="bi bi-gear group-gear" th:onclick="groupUpdateName([[${room.chatNo}]])"></i>			                    		                			                    
+			                    </th:block>
+			                    <i class="fa fa-sign-out-alt" th:onclick="leaveRoom([[${room.chatType}]],[[${room.chatNo}]],[[${userNo}]])"></i>
 			                </li>
 			            </ul>
 			            <!-- 유저 정보 -->
@@ -105,6 +107,7 @@
             
         </div>
     </div>
+    
     <!-- 채팅방 만들기 모달-->
     <div id="chatModal" class="modal">
         <div class="modal-content">
@@ -120,12 +123,12 @@
             </div>     
 		</div>
     </div>
-    
+    <!-- 1대1 채팅 모달 -->
 	<div id="privateChatModal" class="modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
             <h2>1대1 채팅 만들기</h2>
-            <input type="text" placeholder="사용자명 입력" class="input-field">
+            <input type="text" placeholder="사용자명 입력" class="input-field" id="privateChatname">
             <h4>팔로우 목록</h4>
             <div id="followListPrivate">
 
@@ -133,7 +136,7 @@
             <button class="option-button" id="followPrivateBtn">채팅 만들기</button>
         </div>
     </div>
-    
+    <!-- 그룹 채팅 모달 -->
     <div id="groupChatModal" class="modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
@@ -148,24 +151,35 @@
         </div>
     </div>
     
+    <!-- 그룹 채팅 이름 바꾸기 -->
+    <div id="groupChangeName" class="modal">
+    	<div class="modal-content">
+    		<span class="modal-close">&times;</span>
+    		<h2>채팅방 이름 바꾸기</h2>
+    		<input type="text" class="input-field" id="groupChatChange">
+    		<button class="option-button" id="GroupNameBtn">채팅방명 변경</button>
+    	</div>
+    </div>
+    
 <script type="text/javascript">
 	var stompClient = null;			// stomp 프로토콜
 	var currentRoomId = null;		// 방번호
-	var chatRoomType = null;
+	var chatSubScription = null;	// 채팅방 구독
 	const userNo = "[[${userNo}]]"; // 세션정보
 	// 소켓 연결
 	function connect(roomId,roomType) {
 		var socket = new SockJS('/ws');
+		
 		stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
 			if("O1" === roomType){
 			    // 1대1 채팅
-			    stompClient.subscribe('/user/queue/messages/' + roomId, function(message) {
+			    chatSubScription = stompClient.subscribe('/user/queue/messages/' + roomId, function(message) {
 			    	showMessage(JSON.parse(message.body));
 			    });
 	    	}else if("O2" === roomType){
 			    // 그룹채팅
-		        stompClient.subscribe('/topic/messages/' + roomId, function(message) {
+		        chatSubScription =stompClient.subscribe('/topic/messages/' + roomId, function(message) {
 		            showMessage(JSON.parse(message.body));	     
 		        });	    		
 	    	}
@@ -194,18 +208,24 @@
 	
 	// 채팅방 - 메시지 입력 - 보내기
 	function sendMessage(userNo) {
-	    let input = document.getElementById("message");
-	    let today = new Date(); 
-	    const chatMessage = {
-	        userNo: userNo,
-	        chatNo: currentRoomId,
-	        msgContent: input.value,
-	        msgType: 'I1',
-	        msgSendTime: today,
-	        nickName: "[[${nickname}]]",
-	    };
-	    stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
-	    input.value = "";
+		if(chatSubScription){
+		    let input = document.getElementById("message");
+		    let today = new Date(); 
+		    const chatMessage = {
+		        userNo: userNo,
+		        chatNo: currentRoomId,
+		        msgContent: input.value,
+		        msgType: 'I1',
+		        msgSendTime: today,
+		        nickName: "[[${nickname}]]",
+		    };
+		    stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
+		    input.value = "";			
+		}else{
+			alert("채팅방에 입장하세요");
+			let input = document.getElementById("message");
+			input.value = "";				
+		}
 	}
 	
 	// 메시지를 보여줌
@@ -272,11 +292,11 @@
 	}
 	// 채팅방 로드
 	function loadRoom(){
-		console.log("확인");
 		$.ajax({
 			url: "/chatRoom/chatList",
 			method: "GET",
 			success: function(result){
+				console.log(result);
 				$('.chat-room-list').empty();
 				result.forEach(function(list){
 					showRoom(list);
@@ -287,21 +307,29 @@
 			}
 		})
 	}
+	// 채팅방 폼
 	function showRoom(list){
 		let tagli = $('<li />');
 		let tagA = $('<a />').prop('href','#').text(list.chatName);
 		tagA.on('click', function(event){
 			enterRoom(event, list.chatNo, list.chatType);
 		});
-		let tagI = $('<i />').addClass('fa fa-sign-out-alt');
-		tagI.on('click', function(event){
-			leaveRoom(list.chatNo, '[[${userNo}]]');
+		let tagI1 = $('<i />').addClass('bi bi-gear');
+		tagI1.on('click', function(event){
+			groupUpdateName(list.chatNo);
+		})
+		let tagI2 = $('<i />').addClass('fa fa-sign-out-alt');
+		tagI2.on('click', function(event){
+			leaveRoom(list.chatType, list.chatNo, '[[${userNo}]]');
 		});
 		tagli.append(tagA);
-		tagli.append(tagI);
+		
 		if(list.chatType == 'O1'){
+			tagli.append(tagI2);
 			$('.chat-room-list.private').append(tagli);			
 		}else if(list.chatType == 'O2'){
+			tagli.append(tagI1);
+			tagli.append(tagI2);
 			$('.chat-room-list.group').append(tagli);
 		}
 	}
@@ -396,7 +424,10 @@
 		$('#privateChatModal').hide();
 		$('#groupChatModal').hide();
 		$('#modalOverlay').hide();
+		$('#groupChangeName').hide();
 		$('.select-follow').prop("checked",false);
+		$('#privateChatname').val('');
+		$('#groupChatname').val('');
 	}
 	$('.modal-close').on('click', function() {
 		allClose();
@@ -414,54 +445,67 @@
 
 	// 1대1 채팅방 만들기
 	function insertPrivate(){
-		let process = null;
-		let formObj = {};
-		formObj['userNo'] = [];
-		formObj['userName'] = [];
-		formObj['chatType'] = 'O1';
-		let checkName = null;
-		$('#followListPrivate .select-follow').each(function() {
-			if($(this).is(":checked")){
-				formObj['chatName'] = "[[${nickname}]]" + '-' + $(this).prev().text();
-				checkName = $(this).prev().text(); 
-				formObj['userNo'].push(Number($(this).val()));
-				formObj['userName'].push($(this).prev().text());
-			}
-		});
-		if($('.chat-room-list.private li a').length > 0){
-			$('.chat-room-list.private li a').each(function() {
-				if($(this).text() == checkName){
-					process = $(this);
+		let isRadioCheck = $('#followListPrivate .select-follow').is(":checked");
+		if(isRadioCheck){
+			let process = null;
+			let formObj = {};
+			formObj['userNo'] = [];
+			formObj['userName'] = [];
+			formObj['chatType'] = 'O1';
+			let checkName = null;
+			$('#followListPrivate .select-follow').each(function() {
+				if($(this).is(":checked")){
+					formObj['chatName'] = "[[${nickname}]]" + '-' + $(this).prev().text();
+					checkName = $(this).prev().text(); 
+					formObj['userNo'].push(Number($(this).val()));
+					formObj['userName'].push($(this).prev().text());
 				}
-				//insertChatRoom(formObj);
-			});			
-			if(!process){
-				insertChatRoom(formObj);
+			});
+			if($('.chat-room-list.private li a').length > 0){
+				$('.chat-room-list.private li a').each(function() {
+					if($(this).text() == checkName){
+						process = $(this);
+					}
+					//insertChatRoom(formObj);
+				});			
+				if(!process){
+					insertChatRoom(formObj);
+				}else{
+					allClose();
+					process.get(0).click();
+				};
 			}else{
-				allClose();
-				process.get(0).click();
-			};
+				insertChatRoom(formObj);
+			}			
 		}else{
-			insertChatRoom(formObj);
+			alert("채팅방 초대할 사람을 체크하세요");
 		}
 	}
 	 
 	// 그룹 채팅방 만들기
 	function insertGroup(){
-		let formObj = {};
-		let chatName = $('#groupChatname').val();
-		formObj['chatName'] = chatName;
-		formObj['userNo'] = [];
-		formObj['userName'] = [];
-		formObj['chatType'] = 'O2';
-		$('#followListGroup .select-follow').each(function() {
-			if($(this).is(":checked")){
-				formObj['userNo'].push(Number($(this).val()));
-				formObj['userName'].push($(this).prev().text());
-			}
-		});
-		
-		insertChatRoom(formObj);
+		let isCheckbox = $('#followListGroup .select-follow').is(":checked");
+		if(isCheckbox){
+			let chatName = $('#groupChatname').val();
+			if(!chatName){
+				alert("채팅방 제목을 입력하세요");
+			}else{
+				let formObj = {};
+				formObj['chatName'] = chatName;
+				formObj['userNo'] = [];
+				formObj['userName'] = [];
+				formObj['chatType'] = 'O2';
+				$('#followListGroup .select-follow').each(function() {
+					if($(this).is(":checked")){
+						formObj['userNo'].push(Number($(this).val()));
+						formObj['userName'].push($(this).prev().text());
+					}
+				});	
+				insertChatRoom(formObj);			
+			}			
+		}else{
+			alert("채팅방 초대할 사람을 체크하세요");
+		}
 	}
 	// 채팅 만들기 함수
 	function insertChatRoom(formObj){
@@ -479,8 +523,9 @@
 			}
 		}); 
 	}
+	
 	// 채팅방 나가기
-	function leaveRoom(chatNo, userNo){
+	function leaveRoom(chatType, chatNo, userNo){
 		if(confirm("나가겠습니까?")){
 			let today = new Date();
 			const chatMessage = {
@@ -489,14 +534,39 @@
 				userNo : userNo,
 				chatNo : chatNo,
 				msgSendTime: today,
+				chatType : chatType
 			};
 			stompClient.send("/app/chat.exit/" + chatNo, {}, JSON.stringify(chatMessage));
-			loadRoom();
-			stompClient.disconnect();
+			$('#roomName').text("채팅창 제목");
+			$('#chatbox').empty();
+			if(chatSubScription){
+				chatSubScription.unsubscribe();
+			}
 		}
 	}
 	// 채팅방 수정(그룹채팅만)
-	
+	function groupUpdateName(chatNo){
+		$('#groupChangeName').show();
+		$('#groupChatChange').val($(event.target).prev().text());
+		$('#GroupNameBtn').on('click', function(){
+			let chatName = $('#groupChatChange').val();
+			allClose();
+			$.ajax({
+				url : "/chat.changeName",
+				method : "POST",
+				data: {
+					chatNo : chatNo,
+					chatName : chatName
+				},
+				success: function(result){
+					console.log(result);
+				},
+				err : function(err){
+					console.log(err);
+				}
+			})
+		});
+	};
 	// 소켓 연결
 	window.onload = function() {
 		connect('@me');

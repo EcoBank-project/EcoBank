@@ -34,7 +34,10 @@ public interface ChatService {
 	public int chatAllMessageDelete(Integer chatNo);
 	// 채팅방 남은 아이디 조회
 	public List<String> chatLeaveUser(Integer userNo, Integer chatNo);
-	
+	// 채팅방 방장 조회
+	public int getRoomManager(Integer userNo, Integer chatNo);
+	// 채팅방 이름 변경
+	public int chatNameChangeUpdate(String chatName, Integer chatNo);
 	//팔로우 목록
 	public List<ChatFollowVO> chatFollowList(Integer userNo);
 }

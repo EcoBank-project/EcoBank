@@ -6,7 +6,8 @@
 		select ce.chat_no, 
 			   chat_name, 
 			   chat_enter_time,
-			   chat_type 
+			   chat_type,
+			   chat_create_user 
 		from chat_entry ce join chat c 
                      		 on ce.chat_no = c.chat_no
 		where user_no = #{userNo}
@@ -141,5 +142,19 @@
 						  <![CDATA[
 						  AND user_no <> #{userNo})
 						  ]]>
-	</select>	
+	</select>
+	<!-- 채팅방 방장 조회 -->
+	<select id="selectRoomManager">
+		SELECT count(*)
+		FROM chat
+		WHERE chat_create_user = #{userNo}
+		AND chat_no = #{chatNo}
+		AND chat_type = 'O2'
+	</select>
+	<!-- 채팅방 이름 변경 -->
+	<update id="updateChatChangeName">
+		UPDATE chat
+		SET chat_name = #{chatName}
+		WHERE chat_no = #{chatNo}
+	</update>	
 </mapper>
