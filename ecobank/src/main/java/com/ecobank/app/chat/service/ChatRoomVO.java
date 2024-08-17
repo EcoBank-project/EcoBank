@@ -12,4 +12,5 @@ public class ChatRoomVO {
 	private Integer userNo;			//사용자 번호
 	private Date chatEnterTime;		//채팅방 생성시간
 	private String chatType;		//채팅방 타입
+	private Integer chatCreateUser;	//채팅방 주인 
 }

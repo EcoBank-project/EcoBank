@@ -98,7 +98,8 @@ public class ChatServiceImpl implements ChatService{
 	// 채팅방 참여자 숫자 조회
 	@Override
 	public int getUsersChatRoom(Integer chatNo) {
-		return chatMapper.selectUsersChatRoom(chatNo);
+		int result = chatMapper.selectUsersChatRoom(chatNo);
+		return result;
 	}
 	// 채팅방 참여자 나가기
 	@Override
@@ -125,6 +126,12 @@ public class ChatServiceImpl implements ChatService{
 	public List<String> chatLeaveUser(Integer userNo, Integer chatNo) {
 		return chatMapper.selectLeaveUser(userNo, chatNo);
 	}
+	// 채팅방 방장 조회
+	@Override
+	public int getRoomManager(Integer userNo, Integer chatNo) {
+		int result = chatMapper.selectRoomManager(userNo, chatNo);
+		return result;
+	}
 	// 채팅 팔로우 목록
 	@Override
 	public List<ChatFollowVO> chatFollowList(Integer userNo) {
@@ -137,6 +144,13 @@ public class ChatServiceImpl implements ChatService{
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
 	    return dateFormat.format(msgSendTime);
 	}
+	// 채팅방 이름 변경
+	@Override
+	public int chatNameChangeUpdate(String chatName, Integer chatNo) {
+		int result = chatMapper.updateChatChangeName(chatName, chatNo);
+		return result;
+	}
+	
 	
 	
 	
