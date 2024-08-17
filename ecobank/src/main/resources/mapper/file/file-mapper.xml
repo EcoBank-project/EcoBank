@@ -62,7 +62,7 @@
 		ORDER BY file_no desc
 	</select>
 	
-	<!-- 다른 참가자 인증 내역 -->
+	<!-- 다른 참가자 인증 내역 조회 -->
 	<select id="selectOtherConfirm" resultType="FileVO">
 		SELECT c.chall_no
 					, c.confirm_no,
@@ -77,7 +77,7 @@
         ORDER BY c.confirm_no DESC
 	</select>
 	
-	<!-- 인증 내역 상세 파일 -->
+	<!-- 인증 내역 상세 파일 조회 -->
 	<select id="getMyConfirmFile" resultType="FileVO">
 		SELECT c.confirm_no
 		       	,f.file_no
@@ -89,5 +89,12 @@
 		         	,f.file_no
 		         	,f.file_path
 	</select>
+	
+	<!-- 인증 파일 삭제 -->
+	<delete id="deleteConfirmFileInfo" parameterType="int">
+		DELETE FROM files
+		WHERE file_code_no = #{confirmNo}
+		AND file_code = 'J3'
+	</delete>
 		
 </mapper>

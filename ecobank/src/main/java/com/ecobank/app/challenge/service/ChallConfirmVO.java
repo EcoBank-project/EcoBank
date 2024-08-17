@@ -25,7 +25,7 @@ public class ChallConfirmVO {
 	private Integer cntReply;			//댓글 갯수
 	
 	//챌린지 인증 좋아요
-	private int confirmLikeNo;			//인증 좋아요
+	private int confirmLikeNo;			//인증 좋아요 번호
 	private Integer cntLike;			//좋아요 갯수
 	
 	//챌린지 인증 신고

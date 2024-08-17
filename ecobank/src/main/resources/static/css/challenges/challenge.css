@@ -80,8 +80,8 @@
 */
 	/* 전체 컨테이너 스타일 */
 	.container {
-	width: 80%;
-	margin: auto;
+		width: 80%;
+		margin: auto;
 	}
   /* 챌린지 카테고리 네비게이션 스타일 */
     .nav-links {
