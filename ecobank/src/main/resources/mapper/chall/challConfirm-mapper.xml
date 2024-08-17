@@ -122,6 +122,20 @@
 				, #{challNo}
 				)		
 	</insert>
+
+	<!-- 챌린지 인증글 삭제하려고 인증 유저 번호 가져오기  -->
+	<select id="findUserNoByConfirmNo" parameterType="int">
+		SELECT user_no
+		FROM chall_confirm
+		WHERE confirm_no = #{confirmNo}
+	</select>
+	
+	<!-- 챌린지 인증 삭제 -->
+	<delete id="deleteConfirmInfo" parameterType="int">
+		DELETE FROM chall_confirm
+		WHERE confirm_no = #{confirmNo}
+	</delete>
+	
 	
 	<!-- 챌린지 인증 참가 여부 -->
 	<select id="confirmStatus" resultType="int">
@@ -170,6 +184,7 @@
 				)
 	</insert>
 	
+	<!-- 인증 댓글 삭제하려고 인증 유저 번호 가져오기 -->
 	<select id="findUserNoByReplyNo" parameterType="int">
 		SELECT user_no
 		FROM chall_confirm_reply
@@ -180,6 +195,32 @@
 	<delete id="deleteReply" parameterType="int">
 		DELETE FROM chall_confirm_reply
 		WHERE confirm_reply_no = #{confirmReplyNo}
+	</delete>
+	
+	<!-- 인증 좋아요 등록 -->
+	<insert id="insertConfirmLike" parameterType="ChallConfirmVO">
+		<selectKey keyProperty="confirmLikeNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(confirm_like_no), 0) + 1
+			FROM chall_confirm_like
+		</selectKey>
+		INSERT INTO chall_confirm_like(
+										confirm_like_no
+										, user_no
+										, confirm_no
+										)
+		VALUES (
+				#{confirmLikeNo}
+				, #{userNo}
+				, #{confirmNo}
+				)
+	</insert>
+	
+	<!-- 인증 좋아요 삭제 -->
+	<delete id="deleteConfirmLike" parameterType="int">
+		DELETE FROM chall_confirm_like
+		WHERE confirm_like_no = #{confirmLikeNo}
 	</delete>
 	
 </mapper>

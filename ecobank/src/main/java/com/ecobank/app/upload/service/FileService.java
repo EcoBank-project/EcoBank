@@ -5,13 +5,9 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-
-
 public interface FileService {
-	
 	//등록
 	public int insertFile(MultipartFile[] images, String fileCode, int fileCodeNo);
-	
 
 	//삭제
 	public int deleteFile(int feedNo);
@@ -27,4 +23,7 @@ public interface FileService {
 	
 	//나의 인증 내역 파일 상세
 	public List<FileVO> selectGetMyInfo(int confirmNo);
+	
+	//인증 파일 삭제
+	public int confirmFileDelete(int confirmNo);
 }

@@ -41,9 +41,10 @@ public class ConfirmController {
 		return "chall/others";
 	}
 	
-	//참가자 인증 상세(같은 service 호출, 같은 html)
+	//참가자 인증 상세(나의 인증 상세랑 같은 service 호출, 같은 html)
 	@GetMapping("othersInfo")
 	public String othersInfo(Model model, ChallConfirmVO challConfirmVO, int userNo) {
+		int nowUserNo = (Integer) httpSession.getAttribute("userNo");
 		challConfirmVO.setUserNo(userNo);
 		ChallConfirmVO findVO = challConfirmService.myConfirmInfo(challConfirmVO);
 		
@@ -51,6 +52,7 @@ public class ConfirmController {
 		
 		model.addAttribute("myConfirm", findVO);
 		model.addAttribute("list", list);
+		model.addAttribute("nowUserNo", nowUserNo); //글쓴 유저가 맞는지 확인하려고
 		return "chall/myConfirmDetail";
 	}
 	
@@ -73,9 +75,10 @@ public class ConfirmController {
 		ChallConfirmVO findVO = challConfirmService.myConfirmInfo(challConfirmVO);
 		
 		List<FileVO> list = fileService.selectGetMyInfo(challConfirmVO.getConfirmNo());
-		System.out.println(list + "리스트");
-		model.addAttribute("list", list);
+		
 		model.addAttribute("myConfirm", findVO);
+		model.addAttribute("list", list);
+		model.addAttribute("nowUserNo", userNo);
 		return "chall/myConfirmDetail";
 	}
 	
@@ -114,12 +117,6 @@ public class ConfirmController {
 		return "redirect:detail?challNo=" + challConfirmVO.getChallNo();
 	}
 	
-	//메인에서 인증 페이지
-	//@GetMapping("confirm")
-	public String confirmList(Model model) {
-		return "chall/confirm";
-	}
-	
 	//챌린지 상세에서 상세 이미지(+리뷰)
 	@GetMapping("review")
 	public String reviewList(ChallVO challVO, Model model) {
@@ -129,6 +126,23 @@ public class ConfirmController {
 		
 		//리뷰
 		return "chall/review";
+	}
+	
+	//인증 좋아요 등록
+//	@PostMapping("likeInsert")
+//	public int confirmLikeInsert(ChallConfirmVO challConfirmVO) {
+//		int userNo = (Integer) httpSession.getAttribute("userNo");
+//		challConfirmVO.setUserNo(userNo);
+//		int confirmLikeNo = challConfirmService.confirmLikeInsert(challConfirmVO);
+//		return confirmLikeNo;
+//	}
+	
+	//인증 좋아요 등록
+	@PostMapping("confirmLikeInsert")
+	public void confirmLikeInsert(ChallConfirmVO challConfirmVO) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		challConfirmVO.setUserNo(userNo);
+		int confirmLikeNo = challConfirmService.confirmLikeInsert(challConfirmVO);
 	}
 	
 }

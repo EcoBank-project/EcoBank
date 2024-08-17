@@ -80,7 +80,6 @@ public class ChallengeController {
 	public String challdetail(ChallVO challVO, Model model) {
 		ChallVO findVO = challService.challInfo(challVO);
 		model.addAttribute("detail", findVO);
-		System.out.println(findVO);
 		return "chall/detail";
 	}
 	
@@ -96,14 +95,12 @@ public class ChallengeController {
 	//챌린지 단건 조회 - 관리자
 	@GetMapping("challInfo")
 	public String challInfo(ChallVO challVO, Model model) {
-		//sSystem.out.println(challVO.getChallNo() + "challno");
 		ChallVO findVO = challService.challInfo(challVO);
 		model.addAttribute("challenge", findVO);
 		return "admins/adminChallInfo";
 	}
 	
 	//챌린지 등록 - 페이지
-	//@Scheduled
 	@GetMapping("challInsert")
 	public String challInsertForm() {
 		return "admins/adminChallInsert";

@@ -23,6 +23,7 @@ public class ChallengeRestController {
 	public ChallengeRestController(ChallConfirmService challConfirmService) {
 		this.challConfirmService = challConfirmService;
 	}
+	
 	@Autowired
 	private HttpSession httpSession;
 	
@@ -74,4 +75,13 @@ public class ChallengeRestController {
 		return result;
 	}
 	
+	//인증 글 삭제
+	@PostMapping("confirmDelete")
+	public int confirmDelete(@RequestParam("confirmNo") int confirmNo) { 
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		int result = challConfirmService.confirmDelete(userNo, confirmNo);
+		
+		return result;
+	}
+
 }

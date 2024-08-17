@@ -7,9 +7,9 @@
 					<p style="display: inline;" th:text="${reply.confirmReplyContent}"></p>
 					<p style="display: inline; margin-left: 10px;"
 						th:text="${#dates.format(reply.confirmReplyCreateAt, 'yyyy-MM-dd')}"></p>
+				<button type="button" class="btn btn-secondary btn-sm deleteBtn" th:if="${reply.userNo} == ${userNo}"
+				th:data-replyno="${reply.confirmReplyNo}" style="display: inline; margin-left: 10px;">삭제</button>
 				</div>
-				<button type="button" class="deleteBtn" th:if="${reply.userNo} == ${userNo}"
-				th:data-replyno="${reply.confirmReplyNo}">삭제</button>
 			</div>
 		</th:block>
 	</div>

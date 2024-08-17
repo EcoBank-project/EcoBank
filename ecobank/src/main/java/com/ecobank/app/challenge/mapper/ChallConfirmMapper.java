@@ -41,6 +41,12 @@ public interface ChallConfirmMapper {
 	//챌린지 인증 등록(userNo, confirmNo, confirmContent, file)
 	public int insertConfirmInfo(ChallConfirmVO challConfirmVO);
 	
+	//챌린지 인증글 삭제하려고 인증 유저 번호 가져오기 
+	public int findUserNoByConfirmNo(int confirmNo);
+	
+	//챌린지 인증 삭제
+	public int deleteConfirmInfo(int confirmNo);
+	
 	//챌린지 인증 여부 확인(결과가 있으면 1/ 참여한적 없으면 0)
 	public int confirmStatus(@Param("userNo") int userNo, @Param("challNo") int challNo);
 	
@@ -50,10 +56,16 @@ public interface ChallConfirmMapper {
 	//인증 댓글 등록
 	public int insertReply(ReplyVO replyVO);
 	
-	//인증 유저 번호 가져오기
+	//인증 댓글 삭제하려고 인증 유저 번호 가져오기
 	public int findUserNoByReplyNo(int confirmReplyNo);
 	
 	//인증 댓글 삭제
 	public int deleteReply(int confirmReplyNo);
+	
+	//인증 좋아요 등록
+	public int insertConfirmLike(ChallConfirmVO challConfirmVO);
+	
+	//인증 좋아요 삭제
+	public int deleteConfirmLike(int confirmLikeNo);
 	
 }
