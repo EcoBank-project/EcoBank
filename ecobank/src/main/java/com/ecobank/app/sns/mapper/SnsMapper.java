@@ -10,6 +10,9 @@ public interface SnsMapper {
 	//전체조회
 	public List<SnsVO> selectSnsAll(SnsVO snsVO);
 	
+	//검색조회
+	public List<SnsVO> searchSnsAll(SnsVO snsVO);
+	
 	//단건조회 
 	public SnsVO selectSnsInfo(SnsVO snsVO);
 	

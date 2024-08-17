@@ -31,6 +31,12 @@ public class SnsServiceImpl implements SnsService{
 		return snsMapper.selectSnsAll(snsVO);
 	}
 	
+	//검색 조회
+	@Override
+	public List<SnsVO> snsSearch(SnsVO snsVO) {
+		return snsMapper.searchSnsAll(snsVO);
+	}
+	
 	//단건조회
 	@Override
 	public SnsVO snsInfo(SnsVO snsVO) {
