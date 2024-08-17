@@ -5,6 +5,8 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,20 +16,21 @@ import com.ecobank.app.challenge.service.ChallConfirmService;
 import com.ecobank.app.challenge.service.ChallConfirmVO;
 import com.ecobank.app.challenge.service.ChallVO;
 import com.ecobank.app.challenge.service.MyConfirmDTO;
+import com.ecobank.app.challenge.service.ReplyVO;
 
 @Service
 public class ChallConfirmServiceImpl implements ChallConfirmService{
-	private ChallConfirmMapper challConfirmMapper;
+	private final ChallConfirmMapper challConfirmMapper;
 	
 	@Autowired
 	public ChallConfirmServiceImpl(ChallConfirmMapper challConfirmMapper) {
 		this.challConfirmMapper = challConfirmMapper;
 	}
 
-//	@Override
-//	public List<ChallConfirmVO> confirmList(int challNo) {
-//		return challConfirmMapper.selectConfirmAll(challNo);
-//	}
+	@Override
+	public List<ChallConfirmVO> confirmList(int challNo) {
+		return challConfirmMapper.selectConfirmAll(challNo);
+	}
 
 	@Override
 	public MyConfirmDTO myConfirm(int userNo, int challNo) {
@@ -91,7 +94,7 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	@Override
 	public int confirmInsert(ChallConfirmVO challConfirmVO) {
 		int result = challConfirmMapper.insertConfirmInfo(challConfirmVO);
-		System.out.println(result);
+		System.out.println(challConfirmVO + "챌린지 인증");
 		return result == 1 ? challConfirmVO.getConfirmNo() : -1;
 	}
 
@@ -105,6 +108,26 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	@Override
 	public List<ChallConfirmVO> confirmReplyList(ChallConfirmVO challConfirmVO) {
 		return challConfirmMapper.selectReplyList(challConfirmVO);
+	}
+
+	//댓글 등록
+	@Override
+	public int replyInsert(int userNo, ReplyVO replyVO) {
+		replyVO.setUserNo(userNo);
+		int result = challConfirmMapper.insertReply(replyVO);
+		return result;
+	}
+	
+	//댓글 삭제(현재 접속한 userno(session), 다른 userno, replyno)
+	@Override
+	public int replyDelete(int userNo, int confirmReplyNo) {
+		int otherUserNo = challConfirmMapper.findUserNoByReplyNo(confirmReplyNo);
+		if(userNo == otherUserNo) {
+			int result = challConfirmMapper.deleteReply(confirmReplyNo);
+			return result;
+		}else {
+			return 0;
+		}
 	}
 
 }

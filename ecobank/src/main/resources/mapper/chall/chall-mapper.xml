@@ -3,36 +3,33 @@
 <mapper namespace="com.ecobank.app.challenge.mapper.ChallMapper">
 	<!-- 챌린지 전체 조회 - 관리자-->
 	<select id="selectChallAll" resultType="ChallVO">
-	
-		    SELECT chall_no
-		         , chall_title
-		         , chall_content
-		         , chall_startAt
-		         , chall_closeAt
-		         , chall_state
-		         , main_img
-		         , detail_img
-		         , chall_score
-		         , chall_createAt
-		    FROM (
-		            SELECT ROWNUM r
-		                 , c.chall_no
-		                 , c.chall_title
-		                 , c.chall_content
-		                 , c.chall_startAt
-		                 , c.chall_closeAt
-		                 , c.chall_state
-		                 , c.main_img
-		                 , c.detail_img
-		                 , c.chall_score
-		                 , c.chall_createAt
-		            FROM chall c
-		            WHERE ROWNUM 	<![CDATA[<=  ]]> #{pageNum} * #{amount}
-		            
-		            ORDER BY c.chall_no DESC
-		    )
-		    WHERE r > (#{pageNum} - 1) * #{amount}
-		
+	    SELECT chall_no
+	         , chall_title
+	         , chall_content
+	         , chall_startAt
+	         , chall_closeAt
+	         , chall_state
+	         , main_img
+	         , detail_img
+	         , chall_score
+	         , chall_createAt
+	    FROM (
+	            SELECT ROWNUM r
+	                 , c.chall_no
+	                 , c.chall_title
+	                 , c.chall_content
+	                 , c.chall_startAt
+	                 , c.chall_closeAt
+	                 , c.chall_state
+	                 , c.main_img
+	                 , c.detail_img
+	                 , c.chall_score
+	                 , c.chall_createAt
+	            FROM chall c
+	            WHERE ROWNUM 	<![CDATA[<=  ]]> #{pageNum} * #{amount}
+	            ORDER BY c.chall_no DESC
+	    )
+	    WHERE r > (#{pageNum} - 1) * #{amount}
 	</select>
 	
 	<!-- 챌린지 목록 개수 -->

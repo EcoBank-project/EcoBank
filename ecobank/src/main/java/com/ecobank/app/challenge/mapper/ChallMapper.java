@@ -25,11 +25,8 @@ public interface ChallMapper {
 	//챌린지 개수 가져오기
 	public int countAllChallenges(ChallVO challVO);
 	
-	//챌린지 단건 조회 - 관리자용
+	//챌린지 단건 조회
 	public ChallVO selectChallInfo(ChallVO challVO);
-	
-	//챌린지 단건 조회 - 회원용
-	//public ChallVO getChallInfo(ChallVO challVO);
 	
 	//챌린지 등록
 	public int insertChallInfo(ChallVO challVO);

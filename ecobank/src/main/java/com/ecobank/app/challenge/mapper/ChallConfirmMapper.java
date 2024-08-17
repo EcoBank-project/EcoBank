@@ -8,11 +8,11 @@ import org.apache.ibatis.annotations.Param;
 import com.ecobank.app.challenge.service.ChallConfirmVO;
 import com.ecobank.app.challenge.service.ChallVO;
 import com.ecobank.app.challenge.service.MyConfirmDTO;
-import com.ecobank.app.sns.service.SnsVO;
+import com.ecobank.app.challenge.service.ReplyVO;
 
 public interface ChallConfirmMapper {
 	//인증 전체 조회 - 챌린지 상세에서 다른 참가자 인증 내역
-	//public List<ChallConfirmVO> selectConfirmAll(int challNo);
+	public List<ChallConfirmVO> selectConfirmAll(int challNo);
 	
 	//인증 단건 조회 - 챌린지 상세에서 다른 참가자 인증 상세
 	public ChallConfirmVO selectConfirmInfo(ChallConfirmVO challConfirmVO);
@@ -46,5 +46,14 @@ public interface ChallConfirmMapper {
 	
 	//인증 댓글 목록
 	public List<ChallConfirmVO> selectReplyList(ChallConfirmVO challConfirmVO);
+	
+	//인증 댓글 등록
+	public int insertReply(ReplyVO replyVO);
+	
+	//인증 유저 번호 가져오기
+	public int findUserNoByReplyNo(int confirmReplyNo);
+	
+	//인증 댓글 삭제
+	public int deleteReply(int confirmReplyNo);
 	
 }
