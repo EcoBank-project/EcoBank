@@ -30,8 +30,11 @@ public interface ChallConfirmService {
 	//챌린지 인증 등록
 	public int confirmInsert(ChallConfirmVO challConfirmVO);
 	
-	//챌린지 참가 인증 등록
+	//챌린지 참가 인증 등록 여부 확인
 	public boolean isConfirmed(int userNo, int challNo);
+	
+	//챌린지 인증 삭제
+	public int confirmDelete(int nowUserNo, int confirmNo);
 	
 	//인증 댓글 목록
 	public List<ChallConfirmVO> confirmReplyList(ChallConfirmVO challConfirmVO);
@@ -41,4 +44,11 @@ public interface ChallConfirmService {
 	
 	//인증 댓글 삭제
 	public int replyDelete(int nowUserNo, int confirmReplyNo);
+	
+	//인증 좋아요 등록
+	public int confirmLikeInsert(ChallConfirmVO challConfirmVO);
+	
+	//인증 좋아요 삭제
+	public int confirmLikeDelete(int confirmLikeNo);
+	
 }

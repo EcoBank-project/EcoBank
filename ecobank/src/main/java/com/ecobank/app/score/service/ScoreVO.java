@@ -1,4 +1,4 @@
-package com.ecobank.app.challenge.service;
+package com.ecobank.app.score.service;
 
 import java.util.Date;
 

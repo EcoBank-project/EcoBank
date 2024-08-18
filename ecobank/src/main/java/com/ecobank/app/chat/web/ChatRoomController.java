@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,6 +68,7 @@ public class ChatRoomController {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		String nickName = (String) httpSession.getAttribute("nickname");
 		List<ChatRoomVO> roomlist = chatService.chatRoomList(userNo, nickName);
+		System.out.println(roomlist);
 		return roomlist;
 	}
 	

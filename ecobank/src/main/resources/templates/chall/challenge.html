@@ -43,7 +43,6 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	<script>
 		$(document).on('click', '.go-challenge', function(){
 	        let cNo = $(this).closest('.card-body').find('.cNo').val();
-	        console.log('챌린지 번호', cNo);
 	        $.ajax({
 	            url: '/goChallenge',
 	            method: 'post',

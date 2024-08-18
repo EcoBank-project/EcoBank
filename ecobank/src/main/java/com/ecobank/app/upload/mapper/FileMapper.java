@@ -24,4 +24,7 @@ public interface FileMapper {
 	
 	//나의 인증 내역 상세 파일
 	public List<FileVO> getMyConfirmFile(int confirmNo);
+	
+	//인증 파일 삭제
+	public int deleteConfirmFileInfo(int confirmNo);
 }

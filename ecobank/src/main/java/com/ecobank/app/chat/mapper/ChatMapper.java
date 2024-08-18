@@ -40,6 +40,10 @@ public interface ChatMapper {
 	public int deleteAllMessage(Integer chatNo);
 	// 채팅방 나가고 남은 사람 조회
 	public List<String> selectLeaveUser(@Param("userNo")Integer userNo, @Param("chatNo")Integer chatNo);
+	// 채팅방 방장 조회
+	public int selectRoomManager(@Param("userNo")Integer userNo, @Param("chatNo")Integer chatNo);
+	// 채팅방 이름 변경
+	public int updateChatChangeName(@Param("chatName")String chatName, @Param("chatNo")Integer chatNo);
 	
 	// 팔로우 목록
 	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);

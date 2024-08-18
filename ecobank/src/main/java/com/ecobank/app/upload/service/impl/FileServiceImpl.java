@@ -53,7 +53,7 @@ public class FileServiceImpl implements FileService{
 				
 				Path savePath = Paths.get(saveName); //여기에 경로 담았음
 				//파일의 정보를 가져와서 boardVO에 파일의 이름을 넣어줌
-				System.out.println("파일"+saveName);
+				//System.out.println("파일"+saveName);
 				fileVO.setFileName(fileName);			//파일 이름
 				fileVO.setFilePath(uniqueFileName); 	//파일 경로
 				//fileVO.setFiletype(fileType); 		//파일 타입
@@ -100,7 +100,7 @@ public class FileServiceImpl implements FileService{
 			return fileMapper.selectSnsFileInfo(feedNo);
 		}
 		
-		//이름은 같지만 다른 매개값을 가짐(메소드 오버라이딩)
+		//나의 인증 내역 파일 - 이름은 같지만 다른 매개값을 가짐(메소드 오버라이딩)
 		@Override
 		public List<FileVO> selectFileInfo(int userNo, int challNo, String fileCode) {
 			FileVO fileVO = new FileVO();
@@ -111,17 +111,23 @@ public class FileServiceImpl implements FileService{
 			return fileMapper.selectConfirmFileInfo(fileVO);
 		}
 
+		//다른 참가자 인증 내역 파일
 		@Override
 		public List<FileVO> selectFileOtherInfo(int challNo) {
 			List<FileVO> list = fileMapper.selectOtherConfirm(challNo);
 			return list;
 		}
 
-		//인증 내역 상세 파일
+		//나의 인증 내역 상세 파일
 		@Override
 		public List<FileVO> selectGetMyInfo(int confirmNo) {
 			return fileMapper.getMyConfirmFile(confirmNo);
 		}
-		
 
+		//인증 파일 삭제
+		@Override
+		public int confirmFileDelete(int confirmNo) {
+			return fileMapper.deleteConfirmFileInfo(confirmNo);
+		}
+		
 }
