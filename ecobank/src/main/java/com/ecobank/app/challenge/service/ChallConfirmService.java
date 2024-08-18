@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.data.relational.core.sql.Like;
 
 public interface ChallConfirmService {
 	//인증 전체 조회 
@@ -46,9 +47,8 @@ public interface ChallConfirmService {
 	public int replyDelete(int nowUserNo, int confirmReplyNo);
 	
 	//인증 좋아요 등록
-	public int confirmLikeInsert(ChallConfirmVO challConfirmVO);
+	public LikeDTO confirmLikeInsert(ChallConfirmVO challConfirmVO);
 	
-	//인증 좋아요 삭제
-	public int confirmLikeDelete(int confirmLikeNo);
-	
+	//인증 좋아요 상태
+	public int confirmLikeStatus(int userNo, int confirmNo);
 }

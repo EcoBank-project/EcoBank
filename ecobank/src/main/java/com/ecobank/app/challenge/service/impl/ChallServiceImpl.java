@@ -25,7 +25,7 @@ public class ChallServiceImpl implements ChallService{
 	@Override
 	public List<ChallVO> challList(Criteria criteria) {
 		LocalDate now = LocalDate.now();
-		System.out.println(now);
+		//System.out.println(now);
 		
 		return challMapper.selectChallAll(criteria);
 	}
@@ -83,6 +83,42 @@ public class ChallServiceImpl implements ChallService{
 	@Override
 	public int getTotal() {
 		return challMapper.getTotal();
+	}
+
+	//챌린지 좋아요 개수
+	@Override
+	public int challLikeCnt(int challNo) {
+		return challMapper.challLikeTotalCnt(challNo);
+	}
+
+	//챌린지 좋아요 여부
+	@Override
+	public int challLikeStatus(int userNo, int challNo) {
+		return challMapper.challLikeStatus(userNo, challNo);
+	}
+
+	//챌린지 좋아요 등록
+	@Override
+	public int challLikeInsert(ChallVO challVO) {
+		return challMapper.insertChallLike(challVO);
+	}
+
+	//챌린지 좋아요 삭제
+	@Override
+	public int challLikeDelete(int userNo, int challNo) {
+		return challMapper.deleteChallLike(userNo, challNo);
+	}
+
+	//챌린지 정렬
+	@Override
+	public List<ChallVO> challengeSort(int userNo, int select) {
+		if(select == 1) { //날짜순
+			return challMapper.orderByDate();
+		}else if(select ==2) { //좋아요
+			return challMapper.orderByLike();
+		}else { //참가
+			return challMapper.orderByEnter(userNo);
+		}
 	}
 
 }

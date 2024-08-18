@@ -20,6 +20,18 @@ public interface ChallService {
 	
 	//챌린지 단건 조회
 	public ChallVO challInfo(ChallVO challVO);
+
+	//챌린지 좋아요 전체 개수
+	public int challLikeCnt(int challNo);
+	
+	//챌린지 좋아요 여부
+	public int challLikeStatus(int userNo, int challNo);
+	
+	//챌린지 좋아요 등록
+	public int challLikeInsert(ChallVO challVO);
+	
+	//챌린지 좋아요 삭제
+	public int challLikeDelete(int userNo, int challNo);
 	
 	//챌린지 등록
 	public int challInsert(ChallVO challVO);
@@ -32,5 +44,8 @@ public interface ChallService {
 	
 	//점수 목록
 	public List<Map<String, Object>> scoreList();
+
+	//챌린지 정렬
+	public List<ChallVO> challengeSort(int userNo, int select);
 	
 }

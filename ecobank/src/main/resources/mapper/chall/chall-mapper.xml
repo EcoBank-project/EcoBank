@@ -81,6 +81,47 @@
 		WHERE chall_no = #{challNo}
 	</select>
 	
+	<!-- 챌린지 좋아요 개수 -->
+	<select id="challLikeTotalCnt" parameterType="int">
+		SELECT COUNT(*)
+		FROM chall_like
+		WHERE chall_no = #{challNo}
+	</select>
+	
+	<!-- 챌린지 좋아요 여부 -->
+	<select id="challLikeStatus" parameterType="int">
+		SELECT COUNT(*)
+		FROM chall_like
+		WHERE chall_no = #{challNo}
+		AND user_no = #{userNo}
+	</select>
+	
+	<!-- 챌린지 좋아요 등록 -->
+	<insert id="insertChallLike" parameterType="ChallVO">
+		<selectKey keyProperty="challLikeNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(chall_like_no), 0) + 1
+			FROM chall_like
+		</selectKey>
+		INSERT INTO chall_like(
+								chall_like_no
+								, user_no
+								, chall_no
+								)
+		VALUES (#{challLikeNo}
+				, #{userNo}
+				, #{challNo}
+				)
+	</insert>
+	
+	<!-- 챌린지 좋아요 삭제 -->
+	<delete id="deleteChallLike" parameterType="int">
+		DELETE FROM chall_like
+		WHERE user_no = #{userNo}
+		AND chall_no = #{challNo}
+	</delete>
+	
 	<!-- 등록 -->
 	<insert id="insertChallInfo" parameterType="ChallVO">
 		<selectKey keyProperty="challNo"
@@ -144,6 +185,33 @@
 		             JOIN chall_confirm f
 		               ON s.user_no = f.user_no
 		ORDER BY s.score_no DESC
+	</select>
+	
+	<select id="orderByLike">
+		SELECT c.*
+		FROM chall c
+		LEFT JOIN (
+		    SELECT chall_no, COUNT(chall_like_no) AS like_count
+		    FROM chall_like
+		    GROUP BY chall_no
+		) cl ON c.chall_no = cl.chall_no
+		WHERE c.chall_state = 'D2'
+		ORDER BY COALESCE(cl.like_count, 0) DESC
+	</select>
+	
+	<select id="orderByEnter" parameterType="int">
+		SELECT c.*
+		FROM chall c
+		INNER JOIN chall_enter cp ON c.chall_no = cp.chall_no
+		WHERE cp.user_no = #{userNo}
+		AND c.chall_state = 'D2'
+	</select>
+	
+	<select id="orderByDate">
+		SELECT *
+		FROM chall
+		WHERE chall_state = 'D2'
+		ORDER BY chall_createAt DESC
 	</select>
 	
 </mapper>

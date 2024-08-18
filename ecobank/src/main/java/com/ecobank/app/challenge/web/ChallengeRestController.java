@@ -12,20 +12,56 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecobank.app.challenge.service.ChallConfirmService;
+import com.ecobank.app.challenge.service.ChallConfirmVO;
+import com.ecobank.app.challenge.service.ChallService;
+import com.ecobank.app.challenge.service.ChallVO;
+import com.ecobank.app.challenge.service.LikeDTO;
 import com.ecobank.app.challenge.service.MyConfirmDTO;
 import com.ecobank.app.challenge.service.ReplyVO;
 
 @RestController
 public class ChallengeRestController {
 	private ChallConfirmService challConfirmService;
+	private ChallService challService;
 	
 	@Autowired
-	public ChallengeRestController(ChallConfirmService challConfirmService) {
+	public ChallengeRestController(ChallConfirmService challConfirmService, ChallService challService) {
 		this.challConfirmService = challConfirmService;
+		this.challService = challService;
 	}
 	
 	@Autowired
 	private HttpSession httpSession;
+	
+	//챌린지 좋아요 개수
+	@GetMapping("challLikeCnt")
+	public int getLikeCnt(@RequestParam("challNo") int challNo) {
+		return challService.challLikeCnt(challNo);
+	}
+	
+	//챌린지 좋아요 여부
+	@GetMapping("challLikeStatus")
+	public int challLikeStatus(@RequestParam("challNo") int challNo) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		int status = challService.challLikeStatus(userNo, challNo);
+		return status;
+	}
+	
+	//챌린지 좋아요 등록
+	@PostMapping("challLikeInsert")
+	public int challLikeInsert(ChallVO challVO) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		challVO.setUserNo(userNo);
+		return challService.challLikeInsert(challVO);
+	}
+	
+	//챌린지 좋아요 삭제
+	@PostMapping("challLikeDelete")
+	public int challLikeDelete(@RequestParam("challNo") int challNo) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		int result = challService.challLikeDelete(userNo, challNo);
+		return result;
+	}
 	
 	@GetMapping("myConfirm")
 	public MyConfirmDTO myConfirm(@RequestParam("challNo") int ChallNo) {
@@ -80,8 +116,23 @@ public class ChallengeRestController {
 	public int confirmDelete(@RequestParam("confirmNo") int confirmNo) { 
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		int result = challConfirmService.confirmDelete(userNo, confirmNo);
-		
 		return result;
+	}
+	
+	//인증 좋아요 등록
+	@PostMapping("confirmLikeInsert")
+	public LikeDTO confirmLikeInsert(ChallConfirmVO challConfirmVO) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		challConfirmVO.setUserNo(userNo);
+		return challConfirmService.confirmLikeInsert(challConfirmVO);
+	}
+	
+	//인증 좋아요 상태 여부
+	@GetMapping("confirmLikeStatus")
+	public int confirmLikeStatus(int confirmNo) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		int status = challConfirmService.confirmLikeStatus(userNo, confirmNo);
+		return status;
 	}
 
 }

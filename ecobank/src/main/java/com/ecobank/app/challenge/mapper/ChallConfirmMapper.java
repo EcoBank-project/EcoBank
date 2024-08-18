@@ -66,6 +66,12 @@ public interface ChallConfirmMapper {
 	public int insertConfirmLike(ChallConfirmVO challConfirmVO);
 	
 	//인증 좋아요 삭제
-	public int deleteConfirmLike(int confirmLikeNo);
+	public int deleteConfirmLike(int userNo, int confirmNo);
+	
+	//인증 좋아요 했는지 안했는지 여부
+	public int confirmLikeStatus(int userNo, int confirmNo);
+	
+	//인증 좋아요 전체 개수
+	public int likeTotalCnt(int confirmNo);
 	
 }

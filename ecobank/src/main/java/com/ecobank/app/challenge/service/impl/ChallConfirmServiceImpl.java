@@ -9,6 +9,8 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import com.ecobank.app.challenge.mapper.ChallConfirmMapper;
 import com.ecobank.app.challenge.service.ChallConfirmService;
 import com.ecobank.app.challenge.service.ChallConfirmVO;
 import com.ecobank.app.challenge.service.ChallVO;
+import com.ecobank.app.challenge.service.LikeDTO;
 import com.ecobank.app.challenge.service.MyConfirmDTO;
 import com.ecobank.app.challenge.service.ReplyVO;
 import com.ecobank.app.upload.mapper.FileMapper;
@@ -103,6 +106,7 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	}
 
 	//챌린지 인증 삭제(현재 접속한 userno(session), 다른 userno, confirmNo)
+	@Transactional
 	@Override
 	public int confirmDelete(int userNo, int confirmNo) {
 		int otherUserNo = challConfirmMapper.findUserNoByConfirmNo(confirmNo);
@@ -134,7 +138,7 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 			}
 			
 			//인증 댓글 삭제
-			challConfirmMapper.deleteReply(confirmNo);
+			//challConfirmMapper.deleteReply(confirmNo);
 			
 			//인증 글 삭제
 			int result = challConfirmMapper.deleteConfirmInfo(confirmNo);
@@ -177,16 +181,29 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	}
 	
 	//인증 좋아요 등록
+	@Transactional //하나의 작업 단위로 보려고
 	@Override
-	public int confirmLikeInsert(ChallConfirmVO challConfirmVO) {
-		int result = challConfirmMapper.insertConfirmLike(challConfirmVO);
-		return result == 1 ? challConfirmVO.getConfirmLikeNo() : -1;
+	public LikeDTO confirmLikeInsert(ChallConfirmVO challConfirmVO) {
+		int result = 0;
+		//서비스 호출
+		int status = confirmLikeStatus(challConfirmVO.getUserNo(), challConfirmVO.getConfirmNo());
+		LikeDTO likeDto = new LikeDTO();
+		if(status == 0) { 
+			result = challConfirmMapper.insertConfirmLike(challConfirmVO);
+		}else {
+			result = challConfirmMapper.deleteConfirmLike(challConfirmVO.getUserNo(), challConfirmVO.getConfirmNo());
+		}
+		likeDto.setLikeStatus(result);
+		//좋아요 전체 개수
+		int totalCnt = challConfirmMapper.likeTotalCnt(challConfirmVO.getConfirmNo());
+		likeDto.setTotalCnt(totalCnt);
+		return likeDto;
 	}
-
-	//인증 좋아요 삭제
+	
+	//인증 좋아요 상태
 	@Override
-	public int confirmLikeDelete(int confirmLikeNo) {
-		return challConfirmMapper.deleteConfirmLike(confirmLikeNo);
+	public int confirmLikeStatus(int userNo, int confirmNo) {
+		return challConfirmMapper.confirmLikeStatus(userNo, confirmNo);
 	}
 
 }
