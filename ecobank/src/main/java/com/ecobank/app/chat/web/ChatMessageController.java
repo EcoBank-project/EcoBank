@@ -54,11 +54,13 @@ public class ChatMessageController {
 		// 메시지 저장
 		ChatMessageVO chatMessage = chatService.ChatMessageInsert(message);
 		String chatType = chatService.chatRoomType(message.getChatNo());
+		//1대1 채팅
 		if("O1".equals(chatType)) {
 			List<String> receiverIds = chatService.ChatUserList(message.getChatNo());
 			for(String receiverId : receiverIds) {
 				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), message);
 			}
+		//그룹 채팅
 		}else if("O2".equals(chatType)){
 			messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatNo(), message);			
 		}

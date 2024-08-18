@@ -128,7 +128,7 @@
         <div class="modal-content">
             <span class="modal-close">&times;</span>
             <h2>1대1 채팅 만들기</h2>
-            <input type="text" placeholder="사용자명 입력" class="input-field" id="privateChatname">
+            <input type="text" placeholder="사용자명 입력" class="input-field" id="privateFollowInput">
             <h4>팔로우 목록</h4>
             <div id="followListPrivate">
 
@@ -142,7 +142,7 @@
             <span class="modal-close">&times;</span>
             <h2>그룹 채팅 만들기</h2>
             <input type="text" placeholder="그룹 채팅방 이름 입력" class="input-field" id="groupChatname">
-            <input type="text" id="inviteUsernames" placeholder="초대할 사용자명 입력" class="input-field">
+            <input type="text" id="groupFollowInput" placeholder="초대할 사용자명 입력" class="input-field">
             <h4>팔로우 목록</h4>
             <div id="followListGroup">
                 
@@ -354,8 +354,41 @@
 	//아이콘 기능 모음
 	//채팅홈
 	
+	// 검색 기능
+	$('#privateFollowInput').on('input', function() {
+	    let search = $(this).val().toLowerCase();
+	    $('#followListPrivate .follow-item').each(function() {
+	        let userName = $(this).find('span').text().toLowerCase();
+	        $(this).toggle(userName.includes(search));
+	    });
+	});
+	$('#groupFollowInput').on('input', function() {
+	    let search = $(this).val().toLowerCase();
+	    $('#followListGroup .follow-item').each(function() {
+	        let userName = $(this).find('span').text().toLowerCase();
+	        $(this).toggle(userName.includes(search));
+	    });
+	});
+	
+	$('.chat-room-search').on('input', function() {
+        let search = $(this).val().toLowerCase();
+        searchChatRooms(search);
+    });
+
+    function searchChatRooms(search) {
+        $('.chat-room-list.private li').each(function() {
+            let chatName = $(this).find('a').text().toLowerCase();
+            $(this).toggle(chatName.includes(search));
+        });
+
+        $('.chat-room-list.group li').each(function() {
+            let chatName = $(this).find('a').text().toLowerCase();
+            $(this).toggle(chatName.includes(search));
+        });
+    }
+	
+	
 	//채팅방 팔로우 목록
-	loadFollow();
 	function loadFollow(){
 		$.ajax({
 			url: "/chatRoom/follow",
@@ -364,8 +397,6 @@
 				result.forEach(function(follow){
 					showFollow(follow);
 				})
-				$('#followPrivateBtn').on('click', insertPrivate);
-				$('#followGroupBtn').on('click', insertGroup);
 			},
 			error: function(error){
 				console.log(error);	
@@ -410,24 +441,26 @@
 	$('#privateChat').on('click', function(){
 		$('#chatModal').hide();
 		$('#privateChatModal').show();
+		loadFollow();
 		//$('#followListPrivate').empty();
 		
 	});
 	$('#groupChat').on('click', function(){
 		$('#chatModal').hide();
 		$('#groupChatModal').show();
+		loadFollow();
 		//$('#followListGroup').empty();
 		
 	});
 	function allClose(){
-		$('#chatModal').hide();
-		$('#privateChatModal').hide();
-		$('#groupChatModal').hide();
-		$('#modalOverlay').hide();
-		$('#groupChangeName').hide();
-		$('.select-follow').prop("checked",false);
-		$('#privateChatname').val('');
-		$('#groupChatname').val('');
+		$('.modal').hide();
+	    $('#modalOverlay').hide();
+	    $('.select-follow').prop("checked", false);
+	    $('#privateChatname').val('');
+	    $('#groupChatname').val('');
+	    $('#groupFollowInput').val('');
+	    $('#followListPrivate').empty();
+	    $('#followListGroup').empty();
 	}
 	$('.modal-close').on('click', function() {
 		allClose();
@@ -442,7 +475,10 @@
 	    }
 	});
 	
-
+	// 채팅방 만들기 버튼
+	$('#followPrivateBtn').on('click', insertPrivate);
+	$('#followGroupBtn').on('click', insertGroup);
+	
 	// 1대1 채팅방 만들기
 	function insertPrivate(){
 		let isRadioCheck = $('#followListPrivate .select-follow').is(":checked");
