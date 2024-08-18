@@ -23,14 +23,13 @@ import com.ecobank.app.chat.service.ChatService;
 public class ChatMessageController {
 	
 	private ChatService chatService;
-	
-	@Autowired
-	ChatMessageController(ChatService chatService){
-		this.chatService = chatService;
-	}
-	
-	@Autowired
 	private SimpMessagingTemplate messagingTemplate;
+	
+	@Autowired
+	ChatMessageController(ChatService chatService, SimpMessagingTemplate messagingTemplate){
+		this.chatService = chatService;
+		this.messagingTemplate = messagingTemplate;
+	}
 	
 	// 채팅방 입장
 	@MessageMapping("/chat.enter")
@@ -54,6 +53,12 @@ public class ChatMessageController {
 		// 메시지 저장
 		ChatMessageVO chatMessage = chatService.ChatMessageInsert(message);
 		String chatType = chatService.chatRoomType(message.getChatNo());
+		
+		// 메시지 번역
+		//String translatedText = chatService.translateMessage(message.getMsgContent(), "en");
+		//String decodedText = decodeHtmlEntities(translatedText);
+		//message.setMsgContent(decodedText);
+		
 		//1대1 채팅
 		if("O1".equals(chatType)) {
 			List<String> receiverIds = chatService.ChatUserList(message.getChatNo());
@@ -65,7 +70,14 @@ public class ChatMessageController {
 			messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatNo(), message);			
 		}
 	}
-	
+	// 문자 디코딩
+	public static String decodeHtmlEntities(String text) {
+        return text.replaceAll("&#39;", "'")
+                   .replaceAll("&quot;", "\"")
+                   .replaceAll("&amp;", "&")
+                   .replaceAll("&lt;", "<")
+                   .replaceAll("&gt;", ">");
+    }
 	// 채팅방 퇴장
 	@MessageMapping("/chat.exit/{roomId}")
 	public void exitUser(@DestinationVariable Integer roomId, ChatMessageVO message, Principal principal) {
