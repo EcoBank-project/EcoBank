@@ -1,20 +1,20 @@
 package com.ecobank.app.chat.web;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
@@ -73,9 +73,9 @@ public class ChatRoomController {
 	}
 	
 	// 채팅방 생성 - 1대1 채팅 & 그룹채팅
-	@PostMapping("/chatRoom/CreateChat")
+	@PostMapping("/chatRoom/createChat")
 	@ResponseBody
-	public Integer chatGroup(HttpSession httpSession, @RequestBody ChatRoomDTO chatRoom){
+	public Integer chatPrivateGroup(HttpSession httpSession, @RequestBody ChatRoomDTO chatRoom){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		Integer chatNo = chatService.ChatRoomInsert(chatRoom, userNo);
 		
@@ -84,5 +84,12 @@ public class ChatRoomController {
 			chatService.ChatUserInsert(chatNo, user);
 		};
 		return chatNo;
+	}
+	// 채팅방 생성 - 오픈 채팅
+	@PostMapping("/chatRoom/createOpenChat")
+	@ResponseBody
+	public String chatOpen(@ModelAttribute ChatRoomVO chatRoom, @RequestPart("image") MultipartFile[] images) {
+		
+		return "1";
 	}
 }

@@ -38,6 +38,10 @@ public interface ChatService {
 	public int getRoomManager(Integer userNo, Integer chatNo);
 	// 채팅방 이름 변경
 	public int chatNameChangeUpdate(String chatName, Integer chatNo);
+	
+	// 채팅 번역
+	public String translateMessage(String text, String targetLanguage);
+	
 	//팔로우 목록
 	public List<ChatFollowVO> chatFollowList(Integer userNo);
 }

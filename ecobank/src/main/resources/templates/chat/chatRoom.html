@@ -55,7 +55,7 @@
 			                    <div class="user-status">KR</div>
 			                </div>
 			                <div class="user-actions">
-			                    <i class="bi bi-gear"></i>
+			                    <i class="bi bi-gear" id="profilSetting"></i>
 			                </div>
 			            </div>
 			        </div>   
@@ -120,6 +120,9 @@
                 <div class="option-card">
                     <button id="groupChat" class="option-button">그룹 채팅</button>
                 </div>
+                <div class="option-card">
+                    <button id="openChat" class="option-button">오픈 채팅</button>
+                </div>
             </div>     
 		</div>
     </div>
@@ -128,7 +131,7 @@
         <div class="modal-content">
             <span class="modal-close">&times;</span>
             <h2>1대1 채팅 만들기</h2>
-            <input type="text" placeholder="사용자명 입력" class="input-field" id="privateChatname">
+            <input type="text" placeholder="사용자명 입력" class="input-field" id="privateFollowInput">
             <h4>팔로우 목록</h4>
             <div id="followListPrivate">
 
@@ -142,11 +145,11 @@
             <span class="modal-close">&times;</span>
             <h2>그룹 채팅 만들기</h2>
             <input type="text" placeholder="그룹 채팅방 이름 입력" class="input-field" id="groupChatname">
-            <input type="text" id="inviteUsernames" placeholder="초대할 사용자명 입력" class="input-field">
+            <input type="text" id="groupFollowInput" placeholder="초대할 사용자명 입력" class="input-field">
             <h4>팔로우 목록</h4>
-            <div id="followListGroup">
-                
-            </div>
+	            <div id="followListGroup">
+	                
+	            </div>
             <button class="option-button" id="followGroupBtn">그룹 채팅 만들기</button>
         </div>
     </div>
@@ -159,6 +162,38 @@
     		<input type="text" class="input-field" id="groupChatChange">
     		<button class="option-button" id="GroupNameBtn">채팅방명 변경</button>
     	</div>
+    </div>
+    
+    <!-- 오픈 채팅방 -->
+    <div id="openChatModal" class="modal">
+        <div class="modal-content">
+        	<span class="modal-close">&times;</span>
+        	<h2>오픈 채팅 만들기</h2>
+        	<div class="image-upload">
+	            <label for="chatImage" class="upload-label">
+	                <img id="imagePreview" src="https://via.placeholder.com/350x200" alt="대표 이미지" />
+	                <input type="file" id="chatImage" accept="image/*" />
+	            </label>
+	        </div>
+        	<input type="text" placeholder="채팅방 제목 입력" class="input-field" id="openChatName">
+        	<div class="switch-container">
+	            <span>검색 허용</span>
+	            <label class="switch">
+	                <input type="checkbox" id="allowSearch">
+	                <span class="slider round"></span>
+	            </label>
+	        </div>
+        	<input type="text" placeholder="비밀번호 입력 (선택)" class="input-field" id="openChatPassword">
+        	<button class="option-button" id="OpenChatBtn">채팅방 만들기</button>
+        </div>
+    </div>
+    
+    <!-- 프로필 -->
+    <div id="profilChatModal" class="modal">
+        <div class="modal-content">
+        	<span class="modal-close">&times;</span>
+        	<h2>프로필</h2>
+        </div>
     </div>
     
 <script type="text/javascript">
@@ -354,8 +389,41 @@
 	//아이콘 기능 모음
 	//채팅홈
 	
+	// 검색 기능
+	$('#privateFollowInput').on('input', function() {
+	    let search = $(this).val().toLowerCase();
+	    $('#followListPrivate .follow-item').each(function() {
+	        let userName = $(this).find('span').text().toLowerCase();
+	        $(this).toggle(userName.includes(search));
+	    });
+	});
+	$('#groupFollowInput').on('input', function() {
+	    let search = $(this).val().toLowerCase();
+	    $('#followListGroup .follow-item').each(function() {
+	        let userName = $(this).find('span').text().toLowerCase();
+	        $(this).toggle(userName.includes(search));
+	    });
+	});
+	
+	$('.chat-room-search').on('input', function() {
+        let search = $(this).val().toLowerCase();
+        searchChatRooms(search);
+    });
+
+    function searchChatRooms(search) {
+        $('.chat-room-list.private li').each(function() {
+            let chatName = $(this).find('a').text().toLowerCase();
+            $(this).toggle(chatName.includes(search));
+        });
+
+        $('.chat-room-list.group li').each(function() {
+            let chatName = $(this).find('a').text().toLowerCase();
+            $(this).toggle(chatName.includes(search));
+        });
+    }
+	
+	
 	//채팅방 팔로우 목록
-	loadFollow();
 	function loadFollow(){
 		$.ajax({
 			url: "/chatRoom/follow",
@@ -364,8 +432,6 @@
 				result.forEach(function(follow){
 					showFollow(follow);
 				})
-				$('#followPrivateBtn').on('click', insertPrivate);
-				$('#followGroupBtn').on('click', insertGroup);
 			},
 			error: function(error){
 				console.log(error);	
@@ -402,32 +468,48 @@
 	}
 	
 	
-	//채팅방 모달 on/off
+	// 채팅방 모달 on/off
+	// 채팅방 + 아이콘
 	$('.bi-plus-circle').on('click', function(){
 	    $('#chatModal').show();
 	    $('#modalOverlay').show();
 	})
+	// 1대1
 	$('#privateChat').on('click', function(){
 		$('#chatModal').hide();
 		$('#privateChatModal').show();
+		loadFollow();
 		//$('#followListPrivate').empty();
 		
 	});
+	// 그룹채팅방
 	$('#groupChat').on('click', function(){
 		$('#chatModal').hide();
 		$('#groupChatModal').show();
+		loadFollow();
 		//$('#followListGroup').empty();
 		
 	});
-	function allClose(){
+	// 오픈채팅방
+	$('#openChat').on('click', function(){
 		$('#chatModal').hide();
-		$('#privateChatModal').hide();
-		$('#groupChatModal').hide();
-		$('#modalOverlay').hide();
-		$('#groupChangeName').hide();
-		$('.select-follow').prop("checked",false);
-		$('#privateChatname').val('');
-		$('#groupChatname').val('');
+		$('#openChatModal').show();
+	});
+	
+	$('#profilSetting').on('click', function(){
+		$('#profilChatModal').show();
+	});
+	
+	
+	function allClose(){
+		$('.modal').hide();
+	    $('#modalOverlay').hide();
+	    $('.select-follow').prop("checked", false);
+	    $('#privateChatname').val('');
+	    $('#groupChatname').val('');
+	    $('#groupFollowInput').val('');
+	    $('#followListPrivate').empty();
+	    $('#followListGroup').empty();
 	}
 	$('.modal-close').on('click', function() {
 		allClose();
@@ -442,7 +524,10 @@
 	    }
 	});
 	
-
+	// 채팅방 만들기 버튼
+	$('#followPrivateBtn').on('click', insertPrivate);
+	$('#followGroupBtn').on('click', insertGroup);
+	
 	// 1대1 채팅방 만들기
 	function insertPrivate(){
 		let isRadioCheck = $('#followListPrivate .select-follow').is(":checked");
@@ -510,7 +595,7 @@
 	// 채팅 만들기 함수
 	function insertChatRoom(formObj){
 		$.ajax({
-			url: '/chatRoom/CreateChat',
+			url: '/chatRoom/createChat',
 			method: 'POST',
 			data : JSON.stringify(formObj),
 			contentType: 'application/json',
@@ -571,7 +656,54 @@
 	window.onload = function() {
 		connect('@me');
 	};
+	
+	//오픈채팅 이미지 보여주기
+	$('#chatImage').on('change', function(evnet){
+		const file = event.target.files[0];
+		const reader = new FileReader();
+		
+		reader.onload = function(e){
+			$('#imagePreview').attr("src", e.target.result);
+		};
+		
+		if (file) {
+	        reader.readAsDataURL(file);
+	    }
+	});
+	
 	//오픈채팅 만들기
+	$('#OpenChatBtn').on('click', function(evnet){
+		let chatName = $('#openChatName').val();
+        let passWord = $('#openChatPassword').val();
+        let allowSearch = $('#allowSearch').is(':checked') ? 'Y' : 'N';
+        
+        let fileInput = $('#chatImage')[0];
+        let formData = new FormData();
+
+        formData.append('chatName', chatName);
+        formData.append('chatPassWord', passWord);
+        formData.append('chatSearchAllow', allowSearch);
+        formData.append('chatType', 'O3');
+        
+        
+        if (fileInput.files.length > 0) {
+            formData.append('image', fileInput.files[0]);
+        } 
+        
+        $.ajax({
+        	url: '/chatRoom/createOpenChat',
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(result) {
+                $('#openChatModal').hide();
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+	});
 	
 	//오픈채팅 검색
 </script>

@@ -13,15 +13,20 @@ import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatRoomDTO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 
 @Service
 public class ChatServiceImpl implements ChatService{
 	
 	private ChatMapper chatMapper;
+	private final Translate translate;
 	
 	@Autowired
-	ChatServiceImpl(ChatMapper chatMapper) {
+	ChatServiceImpl(ChatMapper chatMapper, Translate translate) {
 		this.chatMapper = chatMapper;
+		this.translate = translate;
 	}
 	// 채팅방 목록 조회
 	@Override
@@ -138,17 +143,24 @@ public class ChatServiceImpl implements ChatService{
 		return chatMapper.selectChatFollowAll(userNo);
 	}
 
-	
 	// 날짜 포맷
 	private String formatMessageDate(Date msgSendTime) {
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd a hh:mm");
 	    return dateFormat.format(msgSendTime);
 	}
+	
 	// 채팅방 이름 변경
 	@Override
 	public int chatNameChangeUpdate(String chatName, Integer chatNo) {
 		int result = chatMapper.updateChatChangeName(chatName, chatNo);
 		return result;
+	}
+	
+	// 채팅 번역
+	@Override
+	public String translateMessage(String text, String targetLanguage) {
+		Translation translation = translate.translate(text, Translate.TranslateOption.targetLanguage(targetLanguage));
+		return translation.getTranslatedText();
 	}
 	
 	
