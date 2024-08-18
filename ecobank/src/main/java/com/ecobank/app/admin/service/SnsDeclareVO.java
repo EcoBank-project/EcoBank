@@ -12,5 +12,9 @@ public class SnsDeclareVO {
 					private String	 declareCode;		//sns 신고이유
 					private int	 replyNo;	 		//댓글 번호
 					private int  feedNo;			//피드 번호
-
+					private int replyContent;   //댓글내용
+					private Date replyCreateat; //댓글 작성일자
+					private int userNo;  //유저번호
+					private String snsSituation; 
+					
 }

@@ -11,6 +11,7 @@ import com.ecobank.app.admin.service.AdminService;
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
+import com.ecobank.app.admin.service.adminSnsVO;
 import com.ecobank.app.sns.service.SnsVO;
 
 @Service
@@ -58,11 +59,6 @@ public class AdminServiceImpl implements AdminService {
         return adminMapper.SnsReplyDeclareList();
     }
 
-    //sns 신고 조회
-    @Override
-    public List<SnsDeclareVO> SnsDeclareList() {
-        return adminMapper.SnsDeclareList();
-    }
 
     @Override
     public int updatefeedState(int feedNo, String feedState) {
@@ -102,16 +98,26 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.selectChallDeclare(confirmNo);
 	}
 
+
+
 	@Override
-	public List<SnsVO> selectSns(SnsVO snsVO) {
+	public List<adminSnsVO> selectSns(adminSnsVO adminSnsVO) {
 		// TODO Auto-generated method stub
-		return adminMapper.selectSns(snsVO);
+		return adminMapper.selectSns(adminSnsVO);
 	}
 
+	@Override
+	public Map<String, Object> SnsDeclareList(int feedNo) {
+		// TODO Auto-generated method stub
+		return adminMapper.SnsDeclareList(feedNo);
+		
+	}
+	//sns 댓글 조회 
 
+	@Override
+	public List<adminSnsVO> getRepliesByFeedNo(int feedNo) {
+		// TODO Auto-generated method stub
+		return adminMapper.selectRepliesByFeedNo(feedNo);
+	}
 
-
-
-	
-	
 }

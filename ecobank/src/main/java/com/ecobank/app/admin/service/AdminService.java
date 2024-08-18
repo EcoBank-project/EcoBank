@@ -15,8 +15,7 @@ public interface AdminService {
     // 챌린지 신고 목록 조회 
     List<ChallDeclareVO> ChallDeclareList();
     
-    //sns 신고 관리
-    List<SnsDeclareVO> SnsDeclareList();
+
     
     //sns 댓글 신고 관리
     List<SnsDeclareVO> SnsReplyDeclareList();
@@ -48,9 +47,12 @@ public interface AdminService {
     //챌린지 신고 내용 조회 
     Map<String,Object> selectChallDeclare(int confirmNo);
 
-	List<SnsVO> selectSns(SnsVO snsVO);
+	List<adminSnsVO> selectSns(adminSnsVO adminSnsVO);
+	
+	Map<String,Object> SnsDeclareList(int feedNo);
+	//sns 댓글 조회
+	List<adminSnsVO> getRepliesByFeedNo(int feedNo);
 
-    
 
 
 }

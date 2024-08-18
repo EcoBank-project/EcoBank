@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
+import com.ecobank.app.admin.service.adminSnsVO;
 import com.ecobank.app.sns.service.SnsVO;
 
 public interface AdminMapper {
@@ -26,8 +27,6 @@ public interface AdminMapper {
     //챌린지 신고 조회 
     List<ChallDeclareVO> ChallDeclareList();
     
-    //sns 신고 조회
-    List<SnsDeclareVO> SnsDeclareList();
     
     //sns 댓글 신고 조회 
     List<SnsDeclareVO> SnsReplyDeclareList();
@@ -51,6 +50,12 @@ public interface AdminMapper {
    //챌린지 신고 내용 조회 
    Map<String,Object> selectChallDeclare(int confirmNo);
    
-   List<SnsVO> selectSns(SnsVO snsVO);
-
+   List<adminSnsVO> selectSns(adminSnsVO adminSnsVO);
+   
+   Map<String,Object> selectSnsreply(int feedNo);
+   
+   //sns 댓글 조회
+   Map<String,Object> SnsDeclareList(int feedNo);
+   
+   List<adminSnsVO> selectRepliesByFeedNo(int feedNo);
 }

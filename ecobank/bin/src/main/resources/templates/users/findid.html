@@ -2,11 +2,147 @@
 <html xmlns:th="https://www.thymeleaf.org/"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{common/layouts/default_layout}"
-    layout:fragment="Content"> 
+    layout:fragment="Content">
 <head>
-<meta charset="UTF-8">
-<title>아이디 찾기</title>
+    <meta charset="UTF-8">
+    <title>아이디 찾기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eaf2f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .form-group {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input {
+            width: calc(100% - 22px);
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #c8e0d8;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            max-width: 500px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        #userId {
+            font-size: 20px;
+            color: #333;
+        }
+
+        #searchPw {
+            display: none;
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        #searchPw:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
+    <h2>아이디 찾기</h2>
+    <div class="form-group">
+        <label>휴대폰 번호</label>
+        <input type="text" name="phoneNumber" placeholder="전화번호 입력">
+        <button id="sendSms">인증번호 전송</button>
+    </div>
+    <div class="form-group">
+        <label>인증번호</label>
+        <input type="text" name="verificationCode" placeholder="인증번호 입력">
+        <button id="verifySms">인증하기</button>
+    </div>
+    <div id="result">
+        <p id="userId"></p>
+        <button id="searchPw" >비밀번호 찾기</button>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#sendSms').off('click').on('click', function() {
+                var phoneNumber = $('input[name="phoneNumber"]').val();
+                $.post('/user/send', {
+                    phoneNumber : phoneNumber
+                }).done(function(response) {
+                    alert(response.message);
+                    console.log("response : " + response);
+                }).fail(function() {
+                    alert("전송 실패");
+                });
+            });
+
+            $('#verifySms').off('click').on('click', function() {
+                var phoneNumber = $('input[name="phoneNumber"]').val();
+                var verificationCode = $('input[name="verificationCode"]').val();
+                $.post('/user/verify', {
+                    phoneNumber : phoneNumber,
+                    verificationCode : verificationCode
+                }).done(function(response) {
+                    alert(response.message);
+                    if (response.userId) {
+                        $('#userId').text('회원 ID: ' + response.userId);
+                        $('#searchPw').show(); // 비밀번호 찾기 버튼 표시
+                        $('#searchPw').off('click').on('click', function() {
+                            window.location.href = '/findpw?email=' + encodeURIComponent(response.userId);
+                        });
+                    }
+                }).fail(function() {
+                    alert("인증 실패!");
+                });
+            });
+            
+        });
+    </script>
 </body>
 </html>

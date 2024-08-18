@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.challenge.mapper.ChallConfirmMapper">
+<!-- 	<select id="selectConfirmAll" resultType="ChallConfirmVO">
+		SELECT c.user_no
+		        , c.confirm_no
+		        , c.chall_no
+		        , ( select f.file_name
+		            from files f
+		            where f.file_code_no = c.confirm_no
+		            <![CDATA[
+		            and rownum < 2 ) as file_name
+		            ]]>  
+		FROM chall_confirm c
+		WHERE c.chall_no = #{challNo}
+		ORDER BY c.confirm_no DESC
+	</select> -->
+
+	<select id="selectConfirmInfo" resultType="ChallConfirmVO" parameterType="ChallConfirmVO">
+		
+	</select>
+	
+	<!-- 나의 인증 내역 -->
+	<select id="myConfirm" resultType="MyConfirmDTO" parameterType="MyConfirmDTO">
+		SELECT e.user_no,
+		       e.chall_no,
+		       COUNT(c.confirm_no) AS confirm_count, 
+		       COUNT(c.confirm_no) * 10 AS score
+		       
+		FROM chall_enter e
+							JOIN chall_confirm c
+							ON e.user_no = c.user_no
+							AND e.chall_no = c.chall_no
+		WHERE e.chall_no = #{challNo}
+		  AND e.user_no = #{userNo}
+		  
+		GROUP BY e.user_no, e.chall_no
+	</select>
+	
+	<!-- 나의 인증 상세 -->
+	<select id="myConfirmDetail" resultType="ChallConfirmVO" parameterType="ChallConfirmVO">
+		SELECT c.confirm_no
+		        , u.nickname
+		        , u.user_no
+		        , c.chall_no
+		        , c.confirm_content
+		        , c.confirm_createAt
+		        ,(SELECT count(confirm_no) 
+		            FROM chall_confirm_like
+		           WHERE confirm_no = c.confirm_no
+		          ) as cntLike
+		        ,(SELECT count(confirm_no)
+		            FROM chall_confirm_reply
+		           WHERE confirm_no = c.confirm_no
+		          ) as cntReply
+		FROM chall_confirm c JOIN users u
+		                    	ON c.user_no = u.user_no
+		WHERE c.confirm_no = #{confirmNo}
+		AND c.user_no = #{userNo}
+	</select>
+	
+	<!-- 인증날짜 가져오려고 -->
+	<select id="getConfirmDate" resultType="java.util.Date" parameterType="map">
+		SELECT confirm_createAt
+		FROM chall_confirm
+		WHERE chall_no = #{challNo}
+		AND user_no = #{userNo}
+	</select>
+	
+	<select id="getConfirmCnt" resultType="int" parameterType="int">
+		SELECT TRUNC(chall_closeAt - SYSDATE) AS remaining_days
+		FROM chall
+		WHERE chall_no = #{challNo}
+	</select>
+	
+	<!-- 상세이미지/리뷰 가져오려고 -->
+	<select id="reviewList" resultType="ChallVO" parameterType="ChallVO">
+		SELECT detail_img
+		FROM chall
+		WHERE chall_no = #{challNo}
+	</select>
+	
+	<!-- 챌린지 참가 등록 -->
+	<insert id="challEnterInsert">
+		INSERT INTO chall_enter(
+								chall_enterAt
+								, user_no
+								, chall_no
+								)
+		VALUES (
+				SYSDATE
+				, #{userNo}
+				, #{challNo}
+				)
+	</insert>
+	
+	<!-- 챌린지 참가 여부 -->
+	<select id="enterStatus" resultType="int">
+		SELECT COUNT(*) 
+		FROM chall_enter
+		WHERE user_no = #{userNo}
+		AND chall_no = #{challNo}
+	</select>
+	
+	<!-- 챌린지 인증 등록 -->
+	<insert id="insertConfirmInfo" parameterType="ChallConfirmVO">
+		<selectKey keyProperty="confirmNo"
+			resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(confirm_no), 0) + 1
+			FROM chall_confirm
+		</selectKey>
+		INSERT INTO chall_confirm (	
+									confirm_no
+									, confirm_content
+									, confirm_createAt
+									, user_no
+									, chall_no
+									)
+		VALUES (
+				#{confirmNo}
+				, #{confirmContent}
+				, SYSDATE
+				, #{userNo}
+				, #{challNo}
+				)		
+	</insert>
+	
+	<!-- 챌린지 인증 참가 여부 -->
+	<select id="confirmStatus" resultType="int">
+		SELECT COUNT(*)
+		FROM chall_confirm
+		WHERE chall_no = #{challNo}
+		AND user_no = #{userNo}
+		AND TRUNC(confirm_createAt) = TRUNC(SYSDATE)
+	</select>
+	
+	<!-- 댓글 목록 -->
+	<select id="selectReplyList" resultType="ChallConfirmVO">
+		SELECT r.confirm_reply_no
+			        , r.confirm_reply_content
+			        , r.confirm_reply_createAt
+			        , u.user_no
+			        , u.nickname
+			        , r.confirm_no
+		FROM chall_confirm_reply r LEFT JOIN users u
+		                            	ON r.user_no = u.user_no
+		WHERE r.confirm_no = #{confirmNo}
+		ORDER BY r.confirm_reply_no DESC
+	</select>
+	
+</mapper>

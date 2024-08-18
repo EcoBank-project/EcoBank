@@ -1,3 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mapper.chat.chat-mapper"></mapper>
+<mapper namespace="com.ecobank.app.chat.mapper.ChatMapper">
+	<!-- 채팅방 조회 -->
+	<select id="selectChatRoomAll" resultType="ChatRoomVO">
+		select ce.chat_no, 
+			   chat_name, 
+			   chat_enter_time,
+			   chat_type 
+		from chat_entry ce join chat c 
+                     		 on ce.chat_no = c.chat_no
+		where user_no = #{userNo}
+	</select>
+	
+	<!-- 채팅방 채팅 로그 조회 -->
+	<select id="selectChatMessage" resultType="ChatMessageVO">
+		select msg_no, 
+		       msg_content, 
+		       msg_type, 
+		       msg_send_time, 
+		       m.user_no, 
+		       chat_no,
+		       nickname
+		from msg m join users u 
+		           on m.user_no = u.user_no
+		where chat_no = #{chatNO}
+		order by msg_send_time
+	</select>
+	<!-- 채팅방 채팅 로그 저장 -->
+	<insert id="insertChatMessage" parameterType="ChatMessageVO">
+		<selectKey keyProperty="msgNo"
+		           resultType="Integer"
+		           order="BEFORE">
+			SELECT NVL(MAX(msg_no), 0) + 1
+			FROM msg
+		</selectKey>
+		INSERT INTO msg
+			(
+				msg_no
+				,msg_content
+				,msg_type
+				,msg_send_time
+				,user_no
+				,chat_no
+			)
+		VALUES
+			(
+				#{msgNo}
+				,#{msgContent}
+				,#{msgType}
+				,#{msgSendTime}
+				,#{userNo}
+				,#{chatNo}
+			)	
+	</insert>
+	<!-- 채팅방 팔로우 목록 -->
+	<select id="selectChatFollowAll" parameterType="ChatFollowVO">
+		select following_id,
+			   use_id, 
+			   nickname
+		from follow f join users u 
+		                on u.user_no = following_id
+		where f.follower_id = #{followingId}
+	</select>
+	<!-- 채팅방 생성 -->
+	<insert id="insertChatRoom" statementType="CALLABLE">
+		{call insertChatRoom(
+		    #{chatName, mode=IN},
+		    #{userNo, mode=IN},
+		    #{chatType, mode=IN},
+		    #{chatNo, mode=OUT, jdbcType=INTEGER}
+		    )
+		}
+	</insert>
+	<!-- 채팅방에 참여자 추가 -->
+	<insert id="insertChatUser" parameterType="chatRoomUserVO">
+		<selectKey keyProperty="chatNo"
+		           resultType="Integer"
+		           order="BEFORE">
+		SELECT chat_no
+		FROM chat
+		WHERE chat_no = #{chatNo}
+		</selectKey>
+		INSERT INTO chat_entry (user_no, chat_no)
+		VALUES (#{userNo}, #{chatNo})
+	</insert>
+	<!-- 채팅방에 아이디 조회 -->
+	<select id="selectChatUser">
+		SELECT use_id
+		FROM users
+		WHERE user_no IN (SELECT user_no
+                  		  FROM chat_entry
+                  		  WHERE chat_no = #{chatNo})
+	</select>
+</mapper>

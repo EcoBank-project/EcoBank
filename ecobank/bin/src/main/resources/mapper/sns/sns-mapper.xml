@@ -1,67 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.sns.mapper.SnsMapper">
+
 	<!-- 전체조회 -->
-	<select id="selectSnsAll" resultType="SnsVO">
+	<select id="selectSnsAll" resultType="SnsVO"  >
 		SELECT s.feed_no    
-		       ,u.profile_img
-		       ,u.nickname
-		       ,s.feed_createAt
-		       ,s.user_no
-		       ,s.feed_state
-		       ,count(l.sns_like_no) as count_like
-		       ,count(r.reply_no) as count_reply
-		       ,f.file_name
-               ,f.file_code_no  
-		FROM sns s JOIN users u 
-						ON s.user_no = u.user_no
-		           LEFT OUTER JOIN sns_like l  
-		           		ON s.feed_no = l.feed_no                   
-		           LEFT OUTER JOIN sns_reply r  
-		           		ON s.feed_no = r.feed_no  
-		           LEFT OUTER JOIN files f
-                        ON s.feed_no = f.file_code_no
-		GROUP BY s.feed_no
-				,u.profile_img
-		        ,u.nickname
-		      	,s.feed_createAt
-	          	,s.user_no
-	          	,s.feed_state
-	          	,f.file_name
-               ,f.file_code_no  
-		ORDER BY s.feed_no DESC
+             ,u.profile_img
+             ,u.nickname
+             ,s.feed_createAt
+             ,s.user_no
+             ,s.feed_state
+             ,(SELECT count(feed_no) 
+                 FROM sns_like
+                WHERE feed_no = s.feed_no) as countLike
+             ,(SELECT count(feed_no)
+                 FROM sns_reply
+                WHERE feed_no = s.feed_no) as countReply
+               ,(SELECT file_path
+                 FROM files
+                WHERE file_code_no = s.feed_no
+                 and rownum = 1)  as filePath
+      FROM sns s JOIN users u 
+                   ON s.user_no = u.user_no
+      WHERE feed_state = 'F1'  
+      	<if test="hashtag != null and hashtag != ''">
+      		and hashtag like '%'||#{hashtag}||'%'      
+      	</if>
+       	<if test="nickname != null and nickname != ''">
+      		and nickname like '%'||#{nickname}||'%'      
+      	</if>    
+      <choose>
+      	<when test="orderSns == 1">
+      		ORDER BY countLike DESC
+      	</when>
+      	<otherwise>
+        	ORDER BY s.feed_no DESC
+      	</otherwise>
+      </choose>
 	</select>
 	
 	<!-- 단건조회 -->
 	<select id="selectSnsInfo" resultType="SnsVO">
 		SELECT s.feed_no  
-				,u.profile_img
-		        ,u.nickname
-		   		,s.feed_content
-		        ,s.feed_createAt
-		        ,s.feed_updateAt
-			    ,s.user_no
-		        ,s.feed_state
-			    ,count(l.sns_like_no) as count_like
-                ,count(r.reply_no) as count_reply
+                ,u.profile_img
+                ,u.nickname
+                ,s.feed_content
+	     		,s.feed_createAt
+               	,s.feed_updateAt
+              	,s.user_no
+        		,s.feed_state
+		 		,(SELECT count(feed_no) 
+                 	FROM sns_like
+                   WHERE feed_no = s.feed_no) as countLike
+             	,(SELECT count(feed_no)
+                  	FROM sns_reply
+                   WHERE feed_no = s.feed_no) as countReply
                 ,s.hashtag 
 		FROM sns s JOIN users u 
-		                ON s.user_no = u.user_no
-		           LEFT OUTER JOIN sns_like l  
-		        		ON s.feed_no = l.feed_no                   
-		           LEFT OUTER JOIN sns_reply r  
-	                    ON s.feed_no = r.feed_no 
-		WHERE s.feed_no = #{feedNo}
-		GROUP BY s.feed_no
-		         ,u.profile_img
-		         ,u.nickname
-		         ,s.feed_content
-		         ,s.feed_createAt
-		         ,s.feed_updateAt
-		         ,s.hashtag
-			     ,s.user_no
-			     ,s.feed_state
- 
+		             ON s.user_no = u.user_no
+		WHERE s.feed_no = #{feedNo} 
 	</select>
 	
 	<!-- 등록 -->
@@ -70,7 +67,7 @@
 					resultType="Integer"
 					order="BEFORE">
 			SELECT NVL(MAX(feed_no),1)+1
-			FROM sns
+			  FROM sns
 		</selectKey>
 		INSERT INTO sns 
 		(
@@ -84,16 +81,10 @@
 			#{feedNo}
 			,#{feedContent}
 			,#{hashtag}
-			,#{feedCreateAt}
+			,sysdate
 			,#{userNo}
 			)
 	</insert>
-	
-	<!-- 번호생성 -->
-	 <select id="selectSnsNum" resultType="int">
-			SELECT NVL(MAX(feed_no),1)+1
-			FROM sns
-	</select> 
 	
 	<!-- 수정 -->
 	<update id="updateSnsInfo">
@@ -111,5 +102,68 @@
 		DELETE FROM sns
 		WHERE feed_no = #{feedNo}
 	</delete>
+	
 
+	<update id="updatefeedState">
+		UPDATE sns
+        SET FEED_STATE = #{feedState}
+        WHERE FEED_NO = #{feedNo}
+	</update>
+
+	<!-- sns피드 댓글삭제서비스 x mapper만 -->
+	<delete id="deleteSnsReplyAll" parameterType="int">
+		DELETE FROM sns_reply
+		WHERE feed_no = #{feedNo}
+	</delete>
+
+	<!-- sns신고등록 -->
+	<insert id="insertSnsDeclare" parameterType="SnsVO">
+		<selectKey keyProperty="declareNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(declare_no),1)+1
+			FROM sns_declare
+		</selectKey>
+		INSERT INTO sns_declare(declare_no
+								,confirm_user_no
+								,declareat
+								,declare_code
+								,feed_no
+								,reply_no ) 
+		VALUES (#{declareNo}
+				,#{userNo}
+				,sysdate
+				,#{codeId}
+				,#{feedNo}
+				,#{replyNo})
+	</insert>
+	
+	
+	<!-- 마이피드 -->
+	<select id="selectMySns" resultType="SnsVO">
+		SELECT s.feed_no    
+        		,u.profile_img
+         		,u.nickname
+         		,s.feed_createAt
+         		,s.user_no
+        		,s.feed_state
+         		,(SELECT count(feed_no) 
+        			FROM sns_like
+        		   WHERE feed_no = s.feed_no) as countLike
+        		,(SELECT count(feed_no)
+           		    FROM sns_reply
+                   WHERE feed_no = s.feed_no) as countReply
+                ,(SELECT file_path
+                    FROM files
+                   WHERE file_code_no = s.feed_no
+                 	 and rownum = 1)  as filePath
+      FROM sns s JOIN users u 
+                   ON s.user_no = u.user_no
+      WHERE feed_state = 'F1' 
+      	and u.user_no= #{userNo}
+      ORDER BY s.feed_no DESC
+	</select>
+	
+	
+	
 </mapper>

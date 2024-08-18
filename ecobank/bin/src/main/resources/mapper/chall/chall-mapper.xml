@@ -3,22 +3,46 @@
 <mapper namespace="com.ecobank.app.challenge.mapper.ChallMapper">
 	<!-- 챌린지 전체 조회 - 관리자-->
 	<select id="selectChallAll" resultType="ChallVO">
-		SELECT chall_no
-		        , chall_title
-		        , chall_content
-		        , chall_startAt
-		        , chall_closeAt
-		        , chall_state
-		        , main_img
-		        , detail_img
-		        , chall_score
-		        , chall_createAt
+	
+		    SELECT chall_no
+		         , chall_title
+		         , chall_content
+		         , chall_startAt
+		         , chall_closeAt
+		         , chall_state
+		         , main_img
+		         , detail_img
+		         , chall_score
+		         , chall_createAt
+		    FROM (
+		            SELECT ROWNUM r
+		                 , c.chall_no
+		                 , c.chall_title
+		                 , c.chall_content
+		                 , c.chall_startAt
+		                 , c.chall_closeAt
+		                 , c.chall_state
+		                 , c.main_img
+		                 , c.detail_img
+		                 , c.chall_score
+		                 , c.chall_createAt
+		            FROM chall c
+		            WHERE ROWNUM 	<![CDATA[<=  ]]> #{pageNum} * #{amount}
+		            
+		            ORDER BY c.chall_no DESC
+		    )
+		    WHERE r > (#{pageNum} - 1) * #{amount}
+		
+	</select>
+	
+	<!-- 챌린지 목록 개수 -->
+	<select id="getTotal" resultType="int">
+		SELECT count(*)
 		FROM chall
-		ORDER BY chall_no DESC
 	</select>
 	
 	<!-- 챌린지 상태별로 전체 조회 - 회원 -->
-	<select id="getChallList" resultType="ChallVO" parameterType="String">
+	<select id="getChallList" resultType="ChallVO" parameterType="map">
 		SELECT chall_no
 		        , chall_title
 		        , chall_content
@@ -27,15 +51,21 @@
 		        , chall_state
 		        , main_img
 		FROM chall
-		WHERE chall_state = #{challState}
+		WHERE chall_state = #{challVO.challState}
+		<if test="challVO.challTitle != null and challVO.challTitle != ''.toString()">
+			AND chall_title like '%' || #{challVO.challTitle} || '%' 
+		</if>
 		ORDER BY chall_no DESC
 	</select>
 	
 	<!-- 챌린지 개수 가져오기 -->
-	<select id="countAllChallenges" resultType="int" parameterType="String">
+	<select id="countAllChallenges" resultType="int">
 		SELECT count(*)
 		FROM chall
 		WHERE chall_state = #{challState}
+		<if test="challTitle != null and challTitle != ''.toString()">
+			AND chall_title like '%' || #{challTitle} || '%' 
+		</if>
 	</select>
 	
 	<!-- 단건조회 - 관리자 -->
@@ -49,14 +79,10 @@
 				, main_img
 		        , detail_img
 				, chall_state
+				, chall_score
 		FROM chall
 		WHERE chall_no = #{challNo}
 	</select>
-	
-<!-- 	<select id="selectChallNum" resultType="int">
-		SELECT NVL(MAX(chall_no), 0) + 1
-		FROM chall
-	</select> -->
 	
 	<!-- 등록 -->
 	<insert id="insertChallInfo" parameterType="ChallVO">
@@ -74,6 +100,7 @@
 		        			, chall_closeAt
 							, main_img
 							, detail_img
+							, chall_score
 
 						)
 		VALUES 			(
@@ -84,6 +111,7 @@
 							, #{challCloseAt}
 							, #{mainImg}
 							, #{detailImg}
+							, #{challScore}
 						)		
 	</insert>
 	
@@ -93,6 +121,7 @@
 			, chall_content = #{challContent}
 			, chall_startAt = #{challStartAt}
 			, chall_closeAt = #{challCloseAt}
+			, chall_updateAt = #{challUpdateAt}
 			<if test="mainImg != null and mainImg != ''">
 			, main_img = #{mainImg}
 			, detail_img = #{detailImg}
@@ -107,17 +136,17 @@
 	</delete>
 	
 	<select id="selectScoreAll" resultType="Map">
-		SELECT s.score_no "scoreNo"
+		SELECT DISTINCT s.score_no "scoreNo"
 				, f.user_no "userNo"
 				, c.chall_title "challTitle"
 				, s.confirm_count "confirmCount"
-				, TO_CHAR(chall_closeAt, 'YYYY/MM/DD')|| ' - ' || TO_CHAR(chall_startAt, 'YYYY/MM/DD') "term"
-				, s.confirm_count*10 "score"
+				, TO_CHAR(c.chall_startAt, 'YYYY/MM/DD')|| ' - ' || TO_CHAR(c.chall_closeAt, 'YYYY/MM/DD') "term"
+				, s.confirm_count * 10 "score"
 		FROM score s JOIN chall c
-		                ON s.chall_no = c.chall_no            
-		            JOIN chall_confirm f
-		                ON s.user_no = f.user_no
-		ORDER BY score_no DESC
+		               ON s.chall_no = c.chall_no            
+		             JOIN chall_confirm f
+		               ON s.user_no = f.user_no
+		ORDER BY s.score_no DESC
 	</select>
 	
 </mapper>

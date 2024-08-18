@@ -6,6 +6,20 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+    /* 등록 버튼 색상 조정 */
+    .btn-custom {
+        background-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        border-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        color: white;
+    }
+
+    .btn-custom:hover {
+        background-color: #23272b; /* hover 효과 시 색상 변경 */
+        border-color: #23272b;
+        color: white;
+    }
+</style>
 </head>
 <body>
 	<div class="container mt-5">
@@ -26,6 +40,10 @@
 						    <th class="table-warning">챌린지 기간</th>
 						    <td th:text="${#dates.format(challenge.challStartAt, 'yyyy/MM/dd')} + ' ~ ' + ${#dates.format(challenge.challCloseAt, 'yyyy/MM/dd')}"></td>
 						</tr>
+ 						<tr>
+                            <th class="table-warning">챌린지 인증 완료 후 받는 총 점수</th>
+                            <td th:text="${challenge.challScore}" id="challScore"></td>
+                        </tr>
                         <tr>
                             <th class="table-warning">내용</th>
                             <td th:text="${challenge.challContent}" style="height: 100px;"></td>
@@ -45,11 +63,14 @@
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-end mt-3">
-                    <button type="button" class="btn btn-warning me-2" th:onclick="|location.href='@{challUpdate(challNo=${challenge.challNo})}'|">수정</button>
-                    <button type="button" class="btn btn-secondary me-2" th:onclick="|location.href='@{/challList}'|">목록</button>
+                    <button type="button" class="btn btn-custom" th:onclick="|location.href='@{challUpdate(challNo=${challenge.challNo})}'|">수정</button>
+                    <button type="button" class="btn btn-secondary" th:onclick="|location.href='@{/challList}'|">목록</button>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+
+    </script>
 </body>
 </html>

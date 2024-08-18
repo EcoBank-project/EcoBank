@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{common/layouts/default_layout}"
+    layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 재설정</title>
+    <style>
+        /* 기존 스타일 재사용 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eaf2f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .form-group {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-control {
+            width: calc(100% - 22px);
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #c8e0d8;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>비밀번호 재설정</h2>
+    <div class="form-group">
+		  <form id="resetForm" th:action="@{/reset_pw}" method="post">
+		    <input type="hidden" th:value="${mail}" name="email">
+		    <label for="newPassword" class="form-label">새 비밀번호</label>
+		    <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="새 비밀번호 입력">
+		
+		    <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+		    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="비밀번호 확인">
+		
+		    <span id="error-message" class="error" style="display:none;">비밀번호가 일치하지 않습니다.</span>
+		
+		    <button type="button" onclick="validateForm()">비밀번호 재설정</button>
+		</form>
+    </div>
+    
+    <script>
+	    function validateForm() {
+	        const newPassword = document.getElementById("newPassword").value;
+	        const confirmPassword = document.getElementById("confirmPassword").value;
+	        const errorMessage = document.getElementById("error-message");
+	
+	        if (newPassword !== confirmPassword) {
+	            errorMessage.style.display = "block";
+	        } else {
+	            errorMessage.style.display = "none";
+	            document.getElementById("resetForm").submit();
+	        }
+	    }
+    </script>
+</body>
+</html>

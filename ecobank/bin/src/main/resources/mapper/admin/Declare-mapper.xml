@@ -5,11 +5,13 @@
 		<!-- 챌린지 신고 목록 조회  -->
 		<select id="ChallDeclareList" resultType="com.ecobank.app.admin.service.ChallDeclareVO">
 			SELECT  confirm_declare_no,
-					confirm_declare_type,
+					get_codename(confirm_declare_type)   confirm_declare_type,
 					confirm_declareat,
 					confirm_user_no,
-					confirm_no
-            FROM chall_confirm_declare
+					b.confirm_no,
+					b.user_no 
+            FROM  chall_confirm_declare a join chall_confirm b
+                on a.confirm_no = b.confirm_no
 		</select>
 		<!-- 챌린지 신고 삭제  -->
 		<delete id="deleteChallDeclare">
@@ -17,13 +19,37 @@
     WHERE confirm_declare_no = #{confirmDeclareNo}
 		</delete>
 		
+		<select id="selectSns" resultType="SnsVO"  >
+		SELECT s.feed_no    
+             ,u.profile_img
+             ,u.nickname
+             ,s.feed_createAt
+             ,s.user_no
+             ,s.feed_state
+             ,(SELECT count(feed_no) 
+                 FROM sns_like
+                WHERE feed_no = s.feed_no) as countLike
+             ,(SELECT count(feed_no)
+                 FROM sns_reply
+                WHERE feed_no = s.feed_no) as countReply
+               ,(SELECT file_path
+                 FROM files
+                WHERE file_code_no = s.feed_no
+                 and rownum = 1)  as filePath
+      FROM sns s JOIN users u 
+                   ON s.user_no = u.user_no
+   
+      </select>
+		
+		
 		<!-- sns 댓글 신고 목록 -->
 		<select id="SnsReplyDeclareList" resultType="com.ecobank.app.admin.service.SnsDeclareVO">
 		SELECT DECLARE_NO,
         DECLAREAT,
         CONFIRM_USER_NO,
         DECLARE_CODE,
-        REPLY_NO
+        REPLY_NO,
+        FEED_NO
         FROM sns_declare
         WHERE  REPLY_NO IS NOT NULL AND  REPLY_NO != 0
 		</select>
@@ -49,10 +75,59 @@
  			 WHERE DECLARE_NO = #{declareNO}		
 		</delete>
 		
+	 <update id="updatefeedState">
+		UPDATE sns
+        SET FEED_STATE = #{feedState}
+        WHERE FEED_NO = #{feedNo}
+	</update>
+	<!--sns신고횟수-->
+	<select id="getCountByFeedNo" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+    FROM sns_declare
+    WHERE feed_no = #{feedNo}
+	</select>
+	<!--sns댓글신고횟수-->
+	<select id="getCountByReplyNo" parameterType="int" resultType="int">
+ 	SELECT COUNT(*)
+    FROM sns_declare
+    WHERE reply_no = #{replyNo}
+	</select>
 	
-		
-		
-		
+	<select id="getCountBychallNos" parameterType="int" resultType="int">
+ 	SELECT COUNT(*)
+    FROM chall_confirm_declare
+    WHERE confirm_no = #{confirmNo}
+	</select>
+	
+	 <select id="UpdateSnsState" statementType="CALLABLE">
+        CALL UpdateSnsState()
+    </select>
+	
+	 <select id="UpdateChallengeUserState" statementType="CALLABLE">
+        CALL UpdateChallengeUserState()
+    </select>
+    
+   <select id="selectChallDeclare" parameterType="int" resultType="map">
+     select confirm_no "confirmNo"
+	     ,a.user_no "userNo"
+	     ,confirm_content "confirmContent"
+	     ,chall_title	"challTitle"
+	     ,chall_content "challContent"
+	from chall_confirm a join chall b on a.chall_no = b.chall_no
+	where confirm_no = #{confirmNo}
+    </select>
+    
+    <select id="selectChallCount" resultType="map">
+    	select a.user_no,
+       count(*) cnt, 
+       count( case b.CONFIRM_DECLARE_SITUATION when 'N1' then 1 else  null end) N1,
+       count( case b.CONFIRM_DECLARE_SITUATION when 'N2' then 1 else  null end) N2
+		from chall_confirm a
+		join chall_confirm_declare b 
+		on a.confirm_no = b.confirm_no
+		group by a.user_no 
+    </select>
+
 
 		
 </mapper>

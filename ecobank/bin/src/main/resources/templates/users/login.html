@@ -5,7 +5,10 @@
     layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
+
+
 <title>로그인 페이지</title>
+
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -110,6 +113,7 @@ header {
     margin-top: 1rem;
 }
 </style>
+
 </head>
 <body>
     <div class="login-container">
@@ -118,14 +122,18 @@ header {
             <input type="text" name="username" placeholder="사용자 이름" required>
             <input type="password" name="password" placeholder="비밀번호" required>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <button type="submit">로그인</button>
+            <button type="submit">로그인</button>            
         </form>
-        <a href="/signup" class="link">회원가입</a>
-        <a href="/find-id" class="link">ID 찾기</a>
-        <a href="/find-password" class="link">PW 찾기</a>
+			<a href="/oauth2/authorization/google">google login</a>
+			<a href="/signup" class="link">회원가입</a>
+	        <a href="/findid" class="link">ID 찾기</a>
+	        <a href="/findpw" class="link">PW 찾기</a>
         <div th:if="${error}" class="error-message">
             <p th:text="${error}"></p>
         </div>
     </div>
 </body>
+<script>
+
+</script>
 </html>

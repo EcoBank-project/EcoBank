@@ -18,6 +18,7 @@ import com.ecobank.app.admin.service.AdminService;
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
+import com.ecobank.app.admin.service.adminSnsVO;
 import com.ecobank.app.sns.service.SnsService;
 import com.ecobank.app.sns.service.SnsVO;
 
@@ -136,31 +137,33 @@ public class AdminController {
     
     // SNS 전체 조회
     @GetMapping("adminSns") // 'adminSns' URL로 GET 요청이 들어오면 이 메서드가 호출됩니다.
-    public String adminsnsList(Model model ,SnsVO snsVO) {
-        List<SnsVO> list =  adminService.selectSns(snsVO);//snsService.snsList(snsVO); // 전체 SNS 목록을 조회합니다.
+    public String adminsnsList(Model model ,adminSnsVO adminSnsVO) {
+        List<adminSnsVO> list =  adminService.selectSns(adminSnsVO);//snsService.snsList(snsVO); // 전체 SNS 목록을 조회합니다.
         model.addAttribute("adminSns", list); // 조회한 SNS 목록을 뷰에 전달합니다.
         return "admins/adminSns"; // 'admins/adminSns' 뷰를 반환합니다.
     }
     
-    // SNS 신고 조회
-    @GetMapping("SnsDeclareList")
-    public String SnsDeclareList(@RequestParam(name = "feedNo", required = false, defaultValue = "0") int feedNo, Model model) {
-        List<SnsDeclareVO> list = adminService.SnsDeclareList();
-
-        // 중복 제거 (feedNo를 기준으로)
-        List<SnsDeclareVO> uniqueList = list.stream()
-            .collect(Collectors.toMap(
-                SnsDeclareVO::getFeedNo,
-                snsDeclare -> snsDeclare,
-                (existing, replacement) -> existing))
-            .values()
-            .stream()
-            .collect(Collectors.toList());
-
-        model.addAttribute("SnsDeclareList", uniqueList);
-        return "redirect:/updateadminSns";
-        
+    //SNS 조회
+    @GetMapping("/adminSns/{feedNo}")
+    @ResponseBody
+    public Map<String, Object> SnsDeclareList(@PathVariable int feedNo) {
+        return adminService.SnsDeclareList(feedNo);
     }
+    
+    @GetMapping("/adminSns/replies/{feedNo}")
+    public String getRepliesByFeedNo(@PathVariable int feedNo, Model model) {
+        try {
+            List<adminSnsVO> replies = adminService.getRepliesByFeedNo(feedNo);
+            model.addAttribute("replies", replies);
+            model.addAttribute("feedNo", feedNo);
+            return "admins/SnsDeclareList";
+        } catch (Exception e) {
+            e.printStackTrace(); // 로그에 예외를 기록
+            model.addAttribute("errorMessage", "문제가 발생했습니다. 나중에 다시 시도해 주세요.");
+            return "error"; // error.html로 리다이렉트
+        }
+    }
+    
     // SNS 업데이트
     @PostMapping("updatefeedState")
     public String updatefeedState(@RequestParam int feedNo, @RequestParam String feedState, Model model) {
@@ -169,5 +172,5 @@ public class AdminController {
         return "redirect:/adminSns";
     }
     
-    
+     
 }

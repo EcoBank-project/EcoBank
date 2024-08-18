@@ -6,12 +6,26 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+    /* 등록 버튼 색상 조정 */
+    .btn-custom {
+        background-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        border-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
+        color: white;
+    }
+
+    .btn-custom:hover {
+        background-color: #23272b; /* hover 효과 시 색상 변경 */
+        border-color: #23272b;
+        color: white;
+    }
+</style>
 </head>
 <body>
 	<div>
 		<h3>챌린지 수정</h3>
 		<form name="updateForm" th:object="${challup}" enctype="multipart/form-data">
-			<input type="hidden" th:field="*{challNo}">
+			<input type="hidden" th:field="*{challNo}" id="cNo">
 			<input type="hidden" th:field="*{challStartAt}">
 			<input type="hidden" th:field="*{challCloseAt}">
 			<table class="table">
@@ -38,11 +52,12 @@
 					</td>
 				</tr>
 			</table>
-			<button type="button" class="btn btn-warning" id="updateBtn">수정</button>
+			<button type="button" class="btn btn-custom" id="updateBtn">수정</button>
 			<button type="button" class="btn btn-secondary" th:onclick="|location.href ='@{/challList}'|">목록</button>
 		</form>
 	</div>
 	<script>
+		let cNo = $('#cNo').val();
 		function updateAjax(event){
 			//1)유효성 체크
 			//if(validationCheck() == false) return;
@@ -52,14 +67,20 @@
 			//{ empid : 209, empname : 'Hong', ... }
 			
 			//3)AJAX('경로', {}) /.done(=.then())/ .fail(=.catch()) => @ResponseBody
-			$.ajax('challUpdate', { 
+			$.ajax('challUpdate?challNo=' + cNo, { 
 				type : 'post', //통신할때 method : get, post, put, delete
 				//=> 커맨드 객체, @RequestParam
 				//data : dataObj //기본 객체타입만 받아, 자동으로 QueryString 변환 /이거는 수정 처리 첫번째
 				//=> @RequestBody
 				processData : false,
 				contentType : false,
-				data : formData
+				data : formData,
+				success : function(result){
+					location.href='challInfo?challNo=' + cNo;
+				}, 
+				error : function(err){
+					console.log(err);
+				}
 			})
 			.done(result => { //.done()이 알아서 다 바꿔줘
 				console.log(result);
