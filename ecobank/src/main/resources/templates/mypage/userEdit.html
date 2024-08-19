@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/mypage_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2>회원정보 수정..</h2>
+    <form action="/validate-password" method="post">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required />
+        <button type="submit">확인</button>
+    </form>
+</body>
+</html>
