@@ -164,8 +164,12 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	@Override
 	public int replyInsert(int userNo, ReplyVO replyVO) {
 		replyVO.setUserNo(userNo);
-		int result = challConfirmMapper.insertReply(replyVO);
-		return result;
+	    //댓글 등록
+	    challConfirmMapper.insertReply(replyVO);
+	    //댓글 전체 개수 반환
+	    int totalCnt = challConfirmMapper.replyTotalCnt(replyVO.getConfirmNo());
+	    System.out.println(totalCnt + "개수몇개???");
+	    return totalCnt;
 	}
 	
 	//댓글 삭제(현재 접속한 userno(session), 다른 userno, replyno)
@@ -204,6 +208,20 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	@Override
 	public int confirmLikeStatus(int userNo, int confirmNo) {
 		return challConfirmMapper.confirmLikeStatus(userNo, confirmNo);
+	}
+
+	//인증 신고 사유 목록
+	@Override
+	public List<ChallConfirmVO> declareList() {
+		return challConfirmMapper.selectConfirmDeclare();
+	}
+	
+	//인증 신고 등록
+	@Override
+	public int declareInsert(ChallConfirmVO challConfirmVO) {
+		//challConfirmVO.setConfirmDeclareAt(new Date()); 
+		int result = challConfirmMapper.insertConfirmDeclare(challConfirmVO);
+		return result == 1 ? challConfirmVO.getConfirmDeclareNo() : -1;
 	}
 
 }

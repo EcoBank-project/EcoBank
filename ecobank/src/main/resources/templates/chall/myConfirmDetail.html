@@ -15,7 +15,6 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	    border: 1px solid grey;
 	    width: 100%;
 		max-width: 1000px;
-		max-height: 1000px;
 		padding: 20px;
 	}
 	
@@ -26,21 +25,26 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	    border-radius: 8px;
 	}
 	
-	/* 전체 컨테이너 스타일 */
 	.like-comment {
 	    display: flex;
 	    align-items: center;
 	    gap: 15px;
 	}
 	
-	/* 버튼 기본 스타일 */
 	.like-comment button {
 	    border: none;
-	    background: none;
-	    cursor: pointer;
+        background: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
 	}
 	
-	/* 카운트 텍스트 스타일 */
+	.like-comment i {
+        font-size: 1.2rem; /* 아이콘 크기 조절 */
+        margin-right: 5px;
+        
+    }
+	
 	.like-comment .likes-count,
 	.like-comment .comments-count {
 	    margin-left: 5px;
@@ -89,6 +93,40 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     .comment-item .comment-text {
         margin-top: 5px;
     }
+    .report-button {
+        color: #9B9B9B;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .report-button i {
+        margin-right: 5px;
+        font-size: 1.2rem;
+    }
+    /*모달*/
+	.modal {
+		display: none;
+	    position: fixed;
+	    z-index: 1000;
+	    left: 0;
+	    top: 0;
+	    width: 100%;
+	    height: 100%;
+	    overflow: auto;
+	    background-color: rgba(0, 0, 0, 0.5); 
+	}
+	   
+	.modal_body {
+		background-color: #ffffff;
+	    margin: 15% auto;
+	    padding: 20px;
+	    border-radius: 10px;
+	    width: 400px;
+	    color: #333; 
+	    text-align: center;
+	    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+	}
 </style>
 </head>
 <body>
@@ -142,6 +180,14 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 							<i class="bi bi-chat-dots"></i>
 						</button>
 						<span class="comments-count" th:text="${myConfirm.cntReply} + ' Comments'"></span>
+			            <button class="btn btn-outline-success ms-3">
+			                <i class="bi bi-share"></i>
+			            </button>
+		                <span class="ms-1">Share</span>
+			            <button class="btn btn-outline-danger ms-auto" id="declareModal" th:onclick="declareModal('feed', [[${myConfirm.confirmNo}]])">
+			                <i class="bi bi-exclamation-triangle"></i>
+			            </button>
+		                <span class="ms-1">Report</span>
 					</div>
 				</div>
 			</div>
@@ -150,11 +196,25 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
             </div>
 		</div>
 	</div>
-
-	<!-- Bootstrap JavaScript and Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.js"></script>
+	<!-- 모달영역 -->
+ 	<div class="modal">
+        <div class="modal_body">
+			<div class="inputleft">
+				<h4>신고하기</h4>
+				<hr style="width: 100%; height: 5px; border: none;" />
+				<form method="post">
+					<th:block th:each="declare, sts : ${confirmDeclare}">
+						<input name="aaa" type='radio' class='radioBtn'
+							th:value="${declare.codeId}" th:id="${declare.codeId}" />
+						<label th:text="${declare.codeName}" th:for="${declare.codeId}"></label>
+						<hr style="margin: 0px;" />
+					</th:block>
+				</form>
+			</div>
+			<button onclick='getDeclare()' class="btn btn-primary" id="btn-declare" aria-label="Close">신고하기</button>
+	        <button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
+        </div>
+    </div>
     <script>
     	let fNo = $('#fNo').val();
     	let cNo = $('#cNo').val();
@@ -181,6 +241,9 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     	            console.log(result);
     	            //댓글 등록 후 댓글 목록 호출
     	            replyList();
+    	            //$('.comments-count').text(totalCnt + ' Comments');
+    	            //댓글창 비우기
+    	            $('#confirmReplyContent').val('');
     	        },
     	        error: function(err) {
     	            console.log(err);
@@ -281,8 +344,59 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	                }
 	            })
 	    	})
-    		
     	})
+    	
+    	//신고하기 모달창
+    	function declareModal(state, stateNo){
+			event.preventDefault();
+			
+			modal.style.display="block";
+			//console.log(state);
+			if(state == 'confirm'){
+				 fNo = stateNo;
+			}
+		}
+    	
+    	//모달
+    	const modal = document.querySelector('.modal');
+
+    	$('#btn-close').on('click', function(){
+    		 modal.style.display="none";
+    	});
+    	
+    	//신고하기 등록
+    	let declareId = JSON.parse(/*[[${confirmDeclareJson}]]*/ '[]');
+    	//let userNo = /*[[${session.userNo}]]*/ 0;
+    	
+    	function getDeclare() {
+    		let codeId = "";
+    		console.log('declareId=', declareId);
+    		console.log('confirmNo=', fNo);
+    		$('.radioBtn').each(function(){
+    		  if($(this).is(":checked")){
+    			    codeId=$(this).val();
+    				console.log($(this).val());
+    		  }
+    	    });
+    		
+    		$.ajax({
+    			url : "confirmDeclareInsert?confirmNo=" + fNo,
+    			type : "post",
+    			data : {
+    				confirmNo: fNo,
+    				codeId: codeId,
+    				//userNo: userNo
+    			},
+    			success : function(list){
+    				 alert("해당 인증 글이 신고되었습니다.");
+    				 location.href = 'confirmInfo?confirmNo=' + fNo;
+    			},
+    			error :  function(err){
+    				alert("신고 처리 중 오류");
+    				console.log(err);
+    			}
+    		});
+    	}
     </script>
 </body>
 </html>

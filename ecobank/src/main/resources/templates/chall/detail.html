@@ -24,6 +24,29 @@
 	.bi-heart-fill {
 	    color: hotpink; /* 채워진 하트 색상 */
 	}
+	
+	/* 리스트 아이템 스타일 */
+	.filter-item {
+	    align-items: center;
+	    padding: 12px 20px;
+	    font-size: 16px;
+	    font-weight: 600;
+	    color: #333;
+	    text-decoration: none;
+	    transition: all 0.3s ease;
+	    cursor: pointer;
+	}
+	
+	/* 아이콘과 텍스트 사이 여백 */
+	.filter-item i {
+	    font-size: 1.5rem;
+	    margin-right: 10px;
+	}
+	
+	/* Hover 효과 */
+	.filter-item:hover {
+	    background: linear-gradient(135deg, #d3e9d4 0%, #e2f2e2 100%);
+	}
 </style>
 </head>
 <body>
@@ -55,11 +78,11 @@
                         <input type="hidden" th:value="${detail.challNo}" id="cNo">
                         <input type="hidden" th:value="${detail.confirmNo}" id="fNo">
                         <h1 class="mb-4" th:text="${detail.challTitle}"></h1>
-                        <!--/* <p th:text="${detail.challContent}"></p> 이거로 해야함*/-->
                         <h6>Challenge Guide</h6>
-                        <p>Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet
+                        <p th:text="${detail.challContent}"></p>
+                        <!--/* <p>Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet
                         	Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet
-                        </p>
+                        </p>*/-->
                         <!--/* <p><i class="fa fa-check-circle text-primary me-3"></i>시작 일시 : [[${#dates.format(detail.challStartAt, 'yyyy/MM/dd')}]]</p> */-->
                         <p><i class="fa fa-check-circle text-primary me-3"></i>챌린지 기간 : [[${#dates.format(detail.challStartAt, 'yyyy/MM/dd')} + ' ~ ' + ${#dates.format(detail.challCloseAt, 'yyyy/MM/dd')}]]</p>
                         <p><i class="fa fa-check-circle text-primary me-3"></i>챌린지 인증 성공 후 받는 점수 : [[${detail.challScore}]]점 획득</p>
@@ -76,280 +99,324 @@
             </div>
         </div>
     </div>
-    <!-- About End -->
-    <div class="container-xxl py-5">
-        <div class="container">
-
-	       <div class="row mt-n2 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="col-12 text-center">
-                    <ul class="list-inline mb-5" id="portfolio-flters">
-                        <li class="mx-2 active" data-filter="*" id="detailImg">챌린지 상세 이미지</li>
-                        <li class="mx-2" data-filter=".first" id="myConfirm">나의 인증 내역</li>
-                        <li class="mx-2" data-filter=".second" id="myCalendar">나의 인증 캘린더</li>
-                        <li class="mx-2" data-filter=".third" id="others" th:src="@{/others}">참가자 인증 내역</li>
-                    </ul>
-                </div>
-            </div>
-            <div id="contents">
-            	<!-- 상세이미지/리뷰 -->
-            </div>
+	<!-- About End -->
+	<div class="container-xxl py-5">
+		<div class="container">
+			<div class="row mt-n2 wow fadeInUp" data-wow-delay="0.3s">
+				<div class="col-12 text-center">
+					<ul class="list-inline mb-5" id="portfolio-flters">
+						<li class="mx-2 filter-item active" data-filter="*" id="detailImg">
+							<i class="bi bi-bookmark-heart"></i> <span>챌린지 상세 이미지</span>
+						</li>
+						<li class="mx-2 filter-item" data-filter=".first" id="myConfirm">
+							<i class="bi bi-cloud"></i> <span>나의 인증 내역</span>
+						</li>
+						<li class="mx-2 filter-item" data-filter=".second" id="myCalendar">
+							<i class="bi bi-calendar-check"></i> <span>나의 인증 캘린더</span>
+						</li>
+						<li class="mx-2 filter-item" data-filter=".third" id="others">
+							<i class="bi bi-clouds"></i> <span>참가자 인증 내역</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div id="contents">
+				<!-- 상세이미지/리뷰 -->
+			</div>
 		</div>
-	 </div>
+	</div>
 	<script>
 		let cNo = $('#cNo').val();
 		let fNo = $('#fNo').val();
-		
-		function toggleActive(buttonGroup, activeId) {
-		    //주어진 버튼 그룹 내의 모든 버튼에서 'active' 클래스를 제거
-		    buttonGroup.forEach(function(id) {
-		        $('#' + id).removeClass('active');
-		    });
-		    //클릭된 버튼에 'active' 클래스를 추가
-		    $('#' + activeId).addClass('active');
-		}
-	
-		$(document).ready(function(){
-		    //첫 번째 버튼 그룹
-		    const firstGroup = ['ready', 'end', 'progress'];
-		    firstGroup.forEach(function(id) {
-		        $('#' + id).click(function() {
-		            toggleActive(firstGroup, id);
-		        });
-		    });
-	
-		    //두 번째 버튼 그룹
-		    const secondGroup = ['detailImg', 'myConfirm', 'myCalendar', 'others'];
-		    secondGroup.forEach(function(id) {
-		        $('#' + id).click(function() {
-		            toggleActive(secondGroup, id);
-		        });
-		    });
-		    detailImg(); //상세이미지 호출
-		});
 
-		$('#challBtn').click(function(){
+		function toggleActive(buttonGroup, activeId) {
+			//주어진 버튼 그룹 내의 모든 버튼에서 'active' 클래스를 제거
+			buttonGroup.forEach(function(id) {
+				$('#' + id).removeClass('active');
+			});
+			//클릭된 버튼에 'active' 클래스를 추가
+			$('#' + activeId).addClass('active');
+		}
+
+		$(document).ready(
+				function() {
+					//첫 번째 버튼 그룹
+					const firstGroup = [ 'ready', 'end', 'progress' ];
+					firstGroup.forEach(function(id) {
+						$('#' + id).click(function() {
+							toggleActive(firstGroup, id);
+						});
+					});
+
+					//두 번째 버튼 그룹
+					const secondGroup = [ 'detailImg', 'myConfirm',
+							'myCalendar', 'others' ];
+					secondGroup.forEach(function(id) {
+						$('#' + id).click(function() {
+							toggleActive(secondGroup, id);
+						});
+					});
+					detailImg(); //상세이미지 호출
+				});
+
+		$('#challBtn').click(function() {
 			goToChallenge();
 		})
-		
+
 		//챌린지 도전하기
-		function goToChallenge(){
+		function goToChallenge() {
 			$.ajax({
-	            url: '/goChallenge',
-	            method: 'post',
-	            data: { challNo: cNo },
-	            success: function(result){
-	                alert("챌린지 도전~!");
-	                $('#confirmBtn').show();
-	                console.log(result);
-	            },
-	            error: function(err){
-	            	alert("이미 도전 중인 챌린지입니다.");
-	                console.log(err);
-	            }
-	        });
-		} 
-		
-		$(document).ready(function(){
-            //챌린지 참여 여부 확인
-            $.ajax({
-                url: '/enterStatus',
-                method: 'get',
-                data: { challNo: cNo },
-                success: function(result) {
-                	console.log(result);
-                    if (result) {
-                        $('#challBtn').hide(); //도전하기 버튼 숨기기
-                        $('#confirmBtn').show(); //인증하기 버튼 보이기
-                    } else {
-                        $('#challBtn').show(); //도전하기 버튼 보이기
-                        $('#confirmBtn').hide(); //인증하기 버튼 숨기기
-                    }
-                },
-                error: function(err) {
-                    console.log(err);
-                }
-            });
-            
-            
-            challLikeCnt();
-    		//챌린지 좋아요 개수 먼저 띄어주기
-    		function challLikeCnt(){
-    			let cnt = $('#totalCnt');
-    			$.ajax({
-    				url : 'challLikeCnt',
-    				type : 'get',
-    				data : {
-    					challNo : cNo
-    				},
-    				success : function(result){ //result에 cnt담겨있으니까
-    					cnt.text(result);
-    				},
-    				error : function(err){
-    					console.log(err);
-    				}
-    			})
-    		}
-    		
-    		//좋아요 했는지 안했는지 체크
-    		function likeCheck(){
-    			let status;
-    			$.ajax({
-    				url : 'challLikeStatus',
-    				type : 'get',
-    				data : {
-    					challNo : cNo
-    				},
-    				async: false, //success가 호출되기 전에 chk타서 
-    				success : function(result){
-    					status = result;
-    				},
-    				error : function(err){
-    					console.log(err);
-    				}
-    			})
-    			return status;
-    		}
-    		
-    		//하트채우기
-    		let likeIcon = $('#likeIcon');
-    		let chk = likeCheck();
-    		if(chk == 1){
-    			likeIcon.removeClass('bi bi-heart');
-    			likeIcon.addClass('bi bi-heart-fill');   
-    		}
-    		
-    		//좋아요 등록, 삭제
-			$('#likeIcon').click(function(){
-				likeCheck();
-				//상태가 1이면 url이 delete로, 0이면 url이 insert로 타게
-				let url = likeCheck() == 1 ? 'challLikeDelete' : 'challLikeInsert';
-				
-				$.ajax({
-					url : url,
-					type : 'post',
-					data : {
-						challNo : cNo
-					},
-					success : function(result){
-						//하트 채우기
-						likeIcon.toggleClass('bi-heart bi-heart-fill');
-						//cnt 바뀐 값 띄우기
-						challLikeCnt();
-						console.log(result);
-					},
-					error : function(err){
-						console.log(err);
-					}
-				})
-			})
-        });
-		
+				url : '/goChallenge',
+				method : 'post',
+				data : {
+					challNo : cNo
+				},
+				success : function(result) {
+					alert("챌린지 도전~!");
+					$('#confirmBtn').show();
+					console.log(result);
+				},
+				error : function(err) {
+					alert("이미 도전 중인 챌린지입니다.");
+					console.log(err);
+				}
+			});
+		}
+
+		$(document)
+				.ready(
+						function() {
+							//챌린지 참여 여부 확인
+							$.ajax({
+								url : '/enterStatus',
+								method : 'get',
+								data : {
+									challNo : cNo
+								},
+								success : function(result) {
+									console.log(result);
+									if (result) {
+										$('#challBtn').hide(); //도전하기 버튼 숨기기
+										$('#confirmBtn').show(); //인증하기 버튼 보이기
+									} else {
+										$('#challBtn').show(); //도전하기 버튼 보이기
+										$('#confirmBtn').hide(); //인증하기 버튼 숨기기
+									}
+								},
+								error : function(err) {
+									console.log(err);
+								}
+							});
+
+							challLikeCnt();
+							//챌린지 좋아요 개수 먼저 띄어주기
+							function challLikeCnt() {
+								let cnt = $('#totalCnt');
+								$.ajax({
+									url : 'challLikeCnt',
+									type : 'get',
+									data : {
+										challNo : cNo
+									},
+									success : function(result) { //result에 cnt담겨있으니까
+										cnt.text(result);
+									},
+									error : function(err) {
+										console.log(err);
+									}
+								})
+							}
+
+							//좋아요 했는지 안했는지 체크
+							function likeCheck() {
+								let status;
+								$.ajax({
+									url : 'challLikeStatus',
+									type : 'get',
+									data : {
+										challNo : cNo
+									},
+									async : false, //success가 호출되기 전에 chk타서 
+									success : function(result) {
+										status = result;
+									},
+									error : function(err) {
+										console.log(err);
+									}
+								})
+								return status;
+							}
+
+							//하트채우기
+							let likeIcon = $('#likeIcon');
+							let chk = likeCheck();
+							if (chk == 1) {
+								likeIcon.removeClass('bi bi-heart');
+								likeIcon.addClass('bi bi-heart-fill');
+							}
+
+							//좋아요 등록, 삭제
+							$('#likeIcon')
+									.click(
+											function() {
+												likeCheck();
+												//상태가 1이면 url이 delete로, 0이면 url이 insert로 타게
+												let url = likeCheck() == 1 ? 'challLikeDelete'
+														: 'challLikeInsert';
+
+												$
+														.ajax({
+															url : url,
+															type : 'post',
+															data : {
+																challNo : cNo
+															},
+															success : function(
+																	result) {
+																//하트 채우기
+																likeIcon
+																		.toggleClass('bi-heart bi-heart-fill');
+																//cnt 바뀐 값 띄우기
+																challLikeCnt();
+																console
+																		.log(result);
+															},
+															error : function(
+																	err) {
+																console
+																		.log(err);
+															}
+														})
+											})
+						});
+
 		//당일 인증 완료 후에 다시 인증하기 버튼을 클릭했을때
-		$('#confirmBtn').click(function(event){
-		    event.preventDefault();
-		
-		    $.ajax({
-		        url : '/confirmStatus',
-		        method : 'get',
-		        data : { challNo : cNo },
-		        success : function(isConfirmed){
-		            console.log("isConfirmed:", isConfirmed); 
-		            if(isConfirmed){
-		                alert("이미 오늘 인증되었습니다.");
-		            } else {
-		                location.href = 'confirmInsert?challNo=' + cNo;
-		            }
-		        },
-		        error : function(err){
-		            console.log(err); 
-		            alert("인증 오류");
-		        }
-		    });
+		$('#confirmBtn').click(function(event) {
+			event.preventDefault();
+
+			$.ajax({
+				url : '/confirmStatus',
+				method : 'get',
+				data : {
+					challNo : cNo
+				},
+				success : function(isConfirmed) {
+					console.log("isConfirmed:", isConfirmed);
+					if (isConfirmed) {
+						alert("이미 오늘 인증되었습니다.");
+					} else {
+						location.href = 'confirmInsert?challNo=' + cNo;
+					}
+				},
+				error : function(err) {
+					console.log(err);
+					alert("인증 오류");
+				}
+			});
 		});
-		
+
 		//나의 인증 내역
-		$('#myConfirm').click(function(){
-			$("#contents").load("getMyConfirm?challNo=" + cNo, function(){
+		$('#myConfirm').click(function() {
+			$("#contents").load("getMyConfirm?challNo=" + cNo, function() {
 				$.ajax({
 					url : '/myConfirm',
 					method : 'get',
 					data : {
 						challNo : cNo
 					},
-					success : function(result){
+					success : function(result) {
 						console.log(result);
 						$('#myConfirmCnt').text(result.confirmCount || '0');
 						$('#score').text(result.score || '0');
 						$('#remainCnt').text(result.remainCount || '0');
 					},
-					error : function(err){
+					error : function(err) {
 						console.log(err);
 					}
 				})
 			});
 		})
 		//다른 참가자 인증 내역
-		$('#others').click(function(){
+		$('#others').click(function() {
 			$("#contents").load("others?challNo=" + cNo);
 		})
-		
+
 		//상세이미지+리뷰
-		$('#detailImg').click(function(){
+		$('#detailImg').click(function() {
 			detailImg();
 		})
-		function detailImg(){
+		function detailImg() {
 			$("#contents").load("review?challNo=" + cNo);
 		}
-		
+
 		//나의 인증 캘린더
-		$('#myCalendar').click(function(){
-			$('#contents').load("getMyCalendar", function(){ //controller(페이지처리)
-				var calendarEl = document.getElementById('calendar');
-		    	// new FullCalendar.Calendar(대상 DOM객체, {속성:속성값, 속성2:속성값2..})
-		    	let cNo = $('#cNo').val();
-		    	
-		        var calendar = new FullCalendar.Calendar(calendarEl, {
-		          headerToolbar: {
-		            left: 'prev,next today',
-		            center: 'title',
-		            right: ''
-		          },
-		          initialDate: new Date(), // 현재 날짜
-		          editable: false,
-		          displayEventTime : false,
-		          events: function(info, successCallback, failureCallback) {
-		              $.ajax({
-		                  url: '/calendar',  //restcontroller(불러오는 기능)
-		                  method: 'get',
-		                  data: {
-		                	  challNo : cNo
-		                  },
-		                  success: function(result) {
-		                	  console.log(result)
-		                      // 서버로부터 데이터를 성공적으로 받았을 때 처리
-		                      var events = [];
-		                      result.forEach(function(event) {
-		                    	  events.push({
-		                              title: '인증 성공!',
-		                              start: event, // 'YYYY-MM-DD' 또는 'YYYY-MM-DDTHH:mm:ss' 형식이어야 함
-		                              borderColor : 'green'
-		                          });
-		                      });
-		                      successCallback(events); // FullCalendar에 이벤트 바인딩
-		                  }, 
-		                  error: function(err) {
-		                      console.log(err);
-		                      failureCallback(err); // 오류 처리
-		                  }
-		              });
-		          }
-		          , eventContent: {
-		        	  html: `<div><img src="/img/congratulation.jpg" class="event-icon" /><br><b>오늘 인증 성공!</b></div>`,
-		        	},
-		      });
-		        calendar.render();
-			})
-		})
+		$('#myCalendar')
+				.click(
+						function() {
+							$('#contents')
+									.load(
+											"getMyCalendar",
+											function() { //controller(페이지처리)
+												var calendarEl = document
+														.getElementById('calendar');
+												// new FullCalendar.Calendar(대상 DOM객체, {속성:속성값, 속성2:속성값2..})
+												let cNo = $('#cNo').val();
+
+												var calendar = new FullCalendar.Calendar(
+														calendarEl,
+														{
+															headerToolbar : {
+																left : 'prev,next today',
+																center : 'title',
+																right : ''
+															},
+															initialDate : new Date(), // 현재 날짜
+															editable : false,
+															displayEventTime : false,
+															events : function(
+																	info,
+																	successCallback,
+																	failureCallback) {
+																$
+																		.ajax({
+																			url : '/calendar', //restcontroller(불러오는 기능)
+																			method : 'get',
+																			data : {
+																				challNo : cNo
+																			},
+																			success : function(
+																					result) {
+																				console
+																						.log(result)
+																				// 서버로부터 데이터를 성공적으로 받았을 때 처리
+																				var events = [];
+																				result
+																						.forEach(function(
+																								event) {
+																							events
+																									.push({
+																										title : '인증 성공!',
+																										start : event, // 'YYYY-MM-DD' 또는 'YYYY-MM-DDTHH:mm:ss' 형식이어야 함
+																										borderColor : 'green'
+																									});
+																						});
+																				successCallback(events); // FullCalendar에 이벤트 바인딩
+																			},
+																			error : function(
+																					err) {
+																				console
+																						.log(err);
+																				failureCallback(err); // 오류 처리
+																			}
+																		});
+															},
+															eventContent : {
+																html : `<div><img src="/img/congratulation.jpg" class="event-icon" /><br><b>오늘 인증 성공!</b></div>`,
+															},
+														});
+												calendar.render();
+											})
+						})
 	</script>
 </body>
 </html>

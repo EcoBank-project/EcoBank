@@ -48,4 +48,13 @@ public interface ChallService {
 	//챌린지 정렬
 	public List<ChallVO> challengeSort(int userNo, int select);
 	
+	//챌린지 후기 목록
+	public List<ReviewDTO> reviewList(ChallVO challVO);
+	
+	//챌린지 후기 등록
+	public int reviewInsert(ChallVO challVO);
+	
+	//챌린지 후기 삭제
+	public int reviewDelete(int userNo, int reviewNo);
+	
 }

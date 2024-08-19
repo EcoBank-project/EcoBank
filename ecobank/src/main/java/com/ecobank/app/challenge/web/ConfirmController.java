@@ -16,6 +16,9 @@ import com.ecobank.app.challenge.service.ChallConfirmService;
 import com.ecobank.app.challenge.service.ChallConfirmVO;
 import com.ecobank.app.challenge.service.ChallService;
 import com.ecobank.app.challenge.service.ChallVO;
+import com.ecobank.app.challenge.service.ReviewDTO;
+import com.ecobank.app.common.service.CodeVO;
+import com.ecobank.app.common.service.CommonService;
 import com.ecobank.app.upload.service.FileService;
 import com.ecobank.app.upload.service.FileVO;
 
@@ -27,6 +30,7 @@ public class ConfirmController {
 	private final ChallConfirmService challConfirmService;
 	private final FileService fileService;
 	private final ChallService challService;
+	private final CommonService commonService;
 	
 	@Autowired
 	private HttpSession httpSession;
@@ -53,6 +57,10 @@ public class ConfirmController {
 		model.addAttribute("myConfirm", findVO);
 		model.addAttribute("list", list);
 		model.addAttribute("nowUserNo", nowUserNo); //글쓴 유저가 맞는지 확인하려고
+		
+		//인증 신고 목록
+		List<CodeVO> declarelist = commonService.codeList("0C");
+		model.addAttribute("confirmDeclare", declarelist);
 		return "chall/myConfirmDetail";
 	}
 	
@@ -79,6 +87,11 @@ public class ConfirmController {
 		model.addAttribute("myConfirm", findVO);
 		model.addAttribute("list", list);
 		model.addAttribute("nowUserNo", userNo);
+		System.out.println(findVO + "파인드브오에 뭐 있는지, 신고");
+		
+		//인증 신고 목록
+		List<CodeVO> declarelist = commonService.codeList("0C");
+		model.addAttribute("confirmDeclare", declarelist);
 		return "chall/myConfirmDetail";
 	}
 	
@@ -87,8 +100,12 @@ public class ConfirmController {
 	public String replyList(Model model, ChallConfirmVO challConfirmVO) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		List<ChallConfirmVO> list = challConfirmService.confirmReplyList(challConfirmVO);
+		//ChallConfirmVO findVO = challConfirmService.myConfirmInfo(challConfirmVO);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("replyList", list);
+		//model.addAttribute("myConfirm", findVO);
+		System.out.println(list + "리스트에 뭐있는지");
+		//System.out.println(findVO + "파인드 브오에 뭐있는지");
 		return "chall/reply";
 	}
 	
@@ -124,7 +141,11 @@ public class ConfirmController {
 		ChallVO findVO = challService.challInfo(challVO);
 		model.addAttribute("detail", findVO);
 		
-		//리뷰
+		//리뷰 목록
+		List<ReviewDTO> list = challService.reviewList(challVO);
+		model.addAttribute("reviewList", list);
+		//System.out.println(list + "상세에 리뷰안에 뭐있는지 확인");
+		//[com.ecobank.app.challenge.service.ReviewDTO@4e847d7c]이게 찍히네..
 		return "chall/review";
 	}
 	

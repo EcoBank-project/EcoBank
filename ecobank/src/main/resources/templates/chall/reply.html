@@ -2,13 +2,15 @@
 	<div id="commentList" class="comment-list">
 		<th:block th:each="reply : ${replyList}">
 			<div class="comment-item">
-				<strong th:text="${reply.nickname}"></strong>
-				<div>
-					<p style="display: inline;" th:text="${reply.confirmReplyContent}"></p>
-					<p style="display: inline; margin-left: 10px;"
-						th:text="${#dates.format(reply.confirmReplyCreateAt, 'yyyy-MM-dd')}"></p>
-				<button type="button" class="btn btn-secondary btn-sm deleteBtn" th:if="${reply.userNo} == ${userNo}"
-				th:data-replyno="${reply.confirmReplyNo}" style="display: inline; margin-left: 10px;">삭제</button>
+				<div class="d-flex justify-content-between align-items-center">
+                    <div>
+						<strong th:text="${reply.nickname}"></strong>
+						<p style="display: inline;" th:text="${reply.confirmReplyContent}"></p>
+						<p style="display: inline; margin-left: 10px;"
+							th:text="${#dates.format(reply.confirmReplyCreateAt, 'yyyy-MM-dd')}"></p>
+					</div>
+					<button type="button" class="btn btn-secondary btn-sm deleteBtn" th:if="${reply.userNo} == ${userNo}"
+					th:data-replyno="${reply.confirmReplyNo}" style="display: inline; margin-left: 10px;">Delete</button>
 				</div>
 			</div>
 		</th:block>

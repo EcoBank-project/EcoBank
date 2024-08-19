@@ -187,6 +187,7 @@
 		ORDER BY s.score_no DESC
 	</select>
 	
+	<!-- 챌린지 목록에서 정렬 - 좋아요/참여중/최신날짜순 -->
 	<select id="orderByLike">
 		SELECT c.*
 		FROM chall c
@@ -212,6 +213,18 @@
 		FROM chall
 		WHERE chall_state = 'D2'
 		ORDER BY chall_createAt DESC
+	</select>
+	
+	<!-- 후기 목록 -->
+	<select id="selectReviewAll" parameterType="ChallVO">
+		SELECT review_no
+		        , review_content
+		        , review_createAt
+		        , review_star
+		        , user_no
+		        , chall_no
+		FROM chall_review
+		WHERE chall_no = #{challNo}
 	</select>
 	
 </mapper>

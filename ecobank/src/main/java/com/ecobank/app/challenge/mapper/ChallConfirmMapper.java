@@ -62,6 +62,9 @@ public interface ChallConfirmMapper {
 	//인증 댓글 삭제
 	public int deleteReply(int confirmReplyNo);
 	
+	//인증 댓글 전체 개수
+	public int replyTotalCnt(int confirmNo);
+	
 	//인증 좋아요 등록
 	public int insertConfirmLike(ChallConfirmVO challConfirmVO);
 	
@@ -73,5 +76,11 @@ public interface ChallConfirmMapper {
 	
 	//인증 좋아요 전체 개수
 	public int likeTotalCnt(int confirmNo);
+	
+	//인증 신고 사유 목록
+	public List<ChallConfirmVO> selectConfirmDeclare();
+	
+	//인증 신고 등록
+	public int insertConfirmDeclare(ChallConfirmVO challConfirmVO);
 	
 }

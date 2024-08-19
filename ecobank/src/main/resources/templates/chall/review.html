@@ -4,6 +4,36 @@
 	<div class="detail-image">
 		<img th:src="@{/images/{img}(img=${detail.detailImg})}" alt="상세 이미지" style="object-fit: cover; width:1000px; height:800px">
 	</div>
+	<div class="container mt-5">
+        <h3 class="mb-4">리뷰 목록</h3>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="table-warning">
+                            <th>번호</th>
+                            <th>내용</th>
+                            <th>작성자</th>
+                            <th>별점</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+						<th:block th:each="review : ${reviewList}">
+                            <tr>
+                                <td th:text="${review.reviewNo}"></td>
+                                <td th:text="${review.reviewContent}"></td>
+                                <td th:text="${review.userNo}"></td>
+                                <td th:text="${review.reviewStar}"></td>
+                            </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/}'|">WRITE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+	</th:block>
 </div>
 
 	

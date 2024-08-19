@@ -134,5 +134,13 @@ public class ChallengeRestController {
 		int status = challConfirmService.confirmLikeStatus(userNo, confirmNo);
 		return status;
 	}
+	
+	//인증 신고 등록
+	@PostMapping("confirmDeclareInsert")
+	public int confirmDeclareProcess(ChallConfirmVO challConfirmVO) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		challConfirmVO.setUserNo(userNo);
+		return challConfirmService.declareInsert(challConfirmVO);
+	}
 
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.ecobank.app.challenge.service.ChallVO;
+import com.ecobank.app.challenge.service.ReviewDTO;
 import com.ecobank.app.common.service.Criteria;
 
 public interface ChallMapper {
@@ -63,5 +64,14 @@ public interface ChallMapper {
 	
 	//최신 날짜 순 정렬
 	public List<ChallVO> orderByDate();
+	
+	//챌린지 후기 목록
+	public List<ReviewDTO> selectReviewAll(ChallVO challVO);
+	
+	//챌린지 후기 등록
+	public int insertReview(ChallVO challVO);
+	
+	//챌린지 후기 삭제
+	public int deleteReview(int userNo, int reviewNo);
 	
 }
