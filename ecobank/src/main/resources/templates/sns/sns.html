@@ -43,7 +43,7 @@
 </script>
 </head>
 <body>
-	<form action="uploadForm" method="post" enctype="multipart/form-data">
+	<form method="post" enctype="multipart/form-data">
 	<div>
 		<div class="container">
 			<div class="row">
@@ -56,7 +56,8 @@
 							<div class="ml-3 info">
 								<a href="#" th:text=${sns.nickname}></a>
 							</div>
-							<button class="btn btn-primary">팔로우</button>
+							<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn-primary" th:if="${sns.followYn == null}">팔로우</button>
+							<button type="button" th:data-userno="${sns.userNo}" class="followCancleBtn btn-info" th:unless="${sns.followYn == null}">팔로우 취소</button>
 						</div>
 						<div class="imghover">
 							<div th:text=${sns.feedNo} class="blind"></div>
@@ -81,7 +82,10 @@
 		</div>
 	</div>
 	</form>
-	<script>
+	<script th:inline="javascript">
+		let userNo = [[${session.userNo}]];
+	
+		
 		$(".imghover").on('click', function(event) {
 			/* if(event.target.tagName == 'BUTTON') return; */
 			let fno = $(event.currentTarget).children().first().text();
@@ -92,13 +96,56 @@
 		});
 		
 	    //좋아요버튼
-
 	    $('.like').on('click', function(event){
 	    	console.log($(this));
 	    	console.log(event);
 	    	$(this).toggleClass('active');
 	    	//아작스(if해서 active인지 아닌지 구분해서 아작스 두개 넣기)
 	    })
+	    
+	    
+	    // 팔로우(writeBtn) 버튼을 클릭할 경우
+		$('.followBtn').click(function(){
+			let followingId =$(this).data('userno');
+			console.log("팔로우버튼");
+			console.log('누구야',followingId)
+		// ajax로 팔로우 등록하기
+		$.ajax({
+			type : "POST",
+			url : "insertFollow",
+			data : {userNo, followingId},
+			dataType : "json",
+			success : function(){
+				alert("팔로우 성공");
+			},
+			error :  function(error){
+				console.log(error);
+				alert("팔로우 실패");
+			}
+		});
+	});
+	
+	    
+		//팔로우취소
+		$('.followCancleBtn').click(function(){
+			let followingId =$(this).data('userno');
+			console.log("팔로우버튼");
+			console.log('누구야',followingId)
+		// ajax로 팔로우 등록하기
+		$.ajax({
+			type : "delete",
+			url : "deleteFollow",
+			data : {userNo, followingId},
+			dataType : "json",
+			success : function(){
+				alert("팔로우취소 성공");
+			},
+			error :  function(error){
+				console.log(error);
+				alert("실패");
+			}
+		});
+	});
 /* 		  var btn = document.getElementById("like")
 class="like active"
 .like .active
@@ -107,6 +154,7 @@ class="like active"
 		            addclass removeclass
 		    })하트 다시 눌럿을때 사라져야하고, 내가 눌렀던 하트면 남아잇기
 		    if문으로 feedno like 비교.......데이터에서 좋아요가 null 일때 0으로 바꾸고 nvl 1이면 calss like-active 0이면 like
- */	</script>
+ */	
+ </script>
 </body>
 </html>

@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,6 +46,8 @@ public class SnsController {
 	// 전체조회
 	@GetMapping("sns")
 	public String snsList(SnsVO snsVO, Model model) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		snsVO.setUserNo(userNo);
 		List<SnsVO> list = snsService.snsList(snsVO);
 		model.addAttribute("snsList", list);
 		return "sns/sns";
@@ -53,17 +56,19 @@ public class SnsController {
 	// 전체인기조회
 	@GetMapping("snsP")
 	public String snsPList(SnsVO snsVO, Model model) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		snsVO.setUserNo(userNo);
 		snsVO.setOrderSns(1);
 		List<SnsVO> list = snsService.snsList(snsVO);
 		model.addAttribute("snsList", list);
 		return "sns/sns";
 	}
 
-
 	//검색조회
 	@GetMapping("snsSearch")
-	public String snsSearch(SnsVO snsVO, Model model) {
-		List<SnsVO> list = snsService.snsSearch(snsVO);
+	public String snsSearchProcess(@RequestParam(required=false) String keyword, Model model) {
+		
+		List<SnsVO> list = snsService.snsSearch(keyword);
 		
 		model.addAttribute("snsSearch", list);
 		return "sns/snsSearch";

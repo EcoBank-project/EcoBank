@@ -33,7 +33,13 @@ public class SnsServiceImpl implements SnsService{
 	
 	//검색 조회
 	@Override
-	public List<SnsVO> snsSearch(SnsVO snsVO) {
+	public List<SnsVO> snsSearch(String keyword) {
+		SnsVO snsVO = new SnsVO();
+		if(keyword != null && keyword.charAt(0)=='#') {
+			snsVO.setHashtag(keyword);
+		} else if(keyword != null) {
+			snsVO.setNickname(keyword);
+		}
 		return snsMapper.searchSnsAll(snsVO);
 	}
 	
