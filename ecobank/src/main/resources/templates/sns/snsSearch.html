@@ -25,9 +25,9 @@
 </head>
 <body>
 	<h3>sns 검색</h3>
-	<form name="searchForm" th:action="@{/snsSearch}" method="post" enctype="multipart/form-data">
+	<form name="searchForm" th:action="@{/snsSearch}" method="get">
 	<p>#해시태그 또는 닉네임을 입력하세요</p>
-	<div>검색<input name="hashtag"></div>
+	<div><input name="keyword"></div>
 		<button class="btn btn-primary" type="submit" >검색</button>
 	<div>
 		<div class="container">
@@ -62,8 +62,13 @@
 						
 					</div>
 				</th:block>
+		<div th:if="${snsSearch == null} or ${snsSearch.size() == 0}">
+			<p>검색어를 입력하세요.</p>
+		</div>
 			</div>
 		</div>
+
+	
 	</div>
 	</form>
 			

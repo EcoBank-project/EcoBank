@@ -58,7 +58,34 @@ public class SnsReplyController {
 		snsReplyVO.setUserNo(userNo);
 		System.out.println("좋아요"+snsReplyVO);
 		int snsLikeNo = snsReplyService.insertSnsLike(snsReplyVO);
-		
 	}
-
+	
+	//팔로워 조회
+	@GetMapping("follower")
+	public List<SnsReplyVO> followerInfo(SnsReplyVO snsReplyVO) {
+		 return snsReplyService.followerInfo(snsReplyVO);
+	}
+	
+	//팔로잉 조회
+	@GetMapping("following")
+	public List<SnsReplyVO> followingInfo(SnsReplyVO snsReplyVO){
+		return snsReplyService.followingInfo(snsReplyVO);
+	}
+	
+	//팔로우 등록
+	@PostMapping("insertFollow")
+	public SnsReplyVO insertFollow(SnsReplyVO snsReplyVO) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		snsReplyVO.setUserNo(userNo);
+		int followerId = snsReplyService.insertFollow(snsReplyVO);
+		System.out.println("팔로우등록"+ followerId);
+		System.out.println("팔로우등록"+ followerId);
+		return snsReplyVO;
+	}
+	
+	//팔로우 삭제
+	@DeleteMapping("deleteFollow")
+	public int deleteFollow(Integer followNo) {
+		return snsReplyService.deleteFollow(followNo);
+	}
 }

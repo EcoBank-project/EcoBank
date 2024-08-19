@@ -17,5 +17,8 @@ public class SnsReplyVO {
 	private Integer feedNo;			//피드번호
 	private String nickname;		//닉네임
 	private Integer snsLikeNo;			//좋아요 번호
+	private Integer followerId;			//팔로워 아이디
+	private Integer followingId;		//팔로잉 아이디
+	private Integer followNo;			//팔로우 번호
 
 }

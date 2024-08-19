@@ -8,7 +8,7 @@ public interface SnsService {
 	public List<SnsVO> snsList(SnsVO snsVO);
 	
 	//sns 검색 조회
-	public List<SnsVO> snsSearch(SnsVO snsVO);
+	public List<SnsVO> snsSearch(String keyword);
 	
 	//단건 sns 조회
 	public SnsVO snsInfo(SnsVO snsVO);
