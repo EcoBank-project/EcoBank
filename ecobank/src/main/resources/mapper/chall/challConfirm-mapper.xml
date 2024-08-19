@@ -197,6 +197,13 @@
 		WHERE confirm_reply_no = #{confirmReplyNo}
 	</delete>
 	
+	<!-- 인증 댓글 전체 개수 -->
+	<select id="replyTotalCnt" parameterType="int">
+		SELECT COUNT(*)
+		FROM chall_confirm_reply
+		WHERE confirm_no = #{confirmNo}
+	</select>
+	
 	<!-- 인증 좋아요 등록 -->
 	<insert id="insertConfirmLike" parameterType="ChallConfirmVO">
 		<selectKey keyProperty="confirmLikeNo" 
@@ -238,5 +245,33 @@
 		FROM chall_confirm_like
 		WHERE confirm_no = #{confirmNo}
 	</select>
+	
+	<!-- 인증 신고 목록 -->
+	<select id="selectConfirmDeclare">
+		
+	</select>
+	
+	<!-- 인증 신고 등록 -->
+	<insert id="insertConfirmDeclare" parameterType="ChallConfirmVO">
+		<selectKey keyProperty="confirmDeclareNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(confirm_declare_no), 0) + 1
+			FROM chall_confirm_declare
+		</selectKey>
+		INSERT INTO chall_confirm_declare(confirm_declare_no
+		                                    , confirm_declare_type
+		                                    , confirm_declareAt
+		                                    , confirm_user_no
+		                                    , confirm_no
+		                                )	
+		VALUES (
+				#{confirmDeclareNo}
+		        , #{codeId}
+		        , SYSDATE
+		        , #{userNo}
+		        , #{confirmNo}
+		        )
+	</insert>
 
 </mapper>

@@ -13,6 +13,7 @@ public class ReplyVO {
 	private String confirmReplyContent;	//인증 댓글 내용
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date confirmReplyCreateAt;	//인증 댓글 작성 일자
+	private Integer cntReply;			//댓글 갯수
 	
 	//챌린지 인증
 	private Integer confirmNo;			//인증번호

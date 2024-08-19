@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ecobank.app.challenge.mapper.ChallMapper;
 import com.ecobank.app.challenge.service.ChallService;
 import com.ecobank.app.challenge.service.ChallVO;
+import com.ecobank.app.challenge.service.ReviewDTO;
 import com.ecobank.app.common.service.Criteria;
 @Service
 public class ChallServiceImpl implements ChallService{
@@ -119,6 +120,25 @@ public class ChallServiceImpl implements ChallService{
 		}else { //참가
 			return challMapper.orderByEnter(userNo);
 		}
+	}
+	
+	//후기 목록
+	@Override
+	public List<ReviewDTO> reviewList(ChallVO challVO) {
+		return challMapper.selectReviewAll(challVO);
+	}
+
+	//후기 등록
+	@Override
+	public int reviewInsert(ChallVO challVO) {
+		return 0;
+	}
+
+	//후기 삭제
+	@Override
+	public int reviewDelete(int userNo, int reviewNo) {
+		//userNo가져오는거 추가해야함
+		return challMapper.deleteReview(userNo, reviewNo);
 	}
 
 }

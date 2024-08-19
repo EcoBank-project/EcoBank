@@ -51,4 +51,10 @@ public interface ChallConfirmService {
 	
 	//인증 좋아요 상태
 	public int confirmLikeStatus(int userNo, int confirmNo);
+	
+	//인증 신고 사유 목록
+	public List<ChallConfirmVO> declareList();
+	
+	//인증 신고 등록
+	public int declareInsert(ChallConfirmVO challConfirmVO);
 }

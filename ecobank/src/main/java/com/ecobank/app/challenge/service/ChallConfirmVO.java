@@ -30,7 +30,8 @@ public class ChallConfirmVO {
 	
 	//챌린지 인증 신고
 	private int confirmDeclareNo;		//인증 신고 번호
-	private String confirmDeclareType;	//인증 신고 분류
+	private String codeId;				//신고코드
+	private String declareType;			//인증 신고 분류(=confirmDeclareType)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date confirmDeclareAt;		//인증 신고 날짜
 	
