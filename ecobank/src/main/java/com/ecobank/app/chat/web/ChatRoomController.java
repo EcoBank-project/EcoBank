@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +43,27 @@ public class ChatRoomController {
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("nickname", nickName);
 		model.addAttribute("chatRooms", chatList);
+		return "chat/chatRoom";
+	}
+	
+	@GetMapping("/chatRoom/{chatNo}")
+	public String ChatRoom(@PathVariable Integer chatNo , HttpSession httpSession, Model model){
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		String nickName = (String) httpSession.getAttribute("nickname");
+		ChatRoomVO chatRoom = chatService.chatRoomInfo(chatNo, userNo);
+		
+		
+		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo, nickName);
+		String chatType = chatRoom.getChatType();
+		String chatName = chatRoom.getChatName();
+		
+		model.addAttribute("userNo", userNo);
+		model.addAttribute("chatType", chatType);
+		model.addAttribute("chatName", chatName);
+		model.addAttribute("nickname", nickName);
+		model.addAttribute("chatRooms", chatList);
+		
+		
 		return "chat/chatRoom";
 	}
 	
@@ -88,8 +110,9 @@ public class ChatRoomController {
 	// 채팅방 생성 - 오픈 채팅
 	@PostMapping("/chatRoom/createOpenChat")
 	@ResponseBody
-	public String chatOpen(@ModelAttribute ChatRoomVO chatRoom, @RequestPart("image") MultipartFile[] images) {
-		
-		return "1";
+	public Integer chatOpen(HttpSession httpSession, @ModelAttribute ChatRoomVO chatRoom, @RequestPart("image") MultipartFile[] images) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		Integer chatNo = chatService.ChatOpenInsert(chatRoom, userNo, images);
+		return chatNo;
 	}
 }
