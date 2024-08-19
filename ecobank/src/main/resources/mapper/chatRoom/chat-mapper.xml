@@ -7,13 +7,23 @@
 			   chat_name, 
 			   chat_enter_time,
 			   chat_type,
-			   chat_create_user 
+			   chat_create_user,
+			   chat_image 
 		from chat_entry ce join chat c 
                      		 on ce.chat_no = c.chat_no
 		where user_no = #{userNo}
 		AND chat_user_state = 'Q1'
 	</select>
-	
+	<!-- 채팅방 상세 조회 -->
+	<select id="selectChatRoomInfo" resultType="chatRoomVO">
+		SELECT chat_name, 
+		       chat_type, 
+		       user_no
+		FROM chat c join chat_entry ce
+		              on c.chat_no = ce.chat_no
+		WHERE c.chat_no = #{chatNo}
+		AND user_no = #{userNo}
+	</select>
 	<!-- 채팅방 채팅 로그 조회 -->
 	<select id="selectChatMessage" resultType="ChatMessageVO">
 		select msg_no, 
@@ -70,6 +80,9 @@
 		    #{chatName, mode=IN},
 		    #{userNo, mode=IN},
 		    #{chatType, mode=IN},
+		    #{chatPassWord, mode=IN},
+		    #{chatSearchAllow, mode=IN},
+		    #{chatImage, mode=IN},
 		    #{chatNo, mode=OUT, jdbcType=INTEGER}
 		    )
 		}

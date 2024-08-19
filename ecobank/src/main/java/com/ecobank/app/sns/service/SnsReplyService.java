@@ -30,5 +30,5 @@ public interface SnsReplyService {
 	public int insertFollow(SnsReplyVO snsReplyVO);
 		
 	//팔로우 삭제
-	public int deleteFollow(int followNo);
+	public int deleteFollow(SnsReplyVO snsReplyVO);
 }

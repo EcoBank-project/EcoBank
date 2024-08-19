@@ -32,5 +32,5 @@ public interface SnsReplyMapper {
 	public int insertFollow(SnsReplyVO snsReplyVO);
 	
 	//팔로우 삭제
-	public int deleteFollow(int snsVO);
+	public int deleteFollow(SnsReplyVO snsReplyVO);
 }

@@ -1,11 +1,20 @@
 package com.ecobank.app.chat.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.chat.mapper.ChatMapper;
 import com.ecobank.app.chat.service.ChatFollowVO;
@@ -19,6 +28,9 @@ import com.google.cloud.translate.Translation;
 
 @Service
 public class ChatServiceImpl implements ChatService{
+	
+	@Value("${file.upload.path}")
+	private String uploadPath;
 	
 	private ChatMapper chatMapper;
 	private final Translate translate;
@@ -43,9 +55,9 @@ public class ChatServiceImpl implements ChatService{
 	}
 
 	@Override
-	public ChatRoomVO chatRoomInfo() {
-		// TODO Auto-generated method stub
-		return null;
+	public ChatRoomVO chatRoomInfo(Integer chatNo, Integer userNo) {
+		ChatRoomVO chatRoom = chatMapper.selectChatRoomInfo(chatNo, userNo); 
+		return chatRoom;
 	}
 	
 	
@@ -85,9 +97,43 @@ public class ChatServiceImpl implements ChatService{
 		
 		return chatRoomVO.getChatNo();
 	}
+	// 오픈 채팅방 만들기
+	@Override
+	public int ChatOpenInsert(ChatRoomVO chatRoom, Integer userNo, MultipartFile[] images) {
+		if (images != null) {
+	        for (MultipartFile image : images) {
+	        	String fileName = image.getOriginalFilename();
+	        	String folderPath = makeFolder();
+	        	UUID uuid = UUID.randomUUID();
+				String uniqueFileName = folderPath + "/" + uuid + "_" + fileName;
+				String saveName = uploadPath + "/" + uniqueFileName;
+				Path savePath = Paths.get(saveName);
+				chatRoom.setChatImage(uniqueFileName);
+				try {
+					image.transferTo(savePath);
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+	        }
+	    }
+		chatRoom.setUserNo(userNo);
+		chatMapper.insertChatRoom(chatRoom);
+		return chatRoom.getChatNo();
+	}
+	
+	// 오픈 채팅방 이미지 저장
+	private String makeFolder() {
+		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+		String folderPath = str.replace("/", File.separator);
+        File uploadPathFoler = new File(uploadPath, folderPath);
+        if (uploadPathFoler.exists() == false) {
+			uploadPathFoler.mkdirs();
+        }
+		return str;
+	}
 	
 	
-	// 채팅방 만들기 - 참여자
+	// 채팅방 - 참여자
 	@Override
 	public int ChatUserInsert(Integer chatNo, Integer userNo) {
 		return chatMapper.insertChatUser(chatNo, userNo);

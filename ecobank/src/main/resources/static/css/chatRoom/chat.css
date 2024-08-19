@@ -68,9 +68,21 @@
 
 
     /*아이콘*/
-    .bi-plus-circle , .bi-chat{
+    .bi-plus-circle , .bi-chat, .bi-search{
         font-size: 45px;
         line-height: 45px;
+        color: #32C36C;
+        cursor: pointer;
+    }
+    .iconImage{
+    	width: 45px; 
+        height: 45px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    
+    .iconSlde{
+    	height: 780px;
     }
     
 	.chatRoom-list {

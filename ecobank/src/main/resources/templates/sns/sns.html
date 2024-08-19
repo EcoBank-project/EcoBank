@@ -58,6 +58,7 @@
 							</div>
 							<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn-primary" th:if="${sns.followYn == null}">팔로우</button>
 							<button type="button" th:data-userno="${sns.userNo}" class="followCancleBtn btn-info" th:unless="${sns.followYn == null}">팔로우 취소</button>
+							 <input type="number" th:value="${sns.feedNo}" hidden>
 						</div>
 						<div class="imghover">
 							<div th:text=${sns.feedNo} class="blind"></div>

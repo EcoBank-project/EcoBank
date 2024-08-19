@@ -75,8 +75,8 @@ public class SnsReplyServiceImpl implements SnsReplyService{
 	
 	//팔로우 삭제
 	@Override
-	public int deleteFollow(int followNo) {
-		return snsReplyMapper.deleteFollow(followNo);
+	public int deleteFollow(SnsReplyVO snsReplyVO) {
+		return snsReplyMapper.deleteFollow(snsReplyVO);
 	}
 	
 }
