@@ -15,6 +15,15 @@
 	  max-width: 50px;
 	  margin: 0 auto;
 	}
+	/* 하트 아이콘 기본 색상 */
+	.bi-heart {
+	    color: pink; /* 기본 하트 색상 */
+	}
+	
+	/* 하트 아이콘이 채워졌을 때 색상 */
+	.bi-heart-fill {
+	    color: hotpink; /* 채워진 하트 색상 */
+	}
 </style>
 </head>
 <body>
@@ -54,10 +63,12 @@
                         <!--/* <p><i class="fa fa-check-circle text-primary me-3"></i>시작 일시 : [[${#dates.format(detail.challStartAt, 'yyyy/MM/dd')}]]</p> */-->
                         <p><i class="fa fa-check-circle text-primary me-3"></i>챌린지 기간 : [[${#dates.format(detail.challStartAt, 'yyyy/MM/dd')} + ' ~ ' + ${#dates.format(detail.challCloseAt, 'yyyy/MM/dd')}]]</p>
                         <p><i class="fa fa-check-circle text-primary me-3"></i>챌린지 인증 성공 후 받는 점수 : [[${detail.challScore}]]점 획득</p>
-                        <div class="like-section">
-			                <i class="fas fa-heart"></i>
-			                <span th:text="${detail.challLikeNo}">50</span>
-			            </div>
+						<p>
+							<button id="likeButton" class="btn btn-outline-primary">
+								<i id="likeIcon" class="bi bi-heart"></i>
+							</button>
+							<span class="likes-count" id="totalCnt"></span>
+						</p>
                         <a th:id="challBtn" class="btn btn-primary rounded-pill py-3 px-5 mt-3" th:if="${detail.challState} == 'D2'">도전하기</a>
                         <a th:id="confirmBtn" class="btn btn-primary rounded-pill py-3 px-5 mt-3">인증하기</a>
                     </div>
@@ -84,8 +95,6 @@
             </div>
 		</div>
 	 </div>
-	<!-- Font Awesome for heart icon -->
-	<script src="<https://kit.fontawesome.com/a076d05399.js>" crossorigin="anonymous"></script>
 	<script>
 		let cNo = $('#cNo').val();
 		let fNo = $('#fNo').val();
@@ -117,7 +126,7 @@
 		    });
 		    detailImg(); //상세이미지 호출
 		});
-		
+
 		$('#challBtn').click(function(){
 			goToChallenge();
 		})
@@ -160,6 +169,79 @@
                     console.log(err);
                 }
             });
+            
+            
+            challLikeCnt();
+    		//챌린지 좋아요 개수 먼저 띄어주기
+    		function challLikeCnt(){
+    			let cnt = $('#totalCnt');
+    			$.ajax({
+    				url : 'challLikeCnt',
+    				type : 'get',
+    				data : {
+    					challNo : cNo
+    				},
+    				success : function(result){ //result에 cnt담겨있으니까
+    					cnt.text(result);
+    				},
+    				error : function(err){
+    					console.log(err);
+    				}
+    			})
+    		}
+    		
+    		//좋아요 했는지 안했는지 체크
+    		function likeCheck(){
+    			let status;
+    			$.ajax({
+    				url : 'challLikeStatus',
+    				type : 'get',
+    				data : {
+    					challNo : cNo
+    				},
+    				async: false, //success가 호출되기 전에 chk타서 
+    				success : function(result){
+    					status = result;
+    				},
+    				error : function(err){
+    					console.log(err);
+    				}
+    			})
+    			return status;
+    		}
+    		
+    		//하트채우기
+    		let likeIcon = $('#likeIcon');
+    		let chk = likeCheck();
+    		if(chk == 1){
+    			likeIcon.removeClass('bi bi-heart');
+    			likeIcon.addClass('bi bi-heart-fill');   
+    		}
+    		
+    		//좋아요 등록, 삭제
+			$('#likeIcon').click(function(){
+				likeCheck();
+				//상태가 1이면 url이 delete로, 0이면 url이 insert로 타게
+				let url = likeCheck() == 1 ? 'challLikeDelete' : 'challLikeInsert';
+				
+				$.ajax({
+					url : url,
+					type : 'post',
+					data : {
+						challNo : cNo
+					},
+					success : function(result){
+						//하트 채우기
+						likeIcon.toggleClass('bi-heart bi-heart-fill');
+						//cnt 바뀐 값 띄우기
+						challLikeCnt();
+						console.log(result);
+					},
+					error : function(err){
+						console.log(err);
+					}
+				})
+			})
         });
 		
 		//당일 인증 완료 후에 다시 인증하기 버튼을 클릭했을때

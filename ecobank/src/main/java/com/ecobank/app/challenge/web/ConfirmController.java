@@ -128,21 +128,4 @@ public class ConfirmController {
 		return "chall/review";
 	}
 	
-	//인증 좋아요 등록
-//	@PostMapping("likeInsert")
-//	public int confirmLikeInsert(ChallConfirmVO challConfirmVO) {
-//		int userNo = (Integer) httpSession.getAttribute("userNo");
-//		challConfirmVO.setUserNo(userNo);
-//		int confirmLikeNo = challConfirmService.confirmLikeInsert(challConfirmVO);
-//		return confirmLikeNo;
-//	}
-	
-	//인증 좋아요 등록
-	@PostMapping("confirmLikeInsert")
-	public void confirmLikeInsert(ChallConfirmVO challConfirmVO) {
-		int userNo = (Integer) httpSession.getAttribute("userNo");
-		challConfirmVO.setUserNo(userNo);
-		int confirmLikeNo = challConfirmService.confirmLikeInsert(challConfirmVO);
-	}
-	
 }

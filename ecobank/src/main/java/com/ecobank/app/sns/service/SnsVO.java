@@ -4,10 +4,13 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.ecobank.app.common.service.Criteria;
+
 import lombok.Data;
 
 @Data
-public class SnsVO {
+public class SnsVO extends Criteria{
+	
 
 	private Integer feedNo;			//피드번호
 	private String profileImg;      //회원 이미지
@@ -33,6 +36,7 @@ public class SnsVO {
 	private String declareCode;			//신고코드
 	private Integer replyNo;			//댓글번호
 	private Integer orderSns;			//정렬기준
+	private Integer followYn;			//팔로우여부
 
 	
 	

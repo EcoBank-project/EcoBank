@@ -50,21 +50,21 @@
 		WHERE reply_no = #{replyNo}
 	</delete>
 	
-		<!-- 좋아요 -->
-	<insert id="insertSnsLike" parameterType="SnsVO">
+	<!-- 좋아요 -->
+	<insert id="insertSnsLike" parameterType="SnsReplyVO">
 		<selectKey keyProperty="snsLikeNo" 
 					resultType="Integer"
 					order="BEFORE">
 			SELECT NVL(MAX(sns_like_no),1)+1
 			FROM sns_like
 		</selectKey>
-	Insert INTO sns_like(sns_like_no
-                    	,user_no
-                   		,feed_no) 
-	VALUES(
-			#{snsLikeNo}
-            ,#{userNo}
-            ,#{feedNo}
+		Insert INTO sns_like(sns_like_no
+                    		,user_no
+                   			,feed_no) 
+		VALUES(
+				#{snsLikeNo}
+         	   ,#{userNo}
+         	   ,#{feedNo}
 			)
 	</insert>
 			
@@ -74,7 +74,50 @@
 		 WHERE sns_like_no = #{snsLikeNo}
 	</delete>	
 	
+	<!-- 팔로워 조회 -->
+	<select id="selectFollower" parameterType="SnsReplyVO">
+		SELECT f.follower_id
+				,f.following_id
+				,u.user_no
+				,u.nickname
+		FROM follow f JOIN users u 
+						ON f.follower_id = u.user_no
+		WHERE f.following_id= #{userNo}
+	</select>
 	
+	<!-- 팔로잉 조회 -->
+	<select id="selectFollowing" parameterType="SnsReplyVO">
+		SELECT f.follower_id
+				,f.following_id
+				,u.user_no
+				,u.nickname
+		FROM follow f JOIN users u 
+						ON f.following_id = u.user_no
+		WHERE f.follower_id= #{userNo}
+	</select>
 	
+	<!-- 팔로우 하기 -->
+	<insert id="insertFollow" parameterType="SnsReplyVO">
+		<selectKey keyProperty="followNo" 
+					resultType="Integer"
+					order="BEFORE">		
+			SELECT NVL(MAX(follow_no),1)+1
+			FROM follow
+		</selectKey>
+		INSERT INTO follow(follow_no
+							, follower_id
+							, following_id )
+		VALUES(
+				#{followNo}
+         	   ,#{userNo}
+         	   ,#{followingId}
+			)
+	</insert>
+	
+	<!-- 팔로우 취소하기 -->
+	<delete id="deleteFollow" parameterType="int">		
+		DELETE FROM follow
+		WHERE follow_no = #{followNo}
+	</delete>
 	
 </mapper>

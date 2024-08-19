@@ -28,6 +28,18 @@ public interface ChallMapper {
 	//챌린지 단건 조회
 	public ChallVO selectChallInfo(ChallVO challVO);
 	
+	//챌린지 좋아요 전체 개수
+	public int challLikeTotalCnt(int challNo);
+	
+	//챌린지 좋아요 했는지 안했는지 여부
+	public int challLikeStatus(int userNo, int challNo);
+	
+	//챌린지 좋아요 등록
+	public int insertChallLike(ChallVO challVO);
+	
+	//챌린지 좋아요 삭제
+	public int deleteChallLike(int userNo, int challNo);
+	
 	//챌린지 등록
 	public int insertChallInfo(ChallVO challVO);
 	
@@ -42,5 +54,14 @@ public interface ChallMapper {
 	
 	//인증 회원 점수 목록
 	public List<Map<String, Object>> selectScoreAll();
+	
+	//좋아요순 정렬
+	public List<ChallVO> orderByLike();
+	
+	//내가 참여중인 챌린지순 정렬
+	public List<ChallVO> orderByEnter(int userNo);
+	
+	//최신 날짜 순 정렬
+	public List<ChallVO> orderByDate();
 	
 }

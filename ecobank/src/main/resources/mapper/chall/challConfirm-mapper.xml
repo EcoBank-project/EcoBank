@@ -220,7 +220,23 @@
 	<!-- 인증 좋아요 삭제 -->
 	<delete id="deleteConfirmLike" parameterType="int">
 		DELETE FROM chall_confirm_like
-		WHERE confirm_like_no = #{confirmLikeNo}
+		WHERE confirm_no = #{confirmNo}
+		AND user_no = #{userNo}
 	</delete>
 	
+	<!-- 인증 좋아요 했는지 안했는지 여부 -->
+	<select id="confirmLikeStatus" parameterType="int">
+		SELECT COUNT(*)
+		FROM chall_confirm_like
+		WHERE confirm_no = #{confirmNo}
+		AND user_no = #{userNo}
+	</select>
+	
+	<!-- 인증 좋아요 전체 개수 -->
+	<select id="likeTotalCnt" parameterType="int">
+		SELECT COUNT(*)
+		FROM chall_confirm_like
+		WHERE confirm_no = #{confirmNo}
+	</select>
+
 </mapper>

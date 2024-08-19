@@ -237,11 +237,30 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     		}
     	})
     	
-    	//좋아요 등록
+    	//좋아요 했는지 안했는지 우선 체크
     	$(document).ready(function(){
+    		let likeIcon = $('#likeIcon');
+    		$.ajax({
+    			url : 'confirmLikeStatus',
+    			type : 'get',
+    			data : {
+    				confirmNo: fNo
+    			},
+    			success : function(status){
+    				console.log(status);
+    				console.log(likeIcon);
+    				if(status == 1){ //좋아요 했는 상태
+	    				likeIcon.removeClass('bi bi-heart');
+    					likeIcon.addClass('bi bi-heart-fill');   
+    				}
+    			},
+    			error : function(err){
+    				console.log(err);
+    			}
+    		})
+    		
+    		//좋아요 등록
 	    	$('#likeButton').click(function(){
-	    		let likeIcon = $('#likeIcon'); 
-	            
 	            $.ajax({
 	            	url : 'confirmLikeInsert?confirmNo=' + fNo,
 	            	type : 'post',
@@ -249,12 +268,13 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	                    confirmNo: fNo
 	                },
 	            	success : function(result) {
-	                    if (result == 1) {
+	                    if (result.likeStatus == 1) { //좋아요 등록/삭제
 	                        likeIcon.toggleClass('bi-heart bi-heart-fill');
-	                        $('.likes-count').text(result.likesCount + ' Likes');
+	                        $('.likes-count').text(result.totalCnt + ' Likes');
 	                    } else {
 	                        alert('처리 오류');
-	                    }
+	                    } 
+	                    console.log(result);
 	                },
 	                error: function(err) {
 	                    console.log(err);

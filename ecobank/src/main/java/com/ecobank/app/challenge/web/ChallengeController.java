@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +37,9 @@ public class ChallengeController {
 	public ChallengeController(ChallService challService) {
 		this.challService = challService;
 	}
+	
+	@Autowired
+	private HttpSession httpSession;
 	
 	//챌린지 목록 - 회원용
 	//오픈 예정 챌린지(D1)
@@ -74,6 +80,16 @@ public class ChallengeController {
 		model.addAttribute("list", list);
 		return "chall/challenge";
 	}
+	
+	//챌린지 정렬
+	@GetMapping("challengeSort")
+	public String challengeSort(Model model, @RequestParam("select") int select) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		List<ChallVO> list = challService.challengeSort(userNo, select);
+		model.addAttribute("list", list);
+		return "chall/search";
+	}
+	
 	
 	//챌린지 단건 조회 - 회원
 	@GetMapping("detail")
