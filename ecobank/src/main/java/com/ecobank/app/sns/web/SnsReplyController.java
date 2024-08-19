@@ -85,7 +85,7 @@ public class SnsReplyController {
 	
 	//팔로우 삭제
 	@DeleteMapping("deleteFollow")
-	public int deleteFollow(Integer followNo) {
-		return snsReplyService.deleteFollow(followNo);
+	public int deleteFollow(SnsReplyVO snsReplyVO) {
+		return snsReplyService.deleteFollow(snsReplyVO);
 	}
 }
