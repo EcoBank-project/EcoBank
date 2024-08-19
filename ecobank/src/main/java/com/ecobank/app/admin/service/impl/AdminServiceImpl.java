@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ecobank.app.QnA.service.QnaVO;
 import com.ecobank.app.admin.mapper.AdminMapper;
 import com.ecobank.app.admin.service.AdminService;
 import com.ecobank.app.admin.service.ChallDeclareVO;
@@ -118,6 +119,19 @@ public class AdminServiceImpl implements AdminService {
 	public List<adminSnsVO> getRepliesByFeedNo(int feedNo) {
 		// TODO Auto-generated method stub
 		return adminMapper.selectRepliesByFeedNo(feedNo);
+	}
+	
+	// 전체조회
+	@Override
+	public List<QnaVO> qnaUser() {
+		// TODO Auto-generated method stub
+		return adminMapper.qnaUser();
+	}
+	
+	@Override
+	public QnaVO qnaSelectInfo(int qnaNo) {
+		// TODO Auto-generated method stub
+		return adminMapper.qnaSelectInfo(qnaNo);
 	}
 
 }

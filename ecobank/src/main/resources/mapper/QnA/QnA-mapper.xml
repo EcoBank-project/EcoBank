@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.QnA.mapper.QnaMapper">
+		<!--qna전체조회-->
+	<select id="qnaUserList" resultType="com.ecobank.app.QnA.service.QnaVO">
+		select qna_no,qna_title
+		from QnA
+	</select>
+	<!--등록-->
+<insert id="insertqnaInfo" parameterType="QnaVO">
+    INSERT INTO QNA
+    (qna_no,
+    qna_content,
+    qna_title,
+    qna_createat,
+    user_no)
+    VALUES
+    (QNA_SEQ.NEXTVAL,
+    #{qnaContent},
+    #{qnaTitle},
+    sysdate,
+    #{userNo})
+</insert>
+	<!--단건조회-->
+	 <select id="qnaSelectInfo" parameterType="Integer" resultType="com.ecobank.app.QnA.service.QnaVO">
+        SELECT qna_no, qna_content, qna_title, qna_createat, user_no
+        FROM qna
+        WHERE qna_no = #{qnaNo}
+    </select>
+
+
+</mapper>

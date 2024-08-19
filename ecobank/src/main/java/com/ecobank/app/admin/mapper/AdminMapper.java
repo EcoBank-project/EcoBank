@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.ecobank.app.QnA.service.QnaVO;
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
@@ -58,4 +59,10 @@ public interface AdminMapper {
    Map<String,Object> SnsDeclareList(int feedNo);
    
    List<adminSnsVO> selectRepliesByFeedNo(int feedNo);
+   
+   	//QNA 전체 조회
+ 		List<QnaVO> qnaUser();
+ 	
+ 	//QNA 단건 조회
+ 		 QnaVO qnaSelectInfo(int qnaNo);	
 }

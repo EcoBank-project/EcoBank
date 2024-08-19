@@ -41,30 +41,18 @@
    
       </select>
 		
-		
-		<!-- sns 댓글 신고 목록 -->
-		<select id="SnsReplyDeclareList" resultType="com.ecobank.app.admin.service.SnsDeclareVO">
-		SELECT DECLARE_NO,
-        DECLAREAT,
-        CONFIRM_USER_NO,
-        DECLARE_CODE,
-        REPLY_NO,
-        FEED_NO
-        FROM sns_declare
-        WHERE  REPLY_NO IS NOT NULL AND  REPLY_NO != 0
-		</select>
-		
+				
 		<!-- sns 신고 목록 -->
-		<select id="SnsDeclareList" parameterType="int" resultType="map">
-		SELECT DECLARE_NO,
-        DECLAREAT,
-        CONFIRM_USER_NO,
-        DECLARE_CODE,
-        FEED_NO
-        FROM sns_declare
-        WHERE  FEED_NO = #{feedNo}
-        AND  FEED_NO != 0
-		</select>
+	<select id="SnsDeclareList" parameterType="int" resultType="map">
+    SELECT DECLARE_NO,
+           DECLAREAT,
+           CONFIRM_USER_NO,
+           DECLARE_CODE,
+           FEED_NO
+    FROM sns_declare
+    WHERE FEED_NO = #{feedNo}
+      AND FEED_NO != 0
+</select>
 		
 		<delete id="snsDeclareDelete">
 			 DELETE FROM sns_DECLARE
@@ -128,21 +116,23 @@
 		on a.confirm_no = b.confirm_no
 		group by a.user_no 
     </select>
-<!--댓글 조회-->
-    <select id="selectSnsreply" parameterType="int" resultType="map">
-	select 	feed_no,
-			reply_no,
-			reply_content,
-			user_no
-			reply_createat
-	from sns_reply
-	where feed_no = #{feedNo}
-	</select>
+
 <!-- 댓글조회 -->
 <select id="selectRepliesByFeedNo" resultType="com.ecobank.app.admin.service.adminSnsVO">
         SELECT reply_no, reply_content, user_no, reply_createat, feed_no, sns_situation
         FROM sns_reply
         WHERE feed_no = #{feedNo}
+    </select>
+    <!--qna전체조회-->
+    <select id="qnaUser" resultType="com.ecobank.app.QnA.service.QnaVO">
+		select qna_no,qna_title
+		from QnA
+	</select>
+	<!--qna단건조회-->
+	<select id="qnaSelectInfo" parameterType="Integer" resultType="com.ecobank.app.QnA.service.QnaVO">
+        SELECT qna_no, qna_content, qna_title, qna_createat, user_no
+        FROM qna
+        WHERE qna_no = #{qnaNo}
     </select>
 	
 

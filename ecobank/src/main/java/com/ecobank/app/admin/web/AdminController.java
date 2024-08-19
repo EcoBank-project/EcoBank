@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ecobank.app.QnA.service.QnaVO;
 import com.ecobank.app.admin.service.AdminService;
 import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
@@ -172,5 +173,23 @@ public class AdminController {
         return "redirect:/adminSns";
     }
     
+    // QNA 목록
+    @GetMapping("QnaUser")
+    public String QnaUser(Model model) {
+        List<QnaVO> qnaUser = adminService.qnaUser();
+        model.addAttribute("qnaUser", qnaUser);
+        return "admins/QnaUser";
+    }
+    
+  //QnA 단건조회
+    @GetMapping("/admin/{qnaNo}")
+    public String getQnaInfo(@PathVariable Integer qnaNo, Model model) {
+        QnaVO qnaVO = adminService.qnaSelectInfo(qnaNo);
+        if (qnaVO == null) {
+            return "error"; // QNA가 없을 경우 오류 페이지로 리디렉션
+        }
+        model.addAttribute("qna", qnaVO);
+        return "admins/adminQnaDetail"; // QNA 상세 페이지로 이동
+    }
      
 }
