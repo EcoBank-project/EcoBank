@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatService;
 
@@ -34,7 +33,7 @@ public class ChatMessageController {
 	// 채팅방 입장
 	@MessageMapping("/chat.enter")
 	@SendTo("/topic/message")
-	public ChatMessageDTO enterUser(@Payload ChatMessageDTO message) {
+	public ChatMessageVO enterUser(@Payload ChatMessageVO message) {
 		return message;
 	}
 		
@@ -67,6 +66,9 @@ public class ChatMessageController {
 			}
 		//그룹 채팅
 		}else if("O2".equals(chatType)){
+			messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatNo(), message);
+		//오픈 채팅	
+		}else if("O3".equals(chatType)){
 			messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatNo(), message);			
 		}
 	}
