@@ -2,6 +2,165 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.home.mapper.HomeMapper">
 
-
+	<!-- 인기챌린지( 종료된 챌린지, 참가인원수 기준 1~5위) -->	
+	<select id="getTopFiveFinishedChallenges" resultType="com.ecobank.app.home.service.ChallengeVO">
+		SELECT chall_no, 
+		       chall_title,
+		       chall_content,
+		       chall_startat, 
+		       chall_closeat, 
+		       chall_state, 
+		       main_img, 
+		       detail_img, 
+		       chall_score, 
+		       view_count, 
+		       chall_createat, 
+		       chall_updateat, 
+		       user_no,
+		       user_count
+		FROM (
+		        SELECT c.chall_no,
+		               c.chall_title, 
+		               c.chall_content, 
+		               c.chall_startat, 
+		               c.chall_closeat, 
+		               c.chall_state, 
+		               c.main_img, 
+		               c.detail_img, 
+		               c.chall_score, 
+		               c.view_count, 
+		               c.chall_createat, 
+		               c.chall_updateat, 
+		               c.user_no,
+		               count(e.user_no) AS user_count
+		        FROM chall c join chall_enter e on c.chall_no = e.chall_no
+		        WHERE chall_state='D3'
+		        GROUP BY c.chall_no,
+		                 c.chall_title, 
+		                 c.chall_content, 
+		                 c.chall_startat, 
+		                 c.chall_closeat, 
+		                 c.chall_state, 
+		                 c.main_img, 
+		                 c.detail_img, 
+		                 c.chall_score, 
+		                 c.view_count, 
+		                 c.chall_createat, 
+		                 c.chall_updateat, 
+		                 c.chall_no, 
+		                 c.user_no
+		        order by 14 desc
+		)
+		WHERE ROWNUM BETWEEN 1 AND 6
+	</select>
+	<!-- 인기챌린지( 진행중 챌린지, 참가인원수 기준 1위) -->
+	<select id="getMostPopularChallenge" resultType="com.ecobank.app.home.service.ChallengeVO">
+		SELECT chall_no, 
+		       chall_title,
+		       chall_content,
+		       chall_startat, 
+		       chall_closeat, 
+		       chall_state, 
+		       main_img, 
+		       detail_img, 
+		       chall_score, 
+		       view_count, 
+		       chall_createat, 
+		       chall_updateat, 
+		       user_no,
+		       user_count
+		FROM (
+		        SELECT c.chall_no,
+		               c.chall_title, 
+		               c.chall_content, 
+		               c.chall_startat, 
+		               c.chall_closeat, 
+		               c.chall_state, 
+		               c.main_img, 
+		               c.detail_img, 
+		               c.chall_score, 
+		               c.view_count, 
+		               c.chall_createat, 
+		               c.chall_updateat, 
+		               c.user_no,
+		               count(e.user_no) AS user_count
+		        FROM chall c 
+		        JOIN chall_enter e 
+		          ON c.chall_no = e.chall_no
+		        WHERE chall_state = 'D2'
+		        GROUP BY c.chall_no,
+		                 c.chall_title, 
+		                 c.chall_content, 
+		                 c.chall_startat, 
+		                 c.chall_closeat, 
+		                 c.chall_state, 
+		                 c.main_img, 
+		                 c.detail_img, 
+		                 c.chall_score, 
+		                 c.view_count, 
+		                 c.chall_createat, 
+		                 c.chall_updateat, 
+		                 c.chall_no, 
+		                 c.user_no
+		        ORDER BY count(e.user_no) DESC
+		)
+		WHERE ROWNUM = 1
+	</select>
+	<!-- 종료임박챌린지 -->
+	<select id="getOverSoonChallenges" resultType="com.ecobank.app.home.service.ChallengeVO">
+		SELECT chall_no, 
+		       chall_title,
+		       chall_content,
+		       chall_startat, 
+		       chall_closeat, 
+		       chall_state, 
+		       main_img, 
+		       detail_img, 
+		       chall_score, 
+		       view_count, 
+		       chall_createat, 
+		       chall_updateat, 
+		       user_no,
+		       user_count,
+		       d_day
+		FROM (
+		        SELECT c.chall_no,
+		               c.chall_title, 
+		               c.chall_content, 
+		               c.chall_startat, 
+		               c.chall_closeat, 
+		               c.chall_state, 
+		               c.main_img, 
+		               c.detail_img, 
+		               c.chall_score, 
+		               c.view_count, 
+		               c.chall_createat, 
+		               c.chall_updateat, 
+		               c.user_no,
+		               count(e.user_no) AS user_count,
+		               to_date(c.chall_closeat,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd') AS d_day
+		        FROM chall c 
+		        JOIN chall_enter e 
+		          ON c.chall_no = e.chall_no
+		        WHERE chall_state = 'D2'
+		        GROUP BY c.chall_no,
+		                 c.chall_title, 
+		                 c.chall_content, 
+		                 c.chall_startat, 
+		                 c.chall_closeat, 
+		                 c.chall_state, 
+		                 c.main_img, 
+		                 c.detail_img, 
+		                 c.chall_score, 
+		                 c.view_count, 
+		                 c.chall_createat, 
+		                 c.chall_updateat, 
+		                 c.chall_no, 
+		                 c.user_no,
+		                 to_date(c.chall_closeat,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd')
+		        ORDER BY user_count DESC, d_day asc
+		)
+		WHERE ROWNUM BETWEEN 1 AND 6
+	</select>
 </mapper>
 	

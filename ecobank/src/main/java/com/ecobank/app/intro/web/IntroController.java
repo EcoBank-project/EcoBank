@@ -27,24 +27,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 public class IntroController {
 	private CarbonService carbService;
-	private CarbUserService userService;
 	private ScoreService scoreService;
 	
 	@Autowired
 	public IntroController(CarbonService carbService, CarbUserService userService, ScoreService scoreService) {
 		this.carbService = carbService;
-		this.userService = userService;
 		this.scoreService = scoreService;
-	}
-
-	@GetMapping("/")
-	public String home(Model model) {
-		// 1. 기능수행
-
-		// 2. 클라이언트에 전달할 데이터 담기
-
-		// 3. 데이터를 출력할 페이지 결정
-		return "main/home";
 	}
 
 	// 소개 페이지
@@ -82,48 +70,4 @@ public class IntroController {
 		// 3. 데이터를 출력할 페이지 결정
 		return "main/about";
 	}
-
-	@GetMapping("ip-info")
-	@ResponseBody
-	public ResponseEntity<String> getIpInfo(HttpServletRequest request) {
-		try {
-			// String ip = getClientIp(request);
-			String apiUrl = "https://api.ip.pe.kr/json/";
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
-			System.out.println(response.getBody());
-			return ResponseEntity.ok(response.getBody());
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching IP information.");
-		}
-	}
-
-	@PostMapping("set-country")
-	@ResponseBody
-	public ResponseEntity<String> setCountry(@RequestBody Map<String, String> requestData) {
-
-		// countryCode userId
-		String countryCode = requestData.get("country_code");
-		String userId = requestData.get("user_id");
-
-		// 요청 처리(user테이블 국가코드 update 프로시저 실행)
-		System.out.println(countryCode);
-		System.out.println(userId);
-		// 처리 결과에 따라 적절한 응답을 반환합니다.
-		// 처리 결과에 따라 적절한 응답을 반환합니다.
-		if (countryCode != null && userId != null) {
-			try {
-				userService.updateCountryInfo(userId, countryCode);
-				return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON) // 응답 Content-Type 설정
-						.body("{\"message\":\"Country Code Update Success!\"}");
-			} catch (Exception e) {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON)
-						.body("{\"message\":\"Error updating country information.\"}");
-			}
-		} else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON)
-					.body("{\"message\":\"Invalid data\"}");
-		}
-	}
-
 }

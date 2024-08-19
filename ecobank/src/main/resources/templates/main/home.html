@@ -12,7 +12,46 @@
 <!--/* jsp = ${pageContext.request.contextPath} */-->
 
 <title>home.html</title>
+<style>
 
+        .challenge-info {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .challenge-info span {
+            display: block;
+        }
+        .challenge-info .participants {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .challenge-info .certifications {
+            font-size: 16px;
+            color: gray;
+        }
+        .challenge-info .challenge-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+        }
+        
+        /* 이미지 크기 조정을 위해 Swiper 슬라이드에 스타일 추가 */
+    .mySwiperCustom {
+	    width: 100%; /* 컨테이너의 너비를 100%로 설정 */
+	    max-width: 800px; /* 필요시 max-width를 설정하여 너비 제한 */
+	}
+    .mySwiperCustom .swiper-slide img {
+        max-height: 250px; /* 최대 이미지 높이 설정 */
+        width: auto; /* 자동 너비 조정 */
+        object-fit: cover; /* 이미지 비율 유지하며 컨테이너에 맞춤 */
+    }
+    
+    .container-about {
+    display: flex;
+    justify-content: space-between; /* Swiper와 challenge-info 간의 공간을 자동 조절 */
+    align-items: center; /* 세로 정렬을 중앙으로 */
+}
+    </style>
 </head>
 <body>
 	<!--  BreadCrumb Start -->
@@ -38,7 +77,9 @@
                     <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
 		                <h6 class="text-primary">Top Rated Challenge</h6>
 		                <h1 class="mb-4">Top 1 Challenge</h1>
+		                <img src="https://picsum.photos/500/500" />
 		            </div>
+		            
                  </div>
                 <div class="swiper-slide swiper-slide-next" style="width: 1004px; margin-right: 30px;" role="group"
                     aria-label="2 / 3" data-swiper-slide-index="1">
@@ -46,12 +87,52 @@
 		                <h6 class="text-primary">사이트순위</h6>
 		                <h1 class="mb-4">Top 3 Ranker</h1>
 		            </div>
+	                <div class="container-fluid d-flex justify-content-center align-items-center">
+		                <div class="owl-item center">
+								<div class="testimonial-item text-center">
+									<div class="testimonial-img position-relative">
+										<img class="img-fluid rounded-circle mx-auto mb-5"
+											src="https://api.dicebear.com/9.x/bottts/svg?style=circle">
+									</div>
+									<div class="testimonial-text text-center rounded p-4">
+										<h5 class="mb-1">Client Name</h5>
+										<span class="fst-italic">Profession</span>
+									</div>
+								</div>
+							</div>
+							<div class="owl-item center" >
+								<div class="testimonial-item text-center">
+									<div class="testimonial-img position-relative">
+										<img class="img-fluid rounded-circle mx-auto mb-5"
+											src="https://api.dicebear.com/9.x/bottts/svg?style=circle">
+									</div>
+									<div class="testimonial-text text-center rounded p-4">
+										<h5 class="mb-1">Client Name</h5>
+										<span class="fst-italic">Profession</span>
+									</div>
+								</div>
+							</div>
+							<div class="owl-item center" >
+								<div class="testimonial-item text-center">
+									<div class="testimonial-img position-relative">
+										<img class="img-fluid rounded-circle mx-auto mb-5"
+											src="https://api.dicebear.com/9.x/bottts/svg?style=circle">
+									</div>
+									<div class="testimonial-text text-center rounded p-4">
+										<h5 class="mb-1">Client Name</h5>
+										<span class="fst-italic">Profession</span>
+									</div>
+								</div>
+							</div>
+							
+						</div>
 				</div>
                 <div class="swiper-slide" style="width: 1004px; margin-right: 30px;" role="group" aria-label="3 / 3"
                     data-swiper-slide-index="2">
                     <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
 		                <h6 class="text-primary">Notice</h6>
 		                <h1 class="mb-4">공지사항</h1>
+		                <img src="https://picsum.photos/500/500" />
 		            </div>
                 </div>
             </div>
@@ -74,7 +155,131 @@
 </div>
     <!-- End of Top section -->
     
+<!-- 인기챌린지(종료) -->
+<div class="container-fluid bg-light overflow-hidden my-5 px-lg-0">
+		<div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+	        <h1 class="mb-4">Top 5 Finished Challenge</h1>
+	    </div>
+        <div class="container about px-lg-0">
+            <div class="row g-0 mx-lg-0">
+                <div class="col-lg-4 about-text py-5 wow fadeIn" data-wow-delay="0.5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeIn;">
+                    <div class="p-lg-5 pe-lg-0">
+                    <h1 id="challenge-title" class="mb-4">챌린지 제목</h1>
+                    <p><i class="fa fa-check-circle text-primary me-3"></i><span id="challenge-participants">참여인원</span></p>
+                    <p><i class="fa fa-check-circle text-primary me-3"></i><span id="challenge-certifications">인증</span></p>
+                    <a href="#" id="challenge-link" class="btn btn-primary rounded-pill py-3 px-5 mt-3">챌린지 보기</a>
+                </div>
+                </div>
+                <div class="col-lg-8 ps-lg-0 wow fadeIn d-flex justify-content-left align-items-center" data-wow-delay="0.1s" style="min-height: 400px; visibility: visible; animation-delay: 0.1s; animation-name: fadeIn;">
+ 
+			 <div class="swiper mySwiperCustom swiper-coverflow swiper-3d swiper-initialized swiper-horizontal swiper-watch-progress">
+			    <div class="swiper-wrapper" aria-live="polite" style="cursor: pointer;">
+			        <!-- 반복해서 swiper-slide 생성 -->
+			        <div class="swiper-slide" th:each="challenge, iterStat : ${finishedList}" 
+					     role="group" 
+					     th:aria-label="${iterStat.index + 1} + ' / ' + ${finishedList.size()}" 
+					     th:data-index="${iterStat.index}" 
+					     th:data-challno="${challenge.challNo}"
+					     onclick="handleSlideClick(this)">
+					    <img th:src="@{'/images/' + ${challenge.mainImg}}" th:alt="${challenge.challTitle}" class="img-fluid">
+					</div>
+			    </div>
+			    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+			</div>
+            </div>
+            </div>
+        </div>
+    </div>
+<!-- 인기챌린지(종료) -->
 
+
+<!-- 종료임박 챌린지 -->
+<div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                <h6 class="text-primary">challenges</h6>
+                <h1 class="mb-4">종료임박 챌린지</h1>
+            </div>
+            <div class="row g-4 justify-content-center align-items-center">
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                    <div class="team-item overflow-hidden">
+                        <div class="p-4">
+                            <h5 style="text-align:center;">D-1</h5>
+                        </div>
+                        <div class="d-flex">
+                            <img class="img-fluid" src="img/team-1.jpg" alt="">
+
+                        </div>
+                        <div class="p-4">
+                            <h5 style="text-align:center;">Full Name</h5>
+                            <span style="text-align:center;">Designation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
+                    <div class="team-item overflow-hidden">
+                        <div class="p-4">
+                            <h5 style="text-align:center;">D-1</h5>
+                        </div>
+                        <div class="d-flex">
+                            <img class="img-fluid" src="img/team-2.jpg" alt="">
+
+                        </div>
+                        <div class="p-4">
+                            <h5 style="text-align:center;">Full Name</h5>
+                            <span style="text-align:center;">Designation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                    <div class="team-item overflow-hidden">
+                        <div class="p-4">
+                            <h5 style="text-align:center;">D-1</h5>
+                        </div>
+                        <div class="d-flex">
+                            <img class="img-fluid" src="img/team-3.jpg" alt="">
+
+                        </div>
+                        <div class="p-4">
+                            <h5 style="text-align:center;">Full Name</h5>
+                            <span style="text-align:center;">Designation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.7s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                    <div class="team-item overflow-hidden">
+                        <div class="p-4">
+                            <h5 style="text-align:center;">D-1</h5>
+                        </div>
+                        <div class="d-flex">
+                            <img class="img-fluid" src="img/team-2.jpg" alt="">
+
+                        </div>
+                        <div class="p-4">
+                            <h5 style="text-align:center;">Full Name</h5>
+                            <span style="text-align:center;">Designation</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.9s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
+                    <div class="team-item overflow-hidden">
+                        <div class="p-4">
+                            <h5 style="text-align:center;">D-1</h5>
+                        </div>
+                        <div class="d-flex">
+                            <img class="img-fluid" src="img/team-3.jpg" alt="">
+
+                        </div>
+                        <div class="p-4">
+                            <h5>Full Name</h5>
+                            <span>Designation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- 종료임박 챌린지 -->
 	<th:block sec:authorize="isAuthenticated()">
 		<div>
 			<h4>로그인 정보</h4>
@@ -86,7 +291,7 @@
 	</th:block>
 	<script type="text/javascript" th:src="@{/js/home/home.js}"></script>
 	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script>
+<script type="text/javascript" th:inline="javascript">
     var swiper = new Swiper(".mySwiper", {
       slidesPerView: 1,
       spaceBetween: 30,
@@ -100,6 +305,92 @@
         prevEl: ".swiper-button-prev",
       },
     });
+    
+    document.querySelectorAll('.swiper-slide img').forEach(img => {
+        img.onerror = function() {
+            this.src = 'https://via.placeholder.com/250';  // 대체 이미지 경로
+        };
+    });
+    
+    // 챌린지 정보 배열
+	 const challengeInfo = /*[[${finishedList}]]*/ [];
+
+
+    // 배열 내 객체 속성들을 JavaScript에서 사용할 수 있도록 변환
+     let parsedChallengeInfo=[];
+    
+    var swiperCustom = new Swiper('.mySwiperCustom', {
+        effect: 'coverflow',
+        grabCursor: false,
+        centeredSlides: true,
+        slidesPerView: 3,
+        spaceBetween: 10,
+        coverflowEffect: {
+          rotate: 50,
+          stretch: 0,
+          depth: 300,   // depth 값을 크게 해서 active 슬라이드의 크기를 강조
+          modifier: 1.5,  // 이 값을 조절하여 active 슬라이드의 크기를 더 크게
+          slideShadows: true,
+        },
+        pagination: {
+          el: null, // No pagination bullets
+        },
+        simulateTouch: false, // 터치 및 드래그 비활성화
+        allowTouchMove: false, // 슬라이드 드래그를 완전히 비활성화
+        on: {
+            slideChange: function () {
+                updateChallengeInfo(swiperCustom.activeIndex);
+            },
+        },
+    });
+
+    function handleSlideClick(element) {
+        // 슬라이드의 인덱스와 챌린지 번호 가져오기
+        const index = element.getAttribute('data-index');
+        const challNo = element.getAttribute('data-challno');
+        
+        console.log('Index:', index); // 확인용 콘솔 출력
+        console.log('Challenge No:', challNo); // 확인용 콘솔 출력
+        
+        // Swiper 슬라이드로 이동
+        swiperCustom.slideTo(parseInt(index));
+        
+        // challenge-link의 href 속성 업데이트
+        const challengeLink = document.getElementById('challenge-link');
+        challengeLink.href = '/challenge/' + challNo;
+
+        // 슬라이드 이동 후 challenge-info 정보 갱신
+        updateChallengeInfo(index);
+    }
+
+    // 슬라이드 클릭 시 이벤트 설정
+    function updateChallengeInfo(index) {
+        const info = parsedChallengeInfo[index];
+        console.log(info);
+        document.getElementById('challenge-title').innerText = info.title;
+        document.getElementById('challenge-participants').innerText = `참여인원: ${info.participants}`;
+        document.getElementById('challenge-certifications').innerText = `인증: ${info.certifications}`;
+        document.getElementById('challenge-link').setAttribute('href', info.link);
+    }
+        
+        
+        
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            // challengeInfo 배열을 콘솔에 출력
+            console.log(challengeInfo);
+
+            // 배열 내 객체 속성들을 JavaScript에서 사용할 수 있도록 변환
+            parsedChallengeInfo = challengeInfo.map(challenge => ({
+                title: challenge.challTitle,
+                participants: challenge.userCount,
+                certifications: challenge.challScore, // 예시로 challScore를 certifications에 매핑
+                link: `/detail?challNo=${challenge.challNo}`
+            })); 
+
+            // 변환된 parsedChallengeInfo도 콘솔에 출력
+            console.log('Parsed Challenge Info:', parsedChallengeInfo);
+        });
   </script>
 </body>
 </html>
