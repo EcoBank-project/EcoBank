@@ -15,5 +15,7 @@ public interface QnaService {
 	int insertqnaInfo(QnaVO qnaVO);
 	//QNA 단건 조회
 	 QnaVO qnaSelectInfo(int qnaNo);
+	 //QNA  삭제
+	 int qnaDelete(int qnaVo);
 	
 }

@@ -118,7 +118,7 @@
     </select>
 
 <!-- 댓글조회 -->
-<select id="selectRepliesByFeedNo" resultType="com.ecobank.app.admin.service.adminSnsVO">
+ <select id="selectRepliesByFeedNo" parameterType="int" resultType="com.ecobank.app.admin.service.adminSnsVO">
         SELECT reply_no, reply_content, user_no, reply_createat, feed_no, sns_situation
         FROM sns_reply
         WHERE feed_no = #{feedNo}

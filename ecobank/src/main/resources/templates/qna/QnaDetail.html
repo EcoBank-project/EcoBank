@@ -4,24 +4,33 @@
       layout:decorate="~{common/layouts/default_layout}"
       layout:fragment="Content">
 <head>
-    <meta charset="UTF-8">
-    <title>QNA Detail</title>
+    <!-- 부트스트랩 CSS 포함 -->
+    <title>QNA 상세 정보</title>
 </head>
 <body>
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">QNA 상세 정보</h5>
-        </div>
-        <div class="card-body">
-            <!-- QNA 세부 정보 표시 -->
-            <p><strong>번호:</strong> <span th:text="${qna.qnaNo}"></span></p>
-            <p><strong>제목:</strong> <span th:text="${qna.qnaTitle}"></span></p>
-            <p><strong>내용:</strong> <span th:text="${qna.qnaContent}"></span></p>
-            <p><strong>등록일:</strong> <span th:text="${qna.qnaCreateat}"></span></p>
-            <p><strong>작성자 번호:</strong> <span th:text="${qna.userNo}"></span></p>
-            <!-- 뒤로 가기 버튼 -->
-            <a href="/qna" class="btn btn-secondary">목록으로 돌아가기</a>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">QNA 상세 정보</h5>
+            </div>
+            <div class="card-body">
+                <!-- QNA 세부 정보 표시 -->
+                <p><strong>번호:</strong> <span th:text="${qna.qnaNo}"></span></p>
+                <p><strong>제목:</strong> <span th:text="${qna.qnaTitle}"></span></p>
+                <p><strong>내용:</strong> <span th:text="${qna.qnaContent}"></span></p>
+                <p><strong>등록일:</strong> <span th:text="${qna.qnaCreateat}"></span></p>
+                <p><strong>작성자 번호:</strong> <span th:text="${qna.userNo}"></span></p>
+                <!-- 뒤로 가기 버튼 -->
+                <a href="/QnaUserList" class="btn btn-secondary">목록으로 돌아가기</a>
+				<form th:action="@{/qnaDelete}" method="post" style="display:inline;">
+				                                <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
+				                                <button type="submit" class="btn btn-danger">삭제</button>
+				                            </form>
+            </div>
         </div>
     </div>
+
+
 </body>
 </html>

@@ -27,6 +27,14 @@
         FROM qna
         WHERE qna_no = #{qnaNo}
     </select>
-
+    
+    <!--삭제 -->
+    <delete id="qnaDelete">
+    delete from  qna 
+	where qna_no = #{qnaNo}
+	</delete>
+	
+	
+	
 
 </mapper>

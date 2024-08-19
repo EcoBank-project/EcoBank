@@ -12,4 +12,6 @@ public interface QnaMapper {
 	int insertqnaInfo(QnaVO qnaVO);
 	//QNA 단건 조회
 	 QnaVO qnaSelectInfo(int qnaNo);
+	 //qna삭제
+	 int qnaDelete(int qnaVo);
 }

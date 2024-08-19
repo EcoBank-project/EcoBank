@@ -56,7 +56,8 @@ public interface AdminMapper {
    Map<String,Object> selectSnsreply(int feedNo);
    
    //sns 댓글 조회
-   Map<String,Object> SnsDeclareList(int feedNo);
+   List<Map<String, Object>> SnsDeclareList(@Param("feedNo") int feedNo);
+   
    
    List<adminSnsVO> selectRepliesByFeedNo(int feedNo);
    

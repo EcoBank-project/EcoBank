@@ -106,20 +106,12 @@ public class AdminServiceImpl implements AdminService {
 		// TODO Auto-generated method stub
 		return adminMapper.selectSns(adminSnsVO);
 	}
-
+	//sns 신고 조회 
 	@Override
-	public Map<String, Object> SnsDeclareList(int feedNo) {
-		// TODO Auto-generated method stub
-		return adminMapper.SnsDeclareList(feedNo);
-		
+	public List<Map<String, Object>> SnsDeclareList(int feedNo) {
+	    return adminMapper.SnsDeclareList(feedNo);
 	}
-	//sns 댓글 조회 
 
-	@Override
-	public List<adminSnsVO> getRepliesByFeedNo(int feedNo) {
-		// TODO Auto-generated method stub
-		return adminMapper.selectRepliesByFeedNo(feedNo);
-	}
 	
 	// 전체조회
 	@Override
@@ -132,6 +124,11 @@ public class AdminServiceImpl implements AdminService {
 	public QnaVO qnaSelectInfo(int qnaNo) {
 		// TODO Auto-generated method stub
 		return adminMapper.qnaSelectInfo(qnaNo);
+	}
+
+	@Override
+	public List<adminSnsVO> selectRepliesByFeedNo(int feedNo) {
+	    return adminMapper.selectRepliesByFeedNo(feedNo);
 	}
 
 }

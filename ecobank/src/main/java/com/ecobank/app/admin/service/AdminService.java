@@ -50,9 +50,9 @@ public interface AdminService {
 
 	List<adminSnsVO> selectSns(adminSnsVO adminSnsVO);
 	
-	Map<String,Object> SnsDeclareList(int feedNo);
+	List<Map<String, Object>> SnsDeclareList(int feedNo);
 	//sns 댓글 조회
-	List<adminSnsVO> getRepliesByFeedNo(int feedNo);
+	List<adminSnsVO> selectRepliesByFeedNo(int feedNo);
 	
 	//QNA 전체 조회
 		List<QnaVO> qnaUser();

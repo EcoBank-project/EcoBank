@@ -32,6 +32,11 @@ public class QnaServiceImpl implements QnaService{
 		// TODO Auto-generated method stub
 		return qnaMapper.qnaSelectInfo(qnaNo);
 	}
+	@Override
+	public int qnaDelete(int qnaVo) {
+		// TODO Auto-generated method stub
+		return qnaMapper.qnaDelete(qnaVo);
+	}
 	
 
 
