@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ecobank.app.users.service.UserCreateForm;
 import com.ecobank.app.users.service.UserRepository;
 import com.ecobank.app.users.service.UserService;
+import com.ecobank.app.users.service.Users;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +30,8 @@ public class UsersController {
 	@Autowired
 	private UserRepository userRepository;
 
+
+	
 	@GetMapping("login")
 	public String goLogin() {
 		return "users/login";

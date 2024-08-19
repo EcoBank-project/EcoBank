@@ -12,7 +12,7 @@
         </button>
         <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                 <sec:authorize access="isAuthenticated()">
-                    <span class="nav-item nav-link">안녕하세요 <span th:text="${#authentication.name}"> 님 </span></span>
+                    <span class="nav-item nav-link">안녕하세요 <span th:text="${session.nickname}"></span> 님</span>
                 </sec:authorize>
         </th:block>
         <div class="collapse navbar-collapse" id="navbarCollapse">
