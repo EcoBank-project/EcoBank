@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,28 +49,30 @@ public class ChatMessageController {
 
 	// 채팅방 대화
 	@MessageMapping("/chat.message/{roomId}")
-	public void sendUser(@Payload ChatMessageVO message) {
+	public void sendUser(@Payload ChatMessageVO message, Principal principal) {
 		// 메시지 저장
 		ChatMessageVO chatMessage = chatService.ChatMessageInsert(message);
 		String chatType = chatService.chatRoomType(message.getChatNo());
 		
-		// 메시지 번역
-		//String translatedText = chatService.translateMessage(message.getMsgContent(), "en");
-		//String decodedText = decodeHtmlEntities(translatedText);
-		//message.setMsgContent(decodedText);
+		List<String> receiverIds = chatService.ChatUserList(message.getChatNo());
 		
-		//1대1 채팅
-		if("O1".equals(chatType)) {
-			List<String> receiverIds = chatService.ChatUserList(message.getChatNo());
-			for(String receiverId : receiverIds) {
+		for(String receiverId : receiverIds) {
+			// 메시지 번역
+//			String lagCode = chatService.laguageCodeSelect(receiverId);
+//			String translatedText = chatService.translateMessage(message.getMsgContent(), lagCode);
+//			String decodedText = decodeHtmlEntities(translatedText);
+//			message.setMsgContent(decodedText);
+			
+			if("O1".equals(chatType)) {
+				//1대1 채팅
 				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), message);
+			}else if("O2".equals(chatType)){
+				//그룹 채팅
+				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), message);
+				//오픈 채팅	
+			}else if("O3".equals(chatType)){
+				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), message);			
 			}
-		//그룹 채팅
-		}else if("O2".equals(chatType)){
-			messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatNo(), message);
-		//오픈 채팅	
-		}else if("O3".equals(chatType)){
-			messagingTemplate.convertAndSend("/topic/messages/" + chatMessage.getChatNo(), message);			
 		}
 	}
 	// 문자 디코딩

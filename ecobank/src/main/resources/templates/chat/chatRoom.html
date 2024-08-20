@@ -246,6 +246,15 @@
         <div class="modal-content">
         	<span class="modal-close">&times;</span>
         	<h2>프로필</h2>
+        	<div class="language-selector">
+                <label for="language" id="language-text">언어 선택</label>
+                <select id="language_code" name="language">
+                    <option value="ko" selected>한국어</option>
+                    <option value="en">English</option>
+                    <option value="ja">日本語</option>
+                </select>
+            </div>
+            <button class="option-button" id="userLanguageBtn">언어 변경</button>
         </div>
     </div>
     
@@ -260,16 +269,11 @@
 		
 		stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
-			if("O1" === roomType){
-			    // 1대1 채팅
+			if(roomType != null){
+			    // 채팅
 			    chatSubScription = stompClient.subscribe('/user/queue/messages/' + roomId, function(message) {
 			    	showMessage(JSON.parse(message.body));
 			    });
-	    	}else if("O2" === roomType){
-			    // 그룹채팅
-		        chatSubScription =stompClient.subscribe('/topic/messages/' + roomId, function(message) {
-		            showMessage(JSON.parse(message.body));	     
-		        });	    		
 	    	}
 			// 채팅방 목록 로드
 	        stompClient.subscribe('/user/queue/chatList', function(message) {
@@ -404,7 +408,6 @@
 	        tagI.on('click', function(event){
 	        	$('#openChatInviteModal').show();
 	        	inviteFollow(roomId);
-	        	console.log("확인");
 	        });
 	        tagI1.on('click', function(event){
 	        	$('#openChatUpdateModal').show();
@@ -682,7 +685,6 @@
 					if($(this).text() == checkName){
 						process = $(this);
 					}
-					//insertChatRoom(formObj);
 				});			
 				if(!process){
 					insertChatRoom(formObj);
@@ -836,6 +838,37 @@
 	});
 	
 	//오픈채팅 검색
+	
+	
+	//프로필 설정
+	$('#language_code').on('change',function(){
+		if($(this).val() == 'ko'){
+			$('#language-text').text('언어 선택');
+		}else if($(this).val() == 'en'){
+			$('#language-text').text('Select Language');
+		}else if($(this).val() == 'ja'){
+			$('#language-text').text('言語を選択');
+		}
+	})
+	
+	$('#userLanguageBtn').on('click',function(){
+		let lagCode = $('#language_code').val();	
+		profilChange(lagCode);
+	})
+	function profilChange(language){
+		$.ajax({
+			url: '/chatRoom/languageChange/'+ language,
+            method: 'GET',
+            success: function(result){
+            	$('#profilChatModal').hide();
+            	$('.user-status').text(language);
+            },
+            error: function(error){
+            	console.log(error);
+            }
+		})
+	}
+	
 </script>
 </body>
 </html>

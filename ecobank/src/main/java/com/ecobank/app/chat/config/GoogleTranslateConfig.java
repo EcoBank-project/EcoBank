@@ -9,7 +9,7 @@ import com.google.cloud.translate.TranslateOptions;
 
 @Configuration
 public class GoogleTranslateConfig {
-	//@Value("${google.api.key}")
+	@Value("${google.api.key}")
     private String apiKey;
 	
 	@Bean
