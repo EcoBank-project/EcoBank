@@ -1,5 +1,7 @@
 package com.ecobank.app.users.service;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +67,19 @@ public class UserService {
 		return new UserStatistics(totalScore, followerCount, followingCount);
 	}
 	
+    public Optional<Users> findByUserId(String useId) {
+        return userRepository.findByUseId(useId);
+    }
+    
+    public boolean isEmailExists(String useId) {
+        return userRepository.findByUseId(useId) != null;
+    }
 
+    public boolean withdrawUser(Integer userNo) {
+
+    	userRepository.deleteById(userNo);
+        return true;
+       
+    }
 
 }

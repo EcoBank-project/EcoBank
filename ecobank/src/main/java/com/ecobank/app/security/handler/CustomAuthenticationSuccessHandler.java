@@ -31,12 +31,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		session.setAttribute("userState", userDetail.getUserState());
 		session.setAttribute("userNo", userDetail.getUserNO());
 		session.setAttribute("resp", userDetail.getResp());
+		session.setAttribute("userPw", userDetail.getPassword());
 		
 		System.out.println("세션에 저장되는 정보들");
 		System.out.println("아이디 : " + userDetail.getUsername());
 		System.out.println("닉네임 : " + userDetail.getNickname());
 		System.out.println("유저상태 : " + userDetail.getUserState());
 		System.out.println("유저번호 :" + userDetail.getUserNO());
+		System.out.println("유저비번 : " + userDetail.getPassword());
+		
 		
 		// 일반회원
 		if(userDetail.getResp().equals("A1")) {

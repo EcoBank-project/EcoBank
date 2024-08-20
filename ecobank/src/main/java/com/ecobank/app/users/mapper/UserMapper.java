@@ -17,7 +17,7 @@ public interface UserMapper {
     public String findUserInfoByUseId(@Param("useId") String useId)
     ;
 	// 유저 스코어
-	@Select("SELECT NVL(SUM(score), 0) FROM score WHERE user_no = #{userNo} GROUP BY user_no")
+	@Select("SELECT SUM(score) FROM score WHERE user_no = #{userNo}")
 	Integer findTotalScoreByUserNo(int userNo);
 
 	// 유저 팔로워 수

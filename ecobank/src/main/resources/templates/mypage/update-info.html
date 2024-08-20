@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/mypage_layout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 수정</title>
+    <style>
+        .editContainer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .title {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .info-list2 {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-item2 {
+            background: #fff;
+            margin: 10px auto;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+
+        .info-item2 span {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-item2 div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .info-item2 p,
+        .info-item2 input {
+            border: none;
+            background: none;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn.small-btn {
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+
+        /* 모달창 스타일 */
+        .modal {
+            display: none; /* 숨김 상태 */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        /* 폼 요소 스타일 */
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-form label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .modal-form input[type="text"],
+        .modal-form input[type="email"],
+        .modal-form input[type="password"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .modal-form button[type="submit"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .modal-form button[type="submit"]:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="editContainer">
+        <h2 class="title">회원정보수정</h2>
+        <ul class="info-list2">
+            <li class="info-item2">
+                <span>닉네임</span>
+                <div>
+                    <p th:text="${session.nickname}"></p>
+                    <a href="#" class="btn small-btn" onclick="openModal('nicknameModal')">변경하기</a>
+                </div>
+            </li>
+            <li class="info-item2">
+                <span>현재 아이디(이메일)</span>
+                <div>
+                    <p class="eng" th:text="${session.useId}"></p>
+                    <a href="#" class="btn small-btn" onclick="openModal('emailModal')">변경하기</a>
+                </div>
+            </li>
+            <li class="info-item2">
+                <span>현재 비밀번호</span>
+                <div>
+                    <input type="password" th:value="${session.userPw}" disabled>
+                    <a href="#" class="btn small-btn" onclick="openModal('passwordModal')">변경하기</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 닉네임 수정 모달 -->
+    <div id="nicknameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">닉네임 변경</h2>
+                <span class="close" onclick="closeModal('nicknameModal')">&times;</span>
+            </div>
+            <form id="nicknameForm" method="post" action="/update-nickname" class="modal-form">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <label for="newNickname">새 닉네임:</label>
+                <input type="text" id="newNickname" name="newNickname" required>
+                <button type="submit">확인</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 아이디 수정 모달 -->
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">아이디 변경</h2>
+                <span class="close" onclick="closeModal('emailModal')">&times;</span>
+            </div>
+            <form id="emailForm" method="post" action="/update-email" class="modal-form">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <label for="newEmail">새 아이디 (이메일):</label>
+                <input type="email" id="newEmail" name="newEmail" required>
+                <button type="submit">확인</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 비밀번호 수정 모달 -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">비밀번호 변경</h2>
+                <span class="close" onclick="closeModal('passwordModal')">&times;</span>
+            </div>
+            <form id="passwordForm" method="post" action="/update-password" class="modal-form">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <label for="newPassword">새 비밀번호:</label>
+                <input type="password" id="newPassword" name="newPassword" required>
+                <label for="newPassword">새 비밀번호 확인:</label>
+                <input type="password" id="chkPassword" name="chkPassword" required>
+                <button type="submit">확인</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // 모달창 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            var modals = document.querySelectorAll('.modal');
+            modals.forEach(function(modal) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

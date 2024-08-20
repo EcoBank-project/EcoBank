@@ -33,7 +33,20 @@
     delete from  qna 
 	where qna_no = #{qnaNo}
 	</delete>
-	
+	<!-- 답글 조회 -->
+	 <select id="qnaReplyList" parameterType="Integer" resultType="com.ecobank.app.QnA.service.QnaVO">
+  select 
+  qna_reply_no,
+  qna_reply_content,
+  qna_replyat,
+  qna_no
+	from qna_reply
+	where qna_no = #{qnaNo}
+    </select>
+    <update id="updateQnaInfo" parameterType="ChallVO">
+		
+    
+    </update>
 	
 	
 
