@@ -142,6 +142,7 @@ public class ChallServiceImpl implements ChallService{
 		int otherUserNo = challMapper.findUserNoByReviewNo(reviewNo);
 		if(userNo == otherUserNo) {
 			int result = challMapper.deleteReview(userNo, reviewNo);
+			System.out.println(result + "결과값");
 			return result;
 		}else {
 			return 0;

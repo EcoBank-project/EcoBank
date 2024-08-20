@@ -8,8 +8,11 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="../css/challenges/challenge.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	  <!--/* <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet"> */-->
+	
+	  <!-- Template Main CSS File -->
+	  <link href="assets/css/maindd.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <style>
 	.event-icon {
 	  max-width: 50px;
@@ -71,6 +74,7 @@
 	    text-align: center;
 	    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 	}
+	/*리뷰 작성 폼 모달*/
 	#reviewStar fieldset{
 	    display: inline-block;
 	    direction: rtl;
@@ -105,6 +109,50 @@
 	    border-radius: 5px;
 	    font-size: 16px;
 	    resize: none;
+	}
+	
+	.bi-star-fill {
+	    color: #ffc107;
+	}
+	
+	.bi-star {
+	    color: #e4e5e9;
+	}
+	
+	.testimonial-carousel .testimonial-img img {
+	    width: 300px;
+	    height: 300px;
+	}
+   .testimonial-carousel .owl-nav {
+         top:120px;
+	}
+	
+	.testimonial-carousel:hover .owl-nav {
+	    width: 300px;
+	}
+	
+	.testimonial-carousel .testimonial-img img {
+	  width: 300px;
+	  height: 300px;
+	}
+	
+	.testimonial-carousel .swiper-button-next,
+	.testimonial-carousel .swiper-button-prev {
+	  color: #000; /* 화살표 색상 */
+	  background: rgba(255, 255, 255, 0.5); /* 배경 색상 */
+	  border-radius: 50%;
+	  width: 40px;
+	  height: 40px;
+	}
+	
+	.testimonial-carousel .swiper-button-next:hover,
+	.testimonial-carousel .swiper-button-prev:hover {
+	  background: rgba(255, 255, 255, 0.8);
+	}
+	
+	.testimonial-carousel .swiper-pagination {
+	  bottom: 10px;
+	  text-align: center;
 	}
 </style>
 </head>
@@ -209,7 +257,7 @@
 					<textarea class="form-control border-0" rows="5" name="reviewContent" id="reviewContent" 
 							  placeholder="챌린지에 대해 리뷰를 남겨주세요"></textarea>
 				</div>
-				<hr style="margin: 0px;" />
+				<hr style="margin: 10px;" />
 				<button type="button" class="btn btn-primary" id="btn-review" aria-label="Close">작성하기</button>
 			    <button type="button" class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
 			</form>
@@ -519,6 +567,23 @@
 				calendar.render();
 			})
 		})
+		var swiper = new Swiper('.testimonial-carousel', {
+		  slidesPerView: 1,       // 한 번에 하나의 슬라이드만 보여줌
+		  spaceBetween: 30,       // 슬라이드 간 간격
+		  loop: true,             // 슬라이드 반복
+		  navigation: {
+		    nextEl: '.swiper-button-next',
+		    prevEl: '.swiper-button-prev',
+		  },
+		  pagination: {
+		    el: '.swiper-pagination',
+		    clickable: true,
+		  },
+		  autoplay: {
+		    delay: 5000,          // 자동 슬라이드 속도 (밀리초 단위)
+		    disableOnInteraction: false, // 사용자가 클릭해도 자동 슬라이드 유지
+		  },
+		});
 	</script>
 </body>
 </html>

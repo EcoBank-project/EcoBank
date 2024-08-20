@@ -146,14 +146,6 @@ public class ConfirmController {
 		model.addAttribute("reviewList", list);
 		System.out.println(list + "상세에 리뷰안에 뭐있는지 확인");
 		return "chall/review";
-	}
-	
-	//챌린지 리뷰 상세
-	@GetMapping("reviewInfo")
-	public String reviewInfo(Model model, ReviewDTO reviewDTO) {
-		//reviewDTO dto = 
-		return "chall/reviewInfo";
-	}
-	
+	}	
 	
 }
