@@ -6,6 +6,7 @@
 <head>
     <!-- 부트스트랩 CSS 포함 -->
     <title>QNA 상세 정보</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
 </head>
 <body>
 
@@ -23,14 +24,37 @@
                 <p><strong>작성자 번호:</strong> <span th:text="${qna.userNo}"></span></p>
                 <!-- 뒤로 가기 버튼 -->
                 <a href="/QnaUserList" class="btn btn-secondary">목록으로 돌아가기</a>
-				<form th:action="@{/qnaDelete}" method="post" style="display:inline;">
-				                                <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
-				                                <button type="submit" class="btn btn-danger">삭제</button>
-				                            </form>
+                <form th:action="@{/qnaDelete}" method="post" style="display:inline;">
+                    <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
+                    <button type="submit" class="btn btn-danger">삭제</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 답글 목록 표시 -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">답글 목록</h5>
+            </div>
+            <div class="card-body">
+                <!-- 답글 목록 출력 -->
+                <div th:if="${not #lists.isEmpty(qnaReplyList)}">
+                    <ul class="list-group">
+                        <li th:each="reply : ${qnaReplyList}" class="list-group-item">
+                            <p><strong>답글 번호:</strong> <span th:text="${reply.qnaReplyNo}"></span></p>
+                            <p><strong>답글 내용:</strong> <span th:text="${reply.qnaReplyContent}"></span></p>
+                            <p><strong>등록일:</strong> <span th:text="${reply.qnaReplyat}"></span></p>
+                        </li>
+                    </ul>
+                </div>
+                <div th:if="${#lists.isEmpty(qnaReplyList)}">
+                    <p>답글이 없습니다.</p>
+                </div>
             </div>
         </div>
     </div>
 
-
+    <!-- 부트스트랩 JS 및 의존성 스크립트 포함 -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

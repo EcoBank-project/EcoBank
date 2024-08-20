@@ -55,11 +55,17 @@ public interface AdminService {
 	List<adminSnsVO> selectRepliesByFeedNo(int feedNo);
 	
 	//QNA 전체 조회
-		List<QnaVO> qnaUser();
+	List<QnaVO> qnaUser();
 	
 	//QNA 단건 조회
-		 QnaVO qnaSelectInfo(int qnaNo);	
+	QnaVO qnaSelectInfo(int qnaNo);	
+	
+	//QNA 답글 조회
+	 QnaVO qnaReplySelect(int qnaNo);
 
-
-
+	//QNA 답글 등록 
+	int insertqnareplyInfo(QnaVO qnaVo);
+	
+ 	//QNA 답글 삭제 
+	 int deleteqnadeclare(int qnaVo);
 }

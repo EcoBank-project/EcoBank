@@ -35,6 +35,7 @@ public class SnsVO extends Criteria{
 	private Date declareat ;			//신고날짜
 	private String declareCode;			//신고코드
 	private Integer replyNo;			//댓글번호
+	private Integer confirmUserNo;		//신고이유
 	private Integer orderSns;			//정렬기준
 	private Integer followYn;			//팔로우여부
 

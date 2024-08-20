@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,18 +38,15 @@ public class AdminController {
     // 전체조회
     @GetMapping("/admin")
     public String intro(Model model) {
-        // 오늘 가입한 회원 리스트
         List<UserVO> userList = adminService.UserList();
         model.addAttribute("userList", userList);
-       
-        // 오늘 회원가입한 회원 수
+
         int todaySignUpCount = adminService.getcreaTeat();
         model.addAttribute("todaySignUpCount", todaySignUpCount);
-        
-        // 총 회원 수
+
         int users = adminService.getusers();
         model.addAttribute("users", users);
-        
+
         return "admins/admin";
     }
 
@@ -61,7 +61,7 @@ public class AdminController {
     // 회원 상태 업데이트
     @PostMapping("/adminUserUpdate")
     public String updateUserState(@RequestParam String useId, @RequestParam String userState, RedirectAttributes rttr) {
-        int updatedCount = adminService.updateUserState(useId, userState);     
+        int updatedCount = adminService.updateUserState(useId, userState);
         rttr.addFlashAttribute("updateStatus", updatedCount > 0 ? "성공적으로 업데이트되었습니다." : "업데이트 실패.");
         return "redirect:/adminUser";
     }
@@ -74,8 +74,8 @@ public class AdminController {
         // 중복 제거 (confirmNo를 기준으로)
         List<ChallDeclareVO> uniqueList = list.stream()
             .collect(Collectors.toMap(
-                ChallDeclareVO::getConfirmNo, 
-                challDeclare -> challDeclare,  
+                ChallDeclareVO::getConfirmNo,
+                challDeclare -> challDeclare,
                 (existing, replacement) -> existing))
             .values()
             .stream()
@@ -88,17 +88,17 @@ public class AdminController {
                     challDeclare -> adminService.getCountBychallNos(challDeclare.getConfirmNo()),
                     (existing, replacement) -> existing));
 
-        model.addAttribute("countMap", countMap);     
+        model.addAttribute("countMap", countMap);
         model.addAttribute("ChallDeclareList", uniqueList);
         return "admins/ChallDeclareList";
     }
-    
+
     @GetMapping("/selectChallDeclare/{confirmNo}")
     @ResponseBody
     public Map<String, Object> selectChallDeclare(@PathVariable int confirmNo) {
         return adminService.selectChallDeclare(confirmNo);
     }
-    
+
     // SNS 전체 조회
     @GetMapping("/adminSns")
     public String getAdminSnsList(Model model, adminSnsVO adminSnsVO) {
@@ -113,7 +113,8 @@ public class AdminController {
         System.out.println("Received feedNo: " + feedNo);
         return adminService.SnsDeclareList(feedNo);
     }
- // SNS 댓글 조회
+
+    // SNS 댓글 조회
     @GetMapping("/SnsReplyDeclareList")
     public String getRepliesByFeedNo(@RequestParam("feed_no") int feedNo, Model model) {
         try {
@@ -128,7 +129,6 @@ public class AdminController {
         }
     }
 
-    
     // SNS 업데이트
     @PostMapping("/updatefeedState")
     public String updateFeedState(@RequestParam int feedNo, @RequestParam String feedState, Model model) {
@@ -136,7 +136,7 @@ public class AdminController {
         model.addAttribute("updatefeedState", updatedCount > 0 ? "성공적으로 업데이트되었습니다." : "업데이트 실패.");
         return "redirect:/adminSns";
     }
-    
+
     // QNA 목록
     @GetMapping("/QnaUser")
     public String getQnaUser(Model model) {
@@ -151,15 +151,68 @@ public class AdminController {
         return "redirect:/adminQnaDetail?qnaNo=" + qnaNo;
     }
 
-    // QNA 상세조회
+
     @GetMapping("/adminQnaDetail")
-    public String getQnaInfo(@RequestParam("qnaNo") Integer qnaNo, Model model) {
+    public String getQnaDetail(@RequestParam("qnaNo") Integer qnaNo, Model model) {
+        if (qnaNo == null) {
+            model.addAttribute("errorMessage", "QNA 번호가 필요합니다.");
+            return "error";
+        }
+
         QnaVO qnaVO = adminService.qnaSelectInfo(qnaNo);
         if (qnaVO == null) {
             model.addAttribute("errorMessage", "QNA 정보가 없습니다.");
-            return "error"; // QNA가 없을 경우 오류 페이지로 리디렉션
+            return "error";
         }
+
+        // QNA와 관련된 답글 정보도 조회
+        QnaVO replyVO = adminService.qnaReplySelect(qnaNo);
         model.addAttribute("qna", qnaVO);
-        return "admins/adminQnaDetail"; // QNA 상세 페이지로 이동
+        model.addAttribute("reply", replyVO);
+
+        return "admins/adminQnaDetail";
+    }
+
+
+    // QNA 답글 상세조회
+    @GetMapping("/qnaReplyDetail")
+    public String getQnaReplyDetail(@RequestParam("qnaNo") Integer qnaNo, Model model) {
+        QnaVO qnaVO = adminService.qnaReplySelect(qnaNo);
+        if (qnaVO == null) {
+            model.addAttribute("errorMessage", "답글 정보가 없습니다.");
+            return "error";
+        }
+        model.addAttribute("reply", qnaVO);
+        return "admins/adminQnaDetail";
+    }
+    //QNA등록
+    @SuppressWarnings("unused")
+	@PostMapping("/insertqnareplyInfo")
+    public String insertqnareplyInfo(@ModelAttribute QnaVO qnaVO, Model model) {
+        // qnaVO에서 qnaNo를 추출
+        Integer qnaNo = qnaVO.getQnaNo();
+        
+        // qnaNo가 null인지 확인
+        if (qnaNo == null) {
+            model.addAttribute("errorMessage", "QNA 번호가 필요합니다.");
+            return "error";
+        }
+        // QNA 답글 등록 처리
+        adminService.insertqnareplyInfo(qnaVO);
+
+        // 등록 후 상세 페이지로 리다이렉트
+        return "redirect:/adminQnaDetail?qnaNo=" + qnaNo;
+    }
+ // QNA 답글 삭제
+    @PostMapping("/deleteqnadeclare")
+    public String deleteqnadeclare(@RequestParam("qnaReplyNo") Integer qnaReplyNo, @RequestParam("qnaNo") Integer qnaNo, Model model) {
+        try {
+            adminService.deleteqnadeclare(qnaReplyNo);
+            return "redirect:/adminQnaDetail?qnaNo=" + qnaNo; // 삭제 후 QNA 상세 페이지로 리디렉션
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("errorMessage", "답글 삭제 중 오류가 발생했습니다.");
+            return "error"; // 에러 페이지로 리디렉션
+        }
     }
 }

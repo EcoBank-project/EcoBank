@@ -131,4 +131,24 @@ public class AdminServiceImpl implements AdminService {
 	    return adminMapper.selectRepliesByFeedNo(feedNo);
 	}
 
+
+	//답글 등록
+	@Override
+	public int insertqnareplyInfo(QnaVO qnaVo) {
+		// TODO Auto-generated method stub
+		return adminMapper.insertqnareplyInfo(qnaVo);
+	}
+
+	@Override
+	public int deleteqnadeclare(int qnaVo) {
+		// TODO Auto-generated method stub
+		return adminMapper.deleteqnadeclare(qnaVo);
+	}
+
+	@Override
+	public QnaVO qnaReplySelect(int qnaNo) {
+		// TODO Auto-generated method stub
+		return adminMapper.qnaReplySelect(qnaNo);
+	}
+
 }
