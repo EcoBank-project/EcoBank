@@ -134,7 +134,7 @@ public class ConfirmController {
 		return "redirect:detail?challNo=" + challConfirmVO.getChallNo();
 	}
 	
-	//챌린지 상세에서 상세 이미지(+리뷰)
+	//챌린지 상세에서 상세 이미지(+리뷰 목록)
 	@GetMapping("review")
 	public String reviewList(ChallVO challVO, Model model) {
 		//상세
@@ -144,9 +144,16 @@ public class ConfirmController {
 		//리뷰 목록
 		List<ReviewDTO> list = challService.reviewList(challVO);
 		model.addAttribute("reviewList", list);
-		//System.out.println(list + "상세에 리뷰안에 뭐있는지 확인");
-		//[com.ecobank.app.challenge.service.ReviewDTO@4e847d7c]이게 찍히네..
+		System.out.println(list + "상세에 리뷰안에 뭐있는지 확인");
 		return "chall/review";
 	}
+	
+	//챌린지 리뷰 상세
+	@GetMapping("reviewInfo")
+	public String reviewInfo(Model model, ReviewDTO reviewDTO) {
+		//reviewDTO dto = 
+		return "chall/reviewInfo";
+	}
+	
 	
 }

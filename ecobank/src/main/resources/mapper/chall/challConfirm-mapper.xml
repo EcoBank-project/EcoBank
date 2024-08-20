@@ -136,7 +136,6 @@
 		WHERE confirm_no = #{confirmNo}
 	</delete>
 	
-	
 	<!-- 챌린지 인증 참가 여부 -->
 	<select id="confirmStatus" resultType="int">
 		SELECT COUNT(*)
@@ -188,7 +187,7 @@
 	<select id="findUserNoByReplyNo" parameterType="int">
 		SELECT user_no
 		FROM chall_confirm_reply
-		WHERE confirm_reply_no = #{userNo}
+		WHERE confirm_reply_no = #{confirmReplyNo}
 	</select>
 	
 	<!-- 댓글 삭제 -->
@@ -244,11 +243,6 @@
 		SELECT COUNT(*)
 		FROM chall_confirm_like
 		WHERE confirm_no = #{confirmNo}
-	</select>
-	
-	<!-- 인증 신고 목록 -->
-	<select id="selectConfirmDeclare">
-		
 	</select>
 	
 	<!-- 인증 신고 등록 -->

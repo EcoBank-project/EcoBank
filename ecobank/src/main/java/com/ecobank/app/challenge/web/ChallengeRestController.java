@@ -18,6 +18,7 @@ import com.ecobank.app.challenge.service.ChallVO;
 import com.ecobank.app.challenge.service.LikeDTO;
 import com.ecobank.app.challenge.service.MyConfirmDTO;
 import com.ecobank.app.challenge.service.ReplyVO;
+import com.ecobank.app.challenge.service.ReviewDTO;
 
 @RestController
 public class ChallengeRestController {
@@ -141,6 +142,22 @@ public class ChallengeRestController {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		challConfirmVO.setUserNo(userNo);
 		return challConfirmService.declareInsert(challConfirmVO);
+	}
+	
+	//챌린지 후기 등록
+	@PostMapping("reviewInsert")
+	public int reviewInsertProcess(ReviewDTO reviewDTO) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		reviewDTO.setUserNo(userNo);
+		return challService.reviewInsert(reviewDTO);
+	}
+	
+	//챌린지 후기 삭제
+	@PostMapping("reviewDelete")
+	public int reviewDelete(@RequestParam("reviewNo") int reviewNo) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		int result = challService.reviewDelete(userNo, reviewNo);
+		return result;
 	}
 
 }

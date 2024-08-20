@@ -219,7 +219,6 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	//인증 신고 등록
 	@Override
 	public int declareInsert(ChallConfirmVO challConfirmVO) {
-		//challConfirmVO.setConfirmDeclareAt(new Date()); 
 		int result = challConfirmMapper.insertConfirmDeclare(challConfirmVO);
 		return result == 1 ? challConfirmVO.getConfirmDeclareNo() : -1;
 	}
