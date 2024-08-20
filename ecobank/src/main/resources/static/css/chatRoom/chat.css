@@ -154,6 +154,7 @@
 	    border-radius: 5px;
 	    font-size: 14px;
 	    background-color: #ffffff;
+	    
 	    color: #333;
 	    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 	    transition: border-color 0.3s, box-shadow 0.3s;
@@ -167,10 +168,33 @@
 	    outline: none;
 	}	
 		
-	
-	
-	
-	
+	/* 채팅방 제목 */
+	.chatHeader{
+		display : flex;
+		
+	}
+	.stateIcon i.fa-user-plus {
+		margin-left : 10px;
+		margin-right: 10px;
+		cursor: pointer;
+	}
+	.stateIcon i.fa-user-plus:hover {
+	    color: #333;
+	}
+	.stateIcon i.bi-gear {
+		margin-right: 10px;
+		cursor: pointer;
+	}
+	.stateIcon i.bi-gear:hover {
+	    color: #333;
+	}
+	.stateIcon i.fa-sign-out-alt{
+		margin-right: 10px;
+		cursor: pointer;
+	}
+	.stateIcon i.fa-sign-out-alt:hover {
+	    color: #333;
+	}
 	/* 유저 정보 */
 	.user-info {
 	    padding: 10px;
@@ -226,7 +250,7 @@
 	.modal {
 		display: none;
 		position: fixed;
-		z-index: 1000;
+		z-index: 1030;
 		left: 0;
 	    top: 0;
 	    width: 100%;
