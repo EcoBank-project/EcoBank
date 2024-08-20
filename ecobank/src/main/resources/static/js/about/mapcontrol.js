@@ -203,18 +203,10 @@ function setAllDataPath() {
 	
 	// 나라를 선택했을때
 	simplemaps_worldmap.hooks.click_state = function(id) {
-		swal({
+		Swal.fire({
                 title: "Coming soon!",
                 icon: "success",
-                buttons: {
-	                    confirm: {
-	                        text: "OK",
-	                        value: true,
-	                        visible: true,
-	                        className: "btn btn-primary",
-	                        closeModal: true
-	                    }
-                    }
+                confirmButtonColor: "#32C36C", 
             });
 		
 	}
