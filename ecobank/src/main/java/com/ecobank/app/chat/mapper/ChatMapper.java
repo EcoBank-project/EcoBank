@@ -44,7 +44,11 @@ public interface ChatMapper {
 	public int selectRoomManager(@Param("userNo")Integer userNo, @Param("chatNo")Integer chatNo);
 	// 채팅방 이름 변경
 	public int updateChatChangeName(@Param("chatName")String chatName, @Param("chatNo")Integer chatNo);
-	
+	// 언어 조회
+	public String selectLaguageCode(String userId);
+	// 언어 변경
+	public int updateLaguageCode(@Param("laguageCode") String lagCode, @Param("userNo") Integer userNo);
 	// 팔로우 목록
 	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);
+	
 }

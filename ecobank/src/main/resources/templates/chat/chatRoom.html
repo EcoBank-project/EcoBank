@@ -254,6 +254,7 @@
                     <option value="ja">日本語</option>
                 </select>
             </div>
+            <button class="option-button" id="userLanguageBtn">언어 변경</button>
         </div>
     </div>
     
@@ -268,16 +269,11 @@
 		
 		stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
-			if("O1" === roomType){
-			    // 1대1 채팅
+			if(roomType != null){
+			    // 채팅
 			    chatSubScription = stompClient.subscribe('/user/queue/messages/' + roomId, function(message) {
 			    	showMessage(JSON.parse(message.body));
 			    });
-	    	}else if("O2" === roomType){
-			    // 그룹채팅
-		        chatSubScription =stompClient.subscribe('/topic/messages/' + roomId, function(message) {
-		            showMessage(JSON.parse(message.body));	     
-		        });	    		
 	    	}
 			// 채팅방 목록 로드
 	        stompClient.subscribe('/user/queue/chatList', function(message) {
@@ -412,7 +408,6 @@
 	        tagI.on('click', function(event){
 	        	$('#openChatInviteModal').show();
 	        	inviteFollow(roomId);
-	        	console.log("확인");
 	        });
 	        tagI1.on('click', function(event){
 	        	$('#openChatUpdateModal').show();
@@ -856,12 +851,17 @@
 		}
 	})
 	
+	$('#userLanguageBtn').on('click',function(){
+		let lagCode = $('#language_code').val();	
+		profilChange(lagCode);
+	})
 	function profilChange(language){
 		$.ajax({
-			url: '/chatRoom/languageChange/'+$(this).val(),
+			url: '/chatRoom/languageChange/'+ language,
             method: 'GET',
             success: function(result){
-            	
+            	$('#profilChatModal').hide();
+            	$('.user-status').text(language);
             },
             error: function(error){
             	console.log(error);

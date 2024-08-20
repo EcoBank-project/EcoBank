@@ -216,6 +216,18 @@ public class ChatServiceImpl implements ChatService{
 		Translation translation = translate.translate(text, Translate.TranslateOption.targetLanguage(targetLanguage));
 		return translation.getTranslatedText();
 	}
+	// 언어 조회
+	@Override
+	public String laguageCodeSelect(String userNo) {
+		String result = chatMapper.selectLaguageCode(userNo);
+		return result;
+	}
+	// 언어 변경
+	@Override
+	public int laguageCodeUpdate(String lagCode, Integer userNo) {
+		Integer result = chatMapper.updateLaguageCode(lagCode, userNo);
+		return result;
+	}
 	
 	
 	

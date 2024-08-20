@@ -46,6 +46,7 @@ public class ChatRoomController {
 		return "chat/chatRoom";
 	}
 	
+	// 채팅방 조회
 	@GetMapping("/chatRoom/{chatNo}")
 	public String ChatRoom(@PathVariable Integer chatNo , HttpSession httpSession, Model model){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
@@ -128,7 +129,8 @@ public class ChatRoomController {
 	// 프로필 언어 설정
 	@GetMapping("/chatRoom/languageChange/{languageCode}")
 	@ResponseBody
-	public void profilChange(@PathVariable String languageCode) {
-		
+	public void profilChange(HttpSession httpSession, @PathVariable String languageCode) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		chatService.laguageCodeUpdate(languageCode, userNo);
 	}
 }

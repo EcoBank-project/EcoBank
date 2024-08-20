@@ -46,7 +46,10 @@ public interface ChatService {
 	
 	// 채팅 번역
 	public String translateMessage(String text, String targetLanguage);
-	
+	// 언어 조회
+	public String laguageCodeSelect(String userId);
+	// 언어 변경
+	public int laguageCodeUpdate(String lagCode, Integer userNo);
 	//팔로우 목록
 	public List<ChatFollowVO> chatFollowList(Integer userNo);
 }

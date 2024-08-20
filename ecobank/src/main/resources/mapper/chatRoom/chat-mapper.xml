@@ -81,7 +81,7 @@
 	<select id="selectLaguageCode">
 		SELECT language_code
 		FROM users
-		WHERE user_no = #{userNo}
+		WHERE use_id = #{userId}
 	</select>
 	<!-- 회원 언어 변경 -->
 	<update id="updateLaguageCode">
