@@ -108,20 +108,38 @@ document.addEventListener('DOMContentLoaded', function() {
 			dataType: "json",
 			data: { mail: useidValue },
 			success: function(data) {
-				Swal.fire({
+				swal({
 					icon: 'success',
 					title: '인증번호 발송',
 					text: '인증번호가 발송되었습니다.',
+					buttons: {
+	                    confirm: {
+	                        text: "OK",
+	                        value: true,
+	                        visible: true,
+	                        className: "btn btn-primary",
+	                        closeModal: true
+	                    }
+                    }
 				});
 				$("#Confirm").val(data); // 서버에서 받은 인증번호를 숨겨진 필드에 설정
 				isCodeVerified = false; // 초기 상태로 설정
 				validateForm(); // 인증번호 발송 후 폼 유효성 검사
 			},
 			error: function() {
-				Swal.fire({
+				swal({
 					icon: 'error',
 					title: '인증번호 발송 실패',
 					text: '인증번호 발송에 실패했습니다.',
+					buttons: {
+	                    confirm: {
+	                        text: "OK",
+	                        value: true,
+	                        visible: true,
+	                        className: "btn btn-primary",
+	                        closeModal: true
+	                    }
+                    }
 				});
 			}
 		});
@@ -131,18 +149,36 @@ document.addEventListener('DOMContentLoaded', function() {
 		const number2 = $("#Confirm").val();
 
 		if (number1 === number2) {
-			Swal.fire({
+			swal({
 				icon: 'success',
 				title: '인증 성공',
 				text: '이메일 인증에 성공했습니다.',
+				buttons: {
+	                    confirm: {
+	                        text: "OK",
+	                        value: true,
+	                        visible: true,
+	                        className: "btn btn-primary",
+	                        closeModal: true
+	                    }
+                    }
 			});
 			isCodeVerified = true;
 			validateForm();
 		} else {
-			Swal.fire({
+			swal({
 				icon: 'error',
 				title: '인증 실패',
 				text: '인증번호가 일치하지 않습니다.',
+				buttons: {
+	                    confirm: {
+	                        text: "OK",
+	                        value: true,
+	                        visible: true,
+	                        className: "btn btn-primary",
+	                        closeModal: true
+	                    }
+                    }
 			});
 			isCodeVerified = false;
 		}

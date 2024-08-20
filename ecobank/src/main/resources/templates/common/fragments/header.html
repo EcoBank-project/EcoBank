@@ -12,28 +12,28 @@
         </button>
         <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                 <sec:authorize access="isAuthenticated()">
-                    <span class="nav-item nav-link">안녕하세요 <span th:text="${session.nickname}"></span> 님</span>
+                    <span class="nav-item nav-link" th:text="#{welcome(${session.nickname})}"></span>
                 </sec:authorize>
         </th:block>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a th:href="@{/}" class="nav-item nav-link">Home</a>    
+                <a th:href="@{/}" class="nav-item nav-link" th:text="#{home}"></a>    
                <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                <form method="post" th:action="@{/logout}">
-                 <button type="submit" class="btn btn-link nav-item nav-link">로그아웃</button>
+                 <button type="submit" class="btn btn-link nav-item nav-link" th:text="#{logout}"></button>
                </form>
               
                </th:block>
                <th:block th:unless="${#authentication.principal != 'anonymousUser'}">
                     <!-- 로그인되지 않은 상태 -->
-                    <a th:href="@{/login}" class="nav-item nav-link">로그인</a>
+                    <a th:href="@{/login}" class="nav-item nav-link" th:text="#{login}"></a>
                     
                 </th:block>
-                <a href="/admin" class="nav-item nav-link">공지사항</a>
-                <a href="/QnaUserList" class="nav-item nav-link">QnA</a>
-                <a th:href="@{/about}" class="nav-item nav-link">소개</a>
-                <a th:href="@{/ready}" class="nav-item nav-link">챌린지</a>
-                <a th:href="@{/sns}" class="nav-item nav-link">SNS</a>
+                <a href="/admin" class="nav-item nav-link" th:text="#{notice}"></a>
+                <a href="/QnaUserList" class="nav-item nav-link" th:text="#{QnA}">QnA</a>
+                <a th:href="@{/about}" class="nav-item nav-link" th:text="#{about}"></a>
+                <a th:href="@{/ready}" class="nav-item nav-link" th:text="#{challenge}"></a>
+                <a th:href="@{/sns}" class="nav-item nav-link" th:text="#{SNS}"></a>
 
                 <a class="btn btn-square btn-link rounded-0 border-0 " th:href="@{/chatRoom}"><i class="fas fa-comment-dots"></i></a>
                 <a class="btn btn-square btn-link rounded-0 border-0 " th:href="@{/mypage}"><i class="fas fa-user"></i></a>

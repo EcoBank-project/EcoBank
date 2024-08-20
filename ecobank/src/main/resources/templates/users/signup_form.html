@@ -6,12 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입</title>
-<link rel="stylesheet" href="../css/users/signup.css" />
-<script src="../js/users/signup.js"></script>
+<link rel="stylesheet" th:href="@{/css/users/signup.css}" />
+
 </head>
 <body>
     
-    <main class="main-content">
+    <div class="main-content">
         <div class="signup-container">
             <h2>회원가입</h2>
             <!--
@@ -60,7 +60,7 @@
                 </div>
             </form>
         </div>
-    </main>
-
+    </div>
+<script th:src="@{/js/users/signup.js}"></script>
 </body>
 </html>
