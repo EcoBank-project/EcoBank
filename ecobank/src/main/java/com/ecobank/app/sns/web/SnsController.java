@@ -66,10 +66,11 @@ public class SnsController {
 
 	//검색조회
 	@GetMapping("snsSearch")
-	public String snsSearchProcess(@RequestParam(required=false) String keyword, Model model) {
-		
-		List<SnsVO> list = snsService.snsSearch(keyword);
-		
+	public String snsSearchProcess(@RequestParam(required=false) String keyword, SnsVO snsVO, Model model) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		snsVO.setUserNo(userNo);
+		List<SnsVO> list = snsService.snsSearch(keyword, userNo);
+		System.out.println("검색목록" + list);
 		model.addAttribute("snsSearch", list);
 		return "sns/snsSearch";
 	}
@@ -77,11 +78,14 @@ public class SnsController {
 	// 단건조회
 	@GetMapping("snsInfo")
 	public String snsInfo(SnsVO snsVO, FileVO fileVO, Model model) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		snsVO.setUserNo(userNo);
 		SnsVO findVO = snsService.snsInfo(snsVO);
 		List<FileVO> list = fileService.selectFileInfo(snsVO.getFeedNo());
 		model.addAttribute("snsFileInfo", list);
 		model.addAttribute("sns", findVO);
 		System.out.println("언제" + findVO);
+		System.out.println("단건목록" + list);
 		// 신고사유목록
 		List<CodeVO> declarelist = commonService.codeList("0E");
 		model.addAttribute("snsDeclare", declarelist);
@@ -146,12 +150,13 @@ public class SnsController {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		snsVO.setUserNo(userNo);
 		List<SnsVO> list = snsService.mySns(snsVO);
-
+		SnsVO findVO = snsService.countMySns(snsVO);
 		System.out.println("보" + snsVO);
 		System.out.println("누구야" + userNo);
 		System.out.println("누구야" + list);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("mySns", list);
+		model.addAttribute("countMySns", findVO);
 
 		return "sns/mySns";
 	}

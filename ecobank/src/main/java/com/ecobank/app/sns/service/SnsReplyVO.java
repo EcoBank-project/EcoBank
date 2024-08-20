@@ -20,5 +20,6 @@ public class SnsReplyVO {
 	private Integer followerId;			//팔로워 아이디
 	private Integer followingId;		//팔로잉 아이디
 	private Integer followNo;			//팔로우 번호
+	
 
 }

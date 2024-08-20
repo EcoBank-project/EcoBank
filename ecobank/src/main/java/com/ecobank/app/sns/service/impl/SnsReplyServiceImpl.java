@@ -50,8 +50,8 @@ public class SnsReplyServiceImpl implements SnsReplyService{
 
 	//좋아요 삭제
 	@Override
-	public int deleteSnsLike(int SnsNO) {
-		return snsReplyMapper.deleteSnsLike(SnsNO);
+	public int deleteSnsLike(SnsReplyVO snsReplyVO) {
+		return snsReplyMapper.deleteSnsLike(snsReplyVO);
 	}
 	
 	//팔로워 조회

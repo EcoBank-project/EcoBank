@@ -7,14 +7,11 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-#like{
+.like{
       width: 25px;
       fill: #ddd;
 }
 
-#like.active{
-      fill: red;
-}
 
 #speech{
       width: 25px;
@@ -173,22 +170,22 @@ padding: 20px;
     margin-right: 15px;
 }
    
-   .action-buttons button {
-       margin-right: 10px;
-   }
+.action-buttons button {
+	margin-right: 10px;
+}
    
-   .content-container {
-       margin: 6rem 0;
-   }
+.content-container {
+    margin: 6rem 0;
+}
    
-   .image-preview {
-       max-width: 100%;
-       max-height: 400px;
-       object-fit: cover;
-       border-radius: 8px;
-   }
+.image-preview {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+}
    
-   .like-comment {
+.like-comment {
        display: flex;
        align-items: center;
        gap: 15px;
@@ -207,6 +204,18 @@ padding: 20px;
        width: 100%;
        margin-bottom: 10px;
    }
+   .testimonial-carousel .testimonial-img img {
+    width: 400px;
+    height: 400px;
+}
+
+   .testimonial-carousel .owl-nav {
+ 		  top:170px;
+}
+
+.testimonial-carousel:hover .owl-nav {
+    width: 330px;
+}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
@@ -222,7 +231,9 @@ padding: 20px;
                        <h4 class="mb-1" th:text=${sns.nickname}></h4>
                    </div>
                    <div class="ms-auto action-buttons">
-                      	<button class="btn btn-primary">팔로우</button>
+							<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null}">팔로우</button>
+							<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
+                      	
 						<a href="#" class="nav-menu">...</a>
 						<div class="dropdown-menu">
 							<a href="#" class="declareModal" th:onclick="declareModal('feed',[[${sns.feedNo}]])">게시글 신고하기</a> 
@@ -232,19 +243,24 @@ padding: 20px;
                     </div>
                 </div>
             </div>
-            <!-- Image Preview -->
-            <input type="number" th:value="${sns.feedNo}" hidden>
-            <div class="row mb-4">
-                <div class="col-lg-12">
-                    <div class="position-relative h-100" style="margin:auto;">
-                    	<div th:block th:each="file, sts : ${snsFileInfo}">
-								<img class="image-preview"
-									th:src=@{/images/{filePath}(filePath=${file.filePath})}
-									alt="Attached Image">
-						</div>
-                    </div>
-                </div>
-            </div>
+
+    <!-- image Start -->
+    		<div class="container-xxl py-5">
+        		<div class="container">
+          			<input type="number" th:value="${sns.feedNo}" hidden>
+            		<div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+                    	<th:block th:each="file, sts : ${snsFileInfo}">
+                			<div class="testimonial-item text-center">
+                    			<div class="testimonial-img position-relative">
+                        			<img class="img-fluid mx-auto mb-5" th:src=@{/images/{filePath}(filePath=${file.filePath})}>
+                    			</div>
+                			</div>
+                        </th:block>
+            		</div>
+       			 </div>
+    		</div>
+    <!-- image End -->
+
             <!-- Confirm Content -->
             <div class="row mb-4">
                 <div class="col-lg-12">
@@ -259,8 +275,11 @@ padding: 20px;
             <div class="row like-comment">
                 <div class="col-lg-12">
                     <div class="d-flex align-items-center">
-                       <svg id="like" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
+								   <svg class="like" th:data-feedno="${sns.feedNo}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" th:if="${sns.snslikeYn == null}"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
+                       			   <svg class="likeActive" th:data-snslikeno="${sns.snslikeYn}" style="fill: red;	width: 25px; " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"  th:unless="${sns.snslikeYn == null}"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
+
                         <span class="likes-count" th:text=${sns.countLike} ></span>
+                        
                         <svg id="speech" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 240c0 114.9-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6C73.6 471.1 44.7 480 16 480c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c0 0 0 0 0 0s0 0 0 0s0 0 0 0c0 0 0 0 0 0l.3-.3c.3-.3 .7-.7 1.3-1.4c1.1-1.2 2.8-3.1 4.9-5.7c4.1-5 9.6-12.4 15.2-21.6c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208z"/></svg>
                         <span class="comments-count" th:text=${sns.countReply}></span>
                     </div>
@@ -297,27 +316,6 @@ padding: 20px;
         </div>
     </div>
 
-	<!-- Quote Start -->
-
-		<div class="container-fluid bg-light overflow-hidden px-lg-0"
-			style="margin: 6rem 0;">
-			<div class="container quote px-lg-0">
-				<div class="row g-0 mx-lg-0">
-					<div class="col-lg-6 ps-lg-0 wow fadeIn" data-wow-delay="0.1s"
-						style="min-height: 500px;">
-						<div class="position-relative h-100">
-							<div th:block th:each="file, sts : ${snsFileInfo}">
-								<img class="position-absolute img-fluid w-100 h-100"
-									th:src=@{/images/{filePath}(filePath=${file.filePath})}
-									style="object-fit: cover;">
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-	<!-- Quote End -->
 	
 
 			
@@ -545,34 +543,101 @@ padding: 20px;
 		});
 	}
 	
-	
     //좋아요버튼
-  	var btn = document.getElementById("like")
-
-  	btn.addEventListener('click',function(){
-    	btn.classList.toggle('active');
+  	$('.like').on('click',function(){
+  		let feedNo =$(this).data('feedno');
+  		console.log('하트하으',feedNo);
 		$.ajax({
 			type : "POST",
-			url : "likeInsert?feedNo="+feedNo,
+			url : "likeInsert",
 			data : {feedNo},
+			dataType : "json",
 			success : function(result){
 				alert("좋아요");
-				 location.reload();
-				
+				location.reload();
 			},
 			error :  function(error){
 				console.log('에러',error);
-				alert("신고 실패");
+				alert("좋아요 실패");
 			}
 		});
     })
 
+    	//좋아요취소
+		$('.likeActive').click(function(){
+			let snsLikeNo =$(this).data('snslikeno');
+			console.log("팔로우버튼");
+			console.log('누구야',snsLikeNo)
+		// ajax로 좋아요 취소하기
+		$.ajax({
+			type : "delete",
+			url : "likeDelete",
+			data : {snsLikeNo},
+			success : function(){
+				alert("좋아요취소 성공");
+				location.reload();
+			},
+			error :  function(error){
+				console.log(error);
+				alert("실패");
+			}
+		});
+	});
+	    
+    
+      // 팔로우(writeBtn) 버튼을 클릭할 경우
+		$('.followBtn').click(function(){
+			let followingId =$(this).data('userno');
+			console.log("팔로우버튼");
+			console.log('누구야',followingId);
+		// ajax로 팔로우 등록하기
+		$.ajax({
+			type : "POST",
+			url : "insertFollow",
+			data : {userNo, followingId},
+			dataType : "json",
+			success : function(){
+				alert("팔로우 성공");
+				location.reload();
+			},
+			error :  function(error){
+				console.log(error);
+				alert("팔로우 실패");
+			}
+		});
+	});
+
+	    
+		//팔로우취소
+		$('.followCancleBtn').click(function(){
+			let followNo =$(this).data('followno');
+			console.log("팔로우버튼");
+		// ajax로 팔로우 등록하기
+		$.ajax({
+			type : "delete",
+			url : "deleteFollow",
+			data : {followNo},
+			dataType : "json",
+			success : function(){
+				alert("팔로우취소 성공");
+			},
+			error :  function(error){
+				console.log(error);
+				alert("실패");
+			}
+		});
+	});
+
     
 </script>
-    <!-- Bootstrap JavaScript and Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.js"></script>
+
+<!-- JavaScript Libraries -->
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
 </body>
 
 </html>

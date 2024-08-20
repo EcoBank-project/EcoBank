@@ -18,7 +18,7 @@ public interface SnsReplyService {
 	public int insertSnsLike(SnsReplyVO snsReplyVO);
 		
 	//좋아요 삭제
-	public int deleteSnsLike(int SnsNO);
+	public int deleteSnsLike(SnsReplyVO snsReplyVO);
 	
 	//팔로워 조회
 	public List<SnsReplyVO> followerInfo(SnsReplyVO snsReplyVO);
