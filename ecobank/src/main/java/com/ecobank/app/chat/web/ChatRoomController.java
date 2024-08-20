@@ -118,10 +118,17 @@ public class ChatRoomController {
 		Integer chatNo = chatService.ChatOpenInsert(chatRoom, userNo, images);
 		return chatNo;
 	}
-	//오픈채팅방 초대
+	// 오픈 채팅방 초대
 	@PostMapping("/chatRoom/invite")
 	@ResponseBody
 	public void chatInviteList(@RequestParam Integer chatNo){
+		
+	}
+	
+	// 프로필 언어 설정
+	@GetMapping("/chatRoom/languageChange/{languageCode}")
+	@ResponseBody
+	public void profilChange(@PathVariable String languageCode) {
 		
 	}
 }

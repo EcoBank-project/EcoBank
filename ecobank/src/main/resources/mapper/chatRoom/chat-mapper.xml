@@ -77,6 +77,18 @@
 	</select>
 	<!-- 오픈 채팅방에 참여하고 있는 팔로우 목록 -->
 	
+	<!-- 회원 언어 조회 -->
+	<select id="selectLaguageCode">
+		SELECT language_code
+		FROM users
+		WHERE user_no = #{userNo}
+	</select>
+	<!-- 회원 언어 변경 -->
+	<update id="updateLaguageCode">
+		UPDATE users
+		SET language_code = #{laguageCode}
+		WHERE user_no = #{userNo}
+	</update>
 	<!-- 채팅방 생성 -->
 	<insert id="insertChatRoom" statementType="CALLABLE">
 		{call insertChatRoom(
