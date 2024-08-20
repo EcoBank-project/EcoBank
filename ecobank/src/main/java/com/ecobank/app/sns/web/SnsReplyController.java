@@ -53,13 +53,18 @@ public class SnsReplyController {
 	
 	//좋아요 등록
 	@PostMapping("likeInsert")
-	public void insertSnsLike(SnsReplyVO snsReplyVO, Model model) {
+	public int insertSnsLike(SnsReplyVO snsReplyVO) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		snsReplyVO.setUserNo(userNo);
 		System.out.println("좋아요"+snsReplyVO);
-		int snsLikeNo = snsReplyService.insertSnsLike(snsReplyVO);
+		return snsReplyService.insertSnsLike(snsReplyVO);
 	}
 	
+	//좋아요 삭제
+	@DeleteMapping("likeDelete")
+	public int deleteSnsLike(SnsReplyVO snsReplyVO) {
+		return snsReplyService.deleteSnsLike(snsReplyVO);
+	}
 	//팔로워 조회
 	@GetMapping("follower")
 	public List<SnsReplyVO> followerInfo(SnsReplyVO snsReplyVO) {

@@ -40,5 +40,6 @@ public interface SnsMapper {
 	//마이피드 조회
 	public List<SnsVO> selectMySns(SnsVO snsVO);
 	
-
+	//마이피드 세부 정보
+	public SnsVO countMySns(SnsVO snsVO);
 }

@@ -33,13 +33,14 @@ public class SnsServiceImpl implements SnsService{
 	
 	//검색 조회
 	@Override
-	public List<SnsVO> snsSearch(String keyword) {
+	public List<SnsVO> snsSearch(String keyword, Integer userNo) {
 		SnsVO snsVO = new SnsVO();
 		if(keyword != null && keyword.charAt(0)=='#') {
 			snsVO.setHashtag(keyword);
 		} else if(keyword != null) {
 			snsVO.setNickname(keyword);
 		}
+		snsVO.setUserNo(userNo);
 		return snsMapper.searchSnsAll(snsVO);
 	}
 	
@@ -109,6 +110,12 @@ public class SnsServiceImpl implements SnsService{
 	public List<SnsVO> mySns(SnsVO snsVO) {
 		System.out.println("서비"+snsVO);
 		return snsMapper.selectMySns(snsVO);
+	}
+
+	//마이피드 세부 조회
+	@Override
+	public SnsVO countMySns(SnsVO snsVO) {
+		return snsMapper.countMySns(snsVO);
 	}
 
 

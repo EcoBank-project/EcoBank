@@ -71,7 +71,7 @@
 	<!-- 좋아요 삭제 -->	
 	<delete id="deleteSnsLike" parameterType="int">		
 		DELETE FROM sns_like
-		 WHERE sns_like_no = #{snsLikeNo}
+		WHERE sns_like_no = #{snsLikeNo}
 	</delete>	
 	
 	<!-- 팔로워 조회 -->
@@ -117,7 +117,7 @@
 	<!-- 팔로우 취소하기 -->
 	<delete id="deleteFollow" parameterType="int">		
  		DELETE FROM follow
-		WHERE follower_id = #{userNo} and following_id = #{followingId}  
+		WHERE follow_no = #{followNo}  
 	</delete>
 	
 </mapper>
