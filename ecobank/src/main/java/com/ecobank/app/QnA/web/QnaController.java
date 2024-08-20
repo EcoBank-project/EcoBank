@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -53,14 +52,23 @@ public class QnaController {
         return "redirect:/QnaUserList";
     }
 
-    // QNA 단건 조회
+    // QNA 단건 조회 및 답글 리스트 조회
     @GetMapping("/qna")
     public String getQnaInfo(@RequestParam("qnaNo") Integer qnaNo, Model model) {
-        QnaVO qnaVO = qnaService.qnaSelectInfo(qnaNo);
+        // 단일 QNA 정보 조회
+        QnaVO qnaVO = qnaService.qnaSelectInfo(qnaNo); 
+        
         if (qnaVO == null) {
             return "error"; // QNA가 없을 경우 오류 페이지로 리디렉션
         }
+
+        // 답글 리스트 조회
+        List<QnaVO> qnaReplyList = qnaService.qnaReplyList(qnaNo);
+        
+        // 모델에 QNA 정보와 답글 목록 추가
         model.addAttribute("qna", qnaVO);
+        model.addAttribute("qnaReplyList", qnaReplyList);
+
         return "QnA/QnaDetail"; // QNA 상세 페이지로 이동
     }
 
