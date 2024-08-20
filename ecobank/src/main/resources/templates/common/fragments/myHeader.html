@@ -1,89 +1,108 @@
 <!DOCTYPE html>
 
-
 <th:block xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	th:fragment="myHeaderFragment">
-   <div class="my-header">
-        <!-- 프로필 이미지와 사용자 정보 -->
-        <div class="profile-section">
-            <div class="profile-container">
-                <img th:src="@{/img/defaultProfile.jpg}" alt="기본 이미지" class="profile-image"/>
-            </div>
-            <div class="user-info">
-                <p><span th:text="${session.nickname}"></span>님의 마이페이지</p>
-            </div>
-        </div>
+	<div class="my-header">
+		<!-- 프로필 이미지와 사용자 정보 -->
+		<div class="profile-section">
+			<div class="profile-container">
+				<img th:src="@{/img/defaultProfile.jpg}" alt="기본 이미지"
+					class="profile-image" />
+			</div>
+			<div class="user-info">
+				<p>
+					<span th:text="${session.nickname}"></span>님의 마이페이지
+				</p>
+			</div>
+		</div>
 
-        <!-- 정보 레이아웃 -->
-        <div class="info-section">
-            <div class="info-item">
-                <p class="info-label">포인트</p>
-                <p class="info-value" th:text="${totalScore}">0</p>
-            </div>
-            <div class="info-item">
-                <p class="info-label">팔로워</p>
-                <p class="info-value" th:text="${followerCount}">0</p>
-            </div>
-            <div class="info-item">
-                <p class="info-label">팔로잉</p>
-                <p class="info-value" th:text="${followingCount}">0</p>
-            </div>
-        </div>
-    </div>
+		<!-- 정보 레이아웃 -->
+		<div class="info-section">
+			<div class="info-item">
+				<p class="info-label">포인트</p>
+				<p id="points" class="info-value">0</p>
+			</div>
+			<div class="info-item">
+				<p class="info-label">팔로워</p>
+				<p id="follower" class="info-value">0</p>
+			</div>
+			<div class="info-item">
+				<p class="info-label">팔로잉</p>
+				<p id="following" class="info-value">0</p>
+			</div>
+		</div>
+	</div>
 	<style>
 .my-header {
-    display: flex; /* 플렉스박스를 사용하여 레이아웃 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-    justify-content: space-between; /* 좌우 간격을 최대화 */
-    padding: 20px; /* 패딩 추가 */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px;
 }
 
 .profile-section {
-    display: flex;
-    align-items: center; /* 이미지와 텍스트 수직 정렬 */
+	display: flex;
+	align-items: center;
 }
 
 .profile-container {
-    margin-right: 20px; /* 이미지와 텍스트 사이의 여백 */
+	margin-right: 20px;
 }
 
 .profile-image {
-    width: 100px; /* 이미지 가로 크기 */
-    height: 100px; /* 이미지 세로 크기 */
-    border-radius: 50%; /* 원 모양으로 만들기 */
-    border: 3px solid #ccc; /* 테두리 스타일 */
-    object-fit: cover; /* 이미지 비율 유지 */
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	border: 3px solid #ccc;
+	object-fit: cover;
 }
 
 .user-info p {
-    margin: 0; /* 텍스트 상하 여백 제거 */
-    font-size: 16px; /* 텍스트 크기 조정 */
+	margin: 0;
+	font-size: 16px;
 }
 
 .user-info span {
-    font-weight: bold; /* 강조할 텍스트를 두껍게 */
+	font-weight: bold;
 }
 
 .info-section {
-    display: flex; /* 플렉스박스를 사용하여 아이템 가로 배치 */
-    justify-content: space-between; /* 아이템 사이의 간격을 최대화 */
-    width: 300px; /* 필요에 따라 조정 */
+	display: flex;
+	justify-content: space-between;
+	width: 300px;
 }
 
 .info-item {
-    text-align: center; /* 텍스트 가운데 정렬 */
+	text-align: center;
 }
 
 .info-label {
-    font-size: 14px; /* 라벨 폰트 크기 */
-    margin: 0; /* 라벨 상하 여백 제거 */
+	font-size: 14px;
+	margin: 0;
 }
 
 .info-value {
-    font-size: 16px; /* 값 폰트 크기 */
-    font-weight: bold; /* 값 강조 */
-    margin: 0; /* 값 상하 여백 제거 */
+	font-size: 16px;
+	font-weight: bold;
+	margin: 0;
 }
 </style>
+	<script>
+		$(document).ready(function() {
+			// AJAX 요청으로 사용자 정보 가져오기
+			$.ajax({
+				url : '/user/info',
+				method : 'GET',
+				success : function(data) {
+					$('#points').text(data.totalScore == null? 0 :data.totalScore);
+					$('#follower').text(data.followerCount);
+					$('#following').text(data.followingCount);
+				},
+				error : function(xhr, status, error) {
+					console.error('사용자 정보 가져오기 오류:', status, error);
+				}
+			});
+		});
+	</script>
 </th:block>
