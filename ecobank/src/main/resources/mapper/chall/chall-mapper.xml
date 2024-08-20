@@ -217,14 +217,59 @@
 	
 	<!-- 후기 목록 -->
 	<select id="selectReviewAll" parameterType="ChallVO">
-		SELECT review_no
-		        , review_content
-		        , review_createAt
-		        , review_star
-		        , user_no
-		        , chall_no
-		FROM chall_review
-		WHERE chall_no = #{challNo}
+		SELECT r.review_no
+		     , r.review_content
+		     , r.review_createAt
+		     , r.review_star
+		     , u.nickname
+		     , r.chall_no
+		     , (SELECT ROUND(AVG(review_star), 1)
+		        FROM chall_review
+		        WHERE chall_no = 13) AS avgStar
+		FROM chall_review r JOIN users u 
+		                        ON r.user_no = u.user_no
+		WHERE r.chall_no = #{challNo}
+		ORDER BY r.review_no DESC
 	</select>
+	
+	<!-- 후기 등록 -->
+	<insert id="insertReview" parameterType="ReviewDTO">
+		<selectKey keyProperty="reviewNo"
+			resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(review_no), 0) + 1
+			FROM chall_review
+		</selectKey>
+		INSERT INTO chall_review(
+		                            review_no
+		                            , review_content
+		                            , review_createAt
+		                            , review_star
+		                            , user_no
+		                            , chall_no
+		                        )
+		VALUES (
+				#{reviewNo}
+				, #{reviewContent}
+				, SYSDATE
+				, #{reviewStar}
+				, #{userNo}
+				, #{challNo}
+				)
+	</insert>
+	
+	<!-- 후기 삭제하려고 후기 유저 번호 가져오기 -->
+	<select id="findUserNoByReviewNo" parameterType="int">
+		SELECT user_no
+		FROM chall_review
+		WHERE review_no = #{reviewNo}
+	</select>
+	
+	<!-- 후기 삭제 -->
+	<delete id="deleteReview" parameterType="int">
+		DELETE FROM chall_review
+		WHERE review_no = #{reviewNo}
+		AND user_no = #{userNo}
+	</delete>
 	
 </mapper>

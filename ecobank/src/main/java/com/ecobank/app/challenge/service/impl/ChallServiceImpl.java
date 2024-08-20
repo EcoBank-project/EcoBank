@@ -115,7 +115,7 @@ public class ChallServiceImpl implements ChallService{
 	public List<ChallVO> challengeSort(int userNo, int select) {
 		if(select == 1) { //날짜순
 			return challMapper.orderByDate();
-		}else if(select ==2) { //좋아요
+		}else if(select == 2) { //좋아요
 			return challMapper.orderByLike();
 		}else { //참가
 			return challMapper.orderByEnter(userNo);
@@ -130,15 +130,22 @@ public class ChallServiceImpl implements ChallService{
 
 	//후기 등록
 	@Override
-	public int reviewInsert(ChallVO challVO) {
-		return 0;
+	public int reviewInsert(ReviewDTO reviewDTO) {
+		int result = challMapper.insertReview(reviewDTO);
+		System.out.println(result + "후기 결과에 뭐있나");
+		return result == 1 ? reviewDTO.getReviewNo() : -1;
 	}
 
 	//후기 삭제
 	@Override
 	public int reviewDelete(int userNo, int reviewNo) {
-		//userNo가져오는거 추가해야함
-		return challMapper.deleteReview(userNo, reviewNo);
+		int otherUserNo = challMapper.findUserNoByReviewNo(reviewNo);
+		if(userNo == otherUserNo) {
+			int result = challMapper.deleteReview(userNo, reviewNo);
+			return result;
+		}else {
+			return 0;
+		}
 	}
 
 }

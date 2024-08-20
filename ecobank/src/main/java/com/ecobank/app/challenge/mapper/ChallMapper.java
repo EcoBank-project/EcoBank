@@ -59,7 +59,7 @@ public interface ChallMapper {
 	//좋아요순 정렬
 	public List<ChallVO> orderByLike();
 	
-	//내가 참여중인 챌린지순 정렬
+	//내가 참여 중인 챌린지순 정렬
 	public List<ChallVO> orderByEnter(int userNo);
 	
 	//최신 날짜 순 정렬
@@ -69,7 +69,10 @@ public interface ChallMapper {
 	public List<ReviewDTO> selectReviewAll(ChallVO challVO);
 	
 	//챌린지 후기 등록
-	public int insertReview(ChallVO challVO);
+	public int insertReview(ReviewDTO reviewDTO);
+	
+	//챌린지 후기 삭제하려고 후기 유저 번호 가져오기
+	public int findUserNoByReviewNo(int reviewNo);
 	
 	//챌린지 후기 삭제
 	public int deleteReview(int userNo, int reviewNo);

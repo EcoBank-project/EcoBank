@@ -52,7 +52,7 @@ public interface ChallService {
 	public List<ReviewDTO> reviewList(ChallVO challVO);
 	
 	//챌린지 후기 등록
-	public int reviewInsert(ChallVO challVO);
+	public int reviewInsert(ReviewDTO reviewDTO);
 	
 	//챌린지 후기 삭제
 	public int reviewDelete(int userNo, int reviewNo);
