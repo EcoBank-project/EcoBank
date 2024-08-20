@@ -16,11 +16,16 @@
              ,(SELECT count(feed_no)
                  FROM sns_reply
                 WHERE feed_no = s.feed_no) as countReply
-               ,(SELECT file_path
+             ,(SELECT file_path
                  FROM files
                 WHERE file_code_no = s.feed_no
-                 and rownum = 1)  as filePath
-                , (Select follow_no from follow where follower_id=#{userNo} and following_id = s.user_no) as follow_yn
+                  and rownum = 1)  as filePath
+             ,(SELECT follow_no 
+                 FROM follow 
+              	WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
+             ,(SELECT sns_like_no 
+                 FROM sns_like
+            	WHERE feed_no=s.feed_no) as snslike_yn
       FROM sns s JOIN users u 
                    ON s.user_no = u.user_no
       WHERE feed_state = 'F1'  
@@ -48,10 +53,16 @@
              ,(SELECT count(feed_no)
                  FROM sns_reply
                 WHERE feed_no = s.feed_no) as countReply
-               ,(SELECT file_path
+             ,(SELECT file_path
                  FROM files
                 WHERE file_code_no = s.feed_no
-                 and rownum = 1)  as filePath
+                  and rownum = 1)  as filePath
+             ,(SELECT follow_no 
+                 FROM follow 
+              	WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
+             ,(SELECT sns_like_no 
+                 FROM sns_like
+                WHERE feed_no=s.feed_no) as snslike_yn
       FROM sns s JOIN users u 
                    ON s.user_no = u.user_no
       WHERE feed_state = 'F1'  
@@ -84,6 +95,12 @@
                   	FROM sns_reply
                    WHERE feed_no = s.feed_no) as countReply
                 ,s.hashtag 
+                ,(SELECT follow_no 
+                 	FROM follow 
+              	   WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
+              	,(SELECT sns_like_no 
+                    FROM sns_like
+            	   WHERE feed_no=s.feed_no) as snslike_yn
 		FROM sns s JOIN users u 
 		             ON s.user_no = u.user_no
 		WHERE s.feed_no = #{feedNo} 
@@ -192,6 +209,20 @@
    ORDER BY s.feed_no DESC
 	</select>
 	
-	
-
+	<!-- 마이피드 조회 시 정보 -->
+	<select id="countMySns" resultType="SnsVO">
+		SELECT user_no
+               ,nickname
+               , (SELECT count(feed_no) 
+                    FROM sns
+                   WHERE sns.user_no = users.user_no) as count_feed
+               , (SELECT count(following_id) 
+                    FROM follow
+                   WHERE follow.following_id = users.user_no) as count_following      
+               , (SELECT count(follower_id) 
+                    FROM follow
+                   WHERE follow.follower_id = users.user_no) as count_follower                   
+ 		FROM users
+		WHERE user_no = #{userNo}
+	</select>
 </mapper>

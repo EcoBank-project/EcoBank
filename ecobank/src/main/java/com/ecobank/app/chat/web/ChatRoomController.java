@@ -50,10 +50,13 @@ public class ChatRoomController {
 	public String ChatRoom(@PathVariable Integer chatNo , HttpSession httpSession, Model model){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		String nickName = (String) httpSession.getAttribute("nickname");
-		ChatRoomVO chatRoom = chatService.chatRoomInfo(chatNo, userNo);
-		
+		ChatRoomVO chatRoom = chatService.chatRoomInfo(chatNo, userNo, nickName);
+		if(chatRoom == null) {
+			return "redirect:/";
+		}
 		
 		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo, nickName);
+		
 		String chatType = chatRoom.getChatType();
 		String chatName = chatRoom.getChatName();
 		
@@ -114,5 +117,11 @@ public class ChatRoomController {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		Integer chatNo = chatService.ChatOpenInsert(chatRoom, userNo, images);
 		return chatNo;
+	}
+	//오픈채팅방 초대
+	@PostMapping("/chatRoom/invite")
+	@ResponseBody
+	public void chatInviteList(@RequestParam Integer chatNo){
+		
 	}
 }

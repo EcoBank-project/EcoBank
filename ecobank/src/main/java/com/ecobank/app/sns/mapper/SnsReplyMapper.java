@@ -20,7 +20,7 @@ public interface SnsReplyMapper {
 	public int insertSnsLike(SnsReplyVO snsReplyVO);
 	
 	//좋아요 삭제
-	public int deleteSnsLike(int snsVO);
+	public int deleteSnsLike(SnsReplyVO snsReplyVO);
 	
 	//팔로워 조회 
 	public List<SnsReplyVO> selectFollower(SnsReplyVO snsReplyVO);

@@ -23,6 +23,7 @@
 		              on c.chat_no = ce.chat_no
 		WHERE c.chat_no = #{chatNo}
 		AND user_no = #{userNo}
+		AND chat_user_state = 'Q1'
 	</select>
 	<!-- 채팅방 채팅 로그 조회 -->
 	<select id="selectChatMessage" resultType="ChatMessageVO">
@@ -74,6 +75,8 @@
 		                on u.user_no = following_id
 		where f.follower_id = #{followingId}
 	</select>
+	<!-- 오픈 채팅방에 참여하고 있는 팔로우 목록 -->
+	
 	<!-- 채팅방 생성 -->
 	<insert id="insertChatRoom" statementType="CALLABLE">
 		{call insertChatRoom(

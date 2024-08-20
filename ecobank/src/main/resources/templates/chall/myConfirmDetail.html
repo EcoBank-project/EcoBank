@@ -127,6 +127,18 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	    text-align: center;
 	    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 	}
+	
+	.testimonial-carousel .testimonial-img img {
+	    width: 300px;
+	    height: 300px;
+	}
+   .testimonial-carousel .owl-nav {
+         top:120px;
+	}
+	
+	.testimonial-carousel:hover .owl-nav {
+	    width: 300px;
+	}
 </style>
 </head>
 <body>
@@ -139,6 +151,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 					<div>
 						<input type="hidden" th:value="${myConfirm.challNo}" id="cNo">
 						<input type="hidden" th:value="${myConfirm.confirmNo}" id="fNo">
+						<input type="hidden" th:value="${myConfirm.userNo}" id="uNo">
 						<h4 class="mb-1" th:text="${myConfirm.nickname}"></h4>
 						<small class="text-muted"
 							th:text="${#dates.format(myConfirm.confirmCreateAt, 'yyyy-MM-dd HH:mm:ss')}"></small>
@@ -148,8 +161,28 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 					</div>
 				</div>
 			</div>
-			<!-- Image Preview -->
-			<th:block th:each="file : ${list}">
+			            
+		    <!-- Testimonial Start -->
+			<div class="container-xxl py-5">
+				<div class="container">
+					<div class="owl-carousel testimonial-carousel wow fadeInUp"
+						data-wow-delay="0.1s">
+						<th:block th:each="file, sts : ${list}">
+							<div class="testimonial-item text-center">
+								<div class="testimonial-img position-relative">
+									<img class="img-fluid mx-auto mb-5"
+										th:src=@{/images/{filePath}(filePath=${file.filePath})}
+										alt="인증 이미지">
+								</div>
+							</div>
+						</th:block>
+					</div>
+				</div>
+			</div>
+			<!-- Testimonial End -->
+			
+ 			<!-- Image Preview 기존거 -->
+<!--/*			<th:block th:each="file : ${list}">
 				<div class="row mb-4">
 					<div class="col-lg-12">
 						<div class="position-relative h-100">
@@ -159,7 +192,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 						</div>
 					</div>
 				</div>
-			</th:block>
+			</th:block> */-->
 			<!-- Confirm Content -->
 			<div class="row mb-4">
 				<div class="col-lg-12">
@@ -184,10 +217,10 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 			                <i class="bi bi-share"></i>
 			            </button>
 		                <span class="ms-1">Share</span>
-			            <button class="btn btn-outline-danger ms-auto" id="declareModal" th:onclick="declareModal('feed', [[${myConfirm.confirmNo}]])">
+			            <button class="btn btn-outline-danger ms-auto" id="declareModal" th:onclick="declareModal('confirm', [[${myConfirm.confirmNo}]])" th:if="${myConfirm.userNo != nowUserNo}">
 			                <i class="bi bi-exclamation-triangle"></i>
 			            </button>
-		                <span class="ms-1">Report</span>
+		                <span class="ms-1" th:if="${myConfirm.userNo != nowUserNo}">Report</span>
 					</div>
 				</div>
 			</div>
@@ -218,6 +251,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     <script>
     	let fNo = $('#fNo').val();
     	let cNo = $('#cNo').val();
+    	let uNo = $('#uNo').val();
     	
     	//댓글 부분 html로 따로 빼서 load()
     	replyList();
@@ -380,16 +414,15 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     	    });
     		
     		$.ajax({
-    			url : "confirmDeclareInsert?confirmNo=" + fNo,
+    			url : "confirmDeclareInsert",
     			type : "post",
     			data : {
     				confirmNo: fNo,
     				codeId: codeId,
-    				//userNo: userNo
     			},
     			success : function(list){
     				 alert("해당 인증 글이 신고되었습니다.");
-    				 location.href = 'confirmInfo?confirmNo=' + fNo;
+    				 location.href = 'othersInfo?confirmNo=' + fNo + '&userNo=' + uNo;
     			},
     			error :  function(err){
     				alert("신고 처리 중 오류");

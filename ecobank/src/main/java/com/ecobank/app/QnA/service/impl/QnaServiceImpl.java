@@ -17,29 +17,28 @@ public class QnaServiceImpl implements QnaService{
 	// 전체조회
 	@Override
 	public List<QnaVO> qnaUserList() {
-		// TODO Auto-generated method stub
 		return qnaMapper.qnaUserList();
 	}
 	//등록
 	@Override
 	public int insertqnaInfo(QnaVO qnaVO) {
-		// TODO Auto-generated method stub
 		return qnaMapper.insertqnaInfo(qnaVO);
 	}
-	//단건조회 
+	@Override
+	public int qnaDelete(int qnaVo) {
+		return qnaMapper.qnaDelete(qnaVo);
+	}
+
 	@Override
 	public QnaVO qnaSelectInfo(int qnaNo) {
 		// TODO Auto-generated method stub
 		return qnaMapper.qnaSelectInfo(qnaNo);
 	}
+
 	@Override
-	public int qnaDelete(int qnaVo) {
+	public List<QnaVO> qnaReplyList(int qnaNo) {
 		// TODO Auto-generated method stub
-		return qnaMapper.qnaDelete(qnaVo);
+		return qnaMapper.qnaReplyList(qnaNo);
 	}
-	
-
-
-	
 
 }

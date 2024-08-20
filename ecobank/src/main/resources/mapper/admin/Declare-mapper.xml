@@ -20,81 +20,63 @@
 		</delete>
 		
 		<select id="selectSns" resultType="SnsVO"  >
-		SELECT s.feed_no    
-             ,u.profile_img
-             ,u.nickname
-             ,s.feed_createAt
-             ,s.user_no
-             ,s.feed_state
-             ,(SELECT count(feed_no) 
-                 FROM sns_like
-                WHERE feed_no = s.feed_no) as countLike
-             ,(SELECT count(feed_no)
-                 FROM sns_reply
-                WHERE feed_no = s.feed_no) as countReply
-               ,(SELECT file_path
-                 FROM files
-                WHERE file_code_no = s.feed_no
-                 and rownum = 1)  as filePath
-      FROM sns s JOIN users u 
-                   ON s.user_no = u.user_no
+WITH RankedSns AS (
+    SELECT s.feed_no,
+           u.profile_img,
+           u.nickname,
+           s.feed_createAt,
+           s.user_no,
+           s.feed_state,
+           a.declare_no,
+           a.declareat,
+           a.confirm_user_no,
+           a.declare_code,
+           ROW_NUMBER() OVER (PARTITION BY s.feed_no ORDER BY s.feed_createAt DESC) AS rn
+    FROM sns s
+    JOIN users u ON s.user_no = u.user_no
+    JOIN sns_declare a ON s.feed_no = a.feed_no
+)
+SELECT feed_no,
+       profile_img,
+       nickname,
+       feed_createAt,
+       user_no,
+       feed_state,
+       declare_no,
+       declareat,
+       confirm_user_no,
+       declare_code
+FROM RankedSns
+WHERE rn = 1
    
       </select>
 		
 				
 		<!-- sns 신고 목록 -->
-	<select id="SnsDeclareList" parameterType="int" resultType="map">
+	<select id="SnsDeclare" parameterType="int" resultType="map">
     SELECT DECLARE_NO,
            DECLAREAT,
            CONFIRM_USER_NO,
            DECLARE_CODE,
            FEED_NO
     FROM sns_declare
-    WHERE FEED_NO = #{feedNo}
-      AND FEED_NO != 0
-</select>
+	</select>
 		
-		<delete id="snsDeclareDelete">
-			 DELETE FROM sns_DECLARE
- 			 WHERE DECLARE_NO = #{declareNO}		
-		</delete>
-		
-		<delete id="snsReplyDeclareDelete">
-			 DELETE FROM sns_DECLARE
- 			 WHERE DECLARE_NO = #{declareNO}		
-		</delete>
+
 		
 	 <update id="updatefeedState">
 		UPDATE sns
         SET FEED_STATE = #{feedState}
         WHERE FEED_NO = #{feedNo}
 	</update>
-	<!--sns신고횟수-->
-	<select id="getCountByFeedNo" parameterType="int" resultType="int">
-    SELECT COUNT(*)
-    FROM sns_declare
-    WHERE feed_no = #{feedNo}
-	</select>
-	<!--sns댓글신고횟수-->
-	<select id="getCountByReplyNo" parameterType="int" resultType="int">
- 	SELECT COUNT(*)
-    FROM sns_declare
-    WHERE reply_no = #{replyNo}
-	</select>
+
 	
 	<select id="getCountBychallNos" parameterType="int" resultType="int">
  	SELECT COUNT(*)
     FROM chall_confirm_declare
     WHERE confirm_no = #{confirmNo}
 	</select>
-	
-	 <select id="UpdateSnsState" statementType="CALLABLE">
-        CALL UpdateSnsState()
-    </select>
-	
-	 <select id="UpdateChallengeUserState" statementType="CALLABLE">
-        CALL UpdateChallengeUserState()
-    </select>
+
     
    <select id="selectChallDeclare" parameterType="int" resultType="map">
      select confirm_no "confirmNo"
@@ -119,9 +101,22 @@
 
 <!-- 댓글조회 -->
  <select id="selectRepliesByFeedNo" parameterType="int" resultType="com.ecobank.app.admin.service.adminSnsVO">
-        SELECT reply_no, reply_content, user_no, reply_createat, feed_no, sns_situation
-        FROM sns_reply
-        WHERE feed_no = #{feedNo}
+      
+  SELECT s.reply_no, 
+       s.reply_content, 
+       s.user_no, 
+       s.reply_createat, 
+       s.feed_no, 
+       s.sns_situation,
+       a.declare_no,
+       a.declareat,
+       a.confirm_user_no,
+       a.declare_code
+FROM sns_reply s
+JOIN sns_declare a ON s.feed_no = a.feed_no
+WHERE s.feed_no = #{feedNo}
+
+
     </select>
     <!--qna전체조회-->
     <select id="qnaUser" resultType="com.ecobank.app.QnA.service.QnaVO">
@@ -134,6 +129,24 @@
         FROM qna
         WHERE qna_no = #{qnaNo}
     </select>
+    <!-- QNA 답글 -->
+    <select id="qnaReplySelect" parameterType="Integer" resultType="com.ecobank.app.QnA.service.QnaVO">
+  select 
+  qna_reply_no,
+  qna_reply_content,
+  qna_replyat,
+  qna_no
+	from qna_reply
+	where qna_no = #{qnaNo}
+    </select>
+    <!-- QNA등록 -->
+    <insert id ="insertqnareplyInfo" parameterType="QnaVO">
+    INSERT INTO qna_reply(qna_reply_no, qna_reply_content, qna_no)
+    VALUES (qna_reply_seq.NEXTVAL, #{qnaReplyContent}, #{qnaNo})
+    </insert>
+    <delete id = "deleteqnadeclare">
+    delete from qna_reply
+	where qna_reply_no = #{qnaReplyno}
+    </delete>
 	
-
 </mapper>

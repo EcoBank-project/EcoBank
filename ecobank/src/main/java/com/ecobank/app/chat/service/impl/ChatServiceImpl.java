@@ -53,10 +53,18 @@ public class ChatServiceImpl implements ChatService{
 		}
 		return chatList;
 	}
-
+	// 채팅방 상세 조회
 	@Override
-	public ChatRoomVO chatRoomInfo(Integer chatNo, Integer userNo) {
-		ChatRoomVO chatRoom = chatMapper.selectChatRoomInfo(chatNo, userNo); 
+	public ChatRoomVO chatRoomInfo(Integer chatNo, Integer userNo, String nickName) {
+		ChatRoomVO chatRoom = chatMapper.selectChatRoomInfo(chatNo, userNo);
+		if(chatRoom == null) {
+			return null;
+		}
+		if(chatRoom.getChatType().equals("O1")) {
+			String[] users = chatRoom.getChatName().split("-");
+			String chatRoomName = nickName.equals(users[0]) ? users[1] : users[0];
+			chatRoom.setChatName(chatRoomName);
+		}
 		return chatRoom;
 	}
 	

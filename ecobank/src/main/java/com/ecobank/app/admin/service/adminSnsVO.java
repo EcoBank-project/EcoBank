@@ -36,6 +36,8 @@ public class adminSnsVO {
 	private String replyContent;   //댓글내용
 	private Date replyCreateat; //댓글 작성일자
 	private String  snsSituation;
+	private int	 confirmUserNo;			 //신고한 회원 번호
+
 	
 	
 }

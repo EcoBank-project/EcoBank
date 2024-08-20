@@ -22,6 +22,7 @@
 	                		<a href="/chatRoom">
 		                    	<i class="bi bi-chat"></i>
 		                    </a>
+		                    <!-- 오픈채팅방 아이콘 -->
 		                    <div class="openChatList">
 		                    	<th:block th:each="room : ${chatRooms}" th:if="${room.chatType} == 'O3'">
 		                    		<img th:src="@{/images/{filePath}(filePath=${room.chatImage})}" class="iconImage" th:onclick="enterRoom([[${room.chatName}]], [[${room.chatNo}]], [[${room.chatType}]])">
@@ -74,8 +75,11 @@
             <!-- 채팅 -->
             <div class="col-md-10 col-sm-12 d-flex flex-column">
             	<div class="row">            	
-	                <div>
-	                    <h3 id="roomName">채팅창 제목</h3>
+	                <div class="chatHeader">
+	                    <span id="roomName">채팅창 제목</span>
+	                    <div class="stateIcon">
+		                    
+	                    </div>
 	                </div>
             	</div>
                 <div class="row">
@@ -135,6 +139,7 @@
             </div>     
 		</div>
     </div>
+    
     <!-- 1대1 채팅 모달 -->
 	<div id="privateChatModal" class="modal">
         <div class="modal-content">
@@ -148,6 +153,7 @@
             <button class="option-button" id="followPrivateBtn">채팅 만들기</button>
         </div>
     </div>
+    
     <!-- 그룹 채팅 모달 -->
     <div id="groupChatModal" class="modal">
         <div class="modal-content">
@@ -194,6 +200,44 @@
 	        </div>
         	<input type="text" placeholder="비밀번호 입력 (선택)" class="input-field" id="openChatPassword">
         	<button class="option-button" id="OpenChatBtn">채팅방 만들기</button>
+        </div>
+    </div>
+    
+    <!-- 오픈 채팅방 초대 -->
+    <div id="openChatInviteModal" class="modal">
+        <div class="modal-content">
+        	<span class="modal-close">&times;</span>
+        	<h2>오픈 채팅 초대</h2>
+        	<input type="text" id="openFollowInput" placeholder="초대할 사용자명 입력" class="input-field">
+            <h4>팔로우 목록</h4>
+	            <div id="followListOpen">
+	                
+	            </div>
+            <button class="option-button" id="openInviteBtn">오픈 채팅 초대</button>
+        </div>
+    </div>
+    
+    <!-- 오픈 채팅방 설정 -->
+    <div id="openChatUpdateModal" class="modal">
+    	<div class="modal-content">
+        	<span class="modal-close">&times;</span>
+        	<h2>오픈 채팅 변경</h2>
+        	<div class="image-upload">
+	            <label for="chatImage" class="upload-label">
+	                <img id="imagePreview" src="https://via.placeholder.com/350x200" alt="대표 이미지" />
+	                <input type="file" id="chatImage" accept="image/*" />
+	            </label>
+	        </div>
+        	<input type="text" placeholder="채팅방 제목 입력" class="input-field" id="openChatNameUpdate">
+        	<div class="switch-container">
+	            <span>검색 허용</span>
+	            <label class="switch">
+	                <input type="checkbox" id="allowSearch">
+	                <span class="slider round"></span>
+	            </label>
+	        </div>
+        	<input type="text" placeholder="비밀번호 입력 (선택)" class="input-field" id="openChatPasswordUpdate">
+        	<button class="option-button" id="OpenChatUpdateBtn">채팅방 만들기</button>
         </div>
     </div>
     
@@ -312,6 +356,7 @@
 	    chatbox.scrollTop = chatbox.scrollHeight;
 	}
 	
+	// 주소창
 	$(document).ready(function() {
 	    const path = window.location.pathname;
 	    const match = path.match(/\/chatRoom\/(\d+)/);
@@ -324,7 +369,7 @@
 	    	connect('@me');
 	    }
 	});
-	
+	// history.pushState
 	window.onpopstate = function(event) {
 	    const path = window.location.pathname;
 	    const match = path.match(/\/chatRoom\/(\d+)/);
@@ -338,7 +383,9 @@
 	
 	//채팅방 들어가기
 	function enterRoom(chatName, roomId, roomType) {
-		event.preventDefault();
+		if(event){
+			event.preventDefault();
+		}
 	    currentRoomId = roomId;
 	    
 	    window.history.pushState(null, '', '/chatRoom/' + roomId);
@@ -347,7 +394,27 @@
 	    $('#chatForm').show();
 	    $('#roomName').text(chatName);	// 채팅방 제목 바꿈
 	    $('#chatbox').empty(); // 이전 메시지 초기화
-		
+	
+        // 오픈 채팅방 설정
+	    $('.stateIcon').empty();
+        if(roomType == 'O3'){
+        	let tagI = $('<i />').prop('class', 'fas fa-user-plus');
+	        let tagI1 = $('<i />').prop('class','bi bi-gear');
+	        let tagI2 = $('<i />').prop('class','fa fa-sign-out-alt');
+	        tagI.on('click', function(event){
+	        	$('#openChatInviteModal').show();
+	        	inviteFollow(roomId);
+	        	console.log("확인");
+	        });
+	        tagI1.on('click', function(event){
+	        	$('#openChatUpdateModal').show();
+	        });
+	        tagI2.on('click', function(event){
+				leaveRoom(roomType, roomId, '[[${userNo}]]');
+			});
+	        $('.stateIcon').append(tagI,tagI1,tagI2);
+        }
+	    
 	    
 	    // 소켓 연결중
 	    if (stompClient !== null) {
@@ -368,8 +435,8 @@
 			url: "/chatRoom/chatList",
 			method: "GET",
 			success: function(result){
-				console.log(result);
 				$('.chat-room-list').empty();
+				$('.openChatList').empty();
 				result.forEach(function(list){
 					showRoom(list);
 				});
@@ -404,6 +471,11 @@
 			tagli.append(tagI2);
 			$('.chat-room-list.group').append(tagli);
 		}else if(list.chatType == 'O3'){
+			let tagImg = $('<img />').prop('src','/images/'+list.chatImage).addClass('iconImage');
+			tagImg.on('click', function(evnet){
+				enterRoom(list.chatName, list.chatNo, list.chatType);
+			})
+			$('.openChatList').append(tagImg);
 			
 		}
 	}
@@ -436,6 +508,7 @@
 	        $(this).toggle(userName.includes(search));
 	    });
 	});
+	
 	$('#groupFollowInput').on('input', function() {
 	    let search = $(this).val().toLowerCase();
 	    $('#followListGroup .follow-item').each(function() {
@@ -444,6 +517,7 @@
 	    });
 	});
 	
+	//채팅방 이름 검색
 	$('.chat-room-search').on('input', function() {
         let search = $(this).val().toLowerCase();
         searchChatRooms(search);
@@ -477,7 +551,7 @@
 			}
 		});
 	}
-	//채팅방 모달 
+	//채팅방 팔로우목록 만들기 
 	function showFollow(follow){
 		let label1 = $('<label />').prop('for','private_'+follow.followingId).addClass('follow-item');
 		let span1 = $('<span />')
@@ -506,6 +580,22 @@
 		$('#followListGroup').append(label2);
 	}
 	
+	//오픈채팅방 초대 팔로우 목록
+	function inviteFollow(chatNo){
+		$.ajax({
+			url : "/chatRoom/invite",
+			method : "POST",
+			data : {chatNo},
+			success: function(result){
+				result.forEach(function(follow){
+					
+				})
+			},
+			error: function(error){
+				console.log(error);	
+			}
+		});
+	}	
 	
 	// 채팅방 모달 on/off
 	// 채팅방 + 아이콘
@@ -534,7 +624,7 @@
 		$('#chatModal').hide();
 		$('#openChatModal').show();
 	});
-	
+	// 프로필
 	$('#profilSetting').on('click', function(){
 		$('#profilChatModal').show();
 	});
@@ -549,6 +639,8 @@
 	    $('#groupFollowInput').val('');
 	    $('#followListPrivate').empty();
 	    $('#followListGroup').empty();
+	    
+	    
 	}
 	$('.modal-close').on('click', function() {
 		allClose();
@@ -662,6 +754,7 @@
 			};
 			stompClient.send("/app/chat.exit/" + chatNo, {}, JSON.stringify(chatMessage));
 			$('#roomName').text("채팅창 제목");
+			$('.stateIcon').empty();
 			$('#chatbox').empty();
 			if(chatSubScription){
 				chatSubScription.unsubscribe();
@@ -734,6 +827,7 @@
             processData: false,
             success: function(result) {
                 $('#openChatModal').hide();
+                stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
             },
             error: function(error) {
                 console.log(error);

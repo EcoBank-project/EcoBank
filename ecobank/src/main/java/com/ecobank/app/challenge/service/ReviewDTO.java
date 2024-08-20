@@ -4,13 +4,9 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import groovy.transform.ToString;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class ReviewDTO {
 	//챌린지 후기
 	private int reviewNo;			//챌린지 후기 번호
@@ -20,8 +16,10 @@ public class ReviewDTO {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date reviewUpdateAt;	//챌린지 후기 수정 일자
 	private int reviewStar;			//챌린지 후기 별점
+	private Double avgStar;			//챌린지 별점 평균
 	
 	private Integer challNo; 		//챌린지 번호
 	private int userNo;				//회원 번호
+	private String nickname;      	//닉네임
 	private int confirmNo;			//챌린지 인증 번호
 }
