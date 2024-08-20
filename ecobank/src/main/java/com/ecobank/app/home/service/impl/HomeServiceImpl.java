@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ecobank.app.home.mapper.HomeMapper;
 import com.ecobank.app.home.service.ChallengeVO;
 import com.ecobank.app.home.service.HomeService;
+import com.ecobank.app.home.service.RankingVO;
 
 @Service
 public class HomeServiceImpl implements HomeService{
@@ -35,6 +36,12 @@ private HomeMapper homeMapper;
 	public List<ChallengeVO> getOverSoonChallenges() {
 		// TODO Auto-generated method stub
 		return homeMapper.getOverSoonChallenges();
+	}
+
+	@Override
+	public List<RankingVO> getTopRankedUsers() {
+		// TODO Auto-generated method stub
+		return homeMapper.getTopRankedUsers();
 	}
 
 }

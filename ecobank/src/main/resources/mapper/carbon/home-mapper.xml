@@ -162,5 +162,54 @@
 		)
 		WHERE ROWNUM BETWEEN 1 AND 6
 	</select>
+	
+	<!-- 랭킹(1~3위) -->
+	<select id="getTopRankedUsers" resultType="com.ecobank.app.home.service.RankingVO">
+		SELECT use_id, 
+		       password, 
+		       nickname, 
+		       createat, 
+		       tell, 
+		       profile_img, 
+		       resp, 
+		       country, 
+		       user_no, 
+		       user_state, 
+		       provider, 
+		       provider_id, 
+		       confirm_createat,
+		       use_score
+		FROM (
+		        SELECT u.use_id, 
+		               u.password, 
+		               u.nickname, 
+		               u.createat, 
+		               u.tell, 
+		               u.profile_img, 
+		               u.resp, 
+		               u.country, 
+		               u.user_no, 
+		               u.user_state, 
+		               u.provider, 
+		               u.provider_id, 
+		               u.confirm_createat,
+		               sum(us.use_score) as use_score
+		        FROM users u join use_score us on u.user_no = us.user_no
+		        GROUP BY u.use_id, 
+		                 u.password, 
+		                 u.nickname, 
+		                 u.createat, 
+		                 u.tell, 
+		                 u.profile_img, 
+		                 u.resp, 
+		                 u.country, 
+		                 u.user_no, 
+		                 u.user_state, 
+		                 u.provider, 
+		                 u.provider_id, 
+		                 u.confirm_createat
+		)
+		WHERE ROWNUM BETWEEN 1 AND 4
+	</select>
 </mapper>
 	

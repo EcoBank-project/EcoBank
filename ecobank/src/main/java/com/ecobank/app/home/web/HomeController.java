@@ -19,8 +19,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.ecobank.app.home.service.ChallengeVO;
 import com.ecobank.app.home.service.HomeService;
+import com.ecobank.app.home.service.RankingVO;
 import com.ecobank.app.intro.service.CarbUserService;
-import com.ecobank.app.intro.service.CarbonService;
 import com.ecobank.app.score.service.ScoreService;
 
 @Controller
@@ -43,11 +43,15 @@ public class HomeController {
 		ChallengeVO chall = homeService.getMostPopularChallenge();
 		List<ChallengeVO> overSoonList = homeService.getOverSoonChallenges();
 		List<ChallengeVO> finishedList = homeService.getTopFiveFinishedChallenges();
+		List<RankingVO> topUsers = homeService.getTopRankedUsers();
 		System.out.println(finishedList);  
 		
 		model.addAttribute("chall", chall);
 		model.addAttribute("overSoonList", overSoonList);
 		model.addAttribute("finishedList", finishedList);
+		model.addAttribute("topUsers", topUsers);
+		System.out.println("랭킹 : ");
+		System.out.println(topUsers);
 		// 3. 데이터를 출력할 페이지 결정
 		return "main/home";
 	}
