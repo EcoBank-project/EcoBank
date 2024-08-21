@@ -7,14 +7,14 @@
 	<div class="container mt-5" th:if="${detail.challState} == 'D2'">
 	
 	<!-- review -->
-	<section id="testimonials" class="testimonials section-bg">
+<!--/* 	<section id="testimonials" class="testimonials section-bg">
 	  <div class="container" data-aos="fade-up">
 	    <div class="section-header">
           <h2>ReviewList</h2>
           <p>Please write a review with your stars after participating in the challenge.</p>
           <br/>
           <p style="font-weight: bold;"> What is the current review rating <br/>for the challenge? </p>
-          	<p style="font-size: 30px; font-weight: bold;"><i class="bi bi-star-fill"> 5.0 </i></p>
+          	<p style="font-size: 30px; font-weight: bold;"><i class="bi bi-star-fill" th:text="' ' + ${avg}"> 5.0 </i></p>
 			<div class="d-flex justify-content-end mt-3">
 				<button type="button" class="btn btn-primary"
 					th:onclick="reviewModal('review', [[${param.reviewNo}]])">WRITE</button>
@@ -32,14 +32,14 @@
 	              <h3 th:text="${review.nickname}"></h3>
 	              <h4 th:text="${#dates.format(review.reviewCreateAt, 'yyyy/MM/dd')}"></h4>
 					<div class="stars">
-					  <!-- 채워진 별 표시 -->
+					  채워진 별 표시
 					  <th:block th:if="${review.reviewStar >= 1}"><i class="bi bi-star-fill"></i></th:block>
 					  <th:block th:if="${review.reviewStar >= 2}"><i class="bi bi-star-fill"></i></th:block>
 					  <th:block th:if="${review.reviewStar >= 3}"><i class="bi bi-star-fill"></i></th:block>
 					  <th:block th:if="${review.reviewStar >= 4}"><i class="bi bi-star-fill"></i></th:block>
 					  <th:block th:if="${review.reviewStar == 5}"><i class="bi bi-star-fill"></i></th:block>
 					
-					  <!-- 빈 별 표시 -->
+					  빈 별 표시
 					  <th:block th:if="${review.reviewStar < 5}"><i class="bi bi-star"></i></th:block>
 					  <th:block th:if="${review.reviewStar < 4}"><i class="bi bi-star"></i></th:block>
 					  <th:block th:if="${review.reviewStar < 3}"><i class="bi bi-star"></i></th:block>
@@ -54,25 +54,25 @@
 	              </th:block>
 	            </div>
 	          </div>
-	        </div><!-- End testimonial item -->
+	        </div>End testimonial item
 	        </th:block>
 	      </div>
 	    </div>
 	  </div>
-	</section><!-- End Testimonials Section -->
+	</section>End Testimonials Section */-->
 	
 	<section id="testimonials" class="testimonials section-bg">
 	  <div class="container" data-aos="fade-up">
 	    <div class="section-header">
-	      <h2>ReviewList</h2>
+	      <h2>Challengers' reviews</h2>
 	      <p>Please write a review with your stars after participating in the challenge.</p>
 	      <div style="padding-top:10px;">
 	        <button type="button" class="btn btn-primary"
 	          th:onclick="reviewModal('review', [[${param.reviewNo}]])">WRITE</button>
 	      </div>
 	      <hr/>
-          <p style="font-weight: bold;"> What is the current review rating <br/>for the challenge? </p>
-          	<p style="font-size: 30px; font-weight: bold;"><i class="bi bi-star-fill"> 5.0 </i></p>
+          <p style="font-weight: bold;"> 에코뱅크 챌린저들이 남긴 후기의 평점은 ? </p>
+          	<p style="font-size: 30px; font-weight: bold;"><i class="bi bi-star-fill" th:text="' ' + ${avg} + ' 점'"></i></p>
 	    </div>
 	
 	    <!-- Slider main container -->
