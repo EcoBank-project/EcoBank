@@ -67,6 +67,16 @@ public class UsersController {
         return response;
     }
     
+    @GetMapping("/user/api/check-nickname")
+    @ResponseBody
+    public Map<String, Boolean> checkNickname(@RequestParam("nickname") String nickName) { 
+        Map<String, Boolean> response = new HashMap<>();
+        boolean exists = !userRepository.findByNickName(nickName).isEmpty(); // db에 입력받은 매개값 useId가 있는 지 확인
+        System.out.println("----------------------exists : " + exists);
+        response.put("exists", exists); // 있으면 <exists, true> 없으면 <exists, false>
+        return response;
+    }
+    
 	@GetMapping("findid")
 	public String goFindId() {
 		return "users/findid";

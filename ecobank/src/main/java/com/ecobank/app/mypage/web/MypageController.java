@@ -157,7 +157,7 @@ public class MypageController {
 	    @ResponseBody
 	    public Map<String, Object> processWithdrawal(@RequestParam("userNo") Integer userNo) {
 	        Map<String, Object> response = new HashMap<>();
-	        System.out.println("userNo : " + userNo);
+	        System.out.println("`````````````userNo : " + userNo);
 	        boolean success = userService.withdrawUser(userNo);
 	        response.put("success", success);
 	        return response;

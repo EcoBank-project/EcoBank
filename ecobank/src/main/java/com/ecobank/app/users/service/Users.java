@@ -54,4 +54,13 @@ public class Users {
 
     private String providerId;
     
+    public void deactivate() {
+        this.nickName = null;
+        this.password = null;
+        this.provider = null;
+        this.providerId = null;
+        this.tell = null;
+        this.resp = null;
+        this.userState = null;
+    }
 }
