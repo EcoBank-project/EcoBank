@@ -18,7 +18,10 @@
 	<select id="selectChatRoomInfo" resultType="chatRoomVO">
 		SELECT chat_name, 
 		       chat_type, 
-		       user_no
+		       user_no,
+		       chat_password,
+		       chat_search_allow,
+		       chat_image
 		FROM chat c join chat_entry ce
 		              on c.chat_no = ce.chat_no
 		WHERE c.chat_no = #{chatNo}
@@ -199,5 +202,17 @@
 		SET chat_name = #{chatName}
 		WHERE chat_no = #{chatNo}
 	</update>
-	<!--  -->	
+	<!-- 오픈채팅방 변경 -->
+	<update id="updateOpenChatChange" parameterType="ChatRoomVO">
+		UPDATE chat
+	    <set>
+	        <if test="chatImage != null and chatImage != ''">
+	            chat_image = #{chatImage},
+	        </if>
+	        chat_name = #{chatName},
+	        chat_password = #{chatPassword},
+	        chat_search_allow = #{chatSearchAllow}
+	    </set>
+	    WHERE chat_no = #{chatNo}
+	</update>	
 </mapper>

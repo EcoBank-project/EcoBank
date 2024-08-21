@@ -375,6 +375,9 @@
 	#chatImage {
 	    display: none;
 	}
+	#chatImageUpdate {
+		display: none;
+	}
 	
 	/* 스위치 스타일 */
 	.switch-container {

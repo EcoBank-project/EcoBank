@@ -117,11 +117,21 @@ public class ChatRoomController {
 	// 채팅방 생성 - 오픈 채팅
 	@PostMapping("/chatRoom/createOpenChat")
 	@ResponseBody
-	public Integer chatOpen(HttpSession httpSession,
+	public Integer chatOpenCreate(HttpSession httpSession,
 			                @ModelAttribute ChatRoomVO chatRoom, 
 			                @RequestPart(value = "image", required = false) MultipartFile[] images) {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		Integer chatNo = chatService.ChatOpenInsert(chatRoom, userNo, images);
+		return chatNo;
+	}
+	// 채팅방 업데이트 - 오픈 채팅
+	@PostMapping("/chatRoom/updateOpenChat")
+	@ResponseBody
+	public Integer chatOpenUpdate(HttpSession httpSession,
+			                @ModelAttribute ChatRoomVO chatRoom, 
+			                @RequestPart(value = "image", required = false) MultipartFile[] images) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		Integer chatNo = chatService.OpenChatChangeUpdate(chatRoom, images);
 		return chatNo;
 	}
 	
@@ -152,7 +162,18 @@ public class ChatRoomController {
 		chatService.laguageCodeUpdate(languageCode, userNo);
 	}
 	
-	// 채팅방 만든 이 조회
-	
+	// 채팅방 만든이 조회&설정
+	@PostMapping("/chatRoom/getChatCreateUser")
+	@ResponseBody
+	public ChatRoomVO getChatManager(HttpSession httpSession, @RequestParam Integer chatNo) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		String nickName = (String) httpSession.getAttribute("nickname");
+		int result = chatService.getRoomManager(userNo, chatNo);
+		ChatRoomVO chatRoom = new ChatRoomVO();
+		if(result > 0) {
+			chatRoom = chatService.chatRoomInfo(chatNo, userNo, nickName);
+		}
+		return chatRoom;
+	}
 	
 }

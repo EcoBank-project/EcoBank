@@ -52,5 +52,7 @@ public interface ChatMapper {
 	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);
 	// 채팅방에 없는 팔로우 목록
 	public List<ChatFollowVO> selectChatFollowInfo(@Param("followerId") Integer userNo, @Param("chatNo")Integer chatNo);
+	// 오픈 채팅방 업데이트
+	public int updateOpenChatChange(ChatRoomVO chatRoom);
 	
 }
