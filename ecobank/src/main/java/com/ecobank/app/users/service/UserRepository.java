@@ -11,7 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<Users, Integer> {
 	Optional<Users> findByUseId(String useId);
+	
+	Optional<Users> findByNickName(String nickName);
 
 	@Query("SELECT u.password FROM Users u WHERE u.userNo = :userNo")
 	String findPasswordByUserNo(@Param("userNo") Integer userNo);
+
 }

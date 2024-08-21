@@ -115,10 +115,21 @@
                 $.post('/user/send', {
                     phoneNumber : phoneNumber
                 }).done(function(response) {
-                    alert(response.message);
-                    console.log("response : " + response);
+                    // alert(response.message);
+                    Swal.fire({
+                    	icon: 'success',
+                    	title: '인증번호 발송',
+                    	text: response.message,
+                    	confirmButtonColor: "#32C36C",
+                    })
                 }).fail(function() {
-                    alert("전송 실패");
+                    //alert("전송 실패");
+                    Swal.fire({
+                    	icon: 'fail',
+                    	title: '발송 실패',
+                    	text: '발송 실패했습니다.',
+                    	confirmButtonColor: "#32C36C",
+                    })
                 });
             });
 
@@ -129,16 +140,36 @@
                     phoneNumber : phoneNumber,
                     verificationCode : verificationCode
                 }).done(function(response) {
-                    alert(response.message);
+                    //alert(response.message);
+
                     if (response.userId) {
+                        Swal.fire({
+                        	icon : 'success',
+                        	title : '인증',
+                        	text : response.message,
+                        	confirmButtonColor: "#32C36C",
+                        })
                         $('#userId').text('회원 ID: ' + response.userId);
                         $('#searchPw').show(); // 비밀번호 찾기 버튼 표시
                         $('#searchPw').off('click').on('click', function() {
                             window.location.href = '/findpw?email=' + encodeURIComponent(response.userId);
                         });
+                    } else {
+                        Swal.fire({
+                        	icon : 'success',
+                        	title : '인증',
+                        	text : response.message,
+                        	confirmButtonColor: "#32C36C",
+                        })
                     }
                 }).fail(function() {
-                    alert("인증 실패!");
+                    //alert("인증 실패!");
+                    Swal.fire({
+                    	icon : 'fail',
+                    	title : '인증 실패',
+                    	text : '인증 실패했습니다',
+                    	confirmButtonColor: "#32C36C",
+                    })
                 });
             });
             
