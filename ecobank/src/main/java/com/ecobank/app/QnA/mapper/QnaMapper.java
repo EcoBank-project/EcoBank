@@ -18,4 +18,7 @@ public interface QnaMapper {
 		 
 		// 답글 리스트 조회
 		List<QnaVO> qnaReplyList(int qnaNo);
+		//QnA 수정
+		int updateQnaInfo(QnaVO qnaVo);
+
 }
