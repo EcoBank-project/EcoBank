@@ -232,6 +232,14 @@
         WHERE chall_no = #{challNo}
 	</select>
 	
+	<!-- 후기 등록 여부 -->
+	<select id="reviewStatus" parameterType="int">
+		SELECT COUNT(*)
+		FROM chall_review
+		WHERE review_no = #{reviewNo}
+		AND user_no = #{userNo}
+	</select>
+	
 	<!-- 후기 등록 -->
 	<insert id="insertReview" parameterType="ReviewDTO">
 		<selectKey keyProperty="reviewNo"
