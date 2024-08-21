@@ -210,7 +210,7 @@
 	            chat_image = #{chatImage},
 	        </if>
 	        chat_name = #{chatName},
-	        chat_password = #{chatPassword},
+	        chat_password = #{chatPassWord},
 	        chat_search_allow = #{chatSearchAllow}
 	    </set>
 	    WHERE chat_no = #{chatNo}
