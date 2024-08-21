@@ -69,7 +69,10 @@ public interface ChallMapper {
 	public List<ReviewDTO> selectReviewAll(ChallVO challVO);
 	
 	//챌린지 후기 평균 별점 구하기
-	public double getAvgStar(int challNo);
+	public Double getAvgStar(int challNo);
+	
+	//챌린지 후기 등록 여부(결과가 있으면 1/ 참여한적 없으면 0)
+	public int reviewStatus(@Param("userNo") int userNo, @Param("reviewNo") int reviewNo);
 	
 	//챌린지 후기 등록
 	public int insertReview(ReviewDTO reviewDTO);

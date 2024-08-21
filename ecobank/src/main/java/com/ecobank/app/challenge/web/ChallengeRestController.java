@@ -83,12 +83,14 @@ public class ChallengeRestController {
         return result;
 	}
 	
+	//챌린지 참가 여부
 	@GetMapping("enterStatus")
 	public boolean isUserParticipated(@RequestParam("challNo") int challNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		return challConfirmService.isUserParticipated(userNo, challNo);
 	}
 	
+	//인증 상태 여부
 	@GetMapping("confirmStatus")
 	public boolean isConfirmed(@RequestParam("challNo") int challNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
@@ -150,6 +152,13 @@ public class ChallengeRestController {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		reviewDTO.setUserNo(userNo);
 		return challService.reviewInsert(reviewDTO);
+	}
+	
+	//챌린지 후기 등록 여부
+	@GetMapping("reviewStatus")
+	public boolean reviewStatus(@RequestParam("reviewNo") int reviewNo) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		return challService.reviewStatus(userNo, reviewNo);
 	}
 	
 	//챌린지 후기 삭제
