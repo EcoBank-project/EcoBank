@@ -88,9 +88,11 @@ public class ChatMessageController {
 	public void exitUser(@DestinationVariable Integer roomId, ChatMessageVO message, Principal principal) {
 		int result = chatService.getRoomManager(message.getUserNo(), roomId);
 		// 채팅방 참가자 나가기
+		// 채팅방 주인 아닐경우
 		if(result < 1) {
 			chatService.chatEntryUpdate(message.getUserNo(), roomId);
 			Integer countUser = chatService.getUsersChatRoom(roomId);
+			// 채팅방에 아무도 없을 경우
 			if(countUser < 1) {
 				// 채팅방 메시지 삭제
 				chatService.chatAllMessageDelete(roomId);
@@ -109,7 +111,8 @@ public class ChatMessageController {
 				for(String receiverId : receiverIds) {
 					messagingTemplate.convertAndSendToUser(receiverId, "/queue/leaveChatRoom", message);
 				}
-			}				
+			}
+		// 채팅방 주인일 경우
 		}else {
 			List<String> receiverIds = chatService.chatLeaveUser(message.getUserNo(), roomId);
 			
@@ -133,7 +136,8 @@ public class ChatMessageController {
 		chatService.chatNameChangeUpdate(chatName, chatNo);
 		List<String> receiverIds = chatService.ChatUserList(chatNo);
 		for(String receiverId : receiverIds) {
-			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", chatName);
+			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", chatNo);
+			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatUpdate/" + chatNo, chatName);
 		}
 	}
 	

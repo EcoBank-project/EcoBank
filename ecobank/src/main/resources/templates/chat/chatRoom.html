@@ -274,6 +274,12 @@
 			    chatSubScription = stompClient.subscribe('/user/queue/messages/' + roomId, function(message) {
 			    	showMessage(JSON.parse(message.body));
 			    });
+			    // 채팅방 변경
+			    if(roomType == 'O2' || roomType == 'O3'){
+				    stompClient.subscribe('/user/queue/chatUpdate/' + roomId, function(message){
+				    	$('#roomName').text(message.body);
+				    })			    	
+			    }
 	    	}
 			// 채팅방 목록 로드
 	        stompClient.subscribe('/user/queue/chatList', function(message) {
@@ -407,8 +413,7 @@
         		method : 'POST',
         		data : {chatNo},
         		success : function(result){
-        			console.log(result);
-        			if(result.chatName != null){
+        			if(result != null){
         				let tagI = $('<i />').prop('class', 'fas fa-user-plus');
         		        let tagI1 = $('<i />').prop('class','bi bi-gear');
         		        let tagI2 = $('<i />').prop('class','fa fa-sign-out-alt');
@@ -417,17 +422,24 @@
         		        	inviteFollow(chatNo);
         		        });
         		        tagI1.on('click', function(event){
-        		        	$('#openChatUpdateModal').show();
-        		        	
-        		        	$('#openChatNameUpdate').val(result.chatName);
-        		    	    $('#openChatPasswordUpdate').val(result.chatPassWord);
-        		    	    if(result.chatSearchAllow == 'Y'){
-	        		    	    $('#allowSearchUpdate').prop("checked", true);        		    	    	
-        		    	    }else{
-        		    	    	$('#allowSearchUpdate').prop("checked", false);
-        		    	    }
-        		    	    $('#imagePreviewUpdate').prop("src", "/images/"+result.chatImage);
-        		        });
+        					$.ajax({
+        						url : '/chatRoom/getChatOpenInfo',
+        						method : 'POST',
+        						data : {chatNo},
+        						success : function(result){
+        							$('#openChatUpdateModal').show();
+        		
+        				        	$('#openChatNameUpdate').val(result.chatName);
+        				    	    $('#openChatPasswordUpdate').val(result.chatPassWord);
+        				    	    if(result.chatSearchAllow == 'Y'){
+        					    	    $('#allowSearchUpdate').prop("checked", true);        		    	    	
+        				    	    }else{
+        				    	    	$('#allowSearchUpdate').prop("checked", false);
+        				    	    }
+        				    	    $('#imagePreviewUpdate').prop("src", "/images/"+result.chatImage);
+        						}
+        					})
+        		        })
         		        tagI2.on('click', function(event){
         					leaveRoom(roomType, chatNo, '[[${userNo}]]');
         				});
@@ -443,10 +455,9 @@
         		err : function(err){
         			console.log(err);
         		}
-	
-        	}) 
+        	})
         }
-
+		
 	    // 소켓 연결중
 	    if (stompClient !== null) {
 	        stompClient.disconnect(function() {
@@ -498,7 +509,9 @@
 			tagli.append(tagI2);
 			$('.chat-room-list.private').append(tagli);			
 		}else if(list.chatType == 'O2'){
-			tagli.append(tagI1);
+			if(list.chatCreateUser == '[[${userNo}]]'){
+				tagli.append(tagI1);				
+			}
 			tagli.append(tagI2);
 			$('.chat-room-list.group').append(tagli);
 		}else if(list.chatType == 'O3'){
@@ -741,7 +754,8 @@
 			alert("채팅방 초대할 사람을 체크하세요");
 		}
 	}
-	// 채팅 만들기 함수
+	
+	// 채팅 만들기 
 	function insertChatRoom(formObj){
 		$.ajax({
 			url: '/chatRoom/createChat',
@@ -866,6 +880,7 @@
             }
         });
 	});
+	
 	// 오픈 채팅 업데이트
 	$('#OpenChatUpdateBtn').on('click', function(evnet){
 		let chatNo = currentRoomId;
@@ -959,7 +974,7 @@
 				contentType: 'application/json',
 				success: function(result){
 					allClose();
-					//입장 메시지 보내기
+					stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
 				},
 				error: function(error){
 					console.log(error);
