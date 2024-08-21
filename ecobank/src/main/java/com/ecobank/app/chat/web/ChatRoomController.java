@@ -146,11 +146,12 @@ public class ChatRoomController {
 	// 오픈 채팅방 초대
 	@PostMapping("/chatRoom/inviteOpenChat")
 	@ResponseBody
-	public void openChatInvite(@RequestBody ChatRoomDTO chatRoom) {
+	public Integer openChatInvite(@RequestBody ChatRoomDTO chatRoom) {
 		List<Integer> userNos = chatRoom.getUserNo();
 		for(Integer user : userNos) {
 			chatService.ChatUserInsert(chatRoom.getChatNo(), user);
 		};
+		return chatRoom.getChatNo();
 	}
 	
 	// 프로필 언어 설정
@@ -161,17 +162,21 @@ public class ChatRoomController {
 		chatService.laguageCodeUpdate(languageCode, userNo);
 	}
 	
-	// 채팅방 만든이 조회&설정
+	// 채팅방 만든이 조회
 	@PostMapping("/chatRoom/getChatCreateUser")
 	@ResponseBody
-	public ChatRoomVO getChatManager(HttpSession httpSession, @RequestParam Integer chatNo) {
+	public Integer getChatManager(HttpSession httpSession, @RequestParam Integer chatNo) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		int result = chatService.getRoomManager(userNo, chatNo);
+		return result;
+	}
+	// 채팅방 오픈 정보
+	@PostMapping("/chatRoom/getChatOpenInfo")
+	@ResponseBody
+	public ChatRoomVO ChatOpenInfo(HttpSession httpSession, @RequestParam Integer chatNo) {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		String nickName = (String) httpSession.getAttribute("nickname");
-		int result = chatService.getRoomManager(userNo, chatNo);
-		ChatRoomVO chatRoom = new ChatRoomVO();
-		if(result > 0) {
-			chatRoom = chatService.chatRoomInfo(chatNo, userNo, nickName);
-		}
+		ChatRoomVO chatRoom = chatService.chatRoomInfo(chatNo, userNo, nickName);
 		return chatRoom;
 	}
 	
