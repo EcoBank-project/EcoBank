@@ -7,6 +7,38 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+    .comment-section {
+        margin-top: 20px;
+    }
+
+    .comment-input {
+        margin-bottom: 10px;
+    }
+
+    .comment-submit-btn {
+        width: 100px;
+    }
+
+    .comment-list {
+        margin-bottom: 20px;
+    }
+
+    .comment-item {
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+    }
+
+    .comment-item:last-child {
+        border-bottom: none;
+    }
+
+    .comment-item .comment-author {
+        font-weight: bold;
+    }
+
+    .comment-item .comment-text {
+        margin-top: 5px;
+    }
 .like{
       width: 25px;
       fill: #ddd;
@@ -233,7 +265,7 @@ padding: 20px;
                        <h4 class="mb-1" th:text=${sns.nickname}></h4>
                    </div>
                    <div class="ms-auto action-buttons">
-							<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null}">팔로우</button>
+							<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null}  and ${sns.userNo} != ${session.userNo}">팔로우</button>
 							<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
                       	
 						<a href="#" class="nav-menu">...</a>
@@ -300,11 +332,16 @@ padding: 20px;
             <!-- Comments Section -->
             <div class="row comment-section">
             	<div  class="col-lg-12" id="replyArea">
+            		<div class="comment-item">
+						<div class="d-flex justify-content-between align-items-center">
+            				<!-- 댓글출력 -->
+            			</div>
+            		</div>
 				</div>
-                <div class="col-lg-12" >
+				<div class="d-flex">
 					<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
                     <textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent"></textarea>
-                    <button id="writeBtn"  class="btn btn-primary comment-submit-btn">Submit</button>
+                    <button id="writeBtn" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
                 </div>
             </div>
         </div>
@@ -454,11 +491,13 @@ padding: 20px;
 	
 			//output += "<td>" + list[i].userNo+"</td>";
 			console.log('닉네임을 찾자',list);
+			output += "<div>";
 			output += `<img src="profile.jpg" alt="Profile Image" class="profile-img">`;
-			output += "<div>" + list[i].nickname +"</div>";
+			output += "<strong>" + list[i].nickname +"</strong>";
 			output += `<input type="hidden" name="replyNo" value="${list[i].replyNo}">`;
-			output += "<div>" + list[i].replyContent+"</div>";
-			output += "<div>" + list[i].replyCreateAt+"</div>";
+			output += `<p style="display: inline;">`+ list[i].replyContent +`</p>`;
+			output += `<p style="display: inline; margin-left: 10px;">`+ list[i].replyCreateAt  +`</p>`;
+			output += "</div>";
 			output += `<div class="menu-reply">
 					   		<a href="#" class="nav-menu-reply">...</a>
 							<div class="dropdown-menu-reply">
@@ -551,7 +590,7 @@ padding: 20px;
 	}
 	
     //좋아요버튼
-  	$('.like').on('click',function(){
+  	$('.bi').on('click',function(){
   		let feedNo =$(this).data('feedno');
   		console.log('하트하으',feedNo);
 		$.ajax({
@@ -560,7 +599,6 @@ padding: 20px;
 			data : {feedNo},
 			dataType : "json",
 			success : function(result){
-				alert("좋아요");
 				location.reload();
 			},
 			error :  function(error){
@@ -571,7 +609,7 @@ padding: 20px;
     })
 
     	//좋아요취소
-		$('.likeActive').click(function(){
+		$('.bi-heart-fill').click(function(){
 			let snsLikeNo =$(this).data('snslikeno');
 			console.log("팔로우버튼");
 			console.log('누구야',snsLikeNo)
@@ -581,7 +619,6 @@ padding: 20px;
 			url : "likeDelete",
 			data : {snsLikeNo},
 			success : function(){
-				alert("좋아요취소 성공");
 				location.reload();
 			},
 			error :  function(error){

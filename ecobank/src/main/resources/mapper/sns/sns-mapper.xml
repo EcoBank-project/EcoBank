@@ -250,7 +250,7 @@
                ,u.nickname
                ,f.follower_id
 	      FROM users u JOIN follow f 
-					   ON f.follower_id = u.user_no
+					   ON f.following_id = u.user_no
 		  WHERE follower_id= #{userNo}
 	</select>
 	
