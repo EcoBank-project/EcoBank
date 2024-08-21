@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.mapper.AlarmMapper">
+    <insert id="insertAlarm">
+	    <selectKey keyProperty="alarmNo" 
+	    		   resultType="Integer"
+	    		   order="BEFORE">
+			SELECT NVL(MAX(alarm_no), 0) + 1
+			FROM alarm
+		</selectKey>
+        INSERT INTO alarm (alarm_no, 
+        				   alarm_content, 
+        				   alarm_code, 
+        				   alarm_ref_no, 
+        				   user_no)
+        VALUES (#{alarmNo}, 
+        		#{alarmContent}, 
+        		#{alarmCode}, 
+        		#{alarmRefNo}, 
+        		#{userNo})
+    </insert>
+</mapper>
