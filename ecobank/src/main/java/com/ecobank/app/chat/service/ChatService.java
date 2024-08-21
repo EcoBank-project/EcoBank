@@ -52,4 +52,6 @@ public interface ChatService {
 	public int laguageCodeUpdate(String lagCode, Integer userNo);
 	//팔로우 목록
 	public List<ChatFollowVO> chatFollowList(Integer userNo);
+	//채팅방에 없는 팔로우 목록
+	public List<ChatFollowVO> chatFollowListInfo(Integer userNo, Integer chatNo);
 }

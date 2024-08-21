@@ -37,12 +37,14 @@ public class ChatRoomController {
 	public String ChatRooms(HttpSession httpSession, Model model){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		String nickName = (String) httpSession.getAttribute("nickname");
-		
+		String userId = (String) httpSession.getAttribute("useId");
 		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo, nickName);
+		String lagCode = chatService.laguageCodeSelect(userId);
 		
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("nickname", nickName);
 		model.addAttribute("chatRooms", chatList);
+		model.addAttribute("lagCode", lagCode);
 		return "chat/chatRoom";
 	}
 	
@@ -51,13 +53,14 @@ public class ChatRoomController {
 	public String ChatRoom(@PathVariable Integer chatNo , HttpSession httpSession, Model model){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		String nickName = (String) httpSession.getAttribute("nickname");
+		String userId = (String) httpSession.getAttribute("useId");
 		ChatRoomVO chatRoom = chatService.chatRoomInfo(chatNo, userNo, nickName);
 		if(chatRoom == null) {
 			return "redirect:/";
 		}
 		
 		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo, nickName);
-		
+		String lagCode = chatService.laguageCodeSelect(userId);
 		String chatType = chatRoom.getChatType();
 		String chatName = chatRoom.getChatName();
 		
@@ -66,7 +69,7 @@ public class ChatRoomController {
 		model.addAttribute("chatName", chatName);
 		model.addAttribute("nickname", nickName);
 		model.addAttribute("chatRooms", chatList);
-		
+		model.addAttribute("lagCode", lagCode);
 		
 		return "chat/chatRoom";
 	}
@@ -94,7 +97,6 @@ public class ChatRoomController {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		String nickName = (String) httpSession.getAttribute("nickname");
 		List<ChatRoomVO> roomlist = chatService.chatRoomList(userNo, nickName);
-		System.out.println(roomlist);
 		return roomlist;
 	}
 	
@@ -111,19 +113,35 @@ public class ChatRoomController {
 		};
 		return chatNo;
 	}
+	
 	// 채팅방 생성 - 오픈 채팅
 	@PostMapping("/chatRoom/createOpenChat")
 	@ResponseBody
-	public Integer chatOpen(HttpSession httpSession, @ModelAttribute ChatRoomVO chatRoom, @RequestPart("image") MultipartFile[] images) {
+	public Integer chatOpen(HttpSession httpSession,
+			                @ModelAttribute ChatRoomVO chatRoom, 
+			                @RequestPart(value = "image", required = false) MultipartFile[] images) {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		Integer chatNo = chatService.ChatOpenInsert(chatRoom, userNo, images);
 		return chatNo;
 	}
-	// 오픈 채팅방 초대
-	@PostMapping("/chatRoom/invite")
+	
+	// 오픈 채팅방 팔로우 초대목록 조회
+	@PostMapping("/chatRoom/inviteFollowList")
 	@ResponseBody
-	public void chatInviteList(@RequestParam Integer chatNo){
-		
+	public List<ChatFollowVO> chatInviteList(HttpSession httpSession, @RequestParam Integer chatNo){
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		List<ChatFollowVO> list = chatService.chatFollowListInfo(userNo, chatNo);
+		return list;
+	}
+	
+	// 오픈 채팅방 초대
+	@PostMapping("/chatRoom/inviteOpenChat")
+	@ResponseBody
+	public void openChatInvite(@RequestBody ChatRoomDTO chatRoom) {
+		List<Integer> userNos = chatRoom.getUserNo();
+		for(Integer user : userNos) {
+			chatService.ChatUserInsert(chatRoom.getChatNo(), user);
+		};
 	}
 	
 	// 프로필 언어 설정
@@ -133,4 +151,8 @@ public class ChatRoomController {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		chatService.laguageCodeUpdate(languageCode, userNo);
 	}
+	
+	// 채팅방 만든 이 조회
+	
+	
 }

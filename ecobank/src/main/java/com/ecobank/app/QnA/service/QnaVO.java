@@ -14,5 +14,6 @@ public class QnaVO {
 	private int qnaReplyNo;    			//답글번호
 	private String  qnaReplyContent;	//답글내용
 	private Date qnaReplyat;			//답글 작성일자 
+	private String replyStatus;			//답글 확인
 	
 }

@@ -67,7 +67,7 @@
 			)	
 	</insert>
 	<!-- 채팅방 팔로우 목록 -->
-	<select id="selectChatFollowAll" parameterType="ChatFollowVO">
+	<select id="selectChatFollowAll">
 		select following_id,
 			   use_id, 
 			   nickname
@@ -75,8 +75,22 @@
 		                on u.user_no = following_id
 		where f.follower_id = #{followingId}
 	</select>
-	<!-- 오픈 채팅방에 참여하고 있는 팔로우 목록 -->
-	
+	<!-- 오픈 채팅방에 참여하고 있지 않는 팔로우 목록 -->
+	<select id="selectChatFollowInfo">
+		select following_id,
+		       use_id, 
+		       nickname
+		from follow f join users u 
+		                on u.user_no = following_id
+		where follower_id = #{followerId}
+		AND following_id not In (select following_id
+		                         from follow f join users u 
+		                                         on u.user_no = following_id
+		                                       join chat_entry ce
+		                                         on ce.user_no = following_id
+		                         where f.follower_id = #{followerId}
+		                         and chat_no = #{chatNo})
+	</select>
 	<!-- 회원 언어 조회 -->
 	<select id="selectLaguageCode">
 		SELECT language_code
@@ -177,12 +191,13 @@
 		FROM chat
 		WHERE chat_create_user = #{userNo}
 		AND chat_no = #{chatNo}
-		AND chat_type = 'O2'
+		AND (chat_type = 'O2' OR chat_type = 'O3')
 	</select>
 	<!-- 채팅방 이름 변경 -->
 	<update id="updateChatChangeName">
 		UPDATE chat
 		SET chat_name = #{chatName}
 		WHERE chat_no = #{chatNo}
-	</update>	
+	</update>
+	<!--  -->	
 </mapper>

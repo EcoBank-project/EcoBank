@@ -228,10 +228,11 @@ public class ChatServiceImpl implements ChatService{
 		Integer result = chatMapper.updateLaguageCode(lagCode, userNo);
 		return result;
 	}
-	
-	
-	
-	
-	
-	
+	//채팅방에 없는 팔로우 목록
+	@Override
+	public List<ChatFollowVO> chatFollowListInfo(Integer userNo, Integer chatNo) {
+		List<ChatFollowVO> list = chatMapper.selectChatFollowInfo(userNo, chatNo);
+		return list;
+	}
+
 }

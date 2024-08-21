@@ -4,12 +4,12 @@
       layout:decorate="~{common/layouts/default_layout}"
       layout:fragment="Content">
 <head>
-    <!-- 부트스트랩 CSS 포함 -->
+    <meta charset="UTF-8">
     <title>QNA 상세 정보</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <script src="/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-
     <div class="container mt-4">
         <div class="card">
             <div class="card-header">
@@ -22,6 +22,8 @@
                 <p><strong>내용:</strong> <span th:text="${qna.qnaContent}"></span></p>
                 <p><strong>등록일:</strong> <span th:text="${qna.qnaCreateat}"></span></p>
                 <p><strong>작성자 번호:</strong> <span th:text="${qna.userNo}"></span></p>
+                <!-- 답변 상태 표시 -->
+                <p><strong>답변 상태:</strong> <span th:text="${qna.replyStatus}"></span></p>
                 <!-- 뒤로 가기 버튼 -->
                 <a href="/QnaUserList" class="btn btn-secondary">목록으로 돌아가기</a>
                 <form th:action="@{/qnaDelete}" method="post" style="display:inline;">
@@ -54,7 +56,34 @@
         </div>
     </div>
 
-    <!-- 부트스트랩 JS 및 의존성 스크립트 포함 -->
-    <script src="/js/bootstrap.bundle.min.js"></script>
+    <!-- 권한 부족 모달 -->
+    <div class="modal fade" id="permissionDeniedModal" tabindex="-1" aria-labelledby="permissionDeniedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="permissionDeniedModalLabel">권한 없음</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>이 페이지에 접근할 권한이 없습니다.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 페이지 로드 시 모달을 표시할지 결정
+        document.addEventListener('DOMContentLoaded', function () {
+            // Thymeleaf 변수 'showPermissionDeniedModal'이 true일 경우 모달을 표시
+            const showPermissionDeniedModal = /*[[${showPermissionDeniedModal}]]*/ false;
+            if (showPermissionDeniedModal) {
+                const modal = new bootstrap.Modal(document.getElementById('permissionDeniedModal'));
+                modal.show();
+            }
+        });
+    </script>
 </body>
 </html>
