@@ -129,10 +129,9 @@ public class ChatRoomController {
 	@ResponseBody
 	public Integer chatOpenUpdate(HttpSession httpSession,
 			                @ModelAttribute ChatRoomVO chatRoom, 
-			                @RequestPart(value = "image", required = false) MultipartFile[] images) {
-		Integer userNo = (Integer) httpSession.getAttribute("userNo");
-		Integer chatNo = chatService.OpenChatChangeUpdate(chatRoom, images);
-		return chatNo;
+			                @RequestPart(value = "image", required = false) MultipartFile[] images) {		
+		chatService.OpenChatChangeUpdate(chatRoom, images);
+		return chatRoom.getChatNo();
 	}
 	
 	// 오픈 채팅방 팔로우 초대목록 조회
