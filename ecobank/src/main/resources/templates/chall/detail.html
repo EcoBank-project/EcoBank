@@ -7,12 +7,12 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="../css/challenges/challenge.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-	  <!--/* <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet"> */-->
-	
-	  <!-- Template Main CSS File -->
-	  <link href="assets/css/maindd.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<!-- Template Main CSS File -->
+<link href="assets/css/maindd.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 <style>
 	.event-icon {
 	  max-width: 50px;
@@ -118,7 +118,7 @@
 	.bi-star {
 	    color: #e4e5e9;
 	}
-	
+	/*여기 수정해야함*/
 	.testimonial-carousel .testimonial-img img {
 	    width: 300px;
 	    height: 300px;
@@ -129,11 +129,6 @@
 	
 	.testimonial-carousel:hover .owl-nav {
 	    width: 300px;
-	}
-	
-	.testimonial-carousel .testimonial-img img {
-	  width: 300px;
-	  height: 300px;
 	}
 	
 	.testimonial-carousel .swiper-button-next,
@@ -150,9 +145,17 @@
 	  background: rgba(255, 255, 255, 0.8);
 	}
 	
-	.testimonial-carousel .swiper-pagination {
-	  bottom: 10px;
-	  text-align: center;
+	.profile-img {
+	    width: 60px;
+	    height: 60px;
+	    border-radius: 50%;
+	    object-fit: cover;
+	    margin-right: 15px;
+	}
+	
+	.swiper {
+	  width: 600px;
+	  height: 300px;
 	}
 </style>
 </head>
@@ -264,6 +267,8 @@
 		</div>
 	    </div>
 	</div>
+	<!-- Swiper JS -->
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 	<script>
 		let cNo = $('#cNo').val();
 		let fNo = $('#fNo').val();
@@ -464,6 +469,7 @@
 				})
 			});
 		})
+		
 		//다른 참가자 인증 내역
 		$('#others').click(function() {
 			$("#contents").load("others?challNo=" + cNo);
@@ -475,46 +481,8 @@
 		})
 		function detailImg() {
 			$("#contents").load("review?challNo=" + cNo);
-			
 		}
 		
-		//리뷰 등록 모달창
-		function reviewModal(state, stateNo){
-			event.preventDefault();
-			
-			modal.style.display="block";
-			//console.log(state, "스테이트 뭔지")
-			if(state == 'review'){
-				rNo = stateNo;
-				console.log(rNo, "알앤오");
-			}
-		}
-		
-		//리뷰 모달
-		const modal = document.querySelector('.modal');
-	    	$('#btn-close').on('click', function(){
-	    		 modal.style.display="none";
-	    	}); 
-	    	
-	    //리뷰 등록
-	    $('#btn-review').click(function(){
-	    	$.ajax({
-	    		url : 'reviewInsert',
-	    		type : 'post',
-	    		data : $('#reviewStar').serialize(), //form태그안에 값 다 가져오려고
-	    		success : function(result){
-	    			console.log(result);
-	    			alert('리뷰 작성이 완료되었습니다.');
-	    			modal.style.display="none";
-	    			detailImg();
-	    			$('#reviewContent').val('');
-	    		},
-	    		error : function(err){
-	    			console.log(err);
-	    		}
-	    	})
-	    })
-
 		//나의 인증 캘린더
 		$('#myCalendar').click(function() {
 			$('#contents').load("getMyCalendar", function() { //controller(페이지처리)
@@ -567,23 +535,7 @@
 				calendar.render();
 			})
 		})
-		var swiper = new Swiper('.testimonial-carousel', {
-		  slidesPerView: 1,       // 한 번에 하나의 슬라이드만 보여줌
-		  spaceBetween: 30,       // 슬라이드 간 간격
-		  loop: true,             // 슬라이드 반복
-		  navigation: {
-		    nextEl: '.swiper-button-next',
-		    prevEl: '.swiper-button-prev',
-		  },
-		  pagination: {
-		    el: '.swiper-pagination',
-		    clickable: true,
-		  },
-		  autoplay: {
-		    delay: 5000,          // 자동 슬라이드 속도 (밀리초 단위)
-		    disableOnInteraction: false, // 사용자가 클릭해도 자동 슬라이드 유지
-		  },
-		});
+
 	</script>
 </body>
 </html>

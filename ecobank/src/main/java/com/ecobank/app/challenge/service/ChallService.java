@@ -55,6 +55,6 @@ public interface ChallService {
 	public int reviewInsert(ReviewDTO reviewDTO);
 	
 	//챌린지 후기 삭제
-	public int reviewDelete(int userNo, int reviewNo);
+	public int reviewDelete(int nowUserNo, int reviewNo);
 	
 }
