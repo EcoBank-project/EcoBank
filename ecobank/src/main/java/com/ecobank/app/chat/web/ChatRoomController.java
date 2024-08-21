@@ -152,5 +152,7 @@ public class ChatRoomController {
 		chatService.laguageCodeUpdate(languageCode, userNo);
 	}
 	
+	// 채팅방 만든 이 조회
+	
 	
 }

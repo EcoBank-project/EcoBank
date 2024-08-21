@@ -386,13 +386,13 @@
 	};
 	
 	//채팅방 들어가기
-	function enterRoom(chatName, roomId, roomType) {
+	function enterRoom(chatName, chatNo, roomType) {
 		if(event){
 			event.preventDefault();
 		}
-	    currentRoomId = roomId;
+	    currentRoomId = chatNo;
 	    
-	    window.history.pushState(null, '', '/chatRoom/' + roomId);
+	    window.history.pushState(null, '', '/chatRoom/' + chatNo);
 	    
 	    // 채팅방 UI 표시
 	    $('#chatForm').show();
@@ -403,7 +403,18 @@
 	    $('.stateIcon').empty();
         if(roomType == 'O3'){
         	
-        	
+        	/* $.ajax({
+        		url : '/chatRoom/getchatCreateUser',
+        		method : 'POST',
+        		data : {chatNo},
+        		success : function(result){
+        			console.log(result);
+        		},
+        		err : function(err){
+        			console.log(err);
+        		}
+        			
+        	}) */
         	
         	let tagI = $('<i />').prop('class', 'fas fa-user-plus');
 	        let tagI1 = $('<i />').prop('class','bi bi-gear');
@@ -426,13 +437,13 @@
 	    // 소켓 연결중
 	    if (stompClient !== null) {
 	        stompClient.disconnect(function() {
-	            connect(roomId , roomType);
-	            loadMessage(roomId);
+	            connect(chatNo , roomType);
+	            loadMessage(chatNo);
 	        });
 	    // 소켓 처음 연결
 	    } else {
 	        connect(roomId, roomType);
-	        loadMessage(roomId);
+	        loadMessage(chatNo);
 	    }
 	}
 	
@@ -912,6 +923,7 @@
 		let lagCode = $('#language_code').val();	
 		profilChange(lagCode);
 	})
+	
 	function profilChange(language){
 		$.ajax({
 			url: '/chatRoom/languageChange/'+ language,
