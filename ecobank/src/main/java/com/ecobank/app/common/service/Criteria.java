@@ -35,7 +35,7 @@ public class Criteria { 	//공통으로 사용할수있는 하나의 클래스�
 		
 	}
 	
-	//get으로 시작해야만 mybatis에서 찾을 수 있음
+	//get으로 시작해야만 mybatis에서 찾을 수 있음(동적 태그 활용)
 	public String[] getTypeArr() { 
 		return type == null ? new String[] {} : type.split("");
 	}

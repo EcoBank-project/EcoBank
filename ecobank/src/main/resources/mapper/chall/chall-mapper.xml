@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.challenge.mapper.ChallMapper">
 	<!-- 챌린지 전체 조회 - 관리자-->
-	<select id="selectChallAll" resultType="ChallVO">
+	<select id="selectChallAll" resultType="ChallVO" parameterType="ChallVO">
 	    SELECT b.* 
 	    FROM (	
 	    		SELECT ROWNUM r               
@@ -18,7 +18,8 @@
 			                 , c.detail_img
 			                 , c.chall_score
 			                 , c.chall_createAt
-			            FROM chall c	
+			            FROM chall c
+
 			            ORDER BY c.chall_no DESC
                 		) a        
  				WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}         
@@ -218,13 +219,17 @@
 		     , u.nickname
 		     , u.user_no
 		     , r.chall_no
-		     , (SELECT ROUND(AVG(review_star), 1)
-		        FROM chall_review
-		        WHERE chall_no = 13) AS avgStar
 		FROM chall_review r JOIN users u 
 		                        ON r.user_no = u.user_no
 		WHERE r.chall_no = #{challNo}
 		ORDER BY r.review_no DESC
+	</select>
+	
+	<!-- 후기 평균 별점 -->
+	<select id="getAvgStar">
+		SELECT ROUND(AVG(review_star), 1) AS avgStar
+        FROM chall_review
+        WHERE chall_no = #{challNo}
 	</select>
 	
 	<!-- 후기 등록 -->

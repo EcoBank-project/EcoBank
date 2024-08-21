@@ -77,8 +77,15 @@ public class UserService {
 
     public boolean withdrawUser(Integer userNo) {
 
-    	userRepository.deleteById(userNo);
-        return true;
+    	 Optional<Users> userOpt = userRepository.findById(userNo);
+         if (userOpt.isPresent()) {
+             Users user = userOpt.get();
+             user.deactivate(); // 비활성화 및 정보 초기화
+             userRepository.save(user); // 업데이트 저장
+             return true;
+         } else {
+             return false;
+         }
        
     }
 

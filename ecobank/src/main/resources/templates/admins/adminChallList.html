@@ -33,6 +33,13 @@
 </style>
 </head>
 <body>
+	<div class="input-group input-group-sm mb-3" style="width: 400px; height: 40px; margin: 0 auto;">
+			<span class="input-group-text" id="inputGroup-sizing-sm">Search</span>
+			<input type="text" id="searchValue" class="form-control"
+				placeholder="챌린지 제목으로 검색하세요." aria-label="Sizing example input"
+				aria-describedby="inputGroup-sizing-sm">
+			<button type="button" class="btn btn-secondary" onclick="movePage(1);" id="searchBtn">검색</button>
+	</div>
 	<div class="container mt-5">
         <h3 class="mb-4">챌린지 전체 조회</h3>
         <div class="card">
