@@ -2,6 +2,8 @@ package com.ecobank.app.sns.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ecobank.app.sns.service.SnsVO;
 
 
@@ -42,4 +44,7 @@ public interface SnsMapper {
 	
 	//마이피드 세부 정보
 	public SnsVO countMySns(SnsVO snsVO);
+	
+	//팔로우 여부 확인
+	public Integer selectFollow(@Param("userNo") int userNo, @Param("otherNo") int otherNo);
 }

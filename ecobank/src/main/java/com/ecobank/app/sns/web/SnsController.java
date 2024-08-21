@@ -151,14 +151,26 @@ public class SnsController {
 		snsVO.setUserNo(userNo);
 		List<SnsVO> list = snsService.mySns(snsVO);
 		SnsVO findVO = snsService.countMySns(snsVO);
-		System.out.println("보" + snsVO);
-		System.out.println("누구야" + userNo);
-		System.out.println("누구야" + list);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("mySns", list);
 		model.addAttribute("countMySns", findVO);
 
 		return "sns/mySns";
 	}
-
+	
+	// 회원피드 조회
+	@GetMapping("userSns")
+	public String otherSns(SnsVO snsVO, Model model) {
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		Integer result = snsService.selectFollow(userNo, snsVO.getUserNo());
+		List<SnsVO> list = snsService.mySns(snsVO);
+		SnsVO findVO = snsService.countMySns(snsVO);
+		model.addAttribute("mySns", list);
+		model.addAttribute("countMySns", findVO);
+		model.addAttribute("followCheck", result);
+		if(userNo == findVO.getUserNo()) {
+			return "sns/mySns";
+		}
+		return "sns/userSns";
+	}
 }

@@ -16,10 +16,13 @@ public class SnsReplyVO {
 	private Date replyCreateAt;		//댓글 작성 일자
 	private Integer feedNo;			//피드번호
 	private String nickname;		//닉네임
-	private Integer snsLikeNo;			//좋아요 번호
-	private Integer followerId;			//팔로워 아이디
-	private Integer followingId;		//팔로잉 아이디
-	private Integer followNo;			//팔로우 번호
+	private Integer snsLikeNo;		//좋아요 번호
+	private Integer followerId;		//팔로워 아이디
+	private Integer followingId;	//팔로잉 아이디
+	private Integer followNo;		//팔로우 번호
+	private Integer snsBlockNo;		//차단 번호
+	private Integer blockUserNo;	//차단된 회원 번호
+	private Date blockAt;			//차단 일자
 	
 
 }
