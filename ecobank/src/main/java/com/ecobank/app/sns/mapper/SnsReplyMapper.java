@@ -22,11 +22,6 @@ public interface SnsReplyMapper {
 	//좋아요 삭제
 	public int deleteSnsLike(SnsReplyVO snsReplyVO);
 	
-	//팔로워 조회 
-	public List<SnsReplyVO> selectFollower(SnsReplyVO snsReplyVO);
-	
-	//팔로잉 조회 
-	public List<SnsReplyVO> selectFollowing(SnsReplyVO snsReplyVO);
 
 	//팔로우 등록
 	public int insertFollow(SnsReplyVO snsReplyVO);
@@ -39,4 +34,5 @@ public interface SnsReplyMapper {
 	
 	//차단 삭제
 	public int deleteBlock(SnsReplyVO snsReplyVO);
+	
 }

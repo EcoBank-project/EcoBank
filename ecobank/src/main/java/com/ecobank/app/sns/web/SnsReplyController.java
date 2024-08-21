@@ -65,17 +65,6 @@ public class SnsReplyController {
 	public int deleteSnsLike(SnsReplyVO snsReplyVO) {
 		return snsReplyService.deleteSnsLike(snsReplyVO);
 	}
-	//팔로워 조회
-	@GetMapping("follower")
-	public List<SnsReplyVO> followerInfo(SnsReplyVO snsReplyVO) {
-		 return snsReplyService.followerInfo(snsReplyVO);
-	}
-	
-	//팔로잉 조회
-	@GetMapping("following")
-	public List<SnsReplyVO> followingInfo(SnsReplyVO snsReplyVO){
-		return snsReplyService.followingInfo(snsReplyVO);
-	}
 	
 	//팔로우 등록
 	@PostMapping("insertFollow")
@@ -112,4 +101,6 @@ public class SnsReplyController {
 	public int deleteBlock(SnsReplyVO snsReplyVO) {
 		return snsReplyService.deleteBlock(snsReplyVO);
 	}
+	
+	
 }

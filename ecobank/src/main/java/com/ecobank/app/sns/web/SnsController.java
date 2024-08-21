@@ -151,9 +151,15 @@ public class SnsController {
 		snsVO.setUserNo(userNo);
 		List<SnsVO> list = snsService.mySns(snsVO);
 		SnsVO findVO = snsService.countMySns(snsVO);
+		List<SnsVO> followerList = snsService.followerInfo(snsVO);
+		List<SnsVO> followingList = snsService.followingInfo(snsVO);
+		List<SnsVO> blockList = snsService.blockInfo(snsVO);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("mySns", list);
 		model.addAttribute("countMySns", findVO);
+		model.addAttribute("follower", followerList);
+		model.addAttribute("following", followingList);
+		model.addAttribute("block", blockList);
 
 		return "sns/mySns";
 	}

@@ -7,6 +7,30 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+   /*모달*/
+.modal {
+	display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); 
+}
+   
+.modal_body {
+	background-color: #ffffff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    color: #333; 
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
 .imghover {
 	transition: background-img 0.5s;
 }
@@ -37,6 +61,10 @@
       width: 20px;
       fill: #ddd;
 }
+li{
+	display:inline;
+	list-style: none;
+}
 </style>
 <script	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 </head>
@@ -60,13 +88,15 @@
                     <div class="d-flex align-items-center mb-4">
                         <h3 class="mb-0" data-toggle="counter-up">팔로워</h3>
                     </div>
-                    <h5 class="mb-3" th:text=${countMySns.countFollowing}></h5>
+                    <a href="#" class="listModal"  onclick="listModal()">
+                    	<h5 class="mb-3" th:text=${countMySns.countFollowing}></h5></a> 
                 </div>
                 <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
                     <div class="d-flex align-items-center mb-4">
                         <h3 class="mb-0" data-toggle="counter-up">팔로잉</h3>
                     </div>
-                    <h5 class="mb-3" th:text=${countMySns.countFollower}></h5>
+                     <a href="#" class="listModal"  onclick="listModal()">
+                     	<h5 class="mb-3" th:text=${countMySns.countFollower}></h5></a>
                 </div>
             </div>
         </div>
@@ -94,7 +124,25 @@
 			</th:block>
 		</div>
 	</div>
-
+	<!-- 모달영역 -->
+ 	<div class="modal">
+        <div class="modal_body">
+            <div class="inputleft">
+            <ul>
+            	<li><a href="#">팔로잉</a></li>
+            	<li><a href="#">팔로워</a></li>
+            	<li><a href="#">차단</a></li>
+            </ul>
+        	<hr style="width:100%;height:5px;border:none;"/>
+        		<th:block th:each="follower, sts : ${follower}">
+        		
+        		<div th:text=${follower.userNo} hidden></div>
+        		<div th:text=${follower.nickname} ></div>
+        		</th:block>
+        	 <button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
+            </div>
+        </div>
+    </div>
 	<script>
 
 		$(".imghover").on('click', function(event) {
@@ -145,49 +193,25 @@
 				}
 			});
 		});
-		  
-	    // 팔로우(writeBtn) 버튼을 클릭할 경우
-		$('.followBtn').click(function(){
-			let followingId =$(this).data('userno');
-			console.log("팔로우버튼");
-			console.log('누구야',followingId);
-			// ajax로 팔로우 등록하기
-			$.ajax({
-				type : "POST",
-				url : "insertFollow",
-				data : {userNo, followingId},
-				dataType : "json",
-				success : function(){
-					alert("팔로우 성공");
-				},
-				error :  function(error){
-					console.log(error);
-					alert("팔로우 실패");
-				}
-			});
+		const modal = document.querySelector('.modal');
+
+		$('#btn-close').on('click', function(){
+			 modal.style.display="none";
 		});
-	
-		//팔로우취소
-		$('.followCancleBtn').click(function(){
-			let followNo =$(this).data('followno');
-			console.log("팔로우버튼");
-			console.log("팔로우",followNo);
+		
+
+	  	function listModal(){
+			event.preventDefault();
 			
-			// ajax로 팔로우 등록하기
-			$.ajax({
-				type : "delete",
-				url : "deleteFollow",
-				data : {followNo},
-				dataType : "json",
-				success : function(){
-					alert("팔로우취소 성공");
-				},
-				error :  function(error){
-					console.log(error);
-					alert("실패");
-				}
-			});
-		});
+			modal.style.display="block";
+		
+			
+			
+		}
+	
+
+		
+		
 	</script>
 </body>
 </html>
