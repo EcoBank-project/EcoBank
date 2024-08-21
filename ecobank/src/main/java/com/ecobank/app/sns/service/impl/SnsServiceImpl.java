@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.ecobank.app.sns.mapper.SnsMapper;
 import com.ecobank.app.sns.mapper.SnsReplyMapper;
+import com.ecobank.app.sns.service.SnsReplyVO;
 import com.ecobank.app.sns.service.SnsService;
 import com.ecobank.app.sns.service.SnsVO;
 import com.ecobank.app.upload.mapper.FileMapper;
@@ -129,7 +130,24 @@ public class SnsServiceImpl implements SnsService{
 			return 0;
 		}
 	}
+	
+	//팔로잉 조회
+	@Override
+	public List<SnsVO> followingInfo(SnsVO snsVO) {
+		return snsMapper.followingList(snsVO);
+	}
+	
+	//팔로워 조회
+	@Override
+	public List<SnsVO> followerInfo(SnsVO snsVO) {
+		return snsMapper.followerList(snsVO);
+	}
 
+	//차단목록 조회
+	@Override
+	public List<SnsVO> blockInfo(SnsVO snsVO) {
+		return snsMapper.blockList(snsVO);
+	}
 
     
 

@@ -27,7 +27,7 @@
 			<button class="button confirm" onclick="confirmWithdrawal()">탈퇴</button>
 	</div>
 
-	<script>
+	<script th:inline="javascript">
 		$(document).ready(
 				function() {
 					var userNo = '';
@@ -64,10 +64,11 @@
 
 		function confirmWithdrawal() {
 			// 탈퇴 버튼 클릭 시 탈퇴 처리 요청
-			if (confirm('정말로 탈퇴하시겠습니까?')) {
-				var userNo = /*[[${session.userNo}]]*/'';
 
-				$.ajax({
+		    var userNo =  [[ ${session.userNo} ]];
+			console.log("UserNo:", userNo);  // 콘솔에 userNo 출력				
+	
+ 				$.ajax({
 					url : '/api/withdrawal',
 					method : 'POST',
 					data : {
@@ -76,7 +77,7 @@
 					success : function(response) {
 						if (response.success) {
 							alert('탈퇴가 완료되었습니다.');
-							window.location.href = '/logout'; // 로그아웃 후 홈으로 이동
+							window.location.href = '/logout?redirect=/'; 
 						} else {
 							alert('탈퇴 처리에 실패했습니다.');
 						}
@@ -84,9 +85,9 @@
 					error : function(xhr, status, error) {
 						console.error('Error processing withdrawal:', error);
 					}
-				});
+				}); 
 			}
-		}
+		
 	</script>
 </body>
 </html>

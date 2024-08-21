@@ -1,6 +1,5 @@
 package com.ecobank.app.challenge.service.impl;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +24,6 @@ public class ChallServiceImpl implements ChallService{
 	//전체조회
 	@Override
 	public List<ChallVO> challList(Criteria criteria) {
-		LocalDate now = LocalDate.now();
-		//System.out.println(now);
-		
 		return challMapper.selectChallAll(criteria);
 	}
 	
@@ -126,6 +122,13 @@ public class ChallServiceImpl implements ChallService{
 	@Override
 	public List<ReviewDTO> reviewList(ChallVO challVO) {
 		return challMapper.selectReviewAll(challVO);
+	}
+	
+	//후기 평균 별점 구하기
+	@Override
+	public double getAvgStar(int challNo) {
+		Double avgStar =  challMapper.getAvgStar(challNo);
+		return avgStar;
 	}
 
 	//후기 등록

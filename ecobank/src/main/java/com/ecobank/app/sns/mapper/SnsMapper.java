@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.ecobank.app.sns.service.SnsReplyVO;
 import com.ecobank.app.sns.service.SnsVO;
 
 
@@ -47,4 +48,13 @@ public interface SnsMapper {
 	
 	//팔로우 여부 확인
 	public Integer selectFollow(@Param("userNo") int userNo, @Param("otherNo") int otherNo);
+	
+	//팔로잉 목록
+	public List<SnsVO> followingList(SnsVO snsVO);
+	
+	//팔로워 목록
+	public List<SnsVO> followerList(SnsVO snsVO);
+	
+	//차단 목록
+	public List<SnsVO> blockList(SnsVO snsVO);
 }

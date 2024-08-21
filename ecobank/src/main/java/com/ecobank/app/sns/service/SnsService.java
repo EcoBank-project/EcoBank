@@ -40,4 +40,13 @@ public interface SnsService {
 	//팔로우 여부 확인
 	public int selectFollow(int userNo, int otherNo);
 	
+	//팔로잉 목록
+	public List<SnsVO> followingInfo(SnsVO snsVO);
+	
+	//팔로워 목록
+	public List<SnsVO> followerInfo(SnsVO snsVO);
+	
+	//차단 목록
+	public List<SnsVO> blockInfo(SnsVO snsVO);
+	
 }

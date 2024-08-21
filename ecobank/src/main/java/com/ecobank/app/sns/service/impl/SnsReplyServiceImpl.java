@@ -54,17 +54,6 @@ public class SnsReplyServiceImpl implements SnsReplyService{
 		return snsReplyMapper.deleteSnsLike(snsReplyVO);
 	}
 	
-	//팔로워 조회
-	@Override
-	public List<SnsReplyVO> followerInfo(SnsReplyVO snsReplyVO) {
-		return snsReplyMapper.selectFollower(snsReplyVO);
-	}
-
-	//팔로잉 조회
-	@Override
-	public List<SnsReplyVO> followingInfo(SnsReplyVO snsReplyVO) {
-		return snsReplyMapper.selectFollowing(snsReplyVO);
-	}
 
 	//팔로우 등록
 	@Override
@@ -92,4 +81,5 @@ public class SnsReplyServiceImpl implements SnsReplyService{
 		return snsReplyMapper.deleteBlock(snsReplyVO);
 	}
 	
+
 }
