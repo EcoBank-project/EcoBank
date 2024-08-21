@@ -54,4 +54,12 @@
 	<script th:src="@{/lib/lightbox/js/lightbox.min.js}"></script>
 	<script th:src="@{/js/main.js}"></script>
 </th:block>
+
+<th:block th:fragment="AlarmSocketScriptConfig">
+ 	<!-- 필요한 CSS 및 JS 파일들 포함 -->
+    <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <!-- 외부 스크립트 파일 포함 -->
+    <script th:src="@{/js/home/alarmSocket.js}"></script>
+</th:block>
 </html>
