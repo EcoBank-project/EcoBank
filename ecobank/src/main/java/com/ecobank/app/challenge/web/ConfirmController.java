@@ -142,9 +142,13 @@ public class ConfirmController {
 		model.addAttribute("detail", findVO);
 		
 		//리뷰 목록
+		int userNo = (Integer) httpSession.getAttribute("userNo");
+		challVO.getUserNo();
 		List<ReviewDTO> list = challService.reviewList(challVO);
 		model.addAttribute("reviewList", list);
-		System.out.println(list + "상세에 리뷰안에 뭐있는지 확인");
+		model.addAttribute("userNo", userNo);
+		//System.out.println(list + "상세에 리뷰안에 뭐있는지 확인 - 여기에 다른 유저번호");
+		//System.out.println(userNo + "유저번호 뭔지 - 현재 접속한 유저 번호");
 		return "chall/review";
 	}	
 	

@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layouts/default_layout}"
-	layout:fragment="Content">
+	layout:fragment="Content"
+	th:with="lang=${#locale.language}" th:lang="${lang}">
 <head>
 <meta charset="UTF-8">
 <meta name="contextPath"
@@ -82,7 +83,9 @@ canvas {
         }
 
 </style>
+	
 </head>
+
 <body>
 <!--  BreadCrumb Start -->
 <div class="container-fluid page-header py-5">
@@ -141,7 +144,10 @@ canvas {
         <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
                 <h6 class="text-primary">우리의 활동</h6>
-                <h1 class="mb-4">에코 뱅크에 가입한 회원들의 활동이 어떠한 영향을 끼쳤을까요?</h1>
+                <h1 class="mb-4" th:text="#{how_did_the_activities_of_members_who_joined_the_eco_bank_affect_the_earth?}"></h1>
+                
+                <input type="hidden" th:if="${userNo}" id="userNo" th:value="${userNo}"/>
+                <input type="hidden" th:if="${usableScore}" id="usableScore" th:value="${usableScore}"/>
             </div>
             <div class="row g-5 mb-5">
                 <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeIn;">
@@ -163,6 +169,7 @@ canvas {
                     </div>
                     <h5 class="mb-3">입금 환경 점수</h5>
                     <span>에코 뱅크에 <span th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span>점 적립되었습니다.</span>
+                    <button th:if="${usableScore!='0' and usableScore != null}" class="btn btn-primary" onclick="OpenScoreModal()" th:text="#{deposit}"></button>
                 </div>
                 <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.7s" style="visibility: visible; animation-delay: 0.7s; animation-name: fadeIn;">
                     <div class="d-flex align-items-center mb-4">

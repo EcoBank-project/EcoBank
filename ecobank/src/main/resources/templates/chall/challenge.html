@@ -25,13 +25,20 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     <div class="challenge-count">
 	    <p>총 <span th:text="${count}" style="text-decoration: underline; font-weight: bold"></span>개의 챌린지</p>
     </div>
-    <div th:if="${status=='D2'}" style="width: 300px; margin: 0 auto ; margin-top: 30px">
+    <div th:if="${status=='D2'}" style="width: 400px; margin: 0 auto ; margin-top: 30px">
 	    <select class="form-select" aria-label="Default select example" id="orderSelect">
 	        <option value="1">최근 날짜 순</option>
 	        <option value="2">좋아요 순</option>
 	        <option value="3">내가 참여중인 챌린지</option>
 	    </select>
     </div>
+	<div class="input-group input-group-sm mb-3" style="width: 400px; height: 40px; margin: 0 auto;">
+			<span class="input-group-text" id="inputGroup-sizing-sm">Search</span>
+			<input type="text" id="searchValue" class="form-control"
+				placeholder="챌린지 제목으로 검색하세요." aria-label="Sizing example input"
+				aria-describedby="inputGroup-sizing-sm">
+			<button type="button" class="btn btn-secondary" onclick="movePage(1);" id="searchBtn">검색</button>
+	</div>
 	<div class="challenge-container" id="sort">
 	    <div class="challenge-card" th:each="challenge : ${list}">
 	        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 

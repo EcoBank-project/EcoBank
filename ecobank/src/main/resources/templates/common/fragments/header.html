@@ -5,7 +5,7 @@
 
     
         <a th:href="@{/}" class="navbar-brand d-flex align-items-center border-end px-4 px-lg-5">
-            <h2 class="m-0 text-primary">EcoBank</h2>
+            <h2 class="m-0 text-primary" th:text="#{ecobank}"></h2>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -17,7 +17,18 @@
         </th:block>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a th:href="@{/}" class="nav-item nav-link" th:text="#{home}"></a>    
+                <a th:href="@{/}" class="nav-item nav-link" th:text="#{home}"></a>
+                <!-- Language selection dropdown -->
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <span th:text="#{lang}"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" th:href="@{/?lang=en}" th:text="#{en}"></a>
+                <a class="dropdown-item" th:href="@{/?lang=ko}" th:text="#{kr}"></a>
+                <a class="dropdown-item" th:href="@{/?lang=ja}" th:text="#{jp}"></a>
+            </div>
+        </div>    
                <th:block th:if="${#authentication.principal != 'anonymousUser'}">
                <form method="post" th:action="@{/logout}">
                  <button type="submit" class="btn btn-link nav-item nav-link" th:text="#{logout}"></button>

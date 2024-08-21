@@ -3,33 +3,27 @@
 <mapper namespace="com.ecobank.app.challenge.mapper.ChallMapper">
 	<!-- 챌린지 전체 조회 - 관리자-->
 	<select id="selectChallAll" resultType="ChallVO">
-	    SELECT chall_no
-	         , chall_title
-	         , chall_content
-	         , chall_startAt
-	         , chall_closeAt
-	         , chall_state
-	         , main_img
-	         , detail_img
-	         , chall_score
-	         , chall_createAt
-	    FROM (
-	            SELECT ROWNUM r
-	                 , c.chall_no
-	                 , c.chall_title
-	                 , c.chall_content
-	                 , c.chall_startAt
-	                 , c.chall_closeAt
-	                 , c.chall_state
-	                 , c.main_img
-	                 , c.detail_img
-	                 , c.chall_score
-	                 , c.chall_createAt
-	            FROM chall c
-	            WHERE ROWNUM 	<![CDATA[<=  ]]> #{pageNum} * #{amount}
-	            ORDER BY c.chall_no DESC
-	    )
-	    WHERE r > (#{pageNum} - 1) * #{amount}
+	    SELECT b.* 
+	    FROM (	
+	    		SELECT ROWNUM r               
+	    						, a.*	    
+	    		FROM (
+			            SELECT  c.chall_no
+			                 , c.chall_title
+			                 , c.chall_content
+			                 , c.chall_startAt
+			                 , c.chall_closeAt
+			                 , c.chall_state
+			                 , c.main_img
+			                 , c.detail_img
+			                 , c.chall_score
+			                 , c.chall_createAt
+			            FROM chall c	
+			            ORDER BY c.chall_no DESC
+                		) a        
+ 				WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}         
+ 				) b 
+ 		WHERE r <![CDATA[ > ]]> (#{pageNum} - 1) * #{amount}
 	</select>
 	
 	<!-- 챌린지 목록 개수 -->
@@ -222,6 +216,7 @@
 		     , r.review_createAt
 		     , r.review_star
 		     , u.nickname
+		     , u.user_no
 		     , r.chall_no
 		     , (SELECT ROUND(AVG(review_star), 1)
 		        FROM chall_review
@@ -269,7 +264,6 @@
 	<delete id="deleteReview" parameterType="int">
 		DELETE FROM chall_review
 		WHERE review_no = #{reviewNo}
-		AND user_no = #{userNo}
 	</delete>
 	
 </mapper>
