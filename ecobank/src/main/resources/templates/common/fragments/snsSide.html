@@ -1,22 +1,23 @@
 
 <!DOCTYPE html>
 
-
+<style>
+.sideBtn{
+text-align: left;
+}
+</style>
 <th:block xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="snsSideFragment">
 
-    		<div class="side">
-			
- 	
-				<a class="sideBtn btn btn-link" th:href="@{/snsP}"><span>인기글</span></a>
-				<a class="sideBtn btn btn-link" th:href="@{/sns}"><span>전체글</span></a>
-				<a class="sideBtn btn btn-link" th:href="@{/mySns}"><span>My Feed</span></a>
-			    <a class="sideBtn btn btn-link" th:href="@{/snsSearch}"><span>Search</span></a> 
-			    <a class="sideBtn btn btn-link" th:href="@{/snsInsert}"><span>Insert</span></a>
-			    <a class="sideBtn btn btn-link" href="https://instagram.com"><span>계정 연결</span></a>
-		
-		</div>
+	<div class="side">
+		<div><a class="sideBtn btn btn-link" th:href="@{/snsP}">인기글</a></div>
+		<div><a class="sideBtn btn btn-link" th:href="@{/sns}">전체글</a></div>
+		<div><a class="sideBtn btn btn-link" th:href="@{/mySns}">My Feed</a></div>
+		<div><a class="sideBtn btn btn-link" th:href="@{/snsSearch}">Search</a></div> 
+		<div><a class="sideBtn btn btn-link" th:href="@{/snsInsert}">Insert</a></div>
+		<div><a class="sideBtn btn btn-link" href="https://instagram.com">계정 연결</a></div>
+	</div>
 </th:block>
 
 

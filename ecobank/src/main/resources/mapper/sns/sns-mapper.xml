@@ -28,7 +28,10 @@
             	WHERE feed_no=s.feed_no) as snslike_yn
       FROM sns s JOIN users u 
                    ON s.user_no = u.user_no
-      WHERE feed_state = 'F1'  
+      WHERE feed_state = 'F1' 
+        AND s.user_no not in (SELECT block_user_no
+                                FROM sns_block b
+                                WHERE b.user_no =#{userNo})
       <choose>
       	<when test="orderSns == 1">
       		ORDER BY countLike DESC
@@ -39,7 +42,7 @@
       </choose>
 	</select>
 	
-		<!-- 검색조회 type=s&keyword=다은-->
+	<!-- 검색조회 type=s&keyword=다은-->
 	<select id="searchSnsAll" resultType="SnsVO" parameterType="SnsVO" >
 		SELECT s.feed_no    
              ,u.profile_img
@@ -240,4 +243,38 @@
          WHERE follower_id = #{userNo} 
          and following_id = #{otherNo}
 	</select>
+	
+	<!-- 팔로잉 목록 -->
+	<select id="followingList" resultType="SnsVO">
+		SELECT u.user_no
+               ,u.nickname
+               ,f.follower_id
+	      FROM users u JOIN follow f 
+					   ON f.follower_id = u.user_no
+		  WHERE follower_id= #{userNo}
+	</select>
+	
+	<!-- 팔로워 목록 -->
+	<select id="followerList" resultType="SnsVO">
+		SELECT u.user_no
+               ,u.nickname
+               ,f.following_id
+		  FROM users u JOIN follow f 
+					   ON f.follower_id = u.user_no
+		 WHERE following_id= #{userNo}
+	</select>
+	
+	<!-- 차단 목록 -->
+	<select id="blockList" resultType="SnsVO">
+		SELECT b.user_no
+               ,u.nickname
+               ,b.block_user_no
+		  FROM users u JOIN sns_block b 
+		                 ON b.block_user_no = u.user_no
+		 WHERE b.user_no= #{userNo}
+	</select>
+	
+	
+	
+	
 </mapper>
