@@ -126,16 +126,23 @@ public class ChallServiceImpl implements ChallService{
 	
 	//후기 평균 별점 구하기
 	@Override
-	public double getAvgStar(int challNo) {
-		Double avgStar =  challMapper.getAvgStar(challNo);
+	public Double getAvgStar(int challNo) {
+		Double avgStar = challMapper.getAvgStar(challNo);
 		return avgStar;
+	}
+	
+	//후기 등록 여부
+	@Override
+	public boolean reviewStatus(int userNo, int reviewNo) {
+		int cnt = challMapper.reviewStatus(userNo, reviewNo);
+		return cnt > 0;
 	}
 
 	//후기 등록
 	@Override
 	public int reviewInsert(ReviewDTO reviewDTO) {
 		int result = challMapper.insertReview(reviewDTO);
-		System.out.println(result + "후기 결과에 뭐있나");
+		//System.out.println(result + "후기 결과에 뭐있나");
 		return result == 1 ? reviewDTO.getReviewNo() : -1;
 	}
 

@@ -198,7 +198,7 @@
 	                <span class="slider round"></span>
 	            </label>
 	        </div>
-        	<input type="text" placeholder="비밀번호 입력 (선택)" class="input-field" id="openChatPassword">
+        	<input type="password" placeholder="비밀번호 입력 (선택)" class="input-field" id="openChatPassword">
         	<button class="option-button" id="OpenChatBtn">채팅방 만들기</button>
         </div>
     </div>
@@ -223,20 +223,20 @@
         	<span class="modal-close">&times;</span>
         	<h2>오픈 채팅 변경</h2>
         	<div class="image-upload">
-	            <label for="chatImage" class="upload-label">
-	                <img id="imagePreview" src="https://via.placeholder.com/350x200" alt="대표 이미지" />
-	                <input type="file" id="chatImage" accept="image/*" />
+	            <label for="chatImageUpdate" class="upload-label">
+	                <img id="imagePreviewUpdate" src="https://via.placeholder.com/350x200" alt="대표 이미지" />
+	                <input type="file" id="chatImageUpdate" accept="image/*" />
 	            </label>
 	        </div>
         	<input type="text" placeholder="채팅방 제목 입력" class="input-field" id="openChatNameUpdate">
         	<div class="switch-container">
 	            <span>검색 허용</span>
 	            <label class="switch">
-	                <input type="checkbox" id="allowSearch">
+	                <input type="checkbox" id="allowSearchUpdate">
 	                <span class="slider round"></span>
 	            </label>
 	        </div>
-        	<input type="text" placeholder="비밀번호 입력 (선택)" class="input-field" id="openChatPasswordUpdate">
+        	<input type="password" placeholder="비밀번호 입력 (선택)" class="input-field" id="openChatPasswordUpdate">
         	<button class="option-button" id="OpenChatUpdateBtn">채팅방 만들기</button>
         </div>
     </div>
@@ -399,41 +399,54 @@
 	    $('#roomName').text(chatName);	// 채팅방 제목 바꿈
 	    $('#chatbox').empty(); // 이전 메시지 초기화
 	
-        // 오픈 채팅방 설정
+        // 오픈 채팅방 
 	    $('.stateIcon').empty();
         if(roomType == 'O3'){
-        	
-        	/* $.ajax({
-        		url : '/chatRoom/getchatCreateUser',
+        	$.ajax({
+        		url : '/chatRoom/getChatCreateUser',
         		method : 'POST',
         		data : {chatNo},
         		success : function(result){
         			console.log(result);
+        			if(result.chatName != null){
+        				let tagI = $('<i />').prop('class', 'fas fa-user-plus');
+        		        let tagI1 = $('<i />').prop('class','bi bi-gear');
+        		        let tagI2 = $('<i />').prop('class','fa fa-sign-out-alt');
+        		        tagI.on('click', function(event){
+        		        	$('#openChatInviteModal').show();
+        		        	inviteFollow(chatNo);
+        		        });
+        		        tagI1.on('click', function(event){
+        		        	$('#openChatUpdateModal').show();
+        		        	
+        		        	$('#openChatNameUpdate').val(result.chatName);
+        		    	    $('#openChatPasswordUpdate').val(result.chatPassWord);
+        		    	    if(result.chatSearchAllow == 'Y'){
+	        		    	    $('#allowSearchUpdate').prop("checked", true);        		    	    	
+        		    	    }else{
+        		    	    	$('#allowSearchUpdate').prop("checked", false);
+        		    	    }
+        		    	    $('#imagePreviewUpdate').prop("src", "/images/"+result.chatImage);
+        		        });
+        		        tagI2.on('click', function(event){
+        					leaveRoom(roomType, chatNo, '[[${userNo}]]');
+        				});
+        		        $('.stateIcon').append(tagI,tagI1,tagI2);	
+        			}else{
+        				let tagI2 = $('<i />').prop('class','fa fa-sign-out-alt');
+        				tagI2.on('click', function(event){
+        					leaveRoom(roomType, chatNo, '[[${userNo}]]');
+        				});
+        				$('.stateIcon').append(tagI2);
+        			}
         		},
         		err : function(err){
         			console.log(err);
         		}
-        			
-        	}) */
-        	
-        	let tagI = $('<i />').prop('class', 'fas fa-user-plus');
-	        let tagI1 = $('<i />').prop('class','bi bi-gear');
-	        let tagI2 = $('<i />').prop('class','fa fa-sign-out-alt');
-	        tagI.on('click', function(event){
-	        	$('#openChatInviteModal').show();
-	        	inviteFollow(roomId);
-	        });
-	        tagI1.on('click', function(event){
-	        	$('#openChatUpdateModal').show();
-	        });
-	        tagI2.on('click', function(event){
-				leaveRoom(roomType, roomId, '[[${userNo}]]');
-			});
-	        $('.stateIcon').append(tagI,tagI1,tagI2);
+	
+        	}) 
         }
-        
-        
-	    
+
 	    // 소켓 연결중
 	    if (stompClient !== null) {
 	        stompClient.disconnect(function() {
@@ -442,7 +455,7 @@
 	        });
 	    // 소켓 처음 연결
 	    } else {
-	        connect(roomId, roomType);
+	        connect(chatNo, roomType);
 	        loadMessage(chatNo);
 	    }
 	}
@@ -805,6 +818,21 @@
 	    }
 	});
 	
+	$('#chatImageUpdate').on('change', function(evnet){
+		const file = event.target.files[0];
+		const reader = new FileReader();
+		
+		reader.onload = function(e){
+			$('#imagePreviewUpdate').attr("src", e.target.result);
+		};
+		
+		if (file) {
+	        reader.readAsDataURL(file);
+	    }
+	});
+	
+	
+	
 	//오픈채팅 만들기
 	$('#OpenChatBtn').on('click', function(evnet){
 		let chatName = $('#openChatName').val();
@@ -838,6 +866,42 @@
             }
         });
 	});
+	// 오픈 채팅 업데이트
+	$('#OpenChatUpdateBtn').on('click', function(evnet){
+		let chatNo = currentRoomId;
+		let chatName = $('#openChatNameUpdate').val();
+        let passWord = $('#openChatPasswordUpdate').val();
+        let allowSearch = $('#allowSearchUpdate').is(':checked') ? 'Y' : 'N';
+        
+        let fileInput = $('#chatImageUpdate')[0];
+        let formData = new FormData();
+		
+        formData.append('chatNo', chatNo);
+        formData.append('chatName', chatName);
+        formData.append('chatPassWord', passWord);
+        formData.append('chatSearchAllow', allowSearch);
+        formData.append('chatType', 'O3');
+        
+        if (fileInput.files.length > 0) {
+            formData.append('image', fileInput.files[0]);
+        } 
+        
+        $.ajax({
+        	url: '/chatRoom/updateOpenChat',
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(result) {
+            	allClose();
+                stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+	});
+	
 	// 오픈채팅방 초대 팔로우 목록
 	function inviteFollow(chatNo){
 		$.ajax({
@@ -906,8 +970,8 @@
 			alert("채팅방 초대할 사람을 체크하세요");
 		}
 	})
-	
-	//프로필 설정
+		
+	// 프로필 설정
 	$('#language_code').on('change',function(){
 		if($(this).val() == 'ko'){
 			$('#language-text').text('언어 선택');

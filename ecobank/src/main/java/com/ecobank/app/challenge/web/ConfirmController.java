@@ -87,7 +87,7 @@ public class ConfirmController {
 		model.addAttribute("myConfirm", findVO);
 		model.addAttribute("list", list);
 		model.addAttribute("nowUserNo", userNo);
-		System.out.println(findVO + "파인드브오에 뭐 있는지, 신고");
+		//System.out.println(findVO + "파인드브오에 뭐 있는지, 신고");
 		
 		//인증 신고 목록
 		List<CodeVO> declarelist = commonService.codeList("0C");
@@ -144,13 +144,13 @@ public class ConfirmController {
 		//리뷰 목록
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		challVO.getUserNo();
-		//Double avgStar = challService.getAvgStar(challVO.getChallNo());
+		Double avgStar = challService.getAvgStar(challVO.getChallNo());
 		
 		List<ReviewDTO> list = challService.reviewList(challVO);
 		model.addAttribute("reviewList", list);
 		model.addAttribute("userNo", userNo);
-		//model.addAttribute("avg", avgStar);
-		//System.out.println(list + "상세에 리뷰안에 뭐있는지 확인 - 여기에 다른 유저번호");
+		model.addAttribute("avg", avgStar);
+		System.out.println(list + "상세에 리뷰안에 뭐있는지 확인 - 여기에 다른 유저번호");
 		//System.out.println(userNo + "유저번호 뭔지 - 현재 접속한 유저 번호");
 		//System.out.println(avgStar + "평균 별점");
 		return "chall/review";

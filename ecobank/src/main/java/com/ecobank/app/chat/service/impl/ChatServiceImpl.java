@@ -128,7 +128,28 @@ public class ChatServiceImpl implements ChatService{
 		chatMapper.insertChatRoom(chatRoom);
 		return chatRoom.getChatNo();
 	}
-	
+	//오픈채팅방 업데이트 
+	@Override
+	public int OpenChatChangeUpdate(ChatRoomVO chatRoom, MultipartFile[] images) {
+		if (images != null) {
+	        for (MultipartFile image : images) {
+	        	String fileName = image.getOriginalFilename();
+	        	String folderPath = makeFolder();
+	        	UUID uuid = UUID.randomUUID();
+				String uniqueFileName = folderPath + "/" + uuid + "_" + fileName;
+				String saveName = uploadPath + "/" + uniqueFileName;
+				Path savePath = Paths.get(saveName);
+				chatRoom.setChatImage(uniqueFileName);
+				try {
+					image.transferTo(savePath);
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+	        }
+	    }
+		int result = chatMapper.updateOpenChatChange(chatRoom);
+		return result;
+	}	
 	// 오픈 채팅방 이미지 저장
 	private String makeFolder() {
 		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
@@ -234,5 +255,6 @@ public class ChatServiceImpl implements ChatService{
 		List<ChatFollowVO> list = chatMapper.selectChatFollowInfo(userNo, chatNo);
 		return list;
 	}
+	
 
 }

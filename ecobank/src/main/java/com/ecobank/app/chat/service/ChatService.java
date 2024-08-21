@@ -54,4 +54,6 @@ public interface ChatService {
 	public List<ChatFollowVO> chatFollowList(Integer userNo);
 	//채팅방에 없는 팔로우 목록
 	public List<ChatFollowVO> chatFollowListInfo(Integer userNo, Integer chatNo);
+	//오픈채팅방 업데이트
+	public int OpenChatChangeUpdate(ChatRoomVO chatRoom, MultipartFile[] images);
 }
