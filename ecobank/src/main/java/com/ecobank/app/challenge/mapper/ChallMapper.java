@@ -75,6 +75,6 @@ public interface ChallMapper {
 	public int findUserNoByReviewNo(int reviewNo);
 	
 	//챌린지 후기 삭제
-	public int deleteReview(int userNo, int reviewNo);
+	public int deleteReview(int reviewNo);
 	
 }
