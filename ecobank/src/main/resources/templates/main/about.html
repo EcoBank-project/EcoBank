@@ -144,7 +144,7 @@ canvas {
         <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
                 <h6 class="text-primary">우리의 활동</h6>
-                <h1 class="mb-4">에코 뱅크에 가입한 회원들의 활동이 어떠한 영향을 끼쳤을까요?</h1>
+                <h1 class="mb-4" th:text="#{how_did_the_activities_of_members_who_joined_the_eco_bank_affect_the_earth?}"></h1>
                 
                 <input type="hidden" th:if="${userNo}" id="userNo" th:value="${userNo}"/>
                 <input type="hidden" th:if="${usableScore}" id="usableScore" th:value="${usableScore}"/>
