@@ -37,4 +37,7 @@ public interface SnsService {
 	//마이피드 세부 정보 조회
 	public SnsVO countMySns(SnsVO snsVO);
 	
+	//팔로우 여부 확인
+	public int selectFollow(int userNo, int otherNo);
+	
 }

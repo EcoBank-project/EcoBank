@@ -6,13 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
- <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
+<script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
 </head>
 <body>
+	<div class="container"  style="width:1300px;">
 	<h3>sns 등록</h3>
 	<form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
-
 	<input type="file" name="images" multiple><br>
 	<textarea rows="5" cols="30" name="feedContent" placeholder="내용작성"></textarea><br>
 	<textarea rows="1" cols="30" name="hashtag" placeholder="#해시태그"></textarea>
@@ -24,7 +23,7 @@
 			
 		</div>
 		</form>
-
+</div>
 </body>
 
 </html>

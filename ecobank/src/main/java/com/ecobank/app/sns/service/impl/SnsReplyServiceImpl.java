@@ -78,5 +78,18 @@ public class SnsReplyServiceImpl implements SnsReplyService{
 	public int deleteFollow(SnsReplyVO snsReplyVO) {
 		return snsReplyMapper.deleteFollow(snsReplyVO);
 	}
+
+	//차단 등록
+	@Override
+	public int insertBlock(SnsReplyVO snsReplyVO) {
+		int result = snsReplyMapper.insertBlock(snsReplyVO);
+		return result == 1 ? snsReplyVO.getSnsBlockNo() : -1;
+	}
+
+	//차단 삭제
+	@Override
+	public int deleteBlock(SnsReplyVO snsReplyVO) {
+		return snsReplyMapper.deleteBlock(snsReplyVO);
+	}
 	
 }

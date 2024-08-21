@@ -93,4 +93,23 @@ public class SnsReplyController {
 	public int deleteFollow(SnsReplyVO snsReplyVO) {
 		return snsReplyService.deleteFollow(snsReplyVO);
 	}
+	
+	//차단 등록
+	@PostMapping("insertBlock")
+	public SnsReplyVO insertBlock(SnsReplyVO snsReplyVO) {
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		
+		//snsReplyVO.setBlockUserNo(userNo);
+		
+		int blockId = snsReplyService.insertBlock(snsReplyVO);
+		System.out.println("내가 차단"+ userNo);
+		System.out.println("차단된아이디"+ blockId);
+		return snsReplyVO;
+	}
+	
+	//차단 삭제
+	@DeleteMapping("deleteBlock")
+	public int deleteBlock(SnsReplyVO snsReplyVO) {
+		return snsReplyService.deleteBlock(snsReplyVO);
+	}
 }

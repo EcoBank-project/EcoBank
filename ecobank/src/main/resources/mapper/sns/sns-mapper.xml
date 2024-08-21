@@ -111,7 +111,7 @@
 		<selectKey keyProperty="feedNo" 
 					resultType="Integer"
 					order="BEFORE">
-			SELECT NVL(MAX(feed_no),1)+1
+			SELECT NVL(MAX(feed_no),0)+1
 			  FROM sns
 		</selectKey>
 		INSERT INTO sns 
@@ -166,7 +166,7 @@
 		<selectKey keyProperty="declareNo" 
 					resultType="Integer"
 					order="BEFORE">
-			SELECT NVL(MAX(declare_no),1)+1
+			SELECT NVL(MAX(declare_no),0)+1
 			FROM sns_declare
 		</selectKey>
 		INSERT INTO sns_declare(declare_no
@@ -202,11 +202,17 @@
                     FROM files
                    WHERE file_code_no = s.feed_no
                  	 and rownum = 1)  as filePath
-      FROM sns s JOIN users u 
+                ,(SELECT follow_no 
+                 	FROM follow 
+              	   WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
+                ,(SELECT sns_like_no 
+                    FROM sns_like
+                   WHERE feed_no=s.feed_no) as snslike_yn
+      	 FROM sns s JOIN users u 
                    ON s.user_no = u.user_no
-      WHERE feed_state = 'F1' 
-      	AND u.user_no= #{userNo}
-   ORDER BY s.feed_no DESC
+     	 WHERE feed_state = 'F1' 
+      	   AND u.user_no= #{userNo}
+   		ORDER BY s.feed_no DESC
 	</select>
 	
 	<!-- 마이피드 조회 시 정보 -->
@@ -224,5 +230,14 @@
                    WHERE follow.follower_id = users.user_no) as count_follower                   
  		FROM users
 		WHERE user_no = #{userNo}
+	</select>
+	
+	
+	<!-- 팔로우여부 확인 -->
+	<select id="selectFollow"  parameterType="int">
+		SELECT follow_no 
+          FROM follow 
+         WHERE follower_id = #{userNo} 
+         and following_id = #{otherNo}
 	</select>
 </mapper>

@@ -22,7 +22,7 @@
 		<selectKey keyProperty="replyNo" 
 					resultType="Integer"
 					order="BEFORE">
-			SELECT NVL(MAX(reply_no),1)+1
+			SELECT NVL(MAX(reply_no),0)+1
 			FROM sns_reply
 		</selectKey>
 		INSERT INTO sns_reply 
@@ -55,7 +55,7 @@
 		<selectKey keyProperty="snsLikeNo" 
 					resultType="Integer"
 					order="BEFORE">
-			SELECT NVL(MAX(sns_like_no),1)+1
+			SELECT NVL(MAX(sns_like_no),0)+1
 			FROM sns_like
 		</selectKey>
 		Insert INTO sns_like(sns_like_no
@@ -101,7 +101,7 @@
 		<selectKey keyProperty="followNo" 
 					resultType="Integer"
 					order="BEFORE">		
-			SELECT NVL(MAX(follow_no),1)+1
+			SELECT NVL(MAX(follow_no),0)+1
 			FROM follow
 		</selectKey>
 		INSERT INTO follow(follow_no
@@ -120,4 +120,67 @@
 		WHERE follow_no = #{followNo}  
 	</delete>
 	
+	<!-- 차단 하기 -->
+	<insert id="insertBlock" parameterType="SnsReplyVO">
+		<selectKey keyProperty="snsBlockNo" 
+					resultType="Integer"
+					order="BEFORE">		
+			SELECT NVL(MAX(sns_block_no),0)+1
+			FROM sns_block
+		</selectKey>
+		INSERT INTO sns_block(sns_block_no
+							,block_user_no
+							,blockat
+							,user_no)
+		VALUES(
+				#{snsBlockNo}
+         	   ,#{blockUserNo}
+         	   ,sysdate
+         	   ,#{userNo}
+			)
+	</insert>
+	
+	<!-- 차단 취소하기 -->
+	<delete id="deleteBlock" parameterType="int">		
+ 		DELETE FROM sns_block
+		WHERE sns_block_no = #{snsBlockNo}  
+	</delete>
+	
+	<!-- 차단여부 확인 -->
+	<select id="selectBlock"  parameterType="int">
+		SELECT follow_no 
+          FROM follow 
+         WHERE follower_id = #{userNo} 
+         and following_id = #{otherNo}
+	</select>
+		
+	<!-- 팔로잉 목록 -->
+	<select id="followingList" resultType="SnsReplyVO">
+		SELECT u.user_no
+               ,u.nickname
+               ,f.follower_id
+	      FROM users u JOIN follow f 
+					   ON f.follower_id = u.user_no
+		  WHERE follower_id= #{userNo}
+	</select>
+	
+	<!-- 팔로워 목록 -->
+	<select id="followerList" resultType="SnsReplyVO">
+		SELECT u.user_no
+               ,u.nickname
+               ,f.following_id
+		  FROM users u JOIN follow f 
+					   ON f.follower_id = u.user_no
+		 WHERE following_id= #{userNo}
+	</select>
+	
+	<!-- 차단 목록 -->
+	<select id="blockList" resultType="SnsReplyVO">
+		SELECT b.user_no
+               ,u.nickname
+               ,b.block_user_no
+		  FROM users u JOIN sns_block b 
+		                 ON b.block_user_no = u.user_no
+		 WHERE b.user_no= #{userNo}
+</select>
 </mapper>

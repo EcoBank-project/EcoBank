@@ -118,6 +118,18 @@ public class SnsServiceImpl implements SnsService{
 		return snsMapper.countMySns(snsVO);
 	}
 
+	//팔로우 여부 확인
+	@Override
+	public int selectFollow(int userNo, int otherNo) {
+		Integer result = snsMapper.selectFollow(userNo, otherNo);
+		//int result1 = 0;
+		if(result != null) {
+			return  result;
+		}else {
+			return 0;
+		}
+	}
+
 
     
 
