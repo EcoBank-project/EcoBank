@@ -50,5 +50,7 @@ public interface ChatMapper {
 	public int updateLaguageCode(@Param("laguageCode") String lagCode, @Param("userNo") Integer userNo);
 	// 팔로우 목록
 	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);
+	// 채팅방에 없는 팔로우 목록
+	public List<ChatFollowVO> selectChatFollowInfo(@Param("followerId") Integer userNo, @Param("chatNo")Integer chatNo);
 	
 }

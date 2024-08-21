@@ -62,7 +62,7 @@
 			                <img src="https://via.placeholder.com/40" class="profil_img">
 			                <div class="user-details">
 			                    <div class="user-name">[[${nickname}]]</div>
-			                    <div class="user-status">KR</div>
+			                    <div class="user-status">[[${lagCode}]]</div>
 			                </div>
 			                <div class="user-actions">
 			                    <i class="bi bi-gear" id="profilSetting"></i>
@@ -402,6 +402,9 @@
         // 오픈 채팅방 설정
 	    $('.stateIcon').empty();
         if(roomType == 'O3'){
+        	
+        	
+        	
         	let tagI = $('<i />').prop('class', 'fas fa-user-plus');
 	        let tagI1 = $('<i />').prop('class','bi bi-gear');
 	        let tagI2 = $('<i />').prop('class','fa fa-sign-out-alt');
@@ -417,7 +420,8 @@
 			});
 	        $('.stateIcon').append(tagI,tagI1,tagI2);
         }
-	    
+        
+        
 	    
 	    // 소켓 연결중
 	    if (stompClient !== null) {
@@ -582,24 +586,7 @@
 		label2.append(span2, checkbox);
 		$('#followListGroup').append(label2);
 	}
-	
-	//오픈채팅방 초대 팔로우 목록
-	function inviteFollow(chatNo){
-		$.ajax({
-			url : "/chatRoom/invite",
-			method : "POST",
-			data : {chatNo},
-			success: function(result){
-				result.forEach(function(follow){
-					
-				})
-			},
-			error: function(error){
-				console.log(error);	
-			}
-		});
-	}	
-	
+
 	// 채팅방 모달 on/off
 	// 채팅방 + 아이콘
 	$('.bi-plus-circle').on('click', function(){
@@ -643,8 +630,13 @@
 	    $('#followListPrivate').empty();
 	    $('#followListGroup').empty();
 	    
-	    
+	    $('#openChatName').val('');
+	    $('#openChatPassword').val('');
+	    $('#allowSearch').prop("checked", false);
+	    $('#chatImage').val('');
+	    $('#imagePreview').prop("src", 'https://via.placeholder.com/350x200');
 	}
+	
 	$('.modal-close').on('click', function() {
 		allClose();
 		$('#privateChatModal .input-field').val('');
@@ -816,7 +808,6 @@
         formData.append('chatSearchAllow', allowSearch);
         formData.append('chatType', 'O3');
         
-        
         if (fileInput.files.length > 0) {
             formData.append('image', fileInput.files[0]);
         } 
@@ -828,7 +819,7 @@
             contentType: false,
             processData: false,
             success: function(result) {
-                $('#openChatModal').hide();
+            	allClose();
                 stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
             },
             error: function(error) {
@@ -836,9 +827,74 @@
             }
         });
 	});
+	// 오픈채팅방 초대 팔로우 목록
+	function inviteFollow(chatNo){
+		$.ajax({
+			url : "/chatRoom/inviteFollowList",
+			method : "POST",
+			data : {chatNo},
+			success: function(result){
+				$('#followListOpen').empty();
+				result.forEach(function(follow){
+					let label = $('<label />').prop('for','open_'+follow.followingId).addClass('follow-item');
+					let span = $('<span />')
+					let pro_img = $('<img />').prop('src','https://via.placeholder.com/40').addClass('profil_img');
+					span.append(pro_img, follow.nickName);
+					let checkbox = $('<input />').prop('type','checkbox')
+					                             .addClass('select-follow')
+					                             .attr('name','follow')
+					                             .attr('id','open_'+follow.followingId)
+					                             .val(follow.followingId);
+					label.append(span, checkbox);
+					$('#followListOpen').append(label);
+				})
+			},
+			error: function(error){
+				console.log(error);	
+			}
+		});
+	}	
 	
-	//오픈채팅 검색
+	// 오픈채팅 검색
+	$('#openFollowInput').on('input', function() {
+	    let search = $(this).val().toLowerCase();
+	    $('#followListOpen .follow-item').each(function() {
+	        let userName = $(this).find('span').text().toLowerCase();
+	        $(this).toggle(userName.includes(search));
+	    });
+	});
 	
+	//오픈 채팅방 초대
+	$('#openInviteBtn').on('click', function(){
+		let isCheckbox = $('#followListOpen .select-follow').is(":checked");
+		if(isCheckbox){
+			let formObj = {};
+			formObj['userNo'] = [];
+			formObj['chatNo'] = currentRoomId;
+			$('#followListOpen .select-follow').each(function() {
+				if($(this).is(":checked")){
+					formObj['userNo'].push(Number($(this).val()));
+				}
+			});
+			
+			$.ajax({
+				url: '/chatRoom/inviteOpenChat',
+				method: 'POST',
+				data : JSON.stringify(formObj),
+				contentType: 'application/json',
+				success: function(result){
+					allClose();
+					//입장 메시지 보내기
+				},
+				error: function(error){
+					console.log(error);
+				}
+			});
+			
+		}else{
+			alert("채팅방 초대할 사람을 체크하세요");
+		}
+	})
 	
 	//프로필 설정
 	$('#language_code').on('change',function(){
@@ -849,6 +905,7 @@
 		}else if($(this).val() == 'ja'){
 			$('#language-text').text('言語を選択');
 		}
+		$('#user-status').text($(this).val());
 	})
 	
 	$('#userLanguageBtn').on('click',function(){
