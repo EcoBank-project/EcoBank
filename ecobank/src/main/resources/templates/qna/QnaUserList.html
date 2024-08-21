@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>QNA List</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <script>
         // 선택된 QNA의 세부 정보 페이지로 이동
         function goToQnaDetail(qnaNo) {
@@ -14,36 +15,43 @@
     </script>
 </head>
 <body>
-    <div class="card">
-        <div class="card-header">
-            <!-- 버튼 클릭 시 QNA 등록 페이지로 이동 -->
-            <button class="btn btn-primary" onclick="window.location.href='/QnaForm'">등록</button>
-        </div>
-        <div class="card-body">
-            <table class="table table-dark table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-center">번호</th>
-                        <th class="text-center">제목</th>
-                        <th class="text-center">상세 보기</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- 각 QNA 항목에 대해 행을 생성 -->
-                    <tr th:each="qna : ${QnaUserList}">
-                        <td class="text-center" th:text="${qna.qnaNo}"></td>
-                        <td class="text-center" th:text="${qna.qnaTitle}"></td>
-                        <!-- 상세 보기 버튼 추가 -->
-                        <td class="text-center">
-                            <button class="btn btn-info" 
-                                    th:onclick="'goToQnaDetail(' + ${qna.qnaNo} + ')'">
-                                상세 보기
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <!-- 버튼 클릭 시 QNA 등록 페이지로 이동 -->
+                <button class="btn btn-primary" onclick="window.location.href='/QnaForm'">등록</button>
+            </div>
+            <div class="card-body">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">번호</th>
+                            <th class="text-center">제목</th>
+                            <th class="text-center">답변 상태</th> <!-- 추가된 컬럼 -->
+                            <th class="text-center">상세 보기</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 각 QNA 항목에 대해 행을 생성 -->
+                        <tr th:each="qna : ${QnaUserList}">
+                            <td class="text-center" th:text="${qna.qnaNo}"></td>
+                            <td class="text-center" th:text="${qna.qnaTitle}"></td>
+                            <td class="text-center" th:text="${qna.replyStatus}"></td> <!-- 추가된 데이터 -->
+                            <!-- 상세 보기 버튼 추가 -->
+                            <td class="text-center">
+                                <button class="btn btn-info" 
+                                        th:onclick="'goToQnaDetail(' + ${qna.qnaNo} + ')'">
+                                    상세 보기
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <!-- 부트스트랩 JS 및 의존성 스크립트 포함 -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -44,8 +44,9 @@
 	where qna_no = #{qnaNo}
     </select>
     <update id="updateQnaInfo" parameterType="ChallVO">
-		
-    
+		UPDATE qna
+        SET qna_content = #{qnaContent}
+        WHERE qna_no = #{qnaNo}
     </update>
 	
 	
