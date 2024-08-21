@@ -37,7 +37,6 @@
                 <th class="text-center">권한</th>
                 <th class="text-center">국가</th>
                 <th class="text-center">회원상태</th>
-                <th class="text-center">업데이트</th>
                 <th class="text-center">신고 횟수</th>
                 <th class="text-center">정지 일자</th>
                 
@@ -45,7 +44,7 @@
         </thead>
         <tbody>
 			<th:block th:each="user : ${userList}">
-			        <form th:action="@{/adminUserUpdate}" method="post">
+			       
 			        <tr>
 			            <td class="text-center" th:text="${user.userNo}">[userNo]</td>
 			            <td class="text-center" th:text="${user.useId}">[useId]</td>
@@ -55,20 +54,22 @@
 			            <td class="text-center" th:text="${user.resp}">[resp]</td>
 			            <td class="text-center" th:text="${user.country}">[country]</td>
 			            <td class="text-center">
+			             <form th:action="@{/adminUserUpdate}" method="post">
 			                    <input type="hidden" name="useId" th:value="${user.useId}"/>
 			                    <select name="userState" class="form-select form-select-sm">
 			                 
 			                        <option value="B1"  th:selected="'B1' == ${user.userState}">일반회원</option>
 			                        <option value="B2"  th:selected="'B2' == ${user.userState}">정지된회원</option>
 			                    </select>
+			                     <button type="submit" class="btn btn-primary btn-sm">업데이트</button>
+			                      </form>
 			                </td>
-			                <td class="text-center">
-			                    <button type="submit" class="btn btn-primary btn-sm">업데이트</button>
-			                </td>
+			                
+			            
 			                <td class="text-center">[[${user.n1}]]/[[${user.cnt}]]</td>
 			               <td class="text-center" th:text="${#dates.format(user.confirmCreateat, 'yyyy/MM/dd')}">[creaTeat]</td>  
 			        </tr>
-			        </form>
+			      
 			    </th:block>
         </tbody>
     </table>

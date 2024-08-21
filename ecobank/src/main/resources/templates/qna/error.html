@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{adminCommon/layouts/default_layout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>오류</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">접근 권한이 없습니다!</h4>
+            <p>이 페이지에 접근할 권한이 없습니다. 페이지를 확인해 주세요.</p>
+            <hr>
+            <p class="mb-0">문제가 계속되면 관리자에게 문의해 주세요.</p>
+            <a href="/QnaUserList" class="btn btn-primary mt-3">목록으로 돌아가기</a>
+        </div>
+    </div>
+
+    <!-- 부트스트랩 JS 및 의존성 스크립트 포함 -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

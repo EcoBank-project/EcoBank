@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -54,12 +55,23 @@ public class QnaController {
 
     // QNA 단건 조회 및 답글 리스트 조회
     @GetMapping("/qna")
-    public String getQnaInfo(@RequestParam("qnaNo") Integer qnaNo, Model model) {
+    public String getQnaInfo(@RequestParam("qnaNo") Integer qnaNo, Model model, HttpSession session) {
+        Integer loggedInUserNo = (Integer) session.getAttribute("userNo");
+
+        if (loggedInUserNo == null) {
+            return "redirect:/login"; // 로그인 페이지로 리디렉션
+        }
+
         // 단일 QNA 정보 조회
         QnaVO qnaVO = qnaService.qnaSelectInfo(qnaNo); 
         
         if (qnaVO == null) {
             return "error"; // QNA가 없을 경우 오류 페이지로 리디렉션
+        }
+
+        // 작성자 번호와 로그인한 사용자 번호 비교 (int 타입 비교)
+        if (qnaVO.getUserNo() != loggedInUserNo) {
+            return "error"; // 권한 없음 페이지로 리디렉션
         }
 
         // 답글 리스트 조회
@@ -82,5 +94,38 @@ public class QnaController {
             e.printStackTrace();
             return "error"; // 에러 페이지로 리디렉션
         }
+       
     }
+    
+    
+ // QNA 수정 페이지 조회
+    @GetMapping("/qnaEdit/{qnaNo}")
+    public String editQna(@PathVariable Integer qnaNo, Model model) {
+        if (qnaNo == null) {
+            model.addAttribute("errorMessage", "QNA 번호가 필요합니다.");
+            return "error"; // QNA 번호가 없으면 오류 페이지로 이동
+        }
+
+        QnaVO qnaVO = qnaService.qnaSelectInfo(qnaNo); // QNA 정보 조회
+        if (qnaVO == null) {
+            model.addAttribute("errorMessage", "QNA 정보가 없습니다.");
+            return "error"; // QNA 정보가 없으면 오류 페이지로 이동
+        }
+
+        model.addAttribute("qna", qnaVO); // QNA 정보를 모델에 추가
+        return "qna/qnaEdit"; // QNA 수정 페이지로 이동
+    }
+
+    // QNA 수정 처리
+    @PostMapping("/updateQna")
+    public String updateQna(@ModelAttribute QnaVO qnaVO, Model model) {
+        int result = qnaService.updateQnaInfo(qnaVO); // QNA 정보 수정
+        if (result > 0) {
+            return "redirect:/qnaDetail?qnaNo=" + qnaVO.getQnaNo(); // 수정 후 QNA 상세 페이지로 리디렉션
+        } else {
+            model.addAttribute("errorMessage", "QNA 수정에 실패했습니다.");
+            return "error"; // 수정 실패 시 오류 페이지로 이동
+        }
+    }
+    
 }

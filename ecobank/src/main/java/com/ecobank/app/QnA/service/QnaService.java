@@ -16,8 +16,10 @@ public interface QnaService {
 	 QnaVO qnaSelectInfo(int qnaNo);
 	 //QNA  삭제
 	 int qnaDelete(int qnaVo);
-	// QNA 답글 조회
-
 		// 답글 리스트 조회
-		List<QnaVO> qnaReplyList(int qnaNo);
+	List<QnaVO> qnaReplyList(int qnaNo);
+	//QNA수정 
+	int updateQnaInfo(QnaVO qnaVo);
+		
+		
 }
