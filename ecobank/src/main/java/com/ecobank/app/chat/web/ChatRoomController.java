@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
+import com.ecobank.app.chat.service.ChatPartVO;
 import com.ecobank.app.chat.service.ChatRoomDTO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
@@ -179,5 +180,11 @@ public class ChatRoomController {
 		ChatRoomVO chatRoom = chatService.chatRoomInfo(chatNo, userNo, nickName);
 		return chatRoom;
 	}
-	
+	// 채팅방 닉네임 정보
+	@PostMapping("/chatRoom/getChatUserInfo")
+	@ResponseBody
+	public List<ChatPartVO> getChatUserInfo(@RequestParam Integer roomId){
+		List<ChatPartVO> list = chatService.ChatRoomUsersList(roomId);
+		return list;
+	}
 }

@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ecobank.app.chat.mapper.ChatMapper;
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
+import com.ecobank.app.chat.service.ChatPartVO;
 import com.ecobank.app.chat.service.ChatRoomDTO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
@@ -253,6 +254,17 @@ public class ChatServiceImpl implements ChatService{
 	@Override
 	public List<ChatFollowVO> chatFollowListInfo(Integer userNo, Integer chatNo) {
 		List<ChatFollowVO> list = chatMapper.selectChatFollowInfo(userNo, chatNo);
+		return list;
+	}
+	// 채팅방 참여자 이름
+	@Override
+	public String chatNickName(Integer chatNo) {
+		String nickName = chatMapper.selectChatUserName(chatNo);
+		return nickName;
+	}
+	@Override
+	public List<ChatPartVO> ChatRoomUsersList(Integer chatNo) {
+		List<ChatPartVO> list = chatMapper.selectChatRoomUsers(chatNo);
 		return list;
 	}
 	

@@ -78,6 +78,13 @@
 		                on u.user_no = following_id
 		where f.follower_id = #{followingId}
 	</select>
+	<!-- 채팅방 대화 상대 -->
+	<select id="selectChatRoomUsers">
+		SELECT nickname
+		FROM chat_entry ce join users u
+		                     on ce.user_no = u.user_no
+		WHERE chat_no = #{chatNo}
+	</select>
 	<!-- 오픈 채팅방에 참여하고 있지 않는 팔로우 목록 -->
 	<select id="selectChatFollowInfo">
 		select following_id,
@@ -139,6 +146,12 @@
                   		  FROM chat_entry
                   		  WHERE chat_no = #{chatNo}
                   		  AND chat_user_state = 'Q1')
+	</select>
+	<!-- 채팅방 참가자 닉네임 조회 -->
+	<select id="selectChatUserName">
+		SELECT nickname
+		FROM users
+		WHERE user_no = #{userNo}
 	</select>
 	<!-- 채팅방 타입 조회 -->
 	<select id="getChatRoomType">

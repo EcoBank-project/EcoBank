@@ -2,6 +2,7 @@ package com.ecobank.app.chat.web;
 
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,10 +32,20 @@ public class ChatMessageController {
 	}
 	
 	// 채팅방 입장
-	@MessageMapping("/chat.enter")
+	@MessageMapping("/chat.enter/{roomId}")
 	@SendTo("/topic/message")
-	public ChatMessageVO enterUser(@Payload ChatMessageVO message) {
-		return message;
+	public void enterUser(@DestinationVariable Integer roomId, ChatMessageVO message) {
+		List<Integer> userNos = message.getUserNos();
+		List<String> receiverIds = chatService.ChatUserList(roomId);
+		
+		for(Integer userNo : userNos) {
+			message.setUserNo(userNo);
+			message.setMsgContent(chatService.chatNickName(userNo)+"님이 입장하셨습니다");
+			chatService.ChatMessageInsert(message);
+		}
+		for(String receiverId : receiverIds) {
+			messagingTemplate.convertAndSendToUser(receiverId, "/queue/enterChatRoom/"+roomId, message);
+		}
 	}
 		
 	//채팅방 목록

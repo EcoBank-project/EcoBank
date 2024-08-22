@@ -43,7 +43,10 @@ public interface ChatService {
 	public int getRoomManager(Integer userNo, Integer chatNo);
 	// 채팅방 이름 변경
 	public int chatNameChangeUpdate(String chatName, Integer chatNo);
-	
+	// 채팅방 참여자 닉네임
+	public List<ChatPartVO> ChatRoomUsersList(Integer chatNo);
+	// 채팅방 참여자 닉네임 단건
+	public String chatNickName(Integer userNo);
 	// 채팅 번역
 	public String translateMessage(String text, String targetLanguage);
 	// 언어 조회
