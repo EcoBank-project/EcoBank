@@ -45,39 +45,45 @@ public class ChallengeController {
 	//오픈 예정 챌린지(D1)
 	@GetMapping("ready")
 	public String challready(Model model, ChallVO challVO, Criteria criteria) {
-		challVO.setChallState("D1");
-		List<ChallVO> list = challService.getDList(criteria, challVO); //리스트에 D1만 보이게
+		criteria.setChallState("D1"); 	//페이지 개수
+		challVO.setChallState("D1");	//상태값
+		List<ChallVO> list = challService.getDList(criteria); //리스트에 D1만 보이게
         int countD1 = challService.countChallengesByState(challVO); //D1 챌린지 개수
-
+        
         model.addAttribute("count", countD1);
         model.addAttribute("status", "D1");
 		model.addAttribute("list", list);
+		model.addAttribute("page", new PageDTO(8, challService.getTotalByState(criteria), criteria));
 		return "chall/challenge";
 	}
 	
 	//진행 중인 챌린지(D2)
 	@GetMapping("progress")
 	public String challprogress(Model model, ChallVO challVO, Criteria criteria) {
-		challVO.setChallState("D2");
-		List<ChallVO> list = challService.getDList(criteria, challVO); //리스트에 D2만 보이게
+		criteria.setChallState("D2");	//페이지 개수
+		challVO.setChallState("D2");	//상태값
+		List<ChallVO> list = challService.getDList(criteria); //리스트에 D2만 보이게
         int countD2 = challService.countChallengesByState(challVO); //D2 챌린지 개수
-
+        
         model.addAttribute("count", countD2);
         model.addAttribute("status", "D2");
 		model.addAttribute("list", list);
+		model.addAttribute("page", new PageDTO(8, challService.getTotalByState(criteria), criteria));
 		return "chall/challenge";
 	}
 	
 	//완료된 챌린지(D3)
 	@GetMapping("end") 
 	public String challend(Model model, ChallVO challVO, Criteria criteria) {
-		challVO.setChallState("D3");
-		List<ChallVO> list = challService.getDList(criteria, challVO); //리스트에 D3만 보이게
+		criteria.setChallState("D3");	//페이지 개수
+		challVO.setChallState("D3");	//상태값
+		List<ChallVO> list = challService.getDList(criteria); //리스트에 D3만 보이게
         int countD3 = challService.countChallengesByState(challVO); //D3 챌린지 개수
 
         model.addAttribute("count", countD3);
         model.addAttribute("status", "D3");
 		model.addAttribute("list", list);
+		model.addAttribute("page", new PageDTO(8, challService.getTotalByState(criteria), criteria));
 		return "chall/challenge";
 	}
 	
@@ -104,7 +110,7 @@ public class ChallengeController {
 	public String challList(Model model, Criteria criteria) {
 		List<ChallVO> list = challService.challList(criteria);
 		model.addAttribute("challList", list);
-		model.addAttribute("page", new PageDTO(5, challService.getTotal(), criteria));
+		model.addAttribute("page", new PageDTO(5, challService.getTotal(criteria), criteria));
 		return "admins/adminChallList";
 	}
 	
@@ -184,10 +190,10 @@ public class ChallengeController {
 	
 	//챌린지 목록 - 관리자
 	@GetMapping("scoreList")
-	public String scoreList(Model model) {
-		List<Map<String, Object>> list = challService.scoreList();
-		
+	public String scoreList(Model model, Criteria criteria) {
+		List<Map<String, Object>> list = challService.scoreList(criteria);
 		model.addAttribute("scoreList", list);
+		model.addAttribute("page", new PageDTO(5, challService.getScoreTotal(criteria), criteria));
 		return "admins/adminScoreList";
 	}
 }

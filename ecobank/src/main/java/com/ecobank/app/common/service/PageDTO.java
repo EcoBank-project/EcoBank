@@ -12,7 +12,7 @@ public class PageDTO { //화면 하단에 보이는 페이지 개수를 계산�
 	private int total; 			//행 전체 개수
 	private Criteria criteria; 	//현재페이지 번호(pageNum), 행 표시 수(amount), 검색 키워드(keyword), 검색 종류(type)
 	//페이지 번호 계산에 필요한 Criteria 클래스의 멤버 변수들에 대한 정보를 가지는 변수
-	private String keyword;		//검색때문에 추가
+	private String keyword;		//검색
 	
 	public PageDTO() {
 			
@@ -23,7 +23,6 @@ public class PageDTO { //화면 하단에 보이는 페이지 개수를 계산�
 		this.pageCount = pageCount;
 		this.total = total;
 		this.criteria = criteria;
-		//this.keyword = keyword;
 		
 		//페이지 끝 번호
 		this.endPage = (int)(Math.ceil(criteria.getPageNum()*1.0/pageCount))*pageCount;

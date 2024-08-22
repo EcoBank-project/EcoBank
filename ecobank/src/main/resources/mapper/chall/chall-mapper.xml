@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ecobank.app.challenge.mapper.ChallMapper">
 	<!-- 챌린지 전체 조회 - 관리자-->
-	<select id="selectChallAll" resultType="ChallVO" parameterType="ChallVO">
+	<select id="selectChallAll" resultType="ChallVO">
 	    SELECT b.* 
 	    FROM (	
 	    		SELECT ROWNUM r               
@@ -19,7 +19,14 @@
 			                 , c.chall_score
 			                 , c.chall_createAt
 			            FROM chall c
-
+						<where>
+							<if test="challState != null and challState != ''.toString()">
+								AND chall_state = #{challState}
+							</if>
+							<if test="keyword != null and keyword != ''.toString()">
+								AND chall_title like '%' || #{keyword} || '%' 
+							</if>
+						</where> 
 			            ORDER BY c.chall_no DESC
                 		) a        
  				WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}         
@@ -29,35 +36,66 @@
 	
 	<!-- 챌린지 목록 개수 -->
 	<select id="getTotal" resultType="int">
-		SELECT count(*)
-		FROM chall
+	SELECT count(*)
+	FROM chall
+	<where>
+		<if test="challState != null and challState != ''.toString()">
+			AND chall_state = #{challState}
+		</if>
+		<if test="keyword != null and keyword != ''.toString()">
+			AND chall_title like '%' || #{keyword} || '%'
+		</if>
+	</where>
 	</select>
 	
 	<!-- 챌린지 상태별로 전체 조회 - 회원 -->
 	<select id="getChallList" resultType="ChallVO" parameterType="map">
-		SELECT chall_no
-		        , chall_title
-		        , chall_content
-		        , chall_startAt
-		        , chall_closeAt
-		        , chall_state
-		        , main_img
-		FROM chall
-		WHERE chall_state = #{challVO.challState}
-		<if test="challVO.challTitle != null and challVO.challTitle != ''.toString()">
-			AND chall_title like '%' || #{challVO.challTitle} || '%' 
-		</if>
-		ORDER BY chall_no DESC
+		SELECT b.* 
+		FROM (	
+		    SELECT ROWNUM r               
+		           , a.*	    
+		    FROM (
+		            SELECT chall_no
+		                    , chall_title
+		                    , chall_content
+		                    , chall_startAt
+		                    , chall_closeAt
+		                    , chall_state
+		                    , main_img
+		            FROM chall
+					<where>
+						<if test="challState != null and challState != ''.toString()">
+							AND chall_state = #{challState}
+						</if>
+						<if test="keyword != null and keyword != ''.toString()">
+							AND chall_title like '%' || #{keyword} || '%' 
+						</if>
+					</where> 
+		            ORDER BY chall_no DESC
+		            ) a        
+ 				WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}         
+ 				) b 
+ 		WHERE r <![CDATA[ > ]]> (#{pageNum} - 1) * #{amount}
 	</select>
 	
-	<!-- 챌린지 개수 가져오기 -->
+	<!-- 챌린지 개수 가져오기 - 총개수 -->
 	<select id="countAllChallenges" resultType="int">
 		SELECT count(*)
 		FROM chall
 		WHERE chall_state = #{challState}
-		<if test="challTitle != null and challTitle != ''.toString()">
-			AND chall_title like '%' || #{challTitle} || '%' 
-		</if>
+	</select>
+	
+	<!-- 페이징때문 -->
+	<select id="getTotalByState" resultType="int">
+		SELECT count(*)
+		FROM chall
+		WHERE chall_state = #{challState}
+			<if test="challState != null and challState != ''.toString()">
+				AND chall_state = #{challState}
+			</if>
+			<if test="keyword != null and keyword != ''.toString()">
+				AND chall_title like '%' || #{keyword} || '%'
+			</if>
 	</select>
 	
 	<!-- 단건조회 - 관리자 -->
@@ -168,18 +206,53 @@
 		WHERE chall_no = #{challNo}
 	</delete>
 	
+	<!-- 점수 전체 조회 -->
 	<select id="selectScoreAll" resultType="Map">
-		SELECT DISTINCT s.score_no "scoreNo"
-				, f.user_no "userNo"
-				, c.chall_title "challTitle"
-				, s.confirm_count "confirmCount"
-				, TO_CHAR(c.chall_startAt, 'YYYY/MM/DD')|| ' - ' || TO_CHAR(c.chall_closeAt, 'YYYY/MM/DD') "term"
-				, s.confirm_count * 10 "score"
-		FROM score s JOIN chall c
+		SELECT b.* 
+		FROM (	
+		    SELECT ROWNUM r               
+		           , a.*	    
+		    FROM (
+		            SELECT DISTINCT s.score_no "scoreNo"
+		                    , f.user_no "userNo"
+		                    , c.chall_title "challTitle"
+		                    , s.confirm_count "confirmCount"
+		                    , TO_CHAR(c.chall_startAt, 'YYYY/MM/DD')|| ' - ' || TO_CHAR(c.chall_closeAt, 'YYYY/MM/DD') "term"
+		                    , s.confirm_count * 10 "score"
+		            FROM score s JOIN chall c
+		                           ON s.chall_no = c.chall_no            
+		                         JOIN chall_confirm f
+		                           ON s.user_no = f.user_no
+	            	<where>
+						<if test="challState != null and challState != ''.toString()">
+							AND chall_state = #{challState}
+						</if>
+						<if test="keyword != null and keyword != ''.toString()">
+							AND chall_title like '%' || #{keyword} || '%' 
+						</if>
+					</where> 
+		            ORDER BY s.score_no DESC
+		         ) a        
+		    WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}       
+		) b 
+		WHERE r <![CDATA[ > ]]> (#{pageNum} - 1) * #{amount}
+	</select>
+	
+	<!-- 점수 테이블 전체 개수 가져오기 -->
+	<select id="getScoreTotal" resultType="int">
+		SELECT COUNT(*)
+        FROM score s JOIN chall c
 		               ON s.chall_no = c.chall_no            
 		             JOIN chall_confirm f
 		               ON s.user_no = f.user_no
-		ORDER BY s.score_no DESC
+	<where>
+		<if test="challState != null and challState != ''.toString()">
+			AND chall_state = #{challState}
+		</if>
+		<if test="keyword != null and keyword != ''.toString()">
+			AND chall_title like '%' || #{keyword} || '%'
+		</if>
+	</where>
 	</select>
 	
 	<!-- 챌린지 목록에서 정렬 - 좋아요/참여중/최신날짜순 -->
@@ -236,7 +309,7 @@
 	<select id="reviewStatus" parameterType="int">
 		SELECT COUNT(*)
 		FROM chall_review
-		WHERE review_no = #{reviewNo}
+		WHERE chall_no = #{challNo}
 		AND user_no = #{userNo}
 	</select>
 	

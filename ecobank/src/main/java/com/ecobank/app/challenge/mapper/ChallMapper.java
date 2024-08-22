@@ -14,17 +14,18 @@ public interface ChallMapper {
 	public List<ChallVO> selectChallAll(Criteria criteria); //나중에 검색(x), 페이징 조건(o) 매개값으로 넣어줘야함
 	
 	//챌린지 목록 개수(페이징)
-	public int getTotal();
+	public int getTotal(Criteria criteria);
 	
 	//챌린지 조회 - 회원용(상태값에 따라)
 	//public List<ChallVO> getChallList();
-	public List<ChallVO> getChallList(@Param("criteria") Criteria criteria, @Param("challVO") ChallVO challVO);
+	public List<ChallVO> getChallList(Criteria criteria);
 	
-	//챌린지 목록 개수(페이징) - 상태에 따른..
-	//public int getTotalByState(String challState);
+	//챌린지 목록 개수(페이징) - 상태에 따른
+	public int getTotalByState(Criteria criteria);
 	
-	//챌린지 개수 가져오기
+	//챌린지 개수 가져오기 - 회원 / cnt
 	public int countAllChallenges(ChallVO challVO);
+	//public int countAllChallenges(Criteria criteria);
 	
 	//챌린지 단건 조회
 	public ChallVO selectChallInfo(ChallVO challVO);
@@ -54,7 +55,10 @@ public interface ChallMapper {
 	public int deleteChallInfo(int challNo);
 	
 	//인증 회원 점수 목록
-	public List<Map<String, Object>> selectScoreAll();
+	public List<Map<String, Object>> selectScoreAll(Criteria criteria);
+	
+	//점수 목록 개수 가져오기
+	public int getScoreTotal(Criteria criteria);
 	
 	//좋아요순 정렬
 	public List<ChallVO> orderByLike();
@@ -72,7 +76,7 @@ public interface ChallMapper {
 	public Double getAvgStar(int challNo);
 	
 	//챌린지 후기 등록 여부(결과가 있으면 1/ 참여한적 없으면 0)
-	public int reviewStatus(@Param("userNo") int userNo, @Param("reviewNo") int reviewNo);
+	public int reviewStatus(@Param("userNo") int userNo, @Param("challNo") int challNo);
 	
 	//챌린지 후기 등록
 	public int insertReview(ReviewDTO reviewDTO);

@@ -156,9 +156,10 @@ public class ChallengeRestController {
 	
 	//챌린지 후기 등록 여부
 	@GetMapping("reviewStatus")
-	public boolean reviewStatus(@RequestParam("reviewNo") int reviewNo) {
+	public int reviewStatus(@RequestParam("challNo") int challNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
-		return challService.reviewStatus(userNo, reviewNo);
+		int isConfirmed = challService.reviewStatus(userNo, challNo);
+		return isConfirmed;
 	}
 	
 	//챌린지 후기 삭제

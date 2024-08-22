@@ -61,16 +61,15 @@
 	  </div>
 	</section>End Testimonials Section */-->
 	
-	<th:block th:if="${avg} != null">
 	<section id="testimonials" class="testimonials section-bg">
 	  <div class="container" data-aos="fade-up">
 	    <div class="section-header">
 	      <h2>Challengers' reviews</h2>
 	      <p>Please write a review with your stars after participating in the challenge.</p>
 	      <div style="padding-top:10px;">
-	        <button type="button" class="btn btn-primary" id="writeBtn"
-	          th:onclick="reviewModal('review', [[${param.reviewNo}]])">WRITE</button>
+	        <button type="button" class="btn btn-primary" id="writeBtn">WRITE</button>
 	      </div>
+		<th:block th:if="${avg} != null">
 	      <hr/>
           <p style="font-weight: bold;"> 에코뱅크 챌린저들이 남긴 후기의 평점은 ? </p>
           	<p style="font-size: 30px; font-weight: bold;"><i class="bi bi-star-fill" th:text="' ' + ${avg} + ' 점'"></i></p>
@@ -85,7 +84,7 @@
 	          <div class="swiper-slide">
 	            <div class="testimonial-wrap">
 	              <div class="testimonial-item">
-	              	<input type="hidden" th:value="${review.challNo}" th:data-challno="${review.challNo}">
+	              	<input type="hidden" th:value="${review.challNo}" id="cNo">
 	                <input type="hidden" th:value="${review.userNo}">
 	                <img src="profile.jpg" alt="Profile Image" class="profile-img">
 	                <h3 th:text="${review.nickname}"></h3>
@@ -108,7 +107,7 @@
 	                <hr style="width: 100%; height: 5px; border: none;" />
 	                <p th:text="${review.reviewContent}"></p>
 	                <hr style="margin: 10px;" />
-	               	<button type="button" class="btn btn-secondary" !important; id="reviewDelete" aria-label="Close" th:data-reviewno="${review.reviewNo}" th:if="${review.userNo} == ${userNo}">
+	               	<button type="button" class="btn btn-secondary" id="reviewDelete" aria-label="Close" th:data-reviewno="${review.reviewNo}" th:if="${review.userNo} == ${userNo}">
 	               		Delete
 	               	</button>
 	              </div>
@@ -121,23 +120,45 @@
 	      <div class="swiper-button-next"></div>
 	    </div>
 	  </div>
+	  </th:block>
 	</section><!-- End Testimonials Section -->
-	</th:block>
 	<script>
+    //리뷰 등록 여부
+	    $('#writeBtn').click(function(event){
+    	event.preventDefault();
+    	
+    	let cNo = $('#cNo').val();
+    	console.log(cNo, "cno");
+    	$.ajax({
+    		url : '/reviewStatus',
+    		type : 'get',
+    		data : {
+    			challNo : cNo
+    		},
+    		success : function(isConfirmed) {
+				console.log("isConfirmed:", isConfirmed);
+				if (isConfirmed) {
+					alert("후기 작성이 이미 완료되었습니다.");
+					
+				}else{
+					reviewModal();
+				}
+			},
+			error : function(err) {
+				console.log(err);
+				alert("오류");
+			}
+    	})
+    });  
 		//리뷰 등록 모달창
-		function reviewModal(state, stateNo){
+		function reviewModal(){
 			event.preventDefault();
 			
 			modal.style.display="block";
-			//console.log(state, "스테이트 뭔지")
-			if(state == 'review'){
-				rNo = stateNo;
-				//console.log(rNo, "알앤오");
-			}
 		}
 		
 		//리뷰 모달
-		const modal = document.querySelector('.modal');
+		var modal = document.querySelector('.modal');
 	    	$('#btn-close').on('click', function(){
 	    		 modal.style.display="none";
 	    	}); 
@@ -161,33 +182,8 @@
 	    	})
 	    })
 	    
-	    //리뷰 등록 여부
-/*  	    $('#writeBtn').click(function(event){
-	    	event.preventDefault();
-	    	
-	    	let rNo = $(this).data('reviewno');
-	    	let cNo = $(this).data('challno');
-	    	$.ajax({
-	    		url : 'reviewStatus',
-	    		type : 'get',
-	    		data : {
-	    			reviewNo : rNo
-	    		},
-	    		success : function(cnt) {
-					console.log("isConfirmed:", cnt);
-					if (cnt) {
-						alert("후기 작성이 이미 완료되었습니다.");
-					} else {
-						location.href = 'detail?challNo=' + cNo;
-					}
-				},
-				error : function(err) {
-					console.log(err);
-					alert("오류");
-				}
-	    	})
-	    });  */
-/* 	    $(document).ready(function() {
+
+/*  	    $(document).ready(function() {
 	    	$.ajax({
 	    		url : 'reviewStatus',
 	    		type : 'get',
@@ -197,13 +193,13 @@
 	    		success : function(result) {
 	    			console.log(result);
 					if (result) {
-						$('#btn-review').hide(); //도전하기 버튼 숨기기
+						$('#btn-review').hide(); 
 					} 
 				},
 				error : function(err) {
 					console.log(err);
 	    		}
-	    }); */
+	    });  */
 	    
 	    //리뷰 삭제
 	    $(document).on('click', '#reviewDelete', function() {
