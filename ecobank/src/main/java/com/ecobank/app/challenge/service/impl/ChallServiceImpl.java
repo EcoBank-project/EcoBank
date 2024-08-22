@@ -1,5 +1,6 @@
 package com.ecobank.app.challenge.service.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,11 @@ public class ChallServiceImpl implements ChallService{
 	//전체조회
 	@Override
 	public List<ChallVO> challList(Criteria criteria) {
+//        List<ChallVO> challList = challMapper.selectChallAll(criteria);
+//		// 만약 challList가 null이거나 비어있다면 빈 리스트 반환
+//        if (challList(criteria) == null || challList.isEmpty()) {
+//            return Collections.emptyList();
+//        }
 		return challMapper.selectChallAll(criteria);
 	}
 	
