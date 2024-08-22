@@ -12,7 +12,7 @@
 }
 
 .imghover:hover {
-	filter: brightness(120%)
+	filter: brightness(0.8);
 }
 
 .blind {
@@ -24,15 +24,16 @@
 	margin: -1px;
 }
 .like{
-      width: 20px;
-      fill: #ddd;
+    width: 20px;
+	fill: #ddd;
 }
 .bi-heart-fill{
 	color: hotpink;
 }
+
 #speech{
-      width: 20px;
-      fill: #ddd;
+    width: 20px;
+    fill: #ddd;
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
@@ -54,8 +55,8 @@
 								</div>
 							</div> 
 							<div style="margin-left:auto;">
-							<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null} and ${sns.userNo} != ${session.userNo}">팔로우</button>
-							<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
+								<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null} and ${sns.userNo} != ${session.userNo}">팔로우</button>
+								<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
 							 </div>
 							 <input type="number" th:value="${sns.feedNo}" hidden>
 						</div>
@@ -66,7 +67,7 @@
 								alt="Image" class="img-fluid" style="width:350px; height:380px; padding:0px;"></a>
 						</div>
 						<div class="post-content-entry">
-							<div class="meta" style="margin-bottom:30px;">
+							<div class="meta" style="margin-bottom:30px;  margin-top:10px;">
 								<button id="likeButton" class="btn btn-outline-primary">
 									<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
 									<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
@@ -88,27 +89,20 @@
 		let userNo = [[${session.userNo}]];
 	
 		$(".imghover").on('click', function(event) {
-			/* if(event.target.tagName == 'BUTTON') return; */
 			let fno = $(event.currentTarget).children().first().text();
-			console.log(fno);
 			let url = '/snsInfo?feedNo=' + fno;
-			console.log('url : ' + url);
 			location.href = url;
 		});
 		
 		$(".other").on('click', function(event) {
-			/* if(event.target.tagName == 'BUTTON') return; */
 			let uno = $(event.currentTarget).children().first().text();
-			console.log('클릭햇어',uno);
 			let url = '/userSns?userNo=' + uno;
-			console.log('url : ' + url);
 			location.href = url;
 		});
 		
 	    //좋아요버튼
 	  	$('.bi').on('click',function(){
 	  		let feedNo =$(this).data('feedno');
-	  		console.log('하트하으',feedNo);
 			$.ajax({
 				type : "POST",
 				url : "likeInsert",
@@ -127,64 +121,58 @@
 		//좋아요취소
 		$('.bi-heart-fill').click(function(){
 			let snsLikeNo =$(this).data('snslikeno');
-			console.log("팔로우버튼");
-			console.log('누구야',snsLikeNo)
-		// ajax로 좋아요 취소하기
-		$.ajax({
-			type : "delete",
-			url : "likeDelete",
-			data : {snsLikeNo},
-			success : function(){
-				location.reload();
-			},
-			error :  function(error){
-				console.log(error);
-				alert("실패");
-			}
+			// ajax로 좋아요 취소하기
+			$.ajax({
+				type : "delete",
+				url : "likeDelete",
+				data : {snsLikeNo},
+				success : function(){
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
 		});
-	});
 	    
 	    // 팔로우(writeBtn) 버튼을 클릭할 경우
 		$('.followBtn').click(function(){
 			let followingId =$(this).data('userno');
-			console.log("팔로우버튼");
-			console.log('누구야',followingId);
-		// ajax로 팔로우 등록하기
-		$.ajax({
-			type : "POST",
-			url : "insertFollow",
-			data : {userNo, followingId},
-			dataType : "json",
-			success : function(){
-				alert("팔로우 성공");
-			},
-			error :  function(error){
-				console.log(error);
-				alert("팔로우 실패");
-			}
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "POST",
+				url : "insertFollow",
+				data : {userNo, followingId},
+				dataType : "json",
+				success : function(){
+					alert("팔로우 성공");
+				},
+				error :  function(error){
+					console.log(error);
+					alert("팔로우 실패");
+				}
+			});
 		});
-	});
 	
-	    
 		//팔로우취소
 		$('.followCancleBtn').click(function(){
 			let followNo =$(this).data('followno');
-			console.log("팔로우버튼");
-		// ajax로 팔로우 등록하기
-		$.ajax({
-			type : "delete",
-			url : "deleteFollow",
-			data : {followNo},
-			dataType : "json",
-			success : function(){
-				alert("팔로우취소 성공");
-			},
-			error :  function(error){
-				console.log(error);
-				alert("실패");
-			}
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "delete",
+				url : "deleteFollow",
+				data : {followNo},
+				dataType : "json",
+				success : function(){
+					alert("팔로우취소 성공");
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
 		});
-	});
 
  </script>
 </body>

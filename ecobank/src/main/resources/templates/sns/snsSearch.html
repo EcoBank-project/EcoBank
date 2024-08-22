@@ -47,7 +47,7 @@ input::placeholder {
                 <button type="submit" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Search</button>
             </div>
 		</form>
-		<div class="row">
+		<div class="row" style="margin-top:40px;">
 			<th:block th:each="sns, sts : ${snsSearch}"	th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
 				<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0">
 					<div class="author mb-4 d-flex align-items-center">
@@ -71,7 +71,7 @@ input::placeholder {
 								alt="Image" class="img-fluid" style="width:350px; height:380px; padding:0px;"></a>
 					</div>
 					<div class="post-content-entry">
-						<div class="meta" style="margin-bottom:30px;">
+						<div class="meta" style="margin-bottom:30px;  margin-top:10px;">
 							<button id="likeButton" class="btn btn-outline-primary">
 								<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
 								<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
@@ -100,6 +100,12 @@ input::placeholder {
 			console.log(fno);
 			let url = '/snsInfo?feedNo=' + fno;
 			console.log('url : ' + url);
+			location.href = url;
+		});
+		
+		$(".other").on('click', function(event) {
+			let uno = $(event.currentTarget).children().first().text();
+			let url = '/userSns?userNo=' + uno;
 			location.href = url;
 		});
 		

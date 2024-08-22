@@ -7,54 +7,55 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-    .comment-section {
-        margin-top: 20px;
-    }
-
-    .comment-input {
-        margin-bottom: 10px;
-    }
-
-    .comment-submit-btn {
-        width: 100px;
-    }
-
-    .comment-list {
-        margin-bottom: 20px;
-    }
-
-    .comment-item {
-        border-bottom: 1px solid #ddd;
-        padding: 10px 0;
-    }
-
-    .comment-item:last-child {
-        border-bottom: none;
-    }
-
-    .comment-item .comment-author {
-        font-weight: bold;
-    }
-
-    .comment-item .comment-text {
-        margin-top: 5px;
-    }
-.like{
-      width: 25px;
-      fill: #ddd;
+.comment-section {
+	margin-top: 20px;
 }
+
+.comment-input {
+    margin-bottom: 10px;
+}
+
+.comment-submit-btn {
+    width: 100px;
+}
+
+.comment-list {
+    margin-bottom: 20px;
+}
+
+.comment-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-item .comment-author {
+    font-weight: bold;
+}
+
+.comment-item .comment-text {
+    margin-top: 5px;
+}
+.like{
+    width: 25px;
+    fill: #ddd;
+}
+
 .bi-heart-fill{
 	color: hotpink;
 }
 
 #speech{
-      width: 25px;
-      fill: #ddd;
-      margin-left: 10px;
+    width: 25px;
+    fill: #ddd;
+    margin-left: 10px;
 }
+
 .menu, .menu-reply{
 	text-align: right;
-
 }
 
 .a {
@@ -83,7 +84,7 @@
 .dropdown-menu a i , .dropdown-menu-reply a i{
 	margin-right: .5rem;
 }
-   /*모달*/
+/*모달*/
 .modal {
 	display: none;
     position: fixed;
@@ -114,7 +115,6 @@ ul{
 }
 
 /* design */
-
 .selectbox{
     margin: 150px auto;
 }
@@ -134,6 +134,7 @@ ul{
 	appearance: none;
 	text-align: left;
 }
+
 .pl:focus{
     border: 1px solid #9B51E0;
     box-sizing: border-box;
@@ -175,21 +176,21 @@ ul{
 }
 
 .radioBtn>label{
-padding: 10px 10px;
-border:1px solid #ccc;
-border-radius:3px;
+	padding: 10px 10px;
+	border:1px solid #ccc;
+	border-radius:3px;
 }
 
 input[type=radio]:checked + label{
-background: #ccc;
-color:white;
-width:  93%;
-height: 100%;
+	background: #ccc;
+	color:white;
+	width:  93%;
+	height: 100%;
 }
 
 .inputleft{
-text-align: left;
-padding: 20px;
+	text-align: left;
+	padding: 20px;
 }
 
 .aaa , .inputleft{
@@ -220,31 +221,30 @@ padding: 20px;
 }
    
 .like-comment {
-       display: flex;
-       align-items: center;
-       gap: 15px;
-   }
-
-   .like-comment .likes-count,
-   .like-comment .comments-count {
-       margin-left: 5px;
-   }
-   
-   .comment-section {
-       margin-top: 20px;
-   }
-   
-   .comment-input {
-       width: 100%;
-       margin-bottom: 10px;
-   }
-   .testimonial-carousel .testimonial-img img {
-    width: 400px;
-    height: 400px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-   .testimonial-carousel .owl-nav {
- 		  top:170px;
+.like-comment .likes-count,.like-comment .comments-count {
+    margin-left: 5px;
+}
+   
+.comment-section {
+    margin-top: 20px;
+}
+   
+.comment-input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.testimonial-carousel .testimonial-img img {
+	width: 400px;
+	height: 400px;
+}
+
+.testimonial-carousel .owl-nav {
+	top:170px;
 }
 
 .testimonial-carousel:hover .owl-nav {
@@ -255,424 +255,383 @@ padding: 20px;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
 </head>
 <body>
-
-       <div class="container" style="width:1000px;">
-           <!-- Profile and Actions -->
-           <div class="row mb-4">
-               <div class="col-lg-12 d-flex align-items-center">
-                   <img src="profile.jpg" alt="Profile Image" class="profile-img">
-                   <div>
-                       <h4 class="mb-1" th:text=${sns.nickname}></h4>
-                   </div>
-                   <div class="ms-auto action-buttons">
-							<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null}  and ${sns.userNo} != ${session.userNo}">팔로우</button>
-							<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
-                      	
-						<a href="#" class="nav-menu">...</a>
-						<div class="dropdown-menu">
-							<a href="#" class="declareModal" th:onclick="declareModal('feed',[[${sns.feedNo}]])">게시글 신고하기</a> 
-							<a href="#" id="updateA">수정하기</a> 
-							<a href='#' id="deleteA">삭제하기</a>
-						</div>
-                    </div>
-                </div>
-            </div>
-
-    <!-- image Start -->
-    		<div class="container-xxl py-5">
-        		<div class="container">
-          			<input type="number" th:value="${sns.feedNo}" hidden>
-            		<div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
-                    	<th:block th:each="file, sts : ${snsFileInfo}">
-                			<div class="testimonial-item text-center">
-                    			<div class="testimonial-img position-relative">
-                        			<img class="img-fluid mx-auto mb-5" th:src=@{/images/{filePath}(filePath=${file.filePath})}>
-                    			</div>
-                			</div>
-                        </th:block>
-            		</div>
-       			 </div>
-    		</div>
-    <!-- image End -->
-
-            <!-- Confirm Content -->
-            <div class="row mb-4">
-                <div class="col-lg-12">
-                    <div class="border p-4 bg-light rounded">
-                        <p class="mb-0"  th:text="${sns.feedContent}"></p>
-                        <p class="mb-0"  th:text="${sns.hashtag}"></p>
-                        <small class="text-muted" th:text="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}"></small>
-                    </div>
-                </div>
-            </div>
-            <!-- Like and Comment Section -->
-            <div class="row like-comment">
-				<div class="col-lg-12">
-					<div class="d-flex align-items-center">
-						<button id="likeButton" class="btn btn-outline-primary">
-							<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
-							<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
-						</button>
-						<span class="likes-count" th:text=${sns.countLike}></span>
-						<button class="btn btn-outline-secondary ms-3">
-							<i class="bi bi-chat-dots"></i>
-						</button>
-						<span class="comments-count" th:text=${sns.countReply}>></span>
-			            <button class="btn btn-outline-success ms-3">
-			                <i class="bi bi-share"></i>
-			            </button>
-		                <span class="ms-1">Share</span>
-			            <button class="btn btn-outline-danger ms-auto">
-			                <i class="bi bi-exclamation-triangle"></i>
-			            </button>
+	<div class="container" style="width:1000px;">
+    <!-- Profile and Actions -->
+    	<div class="row mb-4">
+        	<div class="col-lg-12 d-flex align-items-center">
+        		<div class="other">
+        			<div th:text=${sns.userNo} hidden></div>
+            		<img src="profile.jpg" alt="Profile Image" class="profile-img">
+                	<div>
+                   	<h4 class="mb-1" th:text=${sns.nickname}></h4>
+               		</div>
+               		<small class="text-muted" th:text="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}"></small>
+               	</div>
+                <div class="ms-auto action-buttons">
+					<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null}  and ${sns.userNo} != ${session.userNo}">팔로우</button>
+					<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
+					<div th:if="${sns.userNo} == ${session.userNo}">
+						
+						<button type="button" class="btn btn-secondary" id="updateA">수정하기</button>
+						<button type="button" class="btn btn-danger" id="deleteA" >삭제하기</button>
+			
 					</div>
+                </div>
+            </div>
+        </div>
+    
+ 	   <!-- image Start -->
+    	<div class="container-xxl py-5">
+        	<div class="container">
+          		<input type="number" th:value="${sns.feedNo}" hidden>
+            	<div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
+                   	<th:block th:each="file, sts : ${snsFileInfo}">
+               			<div class="testimonial-item text-center">
+                   			<div class="testimonial-img position-relative">
+                       			<img class="img-fluid mx-auto mb-5" th:src=@{/images/{filePath}(filePath=${file.filePath})}>
+                   			</div>
+               			</div>
+                     </th:block>
+            	</div>
+       		</div>
+    	</div>
+    	<!-- image End -->
+        <!-- Confirm Content -->
+        <div class="row mb-4">
+        	<div class="col-lg-12">
+    	        <div class="border p-4 bg-light rounded">
+                	<p class="mb-0"  th:text="${sns.feedContent}"></p>
+                    <p class="mb-0"  th:text="${sns.hashtag}"></p>
+                    
+                 </div>
+             </div>
+        </div>
+        <!-- Like and Comment Section -->
+		<div class="row like-comment">
+			<div class="col-lg-12">
+				<div class="d-flex align-items-center">
+					<button id="likeButton" class="btn btn-outline-primary">
+						<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
+						<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
+					</button>
+					<span class="likes-count" th:text=${sns.countLike}></span>
+					<button class="btn btn-outline-secondary ms-3">
+						<i class="bi bi-chat-dots"></i>
+					</button>
+					<span class="comments-count" th:text=${sns.countReply}></span>
+			        <button class="btn btn-outline-success ms-3">
+			        	<i class="bi bi-share"></i>
+			        </button>
+		            <span class="ms-1">Share</span>
+			        <button class="btn btn-outline-danger ms-auto" th:onclick="declareModal('feed',[[${sns.feedNo}]])"  th:if="${sns.userNo} != ${session.userNo}">
+			        	<i class="declareModal bi bi-exclamation-triangle"  ></i>
+			        </button>
 				</div>
 			</div>
-
-            <!-- Comments Section -->
-            <div class="row comment-section">
-            	<div  class="col-lg-12" id="replyArea">
-            		<div class="comment-item">
-						<div class="d-flex justify-content-between align-items-center">
-            				<!-- 댓글출력 -->
-            			</div>
-            		</div>
+		</div>
+        <!-- Comments Section -->
+       
+        <div class="row comment-section">
+           	<div  class="col-lg-12 comment-list" >
+           		<div id="commentList" >
+           		
+           					 <div class="replyArea">
+           					 
+           					 </div><!-- 댓글출력 -->
+           		
+			</div>
+			   </div>
+			<div class="d-flex">
+				<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
+               	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent"></textarea>
+                <button id="writeBtn" style="margin-left:10px; height:60px;" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
+             </div>
+          
+		</div>
+		
+		<!-- 모달영역 -->
+ 		<div class="modal">
+       		<div class="modal_body">
+            	<div class="inputleft">
+		            <h4>신고하기</h4>
+		        	<hr style="width:100%;height:5px;border:none;"/>
+		            <form method="post">
+						<th:block th:each="declare, sts : ${snsDeclare}">
+							<input name="aaa" type='radio' class='radioBtn' th:value="${declare.codeId}" th:id="${declare.codeId}"/>
+							<label  th:text="${declare.codeName}" th:for="${declare.codeId}"></label> <hr  style="margin : 0px;"/>
+						</th:block>
+					</form>
 				</div>
-				<div class="d-flex">
-					<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
-                    <textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent"></textarea>
-                    <button id="writeBtn" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
-                </div>
-            </div>
-        </div>
-
-	
-	<!-- 모달영역 -->
- 	<div class="modal">
-        <div class="modal_body">
-            <div class="inputleft">
-            <h4>신고하기</h4>
-        	<hr style="width:100%;height:5px;border:none;"/>
-            <form method="post">
-					<th:block th:each="declare, sts : ${snsDeclare}">
-				<input name="aaa" type='radio' class='radioBtn' th:value="${declare.codeId}" th:id="${declare.codeId}"/>
-				<label  th:text="${declare.codeName}" th:for="${declare.codeId}"></label> <hr  style="margin : 0px;"/>
-					</th:block>
-			</form>
-				</div>
-          <button onclick='getDeclare()' class="btn btn-primary" id="btn-declare" aria-label="Close">신고하기</button>
-          <button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
-        </div>
+          		<button onclick='getDeclare()' class="btn btn-primary" id="btn-declare" aria-label="Close">신고하기</button>
+          		<button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
+        	</div>
+    	</div>
     </div>
-
+	<script th:inline="javascript">
+		let feedNo = $('#feedNo').val();
+		let replyNo = $('#replyNo').val();
+		let replyContent = $('#replyContent');
+		let userNo = [[${session.userNo}]];
+		
+		//개인피드이동
+		$(".other").on('click', function(event) {
+			let uno = $(event.currentTarget).children().first().text();
+			let url = '/userSns?userNo=' + uno;
+			location.href = url;
+		});
+		
+		//게시글 삭제
+		$('#deleteA').on('click', function(){
+			if(confirm("정말 삭제하시겠습니까 ?") == true){   
+				$.ajax({
+					 url:"snsDelete?feedNo="+feedNo,
+					 type: 'GET',
+					 success: function(result) {
+			    	  	 alert("삭제되었습니다");
+			    	  	 location.href="sns";
+					 },
+					 error: function(error) {
+						  console.log(error);
+					      alert('삭제가 실패되었습니다');
+					 }
+				});	
+			}
+		});
 	
+		//게시글수정
+		$('#updateA').on('click', function(){
+			if(confirm("수정하시겠습니까 ?") == true){   
+				$.ajax({
+					 url:"snsUpdate?feedNo="+feedNo,
+					 type: 'GET',
+					 success: function(result) {
+			    	  	 location.href="snsUpdate?feedNo="+feedNo;
+					 },
+					  error: function(error) {
+						  console.log(error);
+					      alert('수정에 실패되었습니다');
+					 }
+				});	
+			}
+		});
+		
+		// ajax로 댓글 불러오기
+		reply();
+		function reply(){
+			$.ajax({
+				type : "GET",
+				url : "snsReply?feedNo="+feedNo ,
+				dataType : "json",
+				success : function(list){
+					replyList(list);
+				},
+				error :  function(){
+					alert("댓글 불러오기 통신 실패");
+				}
+			});
+		}
+		
+		// 댓글 입력(writeBtn) 버튼을 클릭할 경우
+		$('#writeBtn').click(function(){
+			let replyContent = $('#replyContent').val();
+			let fno = $('#feedNo').val();
+	
+		// ajax로 댓글 등록하기
+			$.ajax({
+				type : "POST",
+				url : "snsReply",
+				data : {feedNo, replyContent,userNo},
+				dataType : "json",
+				success : function(list){
+					$('#replyContent').val(""); //초기화
+					reply();
+				},
+				error :  function(){
+					alert("댓글 작성 통신 실패");
+				}
+			});
+		});
+		
+		//댓글 삭제
+		function deleteBtn(replyNo){
+			if(confirm("정말 삭제하시겠습니까 ?") == true){   
+				$.ajax({
+					 url:"snsReply?replyNo=" + replyNo,
+					 type: 'delete',
+					 data: {replyNo},
+					 success: function(result) {
+					     	  	 alert("댓글이 삭제되었습니다");
+					        	 location.reload();
+					        	},
+					  error: function() {
+					          	alert('댓글 삭제가 실패되었습니다');
+					          	}
+				});		
+			};
+		}
+		
+		//댓글목록 출력
+		function replyList(list){	
+			let output = "";
+			for(let i in list){
+				output += "<div class='comment-item' >";
+				output +=`<div class="d-flex justify-content-between align-items-center">`;
+				output += `<div style="float:left;">`;
+				output += `<img src="profile.jpg" alt="Profile Image" class="profile-img">`;
+				output += "<strong>" + list[i].nickname +"</strong>";
+				output += `</div>`;
+				output += `<input type="hidden" name="replyNo" value="${list[i].replyNo}">`;
+				output += `<p style="display: inline;">`+ list[i].replyContent +`</p>`;
+				output += `<div style="float:right;">`;
+				output += `<p style="display: inline; margin-left: 10px;">`+ list[i].replyCreateAt  +`</p>`;
+				output += ` ${ list[i].userNo != userNo ?
+						       `<button class="btn btn-outline-danger ms-auto" onclick="declareModal('reply',${list[i].replyNo})">
+							       <i class="declareModal bi bi-exclamation-triangle"></i>
+							    </button>`:
+				     		   `<button type="button" style="margin-left:10px;"class="btn btn-danger" onclick="deleteBtn(${list[i].replyNo})" >삭제하기</button>` }	`;
+								output += "</div>";		   
+				output += "</div>";
+				output += "</div>";
+			}
+			$('.replyArea').html(output);
+		}
 
+		//신고모달		
+		function declareModal(state, stateNo){
+			console.log("qjxms")
+			//event.preventDefault();
 			
-<script th:inline="javascript">
-	let feedNo = $('#feedNo').val();
-	let replyNo = $('#replyNo').val();
-	let replyContent = $('#replyContent');
-	let userNo = [[${session.userNo}]];
-	
-	//게시글 삭제
-	$('#deleteA').on('click', function(){
-		if(confirm("정말 삭제하시겠습니까 ?") == true){   
-			$.ajax({
-				 url:"snsDelete?feedNo="+feedNo,
-				 type: 'GET',
-				 success: function(result) {
-					 console.log(result);
-		    	  	 alert("삭제되었습니다");
-		    	  	 location.href="sns";
-				 },
-				 error: function(error) {
-					  console.log(error);
-				      alert('삭제가 실패되었습니다');
-				 }
-			});	
-		}
-	});
-	
-	//게시글 드랍메뉴
-	$('.nav-menu').on('click',function(){
-		event.preventDefault();
-		$('.dropdown-menu').show();
-	})	
-	
-	//드랍메뉴 숨기기
-	$(window).click(function(event){
-		if(!$(event.target).hasClass('nav-menu') && !$(event.target).hasClass('menu')){				
-			$('.dropdown-menu').hide();   
-		}
-		if($('.dropdown-menu').css('display') == 'block'){
-		}
-	})
-	
-	//게시글수정
-	$('#updateA').on('click', function(){
-		if(confirm("수정하시겠습니까 ?") == true){   
-			$.ajax({
-				 url:"snsUpdate?feedNo="+feedNo,
-				 type: 'GET',
-				 success: function(result) {
-		    	  	 location.href="snsUpdate?feedNo="+feedNo;
-				 },
-				  error: function(error) {
-					  console.log(error);
-				      alert('수정에 실패되었습니다');
-				 }
-			});	
-		}
-	});
-	
-	// ajax로 댓글 불러오기
-	reply();
-	function reply(){
-		$.ajax({
-			type : "GET",
-			url : "snsReply?feedNo="+feedNo ,
-			dataType : "json",
-			success : function(list){
-				console.log('getcon',replyContent);
-				console.log(list,'ㅇㅇㅇ');
-				replyList(list);
-			},
-			error :  function(){
-				alert("댓글 불러오기 통신 실패");
-			}
-		});
-	}
-	
-	// 댓글 입력(writeBtn) 버튼을 클릭할 경우
-	$('#writeBtn').click(function(){
-		let replyContent = $('#replyContent').val();
-		let fno = $('#feedNo').val();
-
-	// ajax로 댓글 등록하기
-		$.ajax({
-			type : "POST",
-			url : "snsReply",
-			data : {feedNo, replyContent,userNo},
-			dataType : "json",
-			success : function(list){
-				$('#replyContent').val(""); //초기화
-				reply();
-			},
-			error :  function(){
-				alert("댓글 작성 통신 실패");
-			}
-		});
-	});
-	
-	//댓글 삭제
-	function deleteBtn(replyNo){
-		if(confirm("정말 삭제하시겠습니까 ?") == true){   
-			console.log('삭제');
-			$.ajax({
-				 url:"snsReply?replyNo=" + replyNo,
-				 type: 'delete',
-				 data: {replyNo},
-				 success: function(result) {
-				     	  	 alert("댓글이 삭제되었습니다");
-				        	 location.reload();
-				        	},
-				  error: function() {
-				          	alert('댓글 삭제가 실패되었습니다');
-				          	}
-			});		
-		};
-	}
-	
-	//댓글목록 출력
-
-	function replyList(list){	
-		let output = "";
-		for(let i in list){
-	
-			//output += "<td>" + list[i].userNo+"</td>";
-			console.log('닉네임을 찾자',list);
-			output += "<div>";
-			output += `<img src="profile.jpg" alt="Profile Image" class="profile-img">`;
-			output += "<strong>" + list[i].nickname +"</strong>";
-			output += `<input type="hidden" name="replyNo" value="${list[i].replyNo}">`;
-			output += `<p style="display: inline;">`+ list[i].replyContent +`</p>`;
-			output += `<p style="display: inline; margin-left: 10px;">`+ list[i].replyCreateAt  +`</p>`;
-			output += "</div>";
-			output += `<div class="menu-reply">
-					   		<a href="#" class="nav-menu-reply">...</a>
-							<div class="dropdown-menu-reply">
-								<a href="#" class="declareModal" onclick="declareModal('reply',${list[i].replyNo})">댓글 신고하기</a> 
-								<a a href='javascript:void(0);' onclick="javascript:deleteBtn(${list[i].replyNo})">삭제하기</a>
-							</div>
-						</div>`;
-		}
-		$('#replyArea').html(output);
-		
-
-		//댓글 드랍메뉴
-		$('.nav-menu-reply').on('click',function(event){
-			var trNum = $(this).closest('tr').prevAll().length;
-        	console.log('trNum : ' + trNum);
-        	console.log('리플',$('.nav-menu-reply'));
-			event.preventDefault();
-			console.log('내려와',$('.nav-menu-reply').next());
-			console.log('sss',$(this));
-			$('.nav-menu-reply').next().hide();
-			$(this).next().show();
-		})	 
-		
-		//댓글 드랍메뉴 끄기
-		$(window).click(function(event){
-			if(!$(event.target).hasClass('nav-menu-reply') && !$(event.target).hasClass('menu-reply')){				
-				$('.dropdown-menu-reply').hide();   
-			}
-			if($('.dropdown-menu-reply').css('display') == 'block'){
-			}
-		})
-		
-		//댓글 모달 켜기
-		/* $('.declareModal').on('click', function(){
-			console.log('댓',$(this));
-			event.preventDefault();
 			modal.style.display="block";
-			console.log(sss);
-		}); */
-	}
-	
-	function declareModal(state, stateNo){
-		event.preventDefault();
-		
-		modal.style.display="block";
-		console.log(state);
-		if(state == 'feed'){
-			 feedNo = stateNo;
-			 replyNo = '';
-		}else if(state == 'reply'){
-			 replyNo = stateNo;
-			 feedNo = '';
+			console.log(state);
+			if(state == 'feed'){
+				 feedNo = stateNo;
+				 replyNo = '';
+			}else if(state == 'reply'){
+				 replyNo = stateNo;
+				 feedNo = '';
+			}
 		}
-	}
-	
-	//모달
-	const modal = document.querySelector('.modal');
-
-	$('#btn-close').on('click', function(){
-		 modal.style.display="none";
-	});
-	
-	//신고하기
-	let declareId = [[${snsDeclare}]];
-	function getDeclare() {
-		let codeId = "";
-		console.log('id',declareId);
-		console.log('rno',replyNo);
-		console.log('fno',feedNo);
-		$('.radioBtn').each(function(){
-		  if($(this).is(":checked")){
-			    codeId=$(this).val();
-				console.log($(this).val());
-		  }
-	    });
 		
-		$.ajax({
-			type : "POST",
-			url : "declareInsert?feedNo="+feedNo +"&replyNo=" +replyNo,
-			data : {feedNo, replyNo, userNo, codeId},
-			success : function(list){
-				 alert("해당글이 신고되었습니다.");
-				 location.href="sns";
-			},
-			error :  function(error){
-				console.log('에러',error);
-				alert("신고 실패");
-			}
-		});
-	}
+		//모달
+		const modal = document.querySelector('.modal');
 	
-    //좋아요버튼
-  	$('.bi').on('click',function(){
-  		let feedNo =$(this).data('feedno');
-  		console.log('하트하으',feedNo);
-		$.ajax({
-			type : "POST",
-			url : "likeInsert",
-			data : {feedNo},
-			dataType : "json",
-			success : function(result){
-				location.reload();
-			},
-			error :  function(error){
-				console.log('에러',error);
-				alert("좋아요 실패");
-			}
+		$('#btn-close').on('click', function(){
+			 modal.style.display="none";
 		});
-    })
-
-    	//좋아요취소
-		$('.bi-heart-fill').click(function(){
-			let snsLikeNo =$(this).data('snslikeno');
-			console.log("팔로우버튼");
-			console.log('누구야',snsLikeNo)
-		// ajax로 좋아요 취소하기
-		$.ajax({
-			type : "delete",
-			url : "likeDelete",
-			data : {snsLikeNo},
-			success : function(){
-				location.reload();
-			},
-			error :  function(error){
-				console.log(error);
-				alert("실패");
-			}
+		
+		//신고하기
+		let declareId = [[${snsDeclare}]];
+		function getDeclare() {
+			let codeId = "";
+			console.log('id',declareId);
+			console.log('rno',replyNo);
+			console.log('fno',feedNo);
+			$('.radioBtn').each(function(){
+			  if($(this).is(":checked")){
+				    codeId=$(this).val();
+					console.log($(this).val());
+			  }
+		    });
+			
+			$.ajax({
+				type : "POST",
+				url : "declareInsert?feedNo="+feedNo +"&replyNo=" +replyNo,
+				data : {feedNo, replyNo, userNo, codeId},
+				success : function(list){
+					 alert("해당글이 신고되었습니다.");
+					 location.href="sns";
+				},
+				error :  function(error){
+					console.log('에러',error);
+					alert("신고 실패");
+				}
+			});
+		}
+		
+	    //좋아요버튼
+	  	$('.bi').on('click',function(){
+	  		let feedNo =$(this).data('feedno');
+	  		console.log('하트하으',feedNo);
+			$.ajax({
+				type : "POST",
+				url : "likeInsert",
+				data : {feedNo},
+				dataType : "json",
+				success : function(result){
+					location.reload();
+				},
+				error :  function(error){
+					console.log('에러',error);
+					alert("좋아요 실패");
+				}
+			});
+	    })
+	
+	    	//좋아요취소
+			$('.bi-heart-fill').click(function(){
+				let snsLikeNo =$(this).data('snslikeno');
+				console.log("팔로우버튼");
+				console.log('누구야',snsLikeNo)
+			// ajax로 좋아요 취소하기
+			$.ajax({
+				type : "delete",
+				url : "likeDelete",
+				data : {snsLikeNo},
+				success : function(){
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
 		});
-	});
+		    
 	    
-    
-      // 팔로우(writeBtn) 버튼을 클릭할 경우
-		$('.followBtn').click(function(){
-			let followingId =$(this).data('userno');
-			console.log("팔로우버튼");
-			console.log('누구야',followingId);
-		// ajax로 팔로우 등록하기
-		$.ajax({
-			type : "POST",
-			url : "insertFollow",
-			data : {userNo, followingId},
-			dataType : "json",
-			success : function(){
-				alert("팔로우 성공");
-				location.reload();
-			},
-			error :  function(error){
-				console.log(error);
-				alert("팔로우 실패");
-			}
+	      // 팔로우(writeBtn) 버튼을 클릭할 경우
+			$('.followBtn').click(function(){
+				let followingId =$(this).data('userno');
+				console.log("팔로우버튼");
+				console.log('누구야',followingId);
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "POST",
+				url : "insertFollow",
+				data : {userNo, followingId},
+				dataType : "json",
+				success : function(){
+					alert("팔로우 성공");
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("팔로우 실패");
+				}
+			});
 		});
-	});
-
+	
+		    
+			//팔로우취소
+			$('.followCancleBtn').click(function(){
+				let followNo =$(this).data('followno');
+				console.log("팔로우버튼");
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "delete",
+				url : "deleteFollow",
+				data : {followNo},
+				dataType : "json",
+				success : function(){
+					alert("팔로우취소 성공");
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		});
+	
 	    
-		//팔로우취소
-		$('.followCancleBtn').click(function(){
-			let followNo =$(this).data('followno');
-			console.log("팔로우버튼");
-		// ajax로 팔로우 등록하기
-		$.ajax({
-			type : "delete",
-			url : "deleteFollow",
-			data : {followNo},
-			dataType : "json",
-			success : function(){
-				alert("팔로우취소 성공");
-			},
-			error :  function(error){
-				console.log(error);
-				alert("실패");
-			}
-		});
-	});
-
-    
 </script>
 
 <!-- JavaScript Libraries -->

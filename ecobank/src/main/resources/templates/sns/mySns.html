@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-   /*모달*/
+/*모달*/
 .modal {
 	display: none;
     position: fixed;
@@ -36,7 +36,7 @@
 }
 
 .imghover:hover {
-	filter: brightness(120%)
+	filter: brightness(0.8);
 }
 
 .blind {
@@ -47,54 +47,73 @@
 	height: 1px;
 	margin: -1px;
 }
+
 .like{
-      width: 25px;
-      fill: #ddd;
+	width: 25px;
+    fill: #ddd;
 }
+
 .bi-heart-fill{
 	color: hotpink;
 }
 
 #speech{
-      width: 20px;
-      fill: #ddd;
+    width: 20px;
+    fill: #ddd;
 }
+
+ul{
+	padding:0;
+	margin:0;
+}
+
 li{
 	display:inline;
 	list-style: none;
+	font-weight: bold;
+	margin:30px;
 }
+ 
+.ml-3{
+ 	display:flex;
+ 	justify-content: space-around;
+ 	margin-bottom: 5px;
+ }
+
+
 </style>
 <script	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 </head>
 <body>
 <!-- Feature Start -->
 	<div class="container-xxl py-5">
-    	<div class="container" style="width:1000px;">
-        	<div class="row g-5">
-            	<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="d-flex align-items-center mb-4">
-                        <h3 class="mb-0" data-toggle="counter-up" th:text=${countMySns.nickname}></h3>
+    	<div class="container" style="width:1200px;">
+        	<div class="row g-5" style="border: 3px solid orange; border-radius: 2em; text-align:center;">
+            	<div class="col-md-6 col-lg-3 wow  fadeIn" data-wow-delay="0.1s">
+                    <div class="align-items-center mb-4">
+                        <h5 class="mb-0" data-toggle="counter-up" th:text=${countMySns.nickname}></h5>
                     </div>
+                    <a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
                 </div>
                 <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
-                    <div class="d-flex align-items-center mb-4">
-                        <h3 class="mb-0" data-toggle="counter-up">게시물</h3>
+                    <div class="align-items-center mb-4">
+                        <h5 class="mb-0" data-toggle="counter-up">게시물</h5>
                     </div>
-                    <h5 class="mb-3" th:text=${countMySns.countFeed}></h5>
+                    <h3 class="mb-3" th:text=${countMySns.countFeed}></h3>
                 </div>
                 <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
-                    <div class="d-flex align-items-center mb-4">
-                        <h3 class="mb-0" data-toggle="counter-up">팔로워</h3>
+                    <div class="align-items-center mb-4">
+                        <h5 class="mb-0" data-toggle="counter-up">팔로워</h5>
                     </div>
                     <a href="#" class="listModal"  onclick="listModal()">
-                    	<h5 class="mb-3" th:text=${countMySns.countFollowing}></h5></a> 
+                    	<h3 class="mb-3" th:text=${countMySns.countFollowing}></h3></a> 
                 </div>
                 <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
-                    <div class="d-flex align-items-center mb-4">
-                        <h3 class="mb-0" data-toggle="counter-up">팔로잉</h3>
+                    <div class="align-items-center mb-4">
+                        <h5 class="mb-0" data-toggle="counter-up">팔로잉</h5>
                     </div>
                      <a href="#" class="listModal"  onclick="listModal()">
-                     	<h5 class="mb-3" th:text=${countMySns.countFollower}></h5></a>
+                     	<h3 class="mb-3" th:text=${countMySns.countFollower}></h3></a>
                 </div>
             </div>
         </div>
@@ -110,7 +129,7 @@ li{
 							<img th:src=@{/images/{filePath}(filePath=${sns.filePath})} alt="Image" class="img-fluid" style="width:350px; height:380px; padding:0px;"></a>
 					</div>
 					<div class="post-content-entry">
-						<div class="meta" style="margin-bottom:30px;">
+						<div class="meta" style="margin-bottom:30px;  margin-top:10px;">
 							<button id="likeButton" class="btn btn-outline-primary">
 								<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
 								<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
@@ -130,49 +149,65 @@ li{
  	<div class="modal">
         <div class="modal_body">
             <div class="inputleft">
-            <ul>
-            	<li><a href="#">팔로잉</a></li>
-            	<li><a href="#">팔로워</a></li>
-            	<li><a href="#">차단</a></li>
-            </ul>
-        	<hr style="width:100%;height:5px;border:none;"/>
-        		<th:block th:each="follower, sts : ${follower}">
-        		
-        		<div th:text=${follower.userNo} hidden></div>
-        		<div th:text=${follower.nickname} ></div>
-        		</th:block>
-        		
-        		 <th:block th:each="following, sts : ${following}">
-        		
-        		<div th:text=${following.userNo} hidden></div>
-        		<div th:text=${following.nickname} ></div>
-        		</th:block>
-        		
-        		
-        		<th:block th:each="block, sts : ${block}">
-        		
-        		<div th:text=${block.userNo} hidden></div>
-        		<div th:text=${block.nickname} ></div>
-        		</th:block>
-        		
-        	 <button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
-            </div>
-        </div>
-    </div>
+           		<ul>
+            		<li><a href="#" class="fer">팔로워</a></li>
+	            	<li><a href="#" class="fing">팔로잉</a></li>
+	            	<li><a href="#" class="b">차단</a></li>
+	            </ul>
+	        	<hr style="width:100%;height:5px;border:none;"/>
+	        	<div class="author mb-4 d-flex align-items-center"  style="margin-bottom:0px;">
+	        		<!-- 팔로워 -->
+	        		<div class="ferList" style="width:100%;">
+	        			<th:block th:each="follower, sts : ${follower}">
+	        				<div th:text=${follower.userNo} hidden></div>
+	        				<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
+	        				<div class="ml-3 info">
+								<a href="#" style="display: flex; align-items: center;" th:text=${follower.nickname} ></a>
+								<button type="button" th:data-userno="${follower.userNo}" class="followBtn btn btn-primary" th:if="${follower.followYn == null}">팔로우</button>
+								<button type="button" th:data-followno="${follower.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${follower.followYn == null}">팔로잉</button>
+							</div>
+	        			</th:block>
+	        		</div>
+	        	    <!-- 팔로잉 -->
+	        		<div class="fingList" style="display:none; width:100%;">
+	        			<th:block th:each="following, sts : ${following}">
+	        				<div th:text=${following.userNo} hidden></div>
+	        				<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
+	        				<div class="ml-3 info">
+								<a href="#"  style="display: flex; align-items: center;" th:text=${following.nickname} ></a>
+								<button type="button" th:data-userno="${following.userNo}" class="followBtn btn btn-primary" th:if="${following.followYn == null}">팔로우</button>
+								<button type="button" th:data-followno="${following.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${following.followYn == null}">팔로잉</button>
+							</div>		
+	        			</th:block>
+		        	</div>
+	 				<!-- 차단 -->
+	        		<div class="blocbkList" style="display:none; width:100%;">
+		        		<th:block th:each="block, sts : ${block}">
+			        		<div th:text=${block.userNo} hidden></div>
+			        		<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
+			        		<div class="ml-3 info">
+	        					<a href="#"  style="display: flex; align-items: center;" th:text=${block.nickname} ></a>
+	        					<button type="button" th:data-blockno="${block.snsBlockNo}" class="bCancleBtn btn btn-danger"> 차단 해제 </button>
+							</div>
+	        			</th:block>
+	        		</div>
+            	</div>
+        		<button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
+       		</div>
+    	</div>
+   	</div>
 	<script>
-
+	let userNo = [[${session.userNo}]];
+	
 		$(".imghover").on('click', function(event) {
 			let fno = $(event.currentTarget).children().first().text();
-			console.log(fno);
 			let url = '/snsInfo?feedNo=' + fno;
-			console.log('url : ' + url);
 			location.href = url;
 		});
 		
-		  //좋아요버튼
+		//좋아요버튼
 	  	$('.bi').on('click',function(){
 	  		let feedNo =$(this).data('feedno');
-	  		console.log('하트하으',feedNo);
 			$.ajax({
 				type : "POST",
 				url : "likeInsert",
@@ -191,8 +226,6 @@ li{
 		//좋아요취소
 		$('.bi-heart-fill').click(function(){
 			let snsLikeNo =$(this).data('snslikeno');
-			console.log("팔로우버튼");
-			console.log('누구야',snsLikeNo)
 			// ajax로 좋아요 취소하기
 			$.ajax({
 				type : "delete",
@@ -207,24 +240,94 @@ li{
 				}
 			});
 		});
-		const modal = document.querySelector('.modal');
+		  
+	    // 팔로우(writeBtn) 버튼을 클릭할 경우
+		$('.followBtn').click(function(){
+			let followingId =$(this).data('userno');
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "POST",
+				url : "insertFollow",
+				data : {userNo, followingId},
+				dataType : "json",
+				success : function(){
+					alert("팔로우 성공");
+				},
+				error :  function(error){
+					console.log(error);
+					alert("팔로우 실패");
+				}
+			});
+		});
+	
+		//팔로우취소
+		$('.followCancleBtn').click(function(){
+			let followNo =$(this).data('followno');
+			// ajax로 팔로우 취소하기
+			$.ajax({
+				type : "delete",
+				url : "deleteFollow",
+				data : {followNo},
+				dataType : "json",
+				success : function(){
+					alert("팔로우취소 성공");
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		});
 
+		const modal = document.querySelector('.modal');
+		//모달 닫기
 		$('#btn-close').on('click', function(){
 			 modal.style.display="none";
 		});
 		
-
+		//팔로워 목록 클릭 함수
 	  	function listModal(){
 			event.preventDefault();
-			
 			modal.style.display="block";
-		
-			
-			
 		}
-	
 
+		//팔로워,팔로잉,차단 클릭 이벤트
+		$('.fing').on('click',function(){
+			$('.fingList').show();
+			$('.ferList').hide();
+			$('.blocbkList').hide();
+		})
 		
+		$('.fer').on('click',function(){
+			$('.fingList').hide();
+			$('.ferList').show();
+			$('.blocbkList').hide();
+		})
+		
+		$('.b').on('click',function(){
+			$('.fingList').hide();
+			$('.ferList').hide();
+			$('.blocbkList').show();
+		})
+
+		//차단 취소
+		$('.bCancleBtn').click(function(){
+			let snsBlockNo =$(this).data('blockno');
+			// ajax로 차단 취소하기
+			$.ajax({
+				type : "delete",
+				url : "deleteBlock",
+				data : {snsBlockNo},
+				dataType : "json",
+				success : function(){
+					alert("차단취소 성공");
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		})
 		
 	</script>
 </body>

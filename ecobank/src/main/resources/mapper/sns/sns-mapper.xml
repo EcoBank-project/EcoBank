@@ -249,6 +249,9 @@
 		SELECT u.user_no
                ,u.nickname
                ,f.follower_id
+               ,(SELECT follow_no 
+                 	FROM follow 
+              	   WHERE follower_id= #{userNo} and following_id = u.user_no) as follow_yn 
 	      FROM users u JOIN follow f 
 					   ON f.following_id = u.user_no
 		  WHERE follower_id= #{userNo}
@@ -259,6 +262,9 @@
 		SELECT u.user_no
                ,u.nickname
                ,f.following_id
+               ,(SELECT follow_no 
+                 	FROM follow 
+              	   WHERE follower_id= #{userNo} and following_id = u.user_no) as follow_yn 
 		  FROM users u JOIN follow f 
 					   ON f.follower_id = u.user_no
 		 WHERE following_id= #{userNo}
@@ -269,6 +275,7 @@
 		SELECT b.user_no
                ,u.nickname
                ,b.block_user_no
+               ,b.sns_block_no
 		  FROM users u JOIN sns_block b 
 		                 ON b.block_user_no = u.user_no
 		 WHERE b.user_no= #{userNo}

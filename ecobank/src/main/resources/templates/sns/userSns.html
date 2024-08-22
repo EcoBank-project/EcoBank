@@ -12,7 +12,7 @@
 }
 
 .imghover:hover {
-	filter: brightness(120%)
+	filter: brightness(0.8);
 }
 
 .blind {
@@ -22,6 +22,7 @@
 	width: 1px;
 	height: 1px;
 	margin: -1px;
+
 }
 .like{
     width: 20px;
@@ -31,49 +32,57 @@
 .bi-heart-fill{
 	color: hotpink;
 }
+
 #speech{
       width: 20px;
       fill: #ddd;
 }
+
+.ubtn{
+		position: absolute;
+	top:80px;
+	right:300px;
+}
+
 </style>
 <script	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 </head>
 <body>
 <!-- Feature Start -->
 	<div class="container-xxl py-5">
-    	<div class="container" style="width:1000px;">
-        	<div class="row g-5">
-        		<div style="text-align:right;">
-        			<div th:text=${countMySns.userNo} class="blind"></div>
-        			<button type="button" th:data-followno="${followCheck}" th:data-userno="${countMySns.userNo}" class="followBtn btn btn-primary" th:if="${followCheck == 0}">팔로우</button>
-					<button type="button" th:data-followno="${followCheck}" class="followCancleBtn btn btn-secondary" th:unless="${followCheck == 0}">팔로잉</button>
-					<button type="button" th:data-blockid="${countMySns.userNo}" class="blockBtn btn btn-danger" > 차단 </button>
-        		</div>
-            	<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
-                    <div class="d-flex align-items-center mb-4">
-                        <h3 class="mb-0" data-toggle="counter-up" th:text=${countMySns.nickname}></h3>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
-                    <div class="d-flex align-items-center mb-4">
-                        <h3 class="mb-0" data-toggle="counter-up">게시물</h3>
-                    </div>
-                    <h5 class="mb-3" th:text=${countMySns.countFeed}></h5>
-                </div>
-                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
-                    <div class="d-flex align-items-center mb-4">
-                        <h3 class="mb-0" data-toggle="counter-up">팔로워</h3>
-                    </div>
-                    <h5 class="mb-3" th:text=${countMySns.countFollowing}></h5>
-                </div>
-                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
-                    <div class="d-flex align-items-center mb-4">
-                        <h3 class="mb-0" data-toggle="counter-up">팔로잉</h3>
-                    </div>
-                    <h5 class="mb-3" th:text=${countMySns.countFollower}></h5>
-                </div>
-            </div>
+       <div class="ubtn" style="text-align:right;">
+        	<div th:text=${countMySns.userNo} class="blind"></div>
+        	<button type="button" th:data-followno="${followCheck}" th:data-userno="${countMySns.userNo}" class="followBtn btn btn-primary" th:if="${followCheck == 0}">팔로우</button>
+			<button type="button" th:data-followno="${followCheck}" class="followCancleBtn btn btn-secondary" th:unless="${followCheck == 0}">팔로잉</button>
+			<button type="button" th:data-blockid="${countMySns.userNo}" class="blockBtn btn btn-danger" > 차단 </button>
         </div>
+    	<div class="container" style="width:1200px;">
+        		<div class="row g-5" style="border: 3px solid orange; border-radius: 2em; text-align:center;">
+            		<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
+                    	<div class="align-items-center mb-4">
+                        	<h3 class="mb-0" data-toggle="counter-up" th:text=${countMySns.nickname}></h3>
+                    	</div>
+                	</div>
+                	<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
+                    	<div class="align-items-center mb-4">
+                        	<h5 class="mb-0" data-toggle="counter-up">게시물</h5>
+                    	</div>
+                    	<h3 class="mb-3" th:text=${countMySns.countFeed}></h3>
+                	</div>
+                	<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
+                    	<div class="align-items-center mb-4">
+                        	<h5 class="mb-0" data-toggle="counter-up">팔로워</h5>
+                    	</div>
+                    	<h3 class="mb-3" th:text=${countMySns.countFollowing}></h3>
+                	</div>
+               		<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
+                    	<div class="align-items-center mb-4">
+                        	<h5 class="mb-0" data-toggle="counter-up">팔로잉</h5>
+                    	</div>
+                    	<h3 class="mb-3" th:text=${countMySns.countFollower}></h3>
+                	</div>
+            	</div>
+        	</div>
     </div>
     <!-- Feature Start -->
      <div class="container" style="width:1200px;">	
@@ -86,7 +95,7 @@
 							<img th:src=@{/images/{filePath}(filePath=${sns.filePath})} alt="Image" class="img-fluid" style="width:350px; height:380px; padding:0px;"></a>
 					</div>
 					<div class="post-content-entry">
-						<div class="meta" style="margin-bottom:30px;">
+						<div class="meta" style="margin-bottom:30px; margin-top:10px;">
 							<button id="likeButton" class="btn btn-outline-primary">
 								<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
 								<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
@@ -108,16 +117,13 @@
 		
 		$(".imghover").on('click', function(event) {
 			let fno = $(event.currentTarget).children().first().text();
-			console.log(fno);
 			let url = '/snsInfo?feedNo=' + fno;
-			console.log('url : ' + url);
 			location.href = url;
 		});
 		
-		  //좋아요버튼
+		//좋아요버튼
 	  	$('.bi').on('click',function(){
 	  		let feedNo =$(this).data('feedno');
-	  		console.log('하트하으',feedNo);
 			$.ajax({
 				type : "POST",
 				url : "likeInsert",
@@ -127,7 +133,6 @@
 					location.reload();
 				},
 				error :  function(error){
-					console.log('에러',error);
 					alert("좋아요 실패");
 				}
 			});
@@ -136,8 +141,6 @@
 		//좋아요취소
 		$('.bi-heart-fill').click(function(){
 			let snsLikeNo =$(this).data('snslikeno');
-			console.log("팔로우버튼");
-			console.log('누구야',snsLikeNo)
 			// ajax로 좋아요 취소하기
 			$.ajax({
 				type : "delete",
@@ -156,8 +159,6 @@
 	    // 팔로우(writeBtn) 버튼을 클릭할 경우
 		$('.followBtn').click(function(){
 			let followingId =$(this).data('userno');
-			console.log("팔로우버튼");
-			console.log('누구야',followingId);
 			// ajax로 팔로우 등록하기
 			$.ajax({
 				type : "POST",
@@ -178,7 +179,6 @@
 		//팔로우취소
 		$('.followCancleBtn').click(function(){
 			let followNo =$(this).data('followno');
-			console.log("팔로우버튼");
 			// ajax로 팔로우 등록하기
 			$.ajax({
 				type : "delete",
@@ -199,8 +199,6 @@
 		// 차단 버튼을 클릭할 경우
 		$('.blockBtn').click(function(){
 			let blockUserNo =$(this).data('blockid');
-			console.log("ckeks버튼");
-			console.log('누구야',blockUserNo);
 			// ajax로 팔로우 등록하기
 			$.ajax({
 				type : "POST",
@@ -219,8 +217,6 @@
 			});
 		});
 	
-	    
-
 	</script>
 </body>
 </html>
