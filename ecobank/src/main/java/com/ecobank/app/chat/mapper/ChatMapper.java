@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
+import com.ecobank.app.chat.service.ChatPartVO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 
 // 서버 기준
@@ -44,15 +45,19 @@ public interface ChatMapper {
 	public int selectRoomManager(@Param("userNo")Integer userNo, @Param("chatNo")Integer chatNo);
 	// 채팅방 이름 변경
 	public int updateChatChangeName(@Param("chatName")String chatName, @Param("chatNo")Integer chatNo);
+	// 채팅방에 없는 팔로우 목록
+	public List<ChatFollowVO> selectChatFollowInfo(@Param("followerId") Integer userNo, @Param("chatNo")Integer chatNo);
+	// 채팅방 닉네임 단일 조회
+	public String selectChatUserName(Integer userNo);
+	// 오픈 채팅방 업데이트
+	public int updateOpenChatChange(ChatRoomVO chatRoom);
+	// 채팅방 닉네임 조회
+	public List<ChatPartVO> selectChatRoomUsers(Integer chatNo);
+	// 팔로우 목록
+	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);
+	
 	// 언어 조회
 	public String selectLaguageCode(String userId);
 	// 언어 변경
 	public int updateLaguageCode(@Param("laguageCode") String lagCode, @Param("userNo") Integer userNo);
-	// 팔로우 목록
-	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);
-	// 채팅방에 없는 팔로우 목록
-	public List<ChatFollowVO> selectChatFollowInfo(@Param("followerId") Integer userNo, @Param("chatNo")Integer chatNo);
-	// 오픈 채팅방 업데이트
-	public int updateOpenChatChange(ChatRoomVO chatRoom);
-	
 }

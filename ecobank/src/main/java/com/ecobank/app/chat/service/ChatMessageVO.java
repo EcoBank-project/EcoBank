@@ -1,6 +1,7 @@
 package com.ecobank.app.chat.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -18,4 +19,6 @@ public class ChatMessageVO {
 	private Integer userNo;		//회원 번호
 	private Integer chatNo;		//채팅방 번호
 	private String chatType;	//채팅방 타입
+	
+	private List<Integer> userNos;	//사용자 번호
 }

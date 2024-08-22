@@ -11,7 +11,6 @@
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 </head>
 <body>
-    <h3>채팅</h3>
     <div class="container-fluid">
     	<div class="row">
             <div class="col-md-2 col-sm-12">
@@ -76,18 +75,18 @@
             <div class="col-md-10 col-sm-12 d-flex flex-column">
             	<div class="row">            	
 	                <div class="chatHeader">
-	                    <span id="roomName">채팅창 제목</span>
+	                    <span id="roomName">채팅방 제목</span>
 	                    <div class="stateIcon">
 		                    
 	                    </div>
 	                </div>
             	</div>
                 <div class="row">
-                	<div class="col-md-10 col-sm-12">
+                	<div id="rightChatLog" class="col-md-10 col-sm-12">
 		                <div class="chatForm flex-grow-1 border-bottom" id="chatForm" style="overflow-y: auto;">
 		                <!-- 메시지 로그 -->
                             <div class="chatbox" id="chatbox">
-
+								
                             </div>
 		                </div>
 		                <!-- 메시지 입력 -->
@@ -100,20 +99,10 @@
                     </div>
                     <!-- 유저 -->
                     <div class="col-md-2 col-sm-12">
-                		<!-- 세션을 이용-->
-                        <h5>접속중인 유저</h5>
-                        <div>
-                            <div>User1</div>
-                            <div>User2</div>
-                            <div>User3</div>
-                        </div>
-                        <!-- DB를 이용 -->
-                        <h5>오프라인 유저</h5>
-                        <div>
-                            <div>User1</div>
-                            <div>User2</div>
-                            <div>User3</div>
-                        </div>
+                    	<h5>대화상대</h5>
+                    	<div class="chatUserList">
+                    		
+                    	</div>
                 	</div>
                 </div>
             </div>
@@ -280,20 +269,33 @@
 				    	$('#roomName').text(message.body);
 				    })			    	
 			    }
+			    // 채팅방 입장
+			    stompClient.subscribe('/user/queue/enterChatRoom/' + roomId, function(message){
+			    	loadRoom();
+			    	stateMessage(JSON.parse(message.body));
+				});
+			    
+			 	// 채팅방 퇴장
+				stompClient.subscribe('/user/queue/leaveChatRoom', function(message){
+					loadRoom();
+					stateMessage(JSON.parse(message.body));
+				});
 	    	}
 			// 채팅방 목록 로드
 	        stompClient.subscribe('/user/queue/chatList', function(message) {
 	        	loadRoom();
 	        });
-			
-			// 채팅방 입장
-			
-			// 채팅방 퇴장
-			stompClient.subscribe('/user/queue/leaveChatRoom', function(message){
-				loadRoom();
-			});
 	    });
 	}
+	
+	function stateMessage(message){
+		console.log(message);
+        let tagDiv = $('<div />').prop('class','chat-message exit-message');
+        let tagSpan = $('<span />').prop('class','exit-name').text(message.msgContent);
+        tagDiv.append(tagSpan);
+        $('.chatbox').append(tagDiv);
+	}
+	
 	
 	// 메시지 엔터키
 	function enterKeyDown(event, userNo){
@@ -413,7 +415,8 @@
         		method : 'POST',
         		data : {chatNo},
         		success : function(result){
-        			if(result != null){
+        			console.log("확인"+result);
+        			if(result > 0){
         				let tagI = $('<i />').prop('class', 'fas fa-user-plus');
         		        let tagI1 = $('<i />').prop('class','bi bi-gear');
         		        let tagI2 = $('<i />').prop('class','fa fa-sign-out-alt');
@@ -457,7 +460,9 @@
         		}
         	})
         }
-		
+        
+        loadChatUsers(chatNo);
+        
 	    // 소켓 연결중
 	    if (stompClient !== null) {
 	        stompClient.disconnect(function() {
@@ -532,15 +537,32 @@
 	    	data: {roomId},
 	    	success: function(result){
 	    		result.forEach(function(message){
-	    			showMessage(message);
+	    			if(message.msgType == 'I4' || message.msgType == 'I3'){
+	    				stateMessage(message);
+	    			}else if(message.msgType == 'I1'){
+		    			showMessage(message);	    				
+	    			}
 	    		});
 	    	},
 	    	error: function(error){
-	    		
+	    		console.log(error);
 	    	}
 	    });
 	}
-	
+	// 채팅방 유저목록
+	function loadChatUsers(roomId){
+		$.ajax({
+			url: "/chatRoom/getChatUserInfo",
+			method: "POST",
+			data: {roomId},
+			success: function(result){
+				console.log(result);
+				result.forEach(function(users){
+					
+				})
+			}
+		})
+	}
 	//아이콘 기능 모음
 	//채팅홈
 	
@@ -778,7 +800,7 @@
 			let today = new Date();
 			const chatMessage = {
 				msgContent : "[[${nickname}]]" + "님이 나가셨습니다",
-				msgType : 'I1',
+				msgType : 'I4',
 				userNo : userNo,
 				chatNo : chatNo,
 				msgSendTime: today,
@@ -909,7 +931,20 @@
             processData: false,
             success: function(result) {
             	allClose();
-                stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
+                $.ajax({
+					url : "/chat.changeName",
+					method : "POST",
+					data: {
+						chatNo : result,
+						chatName : chatName
+					},
+					success: function(result){
+						console.log(result);
+					},
+					err : function(err){
+						console.log(err);
+					}
+				})
             },
             error: function(error) {
                 console.log(error);
@@ -959,6 +994,7 @@
 		let isCheckbox = $('#followListOpen .select-follow').is(":checked");
 		if(isCheckbox){
 			let formObj = {};
+			let formObj2 = {};
 			formObj['userNo'] = [];
 			formObj['chatNo'] = currentRoomId;
 			$('#followListOpen .select-follow').each(function() {
@@ -974,7 +1010,15 @@
 				contentType: 'application/json',
 				success: function(result){
 					allClose();
-					stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
+					let today = new Date();
+					const chatMessage = {
+						msgType : 'I3',
+						msgSendTime: today,
+						chatType : 'O3',
+						chatNo : result,
+						userNos : formObj['userNo']
+					}
+					stompClient.send("/app/chat.enter/" + result, {}, JSON.stringify(chatMessage));
 				},
 				error: function(error){
 					console.log(error);
