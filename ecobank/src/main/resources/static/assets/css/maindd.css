@@ -306,7 +306,7 @@ section {
     padding: 10px 0 10px 28px;
   }
 
-  .navbar a,
+  /* .navbar a,
   .navbar a:focus {
     display: flex;
     align-items: center;
@@ -320,7 +320,7 @@ section {
     white-space: nowrap;
     transition: 0.3s;
     position: relative;
-  }
+  } */
 
   .navbar a i,
   .navbar a:focus i {
@@ -349,12 +349,12 @@ section {
     width: 100%;
   }
 
-  .navbar a:hover,
+  /* .navbar a:hover,
   .navbar .active,
   .navbar .active:focus,
   .navbar li:hover>a {
     color: #fff;
-  }
+  } */
 
   .navbar .dropdown ul {
     display: block;
@@ -1000,7 +1000,7 @@ section {
 # Testimonials Section
 --------------------------------------------------------------*/
 .testimonials .testimonial-wrap {
-  padding-left: 50px;
+  /* padding-left: 50px; */
 }
 
 .testimonials .testimonials-carousel,
