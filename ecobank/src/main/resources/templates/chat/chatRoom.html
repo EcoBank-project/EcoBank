@@ -98,11 +98,11 @@
                 	    </div>
                     </div>
                     <!-- 유저 -->
-                    <div class="col-md-2 col-sm-12">
+                    <div class="chatUser-list col-md-2 col-sm-12">
                     	<h5>대화상대</h5>
-                    	<div class="chatUserList">
-                    		
-                    	</div>
+                    	<ul class="chat-user-list">
+                    	
+                    	</ul>
                 	</div>
                 </div>
             </div>
@@ -267,19 +267,35 @@
 			    if(roomType == 'O2' || roomType == 'O3'){
 				    stompClient.subscribe('/user/queue/chatUpdate/' + roomId, function(message){
 				    	$('#roomName').text(message.body);
-				    })			    	
+				    })
+				    
+				    // 채팅방 방장이 퇴장
+				 	stompClient.subscribe('/user/queue/leaveChatRoomManager' + roomId, function(message){
+				 		$('#roomName').text('채팅방 제목');
+				 		$('.stateIcon').empty();
+					    $('#chatbox').empty();
+					    $('.chat-user-list').empty();
+					    if(chatSubScription){
+							chatSubScription.unsubscribe();
+							chatSubScription = null;
+						}
+				 	})
 			    }
 			    // 채팅방 입장
 			    stompClient.subscribe('/user/queue/enterChatRoom/' + roomId, function(message){
 			    	loadRoom();
+			    	loadChatUsers(roomId);
 			    	stateMessage(JSON.parse(message.body));
 				});
 			    
 			 	// 채팅방 퇴장
 				stompClient.subscribe('/user/queue/leaveChatRoom', function(message){
 					loadRoom();
+					loadChatUsers(roomId);
 					stateMessage(JSON.parse(message.body));
 				});
+			 	
+			 	
 	    	}
 			// 채팅방 목록 로드
 	        stompClient.subscribe('/user/queue/chatList', function(message) {
@@ -287,7 +303,7 @@
 	        });
 	    });
 	}
-	
+	// 상태 메시지
 	function stateMessage(message){
 		console.log(message);
         let tagDiv = $('<div />').prop('class','chat-message exit-message');
@@ -557,12 +573,22 @@
 			data: {roomId},
 			success: function(result){
 				console.log(result);
+				$('.chat-user-list').empty();
 				result.forEach(function(users){
-					
+					console.log(users);
+					showChatUsers(users);
 				})
 			}
 		})
 	}
+	function showChatUsers(users){	
+		let tagImg = $('<img />').prop('src','https://via.placeholder.com/40x40').prop('class','profil_img');
+		let tagA = $('<a />').prop('href','#').text(users.nickName);
+		let tagli = $('<li />');
+		tagli.append(tagImg, tagA);
+		$('.chat-user-list').append(tagli);
+	}
+	
 	//아이콘 기능 모음
 	//채팅홈
 	
@@ -810,8 +836,10 @@
 			$('#roomName').text("채팅창 제목");
 			$('.stateIcon').empty();
 			$('#chatbox').empty();
+			$('.chat-user-list').empty();
 			if(chatSubScription){
 				chatSubScription.unsubscribe();
+				chatSubScription = null;
 			}
 		}
 	}

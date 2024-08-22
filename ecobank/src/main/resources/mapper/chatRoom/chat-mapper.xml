@@ -80,10 +80,11 @@
 	</select>
 	<!-- 채팅방 대화 상대 -->
 	<select id="selectChatRoomUsers">
-		SELECT nickname
+		SELECT nickname, profile_img
 		FROM chat_entry ce join users u
 		                     on ce.user_no = u.user_no
 		WHERE chat_no = #{chatNo}
+		AND chat_user_state = 'Q1'
 	</select>
 	<!-- 오픈 채팅방에 참여하고 있지 않는 팔로우 목록 -->
 	<select id="selectChatFollowInfo">
@@ -227,5 +228,6 @@
 	        chat_search_allow = #{chatSearchAllow}
 	    </set>
 	    WHERE chat_no = #{chatNo}
-	</update>	
+	</update>
+		
 </mapper>

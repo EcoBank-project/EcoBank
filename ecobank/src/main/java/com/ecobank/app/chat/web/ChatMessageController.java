@@ -45,6 +45,7 @@ public class ChatMessageController {
 		}
 		for(String receiverId : receiverIds) {
 			messagingTemplate.convertAndSendToUser(receiverId, "/queue/enterChatRoom/"+roomId, message);
+			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", roomId);
 		}
 	}
 		
@@ -136,6 +137,7 @@ public class ChatMessageController {
 			messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/chatList", message);		
 			for(String receiverId : receiverIds) {
 				messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", message);
+				messagingTemplate.convertAndSendToUser(receiverId, "/queue/leaveChatRoomManager" + roomId, message);
 			}
 		}
 	}

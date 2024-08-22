@@ -78,11 +78,28 @@ public class ChatRoomController {
 	// 특정 채팅방 채팅로그 조회
 	@PostMapping("/chatRoom/logs")
 	@ResponseBody
-	public List<ChatMessageVO> ChatRoom(@RequestParam Integer roomId) {
+	public List<ChatMessageVO> ChatRoom(HttpSession httpSession, @RequestParam Integer roomId) {
 		List<ChatMessageVO> msgList = chatService.chatMessageList(roomId);
+		//메시지 번역
+//		String userId = (String) httpSession.getAttribute("useId");
+//		String lagCode = chatService.laguageCodeSelect(userId);
+//		for(ChatMessageVO msg : msgList) {
+//			String translatedText = chatService.translateMessage(msg.getMsgContent(), lagCode);
+//			String decodedText = decodeHtmlEntities(translatedText);
+//			msg.setMsgContent(decodedText);
+//		}
+		
 		return msgList;
 	}
 	
+	// 문자 디코딩
+	public static String decodeHtmlEntities(String text) {
+        return text.replaceAll("&#39;", "'")
+                   .replaceAll("&quot;", "\"")
+                   .replaceAll("&amp;", "&")
+                   .replaceAll("&lt;", "<")
+                   .replaceAll("&gt;", ">");
+    }	
 	// 팔로우 목록 조회
 	@GetMapping("/chatRoom/follow")
 	@ResponseBody

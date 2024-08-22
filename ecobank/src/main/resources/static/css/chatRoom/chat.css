@@ -132,6 +132,7 @@
 	    text-decoration: none;
 	    transition: background-color 0.3s, color 0.3s;
 	}
+	
 	.chat-room-list i.fa-sign-out-alt {
 	    margin-left: auto;
 	    cursor: pointer;
@@ -469,3 +470,51 @@
 	  color: #007bff; 
 	}
 	
+
+	
+	
+	
+	
+	.chatUser-list {
+	    display: flex;
+	    flex-direction: column;
+	    height: 100%;
+	}
+	
+	.chat-user-list {
+	    height: 760px;
+	    list-style-type: none;
+	    padding: 0;
+	    margin: 0;
+	    overflow-y: auto;
+	    display: flex;
+	    flex-direction: column;
+	}
+	
+	.chat-user-list li {
+	    display: flex;
+	    align-items: center;
+	    margin-bottom: 10px;
+	    padding: 5px;
+	    border-radius: 5px;
+	    transition: background-color 0.3s, box-shadow 0.3s;
+	}
+	
+	.chat-user-list li:hover {
+	    background-color: #e0e0e0;
+	    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	}
+	
+	.chat-user-list img.profil_img {
+	    border-radius: 50%;
+	    margin-right: 10px;
+	}
+	.chat-user-list a {
+	    flex-grow: 1;
+	    display: block;
+	    padding: 5px 10px;
+	    border-radius: 5px; 
+	    color: #333;
+	    text-decoration: none;
+	    transition: background-color 0.3s, color 0.3s;
+	}
