@@ -7,6 +7,63 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="../css/challenges/challenge.css" />
+<style>
+	.pagination {
+	  	display: flex;
+	  	justify-content: center;
+	}
+	.searchContainer{
+		justify-content: center;
+		margin :  0 auto;
+		width: 300px;
+	}
+	/* 검색창 스타일링 */
+	.search-form {
+	    border-radius: 8px;
+	}
+	
+	.search-form input[type="text"] {
+	    border-radius: 8px;
+	    border: 1px solid black;
+	}
+	
+	.search-form .btn {
+	    border-radius: 0;
+	    background-color: var(--primary-color);
+	    border: none;
+	}
+	.search-form {
+		position: relative;
+		width: 300px;
+	}
+		
+	.search-form .btn:hover {
+	    background-color: darken(var(--primary-color), 10%);
+	}
+	
+	.search-form .form-check-label {
+	    margin-right: 15px;
+	}
+	.search-form {
+		position: relative;
+		width: 300px;
+	}
+	.newInput {
+		width: 100%;
+		border: 1px solid black;
+		border-radius: 8px;
+		padding: 10px 12px;
+		font-size: 14px;
+	}
+	
+	.newImg {
+		position : absolute;
+		width: 17px;
+		top: 10px;
+		right: 12px;
+		margin: 0;
+	}
+</style>
 </head>
 <body>
 	<div class="challenge-links">
@@ -32,13 +89,23 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	        <option value="3">내가 참여중인 챌린지</option>
 	    </select>
     </div>
-	<div class="input-group input-group-sm mb-3" style="width: 400px; height: 40px; margin: 0 auto;">
-			<span class="input-group-text" id="inputGroup-sizing-sm">Search</span>
-			<input type="text" id="searchValue" class="form-control"
-				placeholder="챌린지 제목으로 검색하세요." aria-label="Sizing example input"
-				aria-describedby="inputGroup-sizing-sm">
-			<button type="button" class="btn btn-secondary" onclick="movePage(1);" id="searchBtn">검색</button>
+    
+    <div class="searchContainer" style="width: 400px; height: 40px; margin: 0 auto;">
+		<div class="search-form">
+			<form name="searchForm" class="d-flex align-items-center"
+				id="searchForm">
+				<input name="pageNum" type="hidden" value="1">
+				<div class="d-flex align-items-center w-100">
+					<input type="text" id="searchValue" name="keyword"
+						th:value="${criteria.keyword}" placeholder="챌린지 제목으로 검색하세요."
+						class="newInput" aria-label="Search"> <img
+						src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
+						class="newImg">
+				</div>
+			</form>
+		</div>
 	</div>
+
 	<div class="challenge-container" id="sort">
 	    <div class="challenge-card" th:each="challenge : ${list}">
 	        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 
@@ -54,6 +121,47 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	        </div>
 	    </div>
 	</div>
+	<!-- 페이징 -->
+	<div th:object="${page}">
+		<nav aria-label="Page navigation">
+		  <ul class="pagination">
+		    <!-- Previous Button -->
+		    <li class="page-item" th:classappend="*{prev} ? '' : 'disabled'">
+		      <a class="page-link changePage" th:href="*{startPage - 1}" aria-label="Previous" th:if="*{prev}">
+		        <span aria-hidden="true">&laquo;</span>
+		      </a>
+		      <span class="page-link" th:if="*{!prev}">
+		        <span aria-hidden="true">&laquo;</span>
+		      </span>
+		    </li>
+		
+		    <!-- Page Numbers -->
+		    <th:block th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}">
+		      <li class="page-item" th:classappend="${page.criteria.getPageNum() == num} ? 'active'">
+		        <a class="page-link changePage" th:href="|javascript:gopage(${num})|" th:text="${num}" th:unless="${page.criteria.getPageNum() == num}"></a>
+		        <span class="page-link" th:if="${page.criteria.getPageNum() == num}" th:text="${num}"></span>
+		      </li>
+		    </th:block>
+		
+		    <!-- Next Button -->
+		    <li class="page-item" th:classappend="*{next} ? '' : 'disabled'">
+		      <a class="page-link changePage" th:href="*{endPage + 1}" aria-label="Next" th:if="*{next}">
+		        <span aria-hidden="true">&raquo;</span>
+		      </a>
+		      <span class="page-link" th:if="*{!next}">
+		        <span aria-hidden="true">&raquo;</span>
+		      </span>
+		    </li>
+		  </ul>
+		</nav>
+		
+		<!-- Hidden Form for Page Parameters -->
+		  <form th:object="${criteria}" name="pageForm">
+		    <input type="hidden" name="pageNum" th:field="*{pageNum}">
+		    <input type="hidden" name="amount" th:field="*{amount}">
+		  </form>
+	</div>
+	
 	<script>
 		//정렬 기능 load()
 		$('#orderSelect').change(function(){
@@ -77,6 +185,14 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	            }
 	        });
 	    });
+		//페이징
+		function gopage(num){
+			searchForm.pageNum.value = num;
+			searchForm.submit();		
+		}
+	 	$('.newImg').on('click', function(){
+			$('#searchForm').trigger( "submit" );
+		}) 
 	</script>
 </body>
 </html>

@@ -4,14 +4,17 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.ecobank.app.common.service.Criteria;
+
 import lombok.Data;
 
 @Data
-public class ChallVO {
+public class ChallVO extends Criteria{
 	//챌린지
 	private Integer challNo; 		//챌린지 번호
 	private int userNo;				//회원번호(=관리자 번호)
 	private String challTitle;		//챌린지 제목
+	private String keyword;		//검색때문에 추가
 	private String challContent;	//챌린지 내용
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date challStartAt;		//챌린지 시작 일자

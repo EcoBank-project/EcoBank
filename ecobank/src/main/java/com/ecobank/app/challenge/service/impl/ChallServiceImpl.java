@@ -61,25 +61,40 @@ public class ChallServiceImpl implements ChallService{
 	public int challDelete(int challNo) {
 		return challMapper.deleteChallInfo(challNo);
 	}
+	
 	//점수 목록 조회
 	@Override
-	public List<Map<String, Object>> scoreList() {
-		return challMapper.selectScoreAll();
+	public List<Map<String, Object>> scoreList(Criteria criteria) {
+		return challMapper.selectScoreAll(criteria);
 	}
-
+	
+	//점수 목록 개수 가져오기
+	@Override
+	public int getScoreTotal(Criteria criteria) {
+		return challMapper.getScoreTotal(criteria);
+	}
+	
+	//챌린지 목록 개수(페이징) 
+	@Override
+	public int getTotalByState(Criteria criteria) {
+		return challMapper.getTotalByState(criteria);
+	}
+	
+	//챌린지 총개수 - 회원
 	@Override
 	public int countChallengesByState(ChallVO challVO) {
 		return challMapper.countAllChallenges(challVO);
 	}
 
 	@Override
-	public List<ChallVO> getDList(Criteria criteria, ChallVO challVO) {
-		return challMapper.getChallList(criteria, challVO);
+	public List<ChallVO> getDList(Criteria criteria) {
+		return challMapper.getChallList(criteria);
 	}
-
+	
+	//챌린지 개수 가져오기 - 관리자
 	@Override
-	public int getTotal() {
-		return challMapper.getTotal();
+	public int getTotal(Criteria criteria) {
+		return challMapper.getTotal(criteria);
 	}
 
 	//챌린지 좋아요 개수
@@ -133,9 +148,8 @@ public class ChallServiceImpl implements ChallService{
 	
 	//후기 등록 여부
 	@Override
-	public boolean reviewStatus(int userNo, int reviewNo) {
-		int cnt = challMapper.reviewStatus(userNo, reviewNo);
-		return cnt > 0;
+	public int reviewStatus(int userNo, int challNo) {
+		return challMapper.reviewStatus(userNo, challNo);
 	}
 
 	//후기 등록

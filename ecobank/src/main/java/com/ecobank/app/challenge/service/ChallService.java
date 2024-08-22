@@ -10,12 +10,15 @@ public interface ChallService {
 	public List<ChallVO> challList(Criteria criteria);
 	
 	//챌린지 목록 개수(페이징)
-	public int getTotal();
+	public int getTotal(Criteria criteria);
 	
 	//상태에 따른 챌린지 조회 - 회원
-	public List<ChallVO> getDList(Criteria criteria, ChallVO challVO);
+	public List<ChallVO> getDList(Criteria criteria);
 	
-	//챌린지 개수 가져오기
+	//챌린지 목록 개수(페이징) - 상태에 따른
+	public int getTotalByState(Criteria criteria);
+	
+	//챌린지 개수 가져오기 - 총개수
 	public int countChallengesByState(ChallVO challVO);
 	
 	//챌린지 단건 조회
@@ -43,7 +46,10 @@ public interface ChallService {
 	public int challDelete(int challNo);
 	
 	//점수 목록
-	public List<Map<String, Object>> scoreList();
+	public List<Map<String, Object>> scoreList(Criteria criteria);
+	
+	//점수 목록 개수 가져오기
+	public int getScoreTotal(Criteria criteria);
 
 	//챌린지 정렬
 	public List<ChallVO> challengeSort(int userNo, int select);
@@ -55,7 +61,7 @@ public interface ChallService {
 	public Double getAvgStar(int challNo);
 	
 	//챌린지 후기 등록 여부
-	public boolean reviewStatus(int userNo, int reviewNo);
+	public int reviewStatus(int userNo, int challNo);
 	
 	//챌린지 후기 등록
 	public int reviewInsert(ReviewDTO reviewDTO);

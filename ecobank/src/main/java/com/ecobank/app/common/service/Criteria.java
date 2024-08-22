@@ -10,11 +10,12 @@ public class Criteria { 	//공통으로 사용할수있는 하나의 클래스�
 	private int amount; 	//페이지당 항목 수/페이지당 출력할 데이터 개수
 	private String type; 	//검색 키워드
 	private String keyword; //검색 유형 ex) 전체, 제목, 작성자 등
+	private String challState;		//챌린지 상태
 	
 	//생성자로 무조건 1번 실행
 	//기본 페이지를 1페이지 5개씩 보여준다는 의미
 	public Criteria() {
-		this(1, 5);
+		this(1, 8);
 		
 	}
 
