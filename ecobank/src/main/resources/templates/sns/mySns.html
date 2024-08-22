@@ -72,6 +72,7 @@ li{
 	list-style: none;
 	font-weight: bold;
 	margin:30px;
+	color:black;
 }
  
 .ml-3{
@@ -79,8 +80,9 @@ li{
  	justify-content: space-around;
  	margin-bottom: 5px;
  }
-
-
+       li.active {
+         color: red;
+        }
 </style>
 <script	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
 </head>
@@ -161,8 +163,8 @@ li{
 	        			<th:block th:each="follower, sts : ${follower}">
 	        				<div th:text=${follower.userNo} hidden></div>
 	        				<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
-	        				<div class="ml-3 info">
-								<a href="#" style="display: flex; align-items: center;" th:text=${follower.nickname} ></a>
+	        				<div class="nicknameB ml-3 info" style="display: flex; align-items: center;">
+								<a href="#"  th:text=${follower.nickname} ></a>
 								<button type="button" th:data-userno="${follower.userNo}" class="followBtn btn btn-primary" th:if="${follower.followYn == null}">팔로우</button>
 								<button type="button" th:data-followno="${follower.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${follower.followYn == null}">팔로잉</button>
 							</div>
@@ -208,6 +210,7 @@ li{
 		//좋아요버튼
 	  	$('.bi').on('click',function(){
 	  		let feedNo =$(this).data('feedno');
+	  		console.log(feedNo);
 			$.ajax({
 				type : "POST",
 				url : "likeInsert",
@@ -251,7 +254,7 @@ li{
 				data : {userNo, followingId},
 				dataType : "json",
 				success : function(){
-					alert("팔로우 성공");
+					alert("팔로우 되었습니다.");
 				},
 				error :  function(error){
 					console.log(error);
@@ -328,7 +331,17 @@ li{
 				}
 			});
 		})
-		
+		        const listItems = document.querySelectorAll('li');
+
+        listItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 기존에 활성화된 li 요소의 active 클래스 제거
+                listItems.forEach(li => li.classList.remove('active'));
+
+                // 클릭된 li 요소에 active 클래스 추가
+                item.classList.add('active');
+            });
+        });
 	</script>
 </body>
 </html>
