@@ -1,35 +1,133 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
 		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  	layout:decorate="~{common/layouts/default_layout}"
+		layout:decorate="~{common/layouts/sns_layout}"
 	  	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+.insertContainer{
+	width:900px; 
+ 	border: 2px solid gray;   
+ 	border-radius: 12px; 
+  	padding: 30px;
+    margin: auto;
+}
+
+        h1 {
+            text-align: center;
+          
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+
+        .image-preview {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .image-preview img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    .insertBtn{
+   text-align:  center; 
+    }
+</style>
 </head>
 <body>
-	<h3>sns 수정</h3>
+   <div class="insertContainer"  >
+		<h1>게시글 수정</h1>
+		<form name="updateForm" th:object="${snsInfo}" method="post" enctype="multipart/form-data">
+			<input type= "hidden" th:field ="*{feedNo}">
+            <label for="images">이미지 업로드 (최대 3장)</label>
+            <input type="file" id="images" name="images" th:field="*{fileName}" accept="image/*" multiple required>
 	
-	<form name="updateForm" th:object="${snsInfo}" method="post" enctype="multipart/form-data">
-	<input type= "hidden" th:field ="*{feedNo}">
-
-	<div>피드내용<input name="feedContent" th:field="*{feedContent}"></div>
 		<img th:src =@{/images/{fileName}(fileName=*{fileName})}
 					style="width : 40%;" >
-	<input type="file" name="images" th:field="*{fileName}" multiple>
-			
-		<div>
-			<button type="button" id="updateBtn" >저장</button>
-			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
+
+            <div class="image-preview" id="imagePreview">
+                <!-- 이미지 미리보기 영역 -->
+            </div>
+            <label for="content">내용을 작성하세요(1000자 내외)</label>
+            <textarea id="content" th:field="*{feedContent}" name="feedContent" rows="4" required></textarea>
+            <label for="title">#해시태그를 작성하세요(#필수 입력)</label>
+            <input type="text" id="title"  th:field="*{hashtag}" name="hashtag" >
+		<div class="insertBtn">
+			<button class="btn btn-primary" id="updateBtn" type="button" >저장</button>
 			
 		</div>
 		</form>
+       
+    </div>
+
+
+
 </body>
 	<script>
-
+	let feedNo = $('#feedNo').val();
+	//이미지 미리보기
+    document.getElementById('images').addEventListener('change', function(event) {
+        const files = event.target.files;
+        const previewContainer = document.getElementById('imagePreview');
+        previewContainer.innerHTML = '';
+        for (let i = 0; i < files.length; i++) {
+            if (files[i] && files[i].type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(files[i]);
+            }
+        }
+    });
 		$('#updateBtn').on('click',updateAjax);
 		
 		function updateAjax(event){
+			
 			//1) 유효성체크
 			//	if(validationCheck() == false) return;
 			//2) 서버에 보낼 데이터 정리
@@ -46,6 +144,8 @@
 			})
 			.done( result => {
 				console.log(result);
+				let url = '/snsInfo?feedNo=' + feedNo;
+				location.href = url;
 			})
 			.fail(err => console.log(err));
 		}

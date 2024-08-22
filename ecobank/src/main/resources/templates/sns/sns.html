@@ -71,7 +71,7 @@
 									<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
 								</button>
 								<span class="likes-count" th:text=${sns.countLike}></span>
-								<button class="btn btn-outline-secondary ms-3">
+								<button  type = "button" class="btn btn-outline-secondary ms-3">
 									<i class="bi bi-chat-dots"></i>
 								</button>
 								<span class="comments-count" th:text=${sns.countReply}>></span>
