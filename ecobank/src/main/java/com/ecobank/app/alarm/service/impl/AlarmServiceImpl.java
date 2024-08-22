@@ -17,4 +17,11 @@ public class AlarmServiceImpl implements AlarmService{
         alarmMapper.insertAlarm(alarm); // DB에 알람 저장
         return alarm;
     }
+
+	@Override
+	public String getUserIdFromConfirmNo(Integer confirmNo) {
+		// TODO Auto-generated method stub
+		System.out.println("서비스 호출");
+		return alarmMapper.getUserIdFromConfirmNo(confirmNo);
+	}
 }

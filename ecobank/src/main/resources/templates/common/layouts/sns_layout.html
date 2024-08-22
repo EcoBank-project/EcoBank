@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8">
     <!-- csrf -->
@@ -82,5 +83,7 @@ margin-top: 50px;
 	  });
 	  
  	</script>
+
+ 	<th:block th:replace="common/configs/config :: AlarmSocketScriptConfig"></th:block>
 </body>
 </html>

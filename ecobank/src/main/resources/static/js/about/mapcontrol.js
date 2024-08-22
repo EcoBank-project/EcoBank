@@ -126,7 +126,6 @@ function setMapLabel(labels, colorsets) {
 }
 function setAllDataPath() {
 
-	let carbDataAry = JSON.parse($("input[id='carbList']").val());
 	let test = $("path");
 	let className = '';
 	
@@ -184,8 +183,9 @@ function setAllDataPath() {
 		});
 	});
 
-	console.log(dataAry);
+	/*console.log(dataAry);
 	console.log(simplemaps_worldmap_mapdata.data);
+	*/
 	setMapLabel(carbonlabels,colorsets);
 	//dataAry.forEach((item,idx)=>(console.log(item.sealevel)));
 	simplemaps_worldmap.load();

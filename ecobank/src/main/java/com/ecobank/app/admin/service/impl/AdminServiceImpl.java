@@ -151,4 +151,12 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.qnaReplySelect(qnaNo);
 	}
 
+	@Override
+	public int stateCount() {
+		// TODO Auto-generated method stub
+		return adminMapper.stateCount();
+	}
+	
+	
+
 }

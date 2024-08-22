@@ -52,36 +52,31 @@ public class IntroController {
 		Integer treeCount = (totalScore * 1000) / 20;
 		// 해수면
 		double seaLevel = ((totalScore * 1000.0) / 100000000.0) * 0.5;
-		System.out.println(seaLevel);
+		//System.out.println(seaLevel);
 
 		// 회원 사용 가능 점수
 		CarbUserVO user = new CarbUserVO();
 		String userNo = scoreService.getUserNoFromId(user);
 		String userId = scoreService.getUserId();
-		
+
 		if (userNo != null && userId != "dummyId") {
 
-			System.out.println("userNo: " + userNo);
+			//System.out.println("userNo: " + userNo);
 			String usableScore = scoreService.getScoreUsableByUserId(userId);
 			model.addAttribute("userNo", userNo);
 			model.addAttribute("usableScore", usableScore);
 		}
-		
-		// 2. 클라이언트에 전달할 데이터 담기
-		ObjectMapper objectMapper = new ObjectMapper();
-		String myDataJson;
-		try {
-			myDataJson = objectMapper.writeValueAsString(carbList);
-			model.addAttribute("carbList", myDataJson);
-			model.addAttribute("totalScore", totalScore);
-			model.addAttribute("challEnterUserCount", challEnterUserCount);
-			model.addAttribute("treeCount", treeCount);
-			model.addAttribute("seaLevel", seaLevel);
 
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// 2. 클라이언트에 전달할 데이터 담기
+		//ObjectMapper objectMapper = new ObjectMapper();
+		// String myDataJson;
+
+		// myDataJson = objectMapper.writeValueAsString(carbList);
+		model.addAttribute("carbList", carbList);
+		model.addAttribute("totalScore", totalScore);
+		model.addAttribute("challEnterUserCount", challEnterUserCount);
+		model.addAttribute("treeCount", treeCount);
+		model.addAttribute("seaLevel", seaLevel);
 
 		// 3. 데이터를 출력할 페이지 결정
 		return "main/about";

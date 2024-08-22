@@ -33,7 +33,11 @@
 	          xhr.setRequestHeader(header, token);
 	      }
 	  });
+	  let userNumber = null;
+	  userNumber = [[${session.userNo}]];
+	  
  	</script>
+
  	<th:block th:replace="common/configs/config :: MainTemplateScriptConfig"></th:block>
  	 <th:block th:replace="common/configs/config :: AlarmSocketScriptConfig"></th:block>
 </body>

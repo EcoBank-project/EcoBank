@@ -58,20 +58,12 @@ public class QnaController {
     public String getQnaInfo(@RequestParam("qnaNo") Integer qnaNo, Model model, HttpSession session) {
         Integer loggedInUserNo = (Integer) session.getAttribute("userNo");
 
-        if (loggedInUserNo == null) {
-            return "redirect:/login"; // 로그인 페이지로 리디렉션
-        }
-
         // 단일 QNA 정보 조회
         QnaVO qnaVO = qnaService.qnaSelectInfo(qnaNo); 
-        
-        if (qnaVO == null) {
-            return "error"; // QNA가 없을 경우 오류 페이지로 리디렉션
-        }
-
+              
         // 작성자 번호와 로그인한 사용자 번호 비교 (int 타입 비교)
         if (qnaVO.getUserNo() != loggedInUserNo) {
-            return "error"; // 권한 없음 페이지로 리디렉션
+            return "QnA/error"; // 권한 없음 페이지로 리디렉션
         }
 
         // 답글 리스트 조회

@@ -368,6 +368,12 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	                    if (result.likeStatus == 1) { //좋아요 등록/삭제
 	                        likeIcon.toggleClass('bi-heart bi-heart-fill');
 	                        $('.likes-count').text(result.totalCnt + ' Likes');
+	                        
+	                        if (typeof sendAlarm === "function") {
+	    	                    sendAlarm('H2', fNo);
+	    	                } else {
+	    	                    console.error("sendAlarm 함수가 정의되지 않았습니다.");
+	    	                }
 	                    } else {
 	                        alert('처리 오류');
 	                    } 

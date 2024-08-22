@@ -26,6 +26,11 @@ public class UserVO {
 	private int n1;
 	private int n2;
 	private Date confirmCreateat;
+	private int feedNo;
+	private int replyNo;
+	private int replySituation;
+	private int R1;
+	private int R2;
 	
 
 
