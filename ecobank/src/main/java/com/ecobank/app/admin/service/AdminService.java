@@ -68,4 +68,5 @@ public interface AdminService {
 	
  	//QNA 답글 삭제 
 	 int deleteqnadeclare(int qnaVo);
+	 
 }
