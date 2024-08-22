@@ -34,6 +34,13 @@ margin-left: 130px;
 min-height: 600px;
 margin-top: 50px;
 }
+
+.sideAc {
+  font-weight: bold;
+  font-size: large;
+  background-color: gray;
+}
+
 	</style>
 <th:block th:replace="common/configs/config :: jQueryConfig"></th:block>
 <th:block th:replace="common/configs/config :: MainTemplateConfig"></th:block>
@@ -42,12 +49,10 @@ margin-top: 50px;
 </head>
 <body>
 	<header class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0" th:insert="common/fragments/header :: headerFragment"></header>
-
-			<th:block th:replace="common/fragments/snsSide ::snsSideFragment"></th:block>
-		<div class="main">	
+		<th:block th:replace="common/fragments/snsSide ::snsSideFragment"></th:block>
+			<div class="main">	
 			<th:block layout:fragment="Content"></th:block>
-		</div>
-
+			</div>
 	<footer th:insert="common/fragments/footer :: footerFragment"></footer>
 	<script>
 	 var token = $("meta[name='_csrf']").attr("content");
@@ -57,6 +62,25 @@ margin-top: 50px;
 	          xhr.setRequestHeader(header, token);
 	      }
 	  });
+	  
+
+
+	  
+	  const nonClick = document.querySelectorAll(".sideL");
+
+	  function handleClick(event) {
+	    // div에서 모든 "click" 클래스 제거
+	    nonClick.forEach((e) => {
+	    	e.classList.remove("sideAc");
+	    });
+	    // 클릭한 div만 "click"클래스 추가
+	    event.target.classList.add("sideAc");
+	  }
+
+	  nonClick.forEach((e) => {
+	    e.addEventListener("click", handleClick);
+	  });
+	  
  	</script>
 </body>
 </html>

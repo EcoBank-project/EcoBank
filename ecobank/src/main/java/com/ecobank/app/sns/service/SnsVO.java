@@ -42,9 +42,10 @@ public class SnsVO extends Criteria{
 	private Integer countFeed;			//피드갯수
 	private Integer countFollowing;		//팔로잉 수
 	private Integer countFollower;		//팔로워 수
-	private Integer blockUserNo;			//차단한 회원 번호
+	private Integer blockUserNo;		//차단한 회원 번호
 	private Integer followerId;			//팔로워 아이디
 	private Integer followingId;		//팔로잉 아이디
+	private Integer snsBlockNo;			//차단 번호
 	
 	
 	
