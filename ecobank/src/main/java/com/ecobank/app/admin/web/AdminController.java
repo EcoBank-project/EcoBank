@@ -46,6 +46,9 @@ public class AdminController {
 
         int users = adminService.getusers(); // 전체 사용자 수 조회
         model.addAttribute("users", users);
+        
+        int state = adminService.stateCount();
+        model.addAttribute("state",state);
 
         return "admins/admin"; // 관리자 대시보드 페이지로 이동
     }

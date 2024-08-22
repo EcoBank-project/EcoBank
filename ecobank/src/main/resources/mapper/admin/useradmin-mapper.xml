@@ -68,5 +68,10 @@ ORDER BY a.user_no ASC
 	WHERE use_id = #{useId}
         
     </update>
+    <select id="stateCount" resultType="int">
+    	select count(*)
+		from users
+		where user_state = 'B2'
+    </select>
     
 </mapper>

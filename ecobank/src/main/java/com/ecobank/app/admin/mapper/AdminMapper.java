@@ -76,6 +76,9 @@ public interface AdminMapper {
 	//QNA 답글 삭제 
 	 int deleteqnadeclare(int qnaVo);
 	 
+	//정지되회원수
+	 int stateCount();
+	 
 	
 	 
 	 
