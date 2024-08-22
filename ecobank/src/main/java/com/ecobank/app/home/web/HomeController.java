@@ -21,6 +21,7 @@ import com.ecobank.app.home.service.ChallengeVO;
 import com.ecobank.app.home.service.HomeService;
 import com.ecobank.app.home.service.RankingVO;
 import com.ecobank.app.intro.service.CarbUserService;
+import com.ecobank.app.intro.service.CarbUserVO;
 import com.ecobank.app.score.service.ScoreService;
 
 @Controller
@@ -28,6 +29,7 @@ public class HomeController {
 	private CarbUserService userService;
 	private ScoreService scoreService;
 	private HomeService homeService;
+
 	@Autowired
 	public HomeController(HomeService homeService, CarbUserService userService, ScoreService scoreService) {
 		this.userService = userService;
@@ -44,8 +46,8 @@ public class HomeController {
 		List<ChallengeVO> overSoonList = homeService.getOverSoonChallenges();
 		List<ChallengeVO> finishedList = homeService.getTopFiveFinishedChallenges();
 		List<RankingVO> topUsers = homeService.getTopRankedUsers();
-		System.out.println(finishedList);  
-		
+		System.out.println(finishedList);
+
 		model.addAttribute("chall", chall);
 		model.addAttribute("overSoonList", overSoonList);
 		model.addAttribute("finishedList", finishedList);
@@ -55,7 +57,7 @@ public class HomeController {
 		// 3. 데이터를 출력할 페이지 결정
 		return "main/home";
 	}
-	
+
 	@GetMapping("ip-info")
 	@ResponseBody
 	public ResponseEntity<String> getIpInfo(HttpServletRequest request) {
@@ -98,4 +100,13 @@ public class HomeController {
 					.body("{\"message\":\"Invalid data\"}");
 		}
 	}
+
+		@PostMapping("getuserNo")
+		@ResponseBody
+		public String getUserNo(@RequestBody CarbUserVO userData) {
+
+			// userNo
+			String userNo = scoreService.getUserNoFromId(userData);
+			return userNo;
+		}
 }

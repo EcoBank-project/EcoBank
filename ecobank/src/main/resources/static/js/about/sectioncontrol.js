@@ -6,8 +6,8 @@ let usableScore='-1';
 $(document).ready(function() {
 	userNo = $('#userNo').val();
 	usableScore = $('#usableScore').val();
-    console.log('회원번호: '+userNo);
-    console.log('사용가능점수: '+usableScore);
+/*    console.log('회원번호: '+userNo);
+    console.log('사용가능점수: '+usableScore);*/
 	initializeSection();
 });
 

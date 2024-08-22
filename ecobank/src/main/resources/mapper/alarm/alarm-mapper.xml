@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ecobank.app.mapper.AlarmMapper">
-    <insert id="insertAlarm">
+<mapper namespace="com.ecobank.app.alarm.mapper.AlarmMapper">
+<insert id="insertAlarm">
 	    <selectKey keyProperty="alarmNo" 
 	    		   resultType="Integer"
 	    		   order="BEFORE">
@@ -19,4 +19,12 @@
         		#{alarmRefNo}, 
         		#{userNo})
     </insert>
+    
+    <select id="getUserIdFromConfirmNo" parameterType="Integer" resultType="String">
+    	SELECT use_id
+		FROM users
+		WHERE user_no = (SELECT user_no
+        		         FROM chall_confirm
+                		 WHERE confirm_no=#{confirmNo})
+    </select>
 </mapper>

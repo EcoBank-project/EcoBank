@@ -41,6 +41,11 @@ window.addEventListener('beforeunload', function() {
 });
 
 window.onload = function() {
+	if (typeof userNumber === 'undefined' || userNumber === null) {
+		console.log("userNumber is not defined or is null");
+	} else {
+		console.log("userNumber is defined and its value is:", userNumber);
+	}
     var isAuthenticatedMeta = document.querySelector('meta[name="isAuthenticated"]');
     if (isAuthenticatedMeta !== null) {
         connectAlarm();
@@ -49,16 +54,27 @@ window.onload = function() {
     }
 };
 
-function sendAlarm(userNo) {
-    if (stompClient && stompClient.connected) {
-        let alarmContent = "새로운 알림 내용"; // 알림 내용
+function sendAlarm(alarmCode,alarmRefNo) { // userId : 받는사람
+	// ALARM_CONTENT, ALARM_CODE, ALARM_CREATEAT, ALARM_STATE, ALARM_REF_NO, USER_NO
+    if (stompClientAlarm && stompClientAlarm.connected) {
+		
+		
+        let alarmContent = "none"; // 알림 내용
+        if(alarmCode == 'H3'){
+			alarmContent='feed like!';
+		}
+		else if(alarmCode=='H2'){
+			alarmContent='인증 좋아요!';
+		}
+        
         const alarmMessage = {
-            userNo: userNo,
+            userNo: userNumber,
             alarmContent: alarmContent,
-            alarmCode: 'A1', // 예: 알림 코드
+            alarmCode: alarmCode, // 예: 알림 코드
             alarmCreateAt: new Date(),
+            alarmRefNo:alarmRefNo,
         };
-        stompClient.send("/app/alarm.send/" + userNo, {}, JSON.stringify(alarmMessage));
+        stompClientAlarm.send("/app/alarm.send/" + alarmRefNo, {}, JSON.stringify(alarmMessage));
     } else {
         alert("웹소켓 연결이 필요합니다.");
     }

@@ -55,6 +55,8 @@
     </style>
 </head>
 <body>
+
+<button class="btn btn-primary" onclick="sendAlarm('${#authentication.principal.name}')">알림 전송</button>
 	<!--  BreadCrumb Start -->
 <div class="container-fluid page-header py-5">
   <div class="container py-5">
@@ -298,7 +300,7 @@
         
     document.addEventListener('DOMContentLoaded', function () {
         // challengeInfo 배열을 콘솔에 출력
-        console.log(challengeInfo);
+        //console.log(challengeInfo);
 
         // 배열 내 객체 속성들을 JavaScript에서 사용할 수 있도록 변환
         parsedChallengeInfo = challengeInfo.map(challenge => ({
