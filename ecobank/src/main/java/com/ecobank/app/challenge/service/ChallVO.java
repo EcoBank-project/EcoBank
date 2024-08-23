@@ -29,7 +29,7 @@ public class ChallVO extends Criteria{
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date challUpdateAt;		//챌린지 수정 일자
 	
-	private long daysUntilStart;  	//챌린지 시작까지 남은 D-Day
+	private int dDay;				//d-day
 	
 	private int confirmNo;			//인증번호
 	

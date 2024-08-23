@@ -22,4 +22,5 @@ public class ReviewDTO {
 	private int userNo;				//회원 번호
 	private String nickname;      	//닉네임
 	private int confirmNo;			//챌린지 인증 번호
+	private String profileImg; 		//프로필이미지
 }

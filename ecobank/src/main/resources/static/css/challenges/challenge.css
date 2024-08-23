@@ -173,3 +173,20 @@
     .active{
     	border-bottom: 1px solid black;
     }
+    /* 한줄 ... 처리 */
+	.card-title {
+		width: 100%;
+		display : inline-block;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis; 
+	}   
+	
+	/* 여러줄 ... 처리 */ 
+	.card-text {
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  display: -webkit-box;
+	  -webkit-line-clamp: 2;
+	  -webkit-box-orient: vertical;
+	}
