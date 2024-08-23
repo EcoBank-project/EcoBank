@@ -29,17 +29,25 @@
         <div class="card-body">
             <!-- QNA 답글 정보 표시 -->
             <div th:if="${reply != null}">
-                <p><strong>답글 번호:</strong> <span th:text="${reply.qnaReplyNo}"></span></p>
-                <p><strong>답글 내용:</strong> <span th:text="${reply.qnaReplyContent}"></span></p>
-                <p><strong>등록일:</strong> <span th:text="${reply.qnaReplyat}"></span></p>
+                <form th:action="@{/updateQnaReplyInfo}" method="post">
+                    <input type="hidden" name="qnaReplyNo" th:value="${reply.qnaReplyNo}" />
+                    <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
+                    <div class="form-group">
+                        <label for="qnaReplyContent">답글 내용:</label>
+                        <textarea id="qnaReplyContent" name="qnaReplyContent" class="form-control" required
+                                  th:text="${reply.qnaReplyContent}"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">답글 수정하기</button>
+                </form>
 
                 <!-- 삭제 버튼 -->
-                <form th:action="@{/deleteqnadeclare}" method="post">
+                <form th:action="@{/deleteqnadeclare}" method="post" style="display:inline;">
                     <input type="hidden" name="qnaReplyNo" th:value="${reply.qnaReplyNo}" />
                     <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
                     <button type="submit" class="btn btn-danger">답글 삭제하기</button>
                 </form>
             </div>
+
             <div th:if="${reply == null}">
                 <p>답글 정보가 없습니다.</p>
                 <!-- 답글 등록 폼 -->
@@ -52,6 +60,7 @@
                     <button type="submit" class="btn btn-primary">답글 등록하기</button>
                 </form>
             </div>
+
             <!-- 뒤로 가기 버튼 -->
             <a href="/QnaUser" class="btn btn-secondary">목록으로 돌아가기</a>
         </div>

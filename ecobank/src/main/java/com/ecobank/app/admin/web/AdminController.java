@@ -49,7 +49,10 @@ public class AdminController {
         
         int state = adminService.stateCount();
         model.addAttribute("state",state);
-
+        
+        int QnaState = adminService.qnaReplynocount();
+        model.addAttribute("QnaState",QnaState);
+        
         return "admins/admin"; // 관리자 대시보드 페이지로 이동
     }
 
@@ -146,6 +149,7 @@ public class AdminController {
     @GetMapping("/QnaUser")
     public String getQnaUser(Model model) {
         List<QnaVO> qnaUser = adminService.qnaUser(); // QNA 목록 조회
+        
         model.addAttribute("qnaUser", qnaUser);
         return "admins/QnaUser"; // QNA 목록 페이지로 이동
     }
@@ -169,6 +173,7 @@ public class AdminController {
             model.addAttribute("errorMessage", "QNA 정보가 없습니다.");
             return "error"; // QNA 정보가 없으면 오류 페이지로 이동
         }
+        
 
         // QNA와 관련된 답글 정보도 조회
         QnaVO replyVO = adminService.qnaReplySelect(qnaNo);
@@ -220,6 +225,17 @@ public class AdminController {
             model.addAttribute("errorMessage", "답글 삭제 중 오류가 발생했습니다.");
             return "error"; // 오류 페이지로 이동
         }
+    }
+    // QNA 답글 수정 처리
+    @PostMapping("/updateQnaReplyInfo")
+    public String updateQnaReplyInfo(@ModelAttribute QnaVO qnaVO, Model model, RedirectAttributes rttr) {
+        int result = adminService.updateQnaReplyInfo(qnaVO);
+        if(result > 0) {
+            rttr.addFlashAttribute("message", "답글이 성공적으로 수정되었습니다.");
+        } else {
+            rttr.addFlashAttribute("message", "답글 수정에 실패했습니다.");
+        }
+        return "redirect:/adminQnaDetail?qnaNo=" + qnaVO.getQnaNo(); // 수정 후 상세 페이지로 리다이렉션
     }
 
 }

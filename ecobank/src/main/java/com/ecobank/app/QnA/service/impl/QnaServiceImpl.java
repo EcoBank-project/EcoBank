@@ -2,6 +2,8 @@ package com.ecobank.app.QnA.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,12 +41,6 @@ public class QnaServiceImpl implements QnaService {
         return qnaMapper.insertqnaInfo(qnaVO);
     }
 
-    // QNA 삭제
-    @Override
-    public int qnaDelete(int qnaNo) {
-        return qnaMapper.qnaDelete(qnaNo);
-    }
-
     // QNA 단건 조회
     @Override
     public QnaVO qnaSelectInfo(int qnaNo) {
@@ -57,9 +53,16 @@ public class QnaServiceImpl implements QnaService {
         return qnaMapper.qnaReplyList(qnaNo);
     }
 
-	@Override
-	public int updateQnaInfo(QnaVO qnaVo) {
-		// TODO Auto-generated method stub
-		return qnaMapper.updateQnaInfo(qnaVo);
-	}
+    // QNA 수정
+    @Override
+    public int updateQnaInfo(QnaVO qnaVo) {
+        return qnaMapper.updateQnaInfo(qnaVo);
+    }
+
+    @Override
+    public void deleteQna(int qnaNo) {
+        qnaMapper.deleteQna(qnaNo);
+    }
+
+	
 }

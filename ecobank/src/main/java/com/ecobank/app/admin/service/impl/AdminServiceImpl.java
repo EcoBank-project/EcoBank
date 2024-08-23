@@ -17,146 +17,157 @@ import com.ecobank.app.sns.service.SnsVO;
 
 @Service
 public class AdminServiceImpl implements AdminService {
-	
-	//AdminServiceimpl.java
-
-	
+    
+    // AdminMapper 인스턴스를 주입받습니다.
     @Autowired
     AdminMapper adminMapper;
 
-    // 유저 목록 조회
+    // 유저 목록을 조회합니다.
     @Override
     public List<UserVO> UserList() {
         return adminMapper.userList();
     }
 
-    // 총 회원 수 
+    // 전체 회원 수를 반환합니다.
     @Override
     public int getusers() {
         return adminMapper.getusers();
     }
 
-    // 오늘 가입한 회원 수 조회
+    // 오늘 가입한 회원 수를 반환합니다.
     @Override
     public int getcreaTeat() {
         return adminMapper.getcreaTeat();
     }
 
-    // 회원 상태 업데이트 
+    // 특정 유저의 상태를 업데이트합니다.
     @Override
     public int updateUserState(String useId, String userState) {
         return adminMapper.updateUserState(useId, userState);
     }
 
-    // 챌린지 신고 목록 조회
+    // 챌린지 신고 목록을 조회합니다.
     @Override
     public List<ChallDeclareVO> ChallDeclareList() {
         return adminMapper.ChallDeclareList();
     }
 
-    //sns 댓글 신고 조회 
+    // SNS 댓글 신고 목록을 조회합니다.
     @Override
     public List<SnsDeclareVO> SnsReplyDeclareList() {
         return adminMapper.SnsReplyDeclareList();
     }
 
-
+    // 특정 피드의 상태를 업데이트합니다.
     @Override
     public int updatefeedState(int feedNo, String feedState) {
         return adminMapper.updatefeedState(feedNo, feedState);
     }
 
+    // 특정 피드 번호에 대한 신고 횟수를 반환합니다.
     @Override
     public int getCountByFeedNo(int feedNo) {
         return adminMapper.getCountByFeedNo(feedNo);
     }
 
+    // 특정 댓글 번호에 대한 신고 횟수를 반환합니다.
     @Override
     public int getCountByReplyNo(int replyNo) {
         return adminMapper.getCountByReplyNo(replyNo);
     }
 
+    // 특정 챌린지 번호에 대한 신고 횟수를 반환합니다.
     @Override
     public int getCountBychallNos(int confirmNo) {
         return adminMapper.getCountBychallNos(confirmNo);
     }
 
-    // MyBatis 프로시저 호출
+    // SNS 상태를 업데이트하는 MyBatis 프로시저를 호출합니다.
     @Override
     public void UpdateSnsState() {
         adminMapper.UpdateSnsState();
     }
 
-	@Override
-	public void UpdateChallengeUserState() {
-		
-		adminMapper.UpdateChallengeUserState();
-	}
-    //챌린지 신고 내용 조회 
+    // 챌린지 유저 상태를 업데이트하는 MyBatis 프로시저를 호출합니다.
+    @Override
+    public void UpdateChallengeUserState() {
+        adminMapper.UpdateChallengeUserState();
+    }
 
-	@Override
-	public Map<String,Object> selectChallDeclare(int confirmNo) {
-		return adminMapper.selectChallDeclare(confirmNo);
-	}
+    // 챌린지 신고 내용을 조회합니다.
+    @Override
+    public Map<String, Object> selectChallDeclare(int confirmNo) {
+        return adminMapper.selectChallDeclare(confirmNo);
+    }
 
+    // SNS 목록을 조회합니다.
+    @Override
+    public List<adminSnsVO> selectSns(adminSnsVO adminSnsVO) {
+        return adminMapper.selectSns(adminSnsVO);
+    }
 
+    // 특정 피드 번호에 대한 SNS 신고 목록을 조회합니다.
+    @Override
+    public List<Map<String, Object>> SnsDeclareList(int feedNo) {
+        return adminMapper.SnsDeclareList(feedNo);
+    }
 
-	@Override
-	public List<adminSnsVO> selectSns(adminSnsVO adminSnsVO) {
-		// TODO Auto-generated method stub
-		return adminMapper.selectSns(adminSnsVO);
-	}
-	//sns 신고 조회 
-	@Override
-	public List<Map<String, Object>> SnsDeclareList(int feedNo) {
-	    return adminMapper.SnsDeclareList(feedNo);
-	}
+    // QNA 목록을 조회합니다.
+    @Override
+    public List<QnaVO> qnaUser() {
+        List<QnaVO> qnaList = adminMapper.qnaUser();
+        for (QnaVO qna : qnaList) {
+            // 답글 여부를 확인하여 설정
+            QnaVO reply = adminMapper.qnaReplySelect(qna.getQnaNo());
+            qna.setHasReply(reply != null);
+        }
+        return qnaList;
+    }
 
-	
-	// 전체조회
-	@Override
-	public List<QnaVO> qnaUser() {
-		// TODO Auto-generated method stub
-		return adminMapper.qnaUser();
-	}
-	
-	@Override
-	public QnaVO qnaSelectInfo(int qnaNo) {
-		// TODO Auto-generated method stub
-		return adminMapper.qnaSelectInfo(qnaNo);
-	}
+    // 특정 QNA 번호에 대한 정보를 조회합니다.
+    @Override
+    public QnaVO qnaSelectInfo(int qnaNo) {
+        return adminMapper.qnaSelectInfo(qnaNo);
+    }
 
-	@Override
-	public List<adminSnsVO> selectRepliesByFeedNo(int feedNo) {
-	    return adminMapper.selectRepliesByFeedNo(feedNo);
-	}
+    // 특정 피드 번호에 대한 댓글 목록을 조회합니다.
+    @Override
+    public List<adminSnsVO> selectRepliesByFeedNo(int feedNo) {
+        return adminMapper.selectRepliesByFeedNo(feedNo);
+    }
 
+    // QNA에 대한 답글을 등록합니다.
+    @Override
+    public int insertqnareplyInfo(QnaVO qnaVo) {
+        return adminMapper.insertqnareplyInfo(qnaVo);
+    }
 
-	//답글 등록
-	@Override
-	public int insertqnareplyInfo(QnaVO qnaVo) {
-		// TODO Auto-generated method stub
-		return adminMapper.insertqnareplyInfo(qnaVo);
-	}
+    // QNA를 삭제합니다.
+    @Override
+    public int deleteqnadeclare(int qnaVo) {
+        return adminMapper.deleteqnadeclare(qnaVo);
+    }
 
-	@Override
-	public int deleteqnadeclare(int qnaVo) {
-		// TODO Auto-generated method stub
-		return adminMapper.deleteqnadeclare(qnaVo);
-	}
+    // 특정 QNA 번호에 대한 답글을 조회합니다.
+    @Override
+    public QnaVO qnaReplySelect(int qnaNo) {
+        return adminMapper.qnaReplySelect(qnaNo);
+    }
 
-	@Override
-	public QnaVO qnaReplySelect(int qnaNo) {
-		// TODO Auto-generated method stub
-		return adminMapper.qnaReplySelect(qnaNo);
-	}
+    // 정지된 회원 수를 반환합니다.
+    @Override
+    public int stateCount() {
+        return adminMapper.stateCount();
+    }
 
-	@Override
-	public int stateCount() {
-		// TODO Auto-generated method stub
-		return adminMapper.stateCount();
-	}
-	
-	
-
+    // QNA 답글 정보를 업데이트합니다.
+    @Override
+    public int updateQnaReplyInfo(QnaVO qnaVO) {
+        return adminMapper.updateQnaReplyInfo(qnaVO);
+    }
+    //QNA 댓글 달아야하는 QNA글 수 반환합니다.
+    @Override
+    public int qnaReplynocount() {
+    	return adminMapper.qnaReplynocount();
+    }
 }
