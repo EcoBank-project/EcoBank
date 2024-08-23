@@ -59,4 +59,7 @@ public interface ChatService {
 	public List<ChatFollowVO> chatFollowListInfo(Integer userNo, Integer chatNo);
 	//오픈채팅방 업데이트
 	public int OpenChatChangeUpdate(ChatRoomVO chatRoom, MultipartFile[] images);
+	
+	//회원 프로필
+	public ChatRoomUserVO ChatProfileInfo(Integer userNo);
 }

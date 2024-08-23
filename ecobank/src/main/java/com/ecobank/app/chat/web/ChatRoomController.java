@@ -21,6 +21,7 @@ import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatPartVO;
 import com.ecobank.app.chat.service.ChatRoomDTO;
+import com.ecobank.app.chat.service.ChatRoomUserVO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
 
@@ -42,10 +43,13 @@ public class ChatRoomController {
 		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo, nickName);
 		String lagCode = chatService.laguageCodeSelect(userId);
 		
+		
+		ChatRoomUserVO chatRoomUser = chatService.ChatProfileInfo(userNo);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("nickname", nickName);
 		model.addAttribute("chatRooms", chatList);
 		model.addAttribute("lagCode", lagCode);
+		model.addAttribute("profiles", chatRoomUser);
 		return "chat/chatRoom";
 	}
 	

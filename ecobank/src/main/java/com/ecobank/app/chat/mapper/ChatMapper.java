@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatPartVO;
+import com.ecobank.app.chat.service.ChatRoomUserVO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 
 // 서버 기준
@@ -60,4 +61,8 @@ public interface ChatMapper {
 	public String selectLaguageCode(String userId);
 	// 언어 변경
 	public int updateLaguageCode(@Param("laguageCode") String lagCode, @Param("userNo") Integer userNo);
+	
+	
+	// 회원 프로필
+	public ChatRoomUserVO selectChatUserInfo(Integer userNo);
 }

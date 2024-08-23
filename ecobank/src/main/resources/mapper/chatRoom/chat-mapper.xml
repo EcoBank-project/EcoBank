@@ -36,11 +36,18 @@
 		       msg_send_time, 
 		       m.user_no, 
 		       chat_no,
-		       nickname
+		       nickname,
+		       profile_img
 		from msg m join users u 
 		           on m.user_no = u.user_no
 		where chat_no = #{chatNO}
 		order by msg_send_time
+	</select>
+	<!-- 채팅한 사람의 정보 조회 -->
+	<select id="selectChatUserInfo">
+		SELECT profile_img
+		FROM users
+		WHERE user_no = #{userNo}
 	</select>
 	<!-- 채팅방 채팅 로그 저장 -->
 	<insert id="insertChatMessage" parameterType="ChatMessageVO">
@@ -73,7 +80,8 @@
 	<select id="selectChatFollowAll">
 		select following_id,
 			   use_id, 
-			   nickname
+			   nickname,
+			   profile_img
 		from follow f join users u 
 		                on u.user_no = following_id
 		where f.follower_id = #{followingId}
@@ -90,7 +98,8 @@
 	<select id="selectChatFollowInfo">
 		select following_id,
 		       use_id, 
-		       nickname
+		       nickname,
+		       profile_img
 		from follow f join users u 
 		                on u.user_no = following_id
 		where follower_id = #{followerId}
