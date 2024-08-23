@@ -369,11 +369,11 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	                        likeIcon.toggleClass('bi-heart bi-heart-fill');
 	                        $('.likes-count').text(result.totalCnt + ' Likes');
 	                        
-	                        if (typeof sendAlarm === "function") {
+	                        // 좋아요 안누른 상태이면 알람 전송 실행(수범)
+	                        if (typeof sendAlarm === "function" && $('#likeIcon').hasClass('bi-heart-fill')) {
 	    	                    sendAlarm('H2', fNo);
-	    	                } else {
-	    	                    console.error("sendAlarm 함수가 정의되지 않았습니다.");
-	    	                }
+	    	                } 
+	                        
 	                    } else {
 	                        alert('처리 오류');
 	                    } 
