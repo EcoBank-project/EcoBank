@@ -7,65 +7,15 @@
 	<div class="container mt-5" th:if="${detail.challState} == 'D2'">
 	
 	<!-- review -->
-<!--/* 	<section id="testimonials" class="testimonials section-bg">
-	  <div class="container" data-aos="fade-up">
-	    <div class="section-header">
-          <h2>ReviewList</h2>
-          <p>Please write a review with your stars after participating in the challenge.</p>
-          <br/>
-          <p style="font-weight: bold;"> What is the current review rating <br/>for the challenge? </p>
-          	<p style="font-size: 30px; font-weight: bold;"><i class="bi bi-star-fill" th:text="' ' + ${avg}"> 5.0 </i></p>
-			<div class="d-flex justify-content-end mt-3">
-				<button type="button" class="btn btn-primary"
-					th:onclick="reviewModal('review', [[${param.reviewNo}]])">WRITE</button>
-			</div>
-		</div>
-	  
-	    <div class="slides-2 swiper">
-	      <div class="swiper-wrapper">
-			<th:block th:each="review : ${reviewList}">
-	        <div class="swiper-slide">
-	          <div class="testimonial-wrap">
-	            <div class="testimonial-item">
-	              <input type="hidden" th:value="${review.userNo}">
-				  <img src="profile.jpg" alt="Profile Image" class="profile-img">
-	              <h3 th:text="${review.nickname}"></h3>
-	              <h4 th:text="${#dates.format(review.reviewCreateAt, 'yyyy/MM/dd')}"></h4>
-					<div class="stars">
-					  채워진 별 표시
-					  <th:block th:if="${review.reviewStar >= 1}"><i class="bi bi-star-fill"></i></th:block>
-					  <th:block th:if="${review.reviewStar >= 2}"><i class="bi bi-star-fill"></i></th:block>
-					  <th:block th:if="${review.reviewStar >= 3}"><i class="bi bi-star-fill"></i></th:block>
-					  <th:block th:if="${review.reviewStar >= 4}"><i class="bi bi-star-fill"></i></th:block>
-					  <th:block th:if="${review.reviewStar == 5}"><i class="bi bi-star-fill"></i></th:block>
-					
-					  빈 별 표시
-					  <th:block th:if="${review.reviewStar < 5}"><i class="bi bi-star"></i></th:block>
-					  <th:block th:if="${review.reviewStar < 4}"><i class="bi bi-star"></i></th:block>
-					  <th:block th:if="${review.reviewStar < 3}"><i class="bi bi-star"></i></th:block>
-					  <th:block th:if="${review.reviewStar < 2}"><i class="bi bi-star"></i></th:block>
-					  <th:block th:if="${review.reviewStar < 1}"><i class="bi bi-star"></i></th:block>
-					</div>
-					<hr style="width: 100%; height: 5px; border: none;" />
-	              <p th:text="${review.reviewContent}"></p>
-	              <hr style="margin: 10px;" />
-	              <th:block>
-	              	<button type="button" class="btn btn-secondary" id="reviewDelete" aria-label="Close" th:data-reviewno="${review.reviewNo}" th:if="${review.userNo} == ${userNo}">Delete</button>
-	              </th:block>
-	            </div>
-	          </div>
-	        </div>End testimonial item
-	        </th:block>
-	      </div>
-	    </div>
-	  </div>
-	</section>End Testimonials Section */-->
-	
 	<section id="testimonials" class="testimonials section-bg">
 	  <div class="container" data-aos="fade-up">
 	    <div class="section-header">
 	      <h2>Challengers' reviews</h2>
-	      <p>Please write a review with your stars after participating in the challenge.</p>
+	      <div class="explain">
+	      <p>First, after the challenge,<br> Please write a review by pressing the write</p>
+	      <p>Second, for the review of the challenge, <br> Write a review after choosing a star rating.</p>
+	      <p>Third, your participation is very helpful <br> to the Challengers.</p>
+	      </div>
 	      <div style="padding-top:10px;">
 	        <button type="button" class="btn btn-primary" id="writeBtn">WRITE</button>
 	      </div>
@@ -73,54 +23,64 @@
 	      <hr/>
           <p style="font-weight: bold;"> 에코뱅크 챌린저들이 남긴 후기의 평점은 ? </p>
           	<p style="font-size: 30px; font-weight: bold;"><i class="bi bi-star-fill" th:text="' ' + ${avg} + ' 점'"></i></p>
+        </th:block>
 	    </div>
-	
-	    <!-- Slider main container -->
-	    <div class="swiper testimonial-carousel">
-	      <!-- Additional required wrapper -->
-	      <div class="swiper-wrapper">
-	        <!-- Slides -->
-	        <th:block th:each="review : ${reviewList}">
-	          <div class="swiper-slide">
-	            <div class="testimonial-wrap">
-	              <div class="testimonial-item">
-	              	<input type="hidden" th:value="${review.challNo}" id="cNo">
-	                <input type="hidden" th:value="${review.userNo}">
-	                <img src="profile.jpg" alt="Profile Image" class="profile-img">
-	                <h3 th:text="${review.nickname}"></h3>
-	                <h4 th:text="${#dates.format(review.reviewCreateAt, 'yyyy/MM/dd')}"></h4>
-	                <div class="stars">
-	                  <!-- 채워진 별 표시 -->
-	                  <th:block th:if="${review.reviewStar >= 1}"><i class="bi bi-star-fill"></i></th:block>
-	                  <th:block th:if="${review.reviewStar >= 2}"><i class="bi bi-star-fill"></i></th:block>
-	                  <th:block th:if="${review.reviewStar >= 3}"><i class="bi bi-star-fill"></i></th:block>
-	                  <th:block th:if="${review.reviewStar >= 4}"><i class="bi bi-star-fill"></i></th:block>
-	                  <th:block th:if="${review.reviewStar == 5}"><i class="bi bi-star-fill"></i></th:block>
-	                  
-	                  <!-- 빈 별 표시 -->
-	                  <th:block th:if="${review.reviewStar < 5}"><i class="bi bi-star"></i></th:block>
-	                  <th:block th:if="${review.reviewStar < 4}"><i class="bi bi-star"></i></th:block>
-	                  <th:block th:if="${review.reviewStar < 3}"><i class="bi bi-star"></i></th:block>
-	                  <th:block th:if="${review.reviewStar < 2}"><i class="bi bi-star"></i></th:block>
-	                  <th:block th:if="${review.reviewStar < 1}"><i class="bi bi-star"></i></th:block>
-	                </div>
-	                <hr style="width: 100%; height: 5px; border: none;" />
-	                <p th:text="${review.reviewContent}"></p>
-	                <hr style="margin: 10px;" />
-	               	<button type="button" class="btn btn-secondary" id="reviewDelete" aria-label="Close" th:data-reviewno="${review.reviewNo}" th:if="${review.userNo} == ${userNo}">
-	               		Delete
-	               	</button>
-	              </div>
-	            </div>
-	          </div><!-- End swiper-slide -->
-	        </th:block>
-	      
-	    </div>
-	      <!-- If we need navigation buttons -->
-	      <div class="swiper-button-prev"></div>
-	      <div class="swiper-button-next"></div>
-	  </div>
+		
+			<!-- 데이터가 있을 때 -->
+			<th:block th:if="${#lists.size(reviewList) > 0}">
+			    <!-- Slider main container -->
+			    <div class="swiper testimonial-carousel">
+			      <!-- Additional required wrapper -->
+			      <div class="swiper-wrapper">
+			        <!-- Slides -->
+			        <th:block th:each="review : ${reviewList}">
+			          <div class="swiper-slide">
+			            <div class="testimonial-wrap">
+			              <div class="testimonial-item">
+			              	<input type="hidden" th:value="${review.challNo}" id="cNo">
+			                <input type="hidden" th:value="${review.userNo}">
+			                <img th:src=@{/images/{filePath}(filePath=${review.profileImg})} alt="Profile Image" class="profile-img">
+			                <h3 th:text="${review.nickname}"></h3>
+			                <h4 th:text="${#dates.format(review.reviewCreateAt, 'yyyy/MM/dd')}"></h4>
+			                <div class="stars">
+			                  <!-- 채워진 별 표시 -->
+			                  <th:block th:if="${review.reviewStar >= 1}"><i class="bi bi-star-fill"></i></th:block>
+			                  <th:block th:if="${review.reviewStar >= 2}"><i class="bi bi-star-fill"></i></th:block>
+			                  <th:block th:if="${review.reviewStar >= 3}"><i class="bi bi-star-fill"></i></th:block>
+			                  <th:block th:if="${review.reviewStar >= 4}"><i class="bi bi-star-fill"></i></th:block>
+			                  <th:block th:if="${review.reviewStar == 5}"><i class="bi bi-star-fill"></i></th:block>
+			                  
+			                  <!-- 빈 별 표시 -->
+			                  <th:block th:if="${review.reviewStar < 5}"><i class="bi bi-star"></i></th:block>
+			                  <th:block th:if="${review.reviewStar < 4}"><i class="bi bi-star"></i></th:block>
+			                  <th:block th:if="${review.reviewStar < 3}"><i class="bi bi-star"></i></th:block>
+			                  <th:block th:if="${review.reviewStar < 2}"><i class="bi bi-star"></i></th:block>
+			                  <th:block th:if="${review.reviewStar < 1}"><i class="bi bi-star"></i></th:block>
+			                </div>
+			                <hr style="width: 100%; height: 5px; border: none;" />
+			                <p th:text="${review.reviewContent}"></p>
+			                <hr style="margin: 10px;" />
+			               	<button type="button" class="btn btn-secondary" id="reviewDelete" aria-label="Close" th:data-reviewno="${review.reviewNo}" th:if="${review.userNo} == ${userNo}">
+			               		Delete
+			               	</button>
+			              </div>
+			            </div>
+			          </div><!-- End swiper-slide -->
+			        </th:block>
+			      
+			    </div>
+			      <!-- If we need navigation buttons -->
+			      <div class="swiper-button-prev"></div>
+			      <div class="swiper-button-next"></div>
+			  </div>
 	  </th:block>
+	  
+	<!-- 데이터가 없을 때 -->
+	<th:block th:unless="${#lists.size(reviewList) > 0}">
+	    <tr>
+	        <td colspan="6" class="text-center">첫 리뷰를 작성해주세요.</td>
+	    </tr>
+	</th:block>
 	</section><!-- End Testimonials Section -->
 	<script>
     //리뷰 등록 여부
@@ -181,25 +141,6 @@
 	    		}
 	    	})
 	    })
-	    
-
-/*  	    $(document).ready(function() {
-	    	$.ajax({
-	    		url : 'reviewStatus',
-	    		type : 'get',
-	    		data : {
-	    			reviewNo : rNo
-	    		},
-	    		success : function(result) {
-	    			console.log(result);
-					if (result) {
-						$('#btn-review').hide(); 
-					} 
-				},
-				error : function(err) {
-					console.log(err);
-	    		}
-	    });  */
 	    
 	    //리뷰 삭제
 	    $(document).on('click', '#reviewDelete', function() {

@@ -111,7 +111,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 
 	        <div class="card-body">
 	        	<input type="hidden" th:value="${challenge.challNo}" class="cNo">
-	            <div class="d-day" id="dDay"  th:text="'D-' + ${challenge.daysUntilStart}"></div>
+	            <div th:if="${status=='D1'}" class="d-day" id="dDay"  th:text="'D-' + ${challenge.dDay}"></div>
 	            <h5 class="card-title" th:text="${challenge.challTitle}"></h5>
 	            <p class="card-text" th:text="${challenge.challContent}"></p>
 	            <p th:if="${status=='D1'}" class="card-text" th:text="'시작 일자 : ' + ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')}"></p>

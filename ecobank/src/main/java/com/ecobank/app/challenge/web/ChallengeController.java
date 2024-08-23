@@ -111,15 +111,7 @@ public class ChallengeController {
 		List<ChallVO> list = challService.challList(criteria);
 		model.addAttribute("challList", list);
 		model.addAttribute("page", new PageDTO(5, challService.getTotal(criteria), criteria));
-		
-		// 데이터가 없을 경우, 페이징 처리를 위해 PageImpl을 사용
-//	    if (list.isEmpty()) {
-//	        model.addAttribute("challList", Collections.emptyList());
-//	        model.addAttribute("page", new PageDTO(1, 0, criteria));  // 페이지 수를 1로 설정하고, 총 데이터 수를 0으로 설정
-//	    } else {
-//	        model.addAttribute("challList", list);
-//	        model.addAttribute("page", new PageDTO(5, challService.getTotal(criteria), criteria));
-//	    }
+
 		return "admins/adminChallList";
 	}
 	
