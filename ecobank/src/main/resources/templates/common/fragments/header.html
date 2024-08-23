@@ -40,7 +40,6 @@
                     <a th:href="@{/login}" class="nav-item nav-link" th:text="#{login}"></a>
                     
                 </th:block>
-                <a href="/admin" class="nav-item nav-link" th:text="#{notice}"></a>
                 <a href="/QnaUserList" class="nav-item nav-link" th:text="#{QnA}">QnA</a>
                 <a th:href="@{/about}" class="nav-item nav-link" th:text="#{about}"></a>
                 <a th:href="@{/ready}" class="nav-item nav-link" th:text="#{challenge}"></a>
@@ -48,8 +47,12 @@
 
                 <a class="btn btn-square btn-link rounded-0 border-0 " th:href="@{/chatRoom}"><i class="fas fa-comment-dots"></i></a>
                 <a class="btn btn-square btn-link rounded-0 border-0 " th:href="@{/mypage}"><i class="fas fa-user"></i></a>
-                <a class="btn btn-square btn-link rounded-0 border-0 " href=""><i class="fas fa-bell"></i></a>
-
+<!--                 <a class="btn btn-square btn-link rounded-0 border-0 " href=""><i class="fas fa-bell"></i></a> -->
+                <a class="btn btn-square btn-link rounded-0 border-0 " th:href="@{/}">
+				    <i class="fas fa-bell position-relative">
+				         <span class="notification-dot position-absolute top-0 start-100 translate-middle rounded-circle" style="display: none;"></span>
+				    </i>
+				</a>
             </div>
         </div>
 

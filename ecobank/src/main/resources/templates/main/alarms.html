@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content"
+	th:with="lang=${#locale.language}" th:lang="${lang}">
+<head>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<meta charset="UTF-8">
+<meta name="contextPath"
+	th:value="${#httpServletRequest.getContextPath()}">
+<!--/* jsp = ${pageContext.request.contextPath} */-->
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+<title>alarms.html</title>
+
+</head>
+<body>
+
+<!--  BreadCrumb Start -->
+<div class="container-fluid page-header py-5">
+  <div class="container py-5">
+      <h1 class="display-3 text-white mb-3 animated slideInDown" th:text="#{alarm}"></h1>
+      <nav aria-label="breadcrumb animated slideInDown">
+          <ol class="breadcrumb">
+              <li class="breadcrumb-item text-white active" aria-current="page" th:text="#{alarm}"></li>
+          </ol>
+      </nav>
+  </div>
+</div>
+<!--  BreadCrumb End -->
+
+<!-- Start of Top section -->
+<div class="container-xxl py-5">
+    <div class="container">
+	    <div class="text-center mx-auto mb-1 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+	                <h1 th:text="|${session.nickname}님, 알림 ${#lists.size(alarmList)}건|"></h1>
+        </div>
+        <table class="table table-striped" id="alarms">
+			        <thead>
+			            <tr>
+			                <th class="text-center" th:text="#{index}"></th>
+			                <th class="text-center" th:text="#{sender}"></th>
+			                <th class="text-center" th:text="#{type}"></th>
+			                <th class="text-center" th:text="#{date}"></th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			            <tr th:each="alarm, iterStat : ${alarmList}"
+						    style="cursor: pointer;"
+						    th:if="${alarm.alarmCode == 'H2'}"
+						    th:onclick="|location.href='/othersInfo?confirmNo=' + ${alarm.alarmRefNo} + '&userNo=' + ${alarm.receiverNo}|">
+						    <td class="text-center" th:text="${iterStat.index + 1}"></td>
+						    <td class="text-center" th:text="${alarm.senderNickname}"></td>
+						    <td class="text-center" th:text="${alarm.alarmType}"></td>
+						    <td class="text-center" th:text="${#dates.format(alarm.alarmCreateAt, 'yyyy/MM/dd HH:mm:ss')}"></td>
+						</tr>
+						
+						<tr th:each="alarm, iterStat : ${alarmList}"
+						    style="cursor: pointer;"
+						    th:if="${alarm.alarmCode == 'H3'}"
+						    th:onclick="|location.href='/snsInfo?feedNo=' + ${alarm.alarmRefNo} + '&userNo=' + ${alarm.receiverNo}|">
+						    <td class="text-center" th:text="${iterStat.index + 1}"></td>
+						    <td class="text-center" th:text="${alarm.senderNickname}"></td>
+						    <td class="text-center" th:text="${alarm.alarmType}"></td>
+						    <td class="text-center" th:text="${#dates.format(alarm.alarmCreateAt, 'yyyy/MM/dd HH:mm:ss')}"></td>
+						</tr>
+			        </tbody>
+			    </table>
+    </div>
+</div>
+    <!-- End of Top section -->
+    
+
+
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function() {
+    // 서버에서 받아온 alarmList를 JSON 형태로 가져오기
+    const alarmList = [[${alarmList}]];
+    console.log(alarmList);
+
+    const datatablesSimple = $("#alarms")[0];
+
+    if (datatablesSimple) {
+        const dataTable = new simpleDatatables.DataTable(datatablesSimple);
+
+        // 테이블이 초기화된 후 이벤트를 설정
+        dataTable.on('datatable.init', function() {
+            $('#alarms tbody tr').on('click', function() {
+                const index = $(this).index(); // 인덱스 가져오기
+                const alarm = alarmList[index];  // 해당 인덱스의 alarm 데이터 가져오기
+
+                let url = '';
+
+                if (alarm.alarmCode === 'H2') {
+                    url = `/othersInfo?confirmNo=${alarm.alarmRefNo}&userNo=${alarm.receiverNo}`;
+                } else if (alarm.alarmCode === 'H3') {
+                    url = `/snsInfo?feedNo=${alarm.alarmRefNo}&userNo=${alarm.receiverNo}`;
+                }
+
+                if (url) {
+                	 $.ajax({
+                         type: 'POST',
+                         url: '/updateAlarmState', // 이 URL을 서버 측에서 처리해야 합니다.
+                         contentType: 'application/json',
+                         data: JSON.stringify({ alarmNo: alarm.alarmNo, alarmState: 'G1' }),
+                         success: function(response) {
+                             if (response.result === "success") {
+                                 // AJAX 요청이 성공하면 페이지 이동
+                                 window.location.href = url;
+                             } else {
+                                 console.error('Error updating alarm state');
+                                 
+                             }
+                         },
+                         error: function(error) {
+                             console.error('Error updating alarm state:', error);
+                         }
+                     });
+                }
+            });
+        });
+    }
+});
+</script>
+</body>
+</html>
+
+

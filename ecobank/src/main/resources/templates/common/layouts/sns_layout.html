@@ -6,6 +6,12 @@
     <!-- csrf -->
 	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
  	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+ 	
+ 	<!-- 로그인 상태를 확인하는 메타 태그 -->
+    <th:block sec:authorize="isAuthenticated()">
+	    <meta name="isAuthenticated" content="true"/>
+    </th:block>
+    
     <title>Side</title>
     <!-- Add your CSS and other head elements here -->
  <title>Layout page</title>
@@ -44,6 +50,7 @@ margin-top: 50px;
 <th:block th:replace="common/configs/config :: jQueryConfig"></th:block>
 <th:block th:replace="common/configs/config :: MainTemplateConfig"></th:block>
 <th:block th:replace="common/configs/config :: SweetAlertConfig"></th:block>
+<th:block th:replace="common/configs/config :: AlarmSocketScriptConfig"></th:block>
 <script>
 	 var token = $("meta[name='_csrf']").attr("content");
 	 var header = $("meta[name='_csrf_header']").attr("content");
@@ -68,6 +75,9 @@ margin-top: 50px;
 	  nonClick.forEach((e) => {
 	    e.addEventListener("click", handleClick);
 	  });
+	  
+	  let userNumber = [[${session.userNo != null ? session.userNo : 'null'}]];
+	  userNumber = userNumber === 'null' ? null : userNumber;
  	</script>
 </head>
 <body>
@@ -80,7 +90,6 @@ margin-top: 50px;
 		</div>
 
 	<footer th:insert="common/fragments/footer :: footerFragment"></footer>
-	
 </body>
 <style>
  .sideAc{

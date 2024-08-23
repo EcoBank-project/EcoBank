@@ -33,9 +33,21 @@
 	          xhr.setRequestHeader(header, token);
 	      }
 	  });
-	  let userNumber = null;
-	  userNumber = [[${session.userNo}]];
+	  let userNumber = [[${session.userNo != null ? session.userNo : 'null'}]];
+	  userNumber = userNumber === 'null' ? null : userNumber;
 	  
+	  let Toast = Swal.mixin({
+	        toast: true,
+	        position: "bottom-end",
+	        showConfirmButton: false,
+	        showCloseButton: true,  // 닫기 버튼 추가
+	        didOpen: (toast) => {
+	            toast.addEventListener('click', () => {
+	                window.location.href = `/alarms?receiverNo=${userNumber}`; // 클릭 시 이동할 페이지 설정
+	            });
+	        }
+	    });
+
  	</script>
 
  	<th:block th:replace="common/configs/config :: MainTemplateScriptConfig"></th:block>
