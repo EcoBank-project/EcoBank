@@ -32,7 +32,7 @@
 }
 
 .main{
-margin-left: 130px;
+margin-left: 220px;
 min-height: 600px;
 margin-top: 50px;
 }
@@ -68,6 +68,38 @@ margin-top: 50px;
 	  nonClick.forEach((e) => {
 	    e.addEventListener("click", handleClick);
 	  });
+	  
+	  //인스타그램 연동 api
+$.ajax({
+  url: 'https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url&access_token=IGQWRQbTNBbnpQYnRwN3doNzRoTHRkRmdRU2dGMjU3MDJ5MjVoNGtGcTVfZAGtXbndYTlNYZAmh1WE9ZAamViaFAzSUJzRVFKczRFQmFMa2JWT3U1N1ZAuSmljZAUJoblVTWFllYWhWRkc1N21Ea3pDTmo5NGlYSy02RTQZD',
+  method: 'GET',
+  dataType: 'json',
+  success: function (response) {
+    // API 요청이 성공했을 때 실행될 코드
+    console.log(response);
+    let html = '';
+    
+    for (var i = 0; i < response.data.length; i++) {
+      var imgUrl = response.data[i].media_url;
+      var caption = response.data[i].caption;
+      
+      html += `
+      <div>
+         <img src=${imgUrl}>
+         <p>
+            ${caption}
+         </p>
+      </div>
+      `
+    }
+    
+    $('#container').append(html);
+  },
+  error: function (xhr, status, error) {
+    // API 요청이 실패했을 때 실행될 코드
+    console.log(xhr.responseText);
+  }
+});
  	</script>
 </head>
 <body>
@@ -84,9 +116,8 @@ margin-top: 50px;
 </body>
 <style>
  .sideAc{
-	background-color:black;
-      color:#32C36C;
-      
+	 text-decoration: underline #32C36C dotted 3px ;
+
 }
 
 </style>

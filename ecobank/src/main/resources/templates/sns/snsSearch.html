@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+
 .like{
       width: 25px;
       fill: #ddd;
@@ -33,12 +34,23 @@ input{
 input::placeholder {
   	font-weight: bold;
 }
+.imghover {
+	transition: background-img 0.5s;
+}
 
+.imghover:hover {
+		filter: brightness(0.8);
+}
+
+.profile{
+width: 50px;
+height: 50px;
+}
 </style>
- <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
+
 </head>
 <body>
-	<div class="container"  style="width:1300px;">
+	<div class="container"  style="width:1200px;">
 		<h4>Search</h4>
 		<br/>
 		<form name="searchForm" th:action="@{/snsSearch}" method="get">		
@@ -47,19 +59,20 @@ input::placeholder {
                 <button type="submit" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Search</button>
             </div>
 		</form>
-		<div class="row" style="margin-top:40px;">
+		<div class="row" style="margin-top:40px; text-align:center; margin-left:50px;">
 			<th:block th:each="sns, sts : ${snsSearch}"	th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
-				<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0">
+				<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0" style="width:350px; margin-right:10px;">
 					<div class="author mb-4 d-flex align-items-center">
 						<div class="other">
 							<div th:text=${sns.userNo} hidden></div>
-							<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
-							<div class="ml-3 info">
+							<img  th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Profile Image" class="profile">
+            		
+							<div class="ml-3 info" style="display:inline-block;">
 								<a href="#" th:text=${sns.nickname}></a>
 							</div>
 						</div> 
 						<div style="margin-left:auto;">
-							<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null} and ${sns.userNo} != ${session.userNo}">팔로우</button>
+							<button type="button"  th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null} and ${sns.userNo} != ${session.userNo}">팔로우</button>
 							<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
 						 </div>
 						 <input type="number" th:value="${sns.feedNo}" hidden>
@@ -70,9 +83,9 @@ input::placeholder {
 						<img th:src=@{/images/{filePath}(filePath=${sns.filePath})}
 								alt="Image" class="img-fluid" style="width:350px; height:380px; padding:0px;"></a>
 					</div>
-					<div class="post-content-entry">
+					<div class="post-content-entry" style="text-align:left;">
 						<div class="meta" style="margin-bottom:30px;  margin-top:10px;">
-							<button id="likeButton" class="btn btn-outline-primary">
+							<button type="button" id="likeButton" class="btn btn-outline-primary">
 								<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
 								<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
 							</button>
