@@ -250,9 +250,19 @@ input[type=radio]:checked + label{
 .testimonial-carousel:hover .owl-nav {
     width: 330px;
 }
+
+.profile{
+width: 50px;
+height: 50px;
+}
+
+.profile-img-reply{
+width: 30px;
+height: 30px;
+}
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
+
 </head>
 <body>
 	<div class="container" style="width:1000px;">
@@ -261,11 +271,14 @@ input[type=radio]:checked + label{
         	<div class="col-lg-12 d-flex align-items-center">
         		<div class="other">
         			<div th:text=${sns.userNo} hidden></div>
-            		<img src="profile.jpg" alt="Profile Image" class="profile-img">
-                	<div>
+            		<img  th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Profile Image" class="profile-img">
+            		
+                	<div style="display:inline-block;">
                    	<h4 class="mb-1" th:text=${sns.nickname}></h4>
                		</div>
+               		<div>
                		<small class="text-muted" th:text="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}"></small>
+               		</div>
                	</div>
                 <div class="ms-auto action-buttons">
 					<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null}  and ${sns.userNo} != ${session.userNo}">팔로우</button>
@@ -310,15 +323,15 @@ input[type=radio]:checked + label{
 		<div class="row like-comment">
 			<div class="col-lg-12">
 				<div class="d-flex align-items-center">
-					<button id="likeButton" class="btn btn-outline-primary">
+					<button  id="likeButton" class="btn btn-outline-primary">
 						<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
 						<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
 					</button>
-					<span class="likes-count" th:text=${sns.countLike}></span>
+						<span class="likes-count" th:text="${sns.countLike} + ' Likes'"></span>
 					<button class="btn btn-outline-secondary ms-3">
 						<i class="bi bi-chat-dots"></i>
 					</button>
-					<span class="comments-count" th:text=${sns.countReply}></span>
+					<span class="comments-count" th:text="${sns.countReply} + ' Comments'"></span>
 			        <button class="btn btn-outline-success ms-3">
 			        	<i class="bi bi-share"></i>
 			        </button>
@@ -344,7 +357,7 @@ input[type=radio]:checked + label{
 			<div class="d-flex">
 				<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
                	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent"></textarea>
-                <button id="writeBtn" style="margin-left:10px; height:60px;" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
+                <button type="button" id="writeBtn" style="margin-left:10px; height:60px;" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
              </div>
           
 		</div>
@@ -446,8 +459,9 @@ input[type=radio]:checked + label{
 					$('#replyContent').val(""); //초기화
 					reply();
 				},
-				error :  function(){
+				error :  function(error){
 					alert("댓글 작성 통신 실패");
+					console.log(error);
 				}
 			});
 		});
@@ -477,7 +491,7 @@ input[type=radio]:checked + label{
 				output += "<div class='comment-item' >";
 				output +=`<div class="d-flex justify-content-between align-items-center">`;
 				output += `<div style="float:left;">`;
-				output += `<img src="profile.jpg" alt="Profile Image" class="profile-img">`;
+				output += `<img src="/images/${list[i].profileImg}" alt="Profile Image" class="profile-img">`;
 				output += "<strong>" + list[i].nickname +"</strong>";
 				output += `</div>`;
 				output += `<input type="hidden" name="replyNo" value="${list[i].replyNo}">`;
@@ -594,20 +608,20 @@ input[type=radio]:checked + label{
 				console.log("팔로우버튼");
 				console.log('누구야',followingId);
 			// ajax로 팔로우 등록하기
-			$.ajax({
-				type : "POST",
-				url : "insertFollow",
-				data : {userNo, followingId},
-				dataType : "json",
-				success : function(){
-					alert("팔로우 성공");
-					location.reload();
-				},
-				error :  function(error){
-					console.log(error);
-					alert("팔로우 실패");
-				}
-			});
+				$.ajax({
+					type : "POST",
+					url : "insertFollow",
+					data : {userNo, followingId},
+					dataType : "json",
+					success : function(){
+						alert("팔로우 성공");
+						location.reload();
+					},
+					error :  function(error){
+						console.log(error);
+						alert("팔로우 실패");
+					}
+				});
 		});
 	
 		    

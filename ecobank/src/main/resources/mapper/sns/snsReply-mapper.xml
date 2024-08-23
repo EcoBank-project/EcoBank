@@ -10,6 +10,7 @@
 				,s.user_no
 				,s.feed_no
                 ,u.nickname
+                ,u.profile_img
 		FROM sns_reply s 
 				LEFT JOIN users u
                  	ON s.user_no = u.user_no

@@ -23,6 +23,7 @@ public class SnsReplyVO {
 	private Integer snsBlockNo;		//차단 번호
 	private Integer blockUserNo;	//차단된 회원 번호
 	private Date blockAt;			//차단 일자
+	private String profileImg;      //회원 이미지
 	
 
 }

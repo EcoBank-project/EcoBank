@@ -80,11 +80,15 @@ li{
  	justify-content: space-around;
  	margin-bottom: 5px;
  }
-       li.active {
-         color: red;
-        }
+li.active {
+   color: red;
+ }
+.profile{
+width: 50px;
+height: 50px;
+}
 </style>
-<script	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"></script>
+
 </head>
 <body>
 <!-- Feature Start -->
@@ -92,10 +96,11 @@ li{
     	<div class="container" style="width:1200px;">
         	<div class="row g-5" style="border: 3px solid orange; border-radius: 2em; text-align:center;">
             	<div class="col-md-6 col-lg-3 wow  fadeIn" data-wow-delay="0.1s">
+            	         			<img th:src=@{/images/{filePath}(filePath=${countMySns.profileImg})} alt="Profile Image" class="profile">
                     <div class="align-items-center mb-4">
                         <h5 class="mb-0" data-toggle="counter-up" th:text=${countMySns.nickname}></h5>
                     </div>
-                    <a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
+                    
                 </div>
                 <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
                     <div class="align-items-center mb-4">
@@ -164,9 +169,9 @@ li{
 	        				<div th:text=${follower.userNo} hidden></div>
 	        				<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
 	        				<div class="nicknameB ml-3 info" style="display: flex; align-items: center;">
-								<a href="#"  th:text=${follower.nickname} ></a>
-								<button type="button" th:data-userno="${follower.userNo}" class="followBtn btn btn-primary" th:if="${follower.followYn == null}">팔로우</button>
-								<button type="button" th:data-followno="${follower.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${follower.followYn == null}">팔로잉</button>
+								<a href="#"  th:text=${follower.nickname} style="width:50px;" ></a>
+								<button th:data-userno="${follower.userNo}" class="followBtn btn btn-primary" th:if="${follower.followYn == null}">팔로우</button>
+								<button th:data-followno="${follower.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${follower.followYn == null}">팔로잉</button>
 							</div>
 	        			</th:block>
 	        		</div>
@@ -176,7 +181,7 @@ li{
 	        				<div th:text=${following.userNo} hidden></div>
 	        				<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
 	        				<div class="ml-3 info">
-								<a href="#"  style="display: flex; align-items: center;" th:text=${following.nickname} ></a>
+								<a href="#"  style="display: flex; align-items: center; " th:text=${following.nickname} ></a>
 								<button type="button" th:data-userno="${following.userNo}" class="followBtn btn btn-primary" th:if="${following.followYn == null}">팔로우</button>
 								<button type="button" th:data-followno="${following.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${following.followYn == null}">팔로잉</button>
 							</div>		

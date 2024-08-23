@@ -222,6 +222,7 @@
 	<select id="countMySns" resultType="SnsVO">
 		SELECT user_no
                ,nickname
+               ,profile_img
                , (SELECT count(feed_no) 
                     FROM sns
                    WHERE sns.user_no = users.user_no) as count_feed
