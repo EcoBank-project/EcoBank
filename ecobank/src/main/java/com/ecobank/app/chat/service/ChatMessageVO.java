@@ -21,4 +21,5 @@ public class ChatMessageVO {
 	private String chatType;	//채팅방 타입
 	
 	private List<Integer> userNos;	//사용자 번호
+	private String profileImg;
 }

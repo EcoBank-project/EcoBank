@@ -41,7 +41,6 @@
 			        	<div>다이렉트 메시지</div>
 			            <ul class="chat-room-list private flex-grow-1">
 			                <li th:each="room : ${chatRooms}" th:if="${room.chatType} == 'O1'">
-			                	<!-- <img src="https://via.placeholder.com/40" class="profil_img"> -->
 			                    <a th:href="@{/chatRoom/{chatNo}(chatNo=${room.chatNo})}" th:text="${room.chatName}" th:onclick="enterRoom([[${room.chatName}]], [[${room.chatNo}]], [[${room.chatType}]])"></a>
 			                    <i class="fa fa-sign-out-alt" th:onclick="leaveRoom([[${room.chatType}]],[[${room.chatNo}]],[[${userNo}]])"></i>
 			                </li>
@@ -58,7 +57,7 @@
 			            </ul>
 			            <!-- 유저 정보 -->
 			            <div class="user-info d-flex align-items-center">
-			                <img src="https://via.placeholder.com/40" class="profil_img">
+			                <img th:src="@{/images/{path}(path=${profiles.profileImg})}" class="profil_img">
 			                <div class="user-details">
 			                    <div class="user-name">[[${nickname}]]</div>
 			                    <div class="user-status">[[${lagCode}]]</div>
@@ -234,7 +233,12 @@
     <div id="profilChatModal" class="modal">
         <div class="modal-content">
         	<span class="modal-close">&times;</span>
-        	<h2>프로필</h2>
+        	<div class="profile-info">
+        		<img th:src="@{/images/{path}(path=${profiles.profileImg})}" alt="프로필 사진">
+	            <div>
+	                <h1>[[${nickname}]]</h1>
+	            </div>
+        	</div>
         	<div class="language-selector">
                 <label for="language" id="language-text">언어 선택</label>
                 <select id="language_code" name="language">
@@ -358,7 +362,7 @@
 	    //채팅 프로필 이미지
 	    let img = document.createElement("img");
 	    img.classList.add("chat_profil_img");
-	    img.src="https://via.placeholder.com/40";
+	    img.src="/images/"+message.profileImg;
 	    newMessage.appendChild(img);
 	    //메시지 덩어리
 	    let content = document.createElement("div");
@@ -582,8 +586,11 @@
 		})
 	}
 	function showChatUsers(users){	
-		let tagImg = $('<img />').prop('src','https://via.placeholder.com/40x40').prop('class','profil_img');
+		let tagImg = $('<img />').prop('src','/images/'+users.profileImg).prop('class','profil_img');
 		let tagA = $('<a />').prop('href','#').text(users.nickName);
+		tagA.on('click',function(){
+			event.preventDefault();
+		})
 		let tagli = $('<li />');
 		tagli.append(tagImg, tagA);
 		$('.chat-user-list').append(tagli);
@@ -645,9 +652,10 @@
 	}
 	//채팅방 팔로우목록 만들기 
 	function showFollow(follow){
+		console.log(follow);
 		let label1 = $('<label />').prop('for','private_'+follow.followingId).addClass('follow-item');
 		let span1 = $('<span />')
-		let pro_img1 = $('<img />').prop('src','https://via.placeholder.com/40').addClass('profil_img');
+		let pro_img1 = $('<img />').prop('src','/images/'+follow.profileImg).addClass('profil_img');
 		span1.append(pro_img1, follow.nickName);
 
 		let radio = $('<input />').prop('type','radio')
@@ -661,7 +669,7 @@
 		
 		let label2 = $('<label />').prop('for','group_'+follow.followingId).addClass('follow-item');
 		let span2 = $('<span />')
-		let pro_img2 = $('<img />').prop('src','https://via.placeholder.com/40').addClass('profil_img');
+		let pro_img2 = $('<img />').prop('src','/images/'+follow.profileImg).addClass('profil_img');
 		span2.append(pro_img2, follow.nickName);
 		let checkbox = $('<input />').prop('type','checkbox')
 		                             .addClass('select-follow')
@@ -833,7 +841,7 @@
 				chatType : chatType
 			};
 			stompClient.send("/app/chat.exit/" + chatNo, {}, JSON.stringify(chatMessage));
-			$('#roomName').text("채팅창 제목");
+			$('#roomName').text("채팅방 제목");
 			$('.stateIcon').empty();
 			$('#chatbox').empty();
 			$('.chat-user-list').empty();
@@ -991,7 +999,7 @@
 				result.forEach(function(follow){
 					let label = $('<label />').prop('for','open_'+follow.followingId).addClass('follow-item');
 					let span = $('<span />')
-					let pro_img = $('<img />').prop('src','https://via.placeholder.com/40').addClass('profil_img');
+					let pro_img = $('<img />').prop('src','/images/'+follow.profileImg).addClass('profil_img');
 					span.append(pro_img, follow.nickName);
 					let checkbox = $('<input />').prop('type','checkbox')
 					                             .addClass('select-follow')

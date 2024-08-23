@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecobank.app.chat.service.ChatMessageVO;
+import com.ecobank.app.chat.service.ChatRoomUserVO;
 import com.ecobank.app.chat.service.ChatService;
 
 @Controller
@@ -33,7 +34,6 @@ public class ChatMessageController {
 	
 	// 채팅방 입장
 	@MessageMapping("/chat.enter/{roomId}")
-	@SendTo("/topic/message")
 	public void enterUser(@DestinationVariable Integer roomId, ChatMessageVO message) {
 		List<Integer> userNos = message.getUserNos();
 		List<String> receiverIds = chatService.ChatUserList(roomId);
@@ -63,8 +63,13 @@ public class ChatMessageController {
 	public void sendUser(@Payload ChatMessageVO message, Principal principal) {
 		// 메시지 저장
 		ChatMessageVO chatMessage = chatService.ChatMessageInsert(message);
-		String chatType = chatService.chatRoomType(message.getChatNo());
 		
+		
+		ChatRoomUserVO chatRoomUser = chatService.ChatProfileInfo(message.getUserNo());
+		
+		message.setProfileImg(chatRoomUser.getProfileImg());
+		
+		String chatType = chatService.chatRoomType(message.getChatNo());
 		List<String> receiverIds = chatService.ChatUserList(message.getChatNo());
 		
 		for(String receiverId : receiverIds) {

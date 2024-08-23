@@ -21,6 +21,7 @@ import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatPartVO;
 import com.ecobank.app.chat.service.ChatRoomDTO;
+import com.ecobank.app.chat.service.ChatRoomUserVO;
 import com.ecobank.app.chat.service.ChatRoomVO;
 import com.ecobank.app.chat.service.ChatService;
 import com.google.cloud.translate.Translate;
@@ -262,10 +263,18 @@ public class ChatServiceImpl implements ChatService{
 		String nickName = chatMapper.selectChatUserName(chatNo);
 		return nickName;
 	}
+	// 채팅방 참여자 목록
 	@Override
 	public List<ChatPartVO> ChatRoomUsersList(Integer chatNo) {
 		List<ChatPartVO> list = chatMapper.selectChatRoomUsers(chatNo);
 		return list;
+	}
+	
+	//
+	@Override
+	public ChatRoomUserVO ChatProfileInfo(Integer userNo) {
+		ChatRoomUserVO chatRoom = chatMapper.selectChatUserInfo(userNo);
+		return chatRoom;
 	}
 	
 
