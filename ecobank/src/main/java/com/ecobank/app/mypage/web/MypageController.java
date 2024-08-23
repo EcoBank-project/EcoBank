@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ecobank.app.admin.service.UserVO;
 import com.ecobank.app.mypage.service.MypageChallVO;
+import com.ecobank.app.mypage.service.MypageFollowService;
 import com.ecobank.app.mypage.service.MypageService;
 import com.ecobank.app.users.service.UserRepository;
 import com.ecobank.app.users.service.UserService;
@@ -35,10 +37,12 @@ public class MypageController {
 	private MypageService mypageService;
 
 	@Autowired
+	private MypageFollowService followService;
+
+	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-
 	@GetMapping("mypage")
 	public String getMypage(HttpSession session, Model model) {
 		Integer userNo = (Integer) session.getAttribute("userNo");
@@ -69,6 +73,8 @@ public class MypageController {
 	public String getUserDel() {
 		return "mypage/userDel";
 	}
+	
+	
 
 	// 비밀번호 재확인(수정)
 	@PostMapping("/validate-password")
@@ -170,11 +176,52 @@ public class MypageController {
 
 	@GetMapping("/ongoingChall")
 	public String getChallenge(HttpSession session, Model model) {
-        Integer userNo = (Integer) session.getAttribute("userNo");
-		
+		Integer userNo = (Integer) session.getAttribute("userNo");
+
 		List<MypageChallVO> challengeInfo = mypageService.getChallengeInfo(userNo);
 		model.addAttribute("challengeInfo", challengeInfo);
 		return "mypage/ongoingChall";
 	}
+	
+	@GetMapping("/exitChall")
+	public String getExitChallenge(HttpSession session, Model model) {
+		Integer userNo = (Integer) session.getAttribute("userNo");
 
+		List<MypageChallVO> challengeInfo = mypageService.getExitChallengeInfo(userNo);
+		model.addAttribute("challengeInfo", challengeInfo);
+		return "mypage/exitChall";
+	}
+	
+
+	@PostMapping("/cancelChallenge")
+	@ResponseBody
+	public String cancelChallenge(@RequestParam("challNo") int challNo, @RequestParam("userNo") int userNo) {
+		try {
+			boolean success = mypageService.cancelChallenge(userNo, challNo);
+			if (success) {
+				return "success";
+			} else {
+				return "fail";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error";
+		}
+	}
+	
+	@GetMapping("/user/following")
+	@ResponseBody
+    public List<UserVO> getFollowingList(@RequestParam("userNo") int userNo) {
+        return followService.getFollowingList(userNo);
+    }
+
+    // 팔로워 목록 API
+    @GetMapping("/user/follower")
+    @ResponseBody
+    public List<UserVO> getFollowerList(@RequestParam("userNo") int userNo) {
+        return followService.getFollowerList(userNo);
+    }
+
+    
+    
 }

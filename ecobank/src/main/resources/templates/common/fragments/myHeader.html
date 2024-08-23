@@ -1,138 +1,295 @@
 <!DOCTYPE html>
 
 <th:block xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-    th:fragment="myHeaderFragment">
-    <div class="my-header">
-        <!-- 프로필 이미지와 사용자 정보 -->
-        <div class="profile-section">
-            <div class="profile-container">
-                <img th:src="@{/img/defaultProfile.jpg}" alt="기본 이미지"
-                    class="profile-image" />
-            </div>
-            <div class="user-info">
-                <p>
-                    <span class="nickname" th:text="${session.nickname}"></span>님의 마이페이지
-                </p>
-            </div>
-        </div>
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	th:fragment="myHeaderFragment">
+	<div class="my-header">
+		<!-- 프로필 이미지와 사용자 정보 -->
+		<div class="profile-section">
+			<div class="profile-container">
+				<img th:src="@{/img/defaultProfile.jpg}" alt="기본 이미지"
+					class="profile-image" />
+			</div>
+			<div class="user-info">
+				<p>
+					<span class="nickname" th:text="${session.nickname}"></span>님의
+					마이페이지
+				</p>
+			</div>
+		</div>
 
-        <!-- 정보 레이아웃 -->
-        <div class="info-section">
-            <div class="info-item">
-                <p class="info-label">포인트</p>
-                <p id="points" class="info-value">0</p>
-            </div>
-            <div class="info-item">
-                <p class="info-label">팔로워</p>
-                <p id="follower" class="info-value">0</p>
-            </div>
-            <div class="info-item">
-                <p class="info-label">팔로잉</p>
-                <p id="following" class="info-value">0</p>
-            </div>
-        </div>
-    </div>
-    <style>
+		<!-- 정보 레이아웃 -->
+		<div class="info-section">
+			<div class="info-item">
+				<p class="info-label">포인트</p>
+				<p id="points" class="info-value">0</p>
+			</div>
+			<div class="info-item">
+				<p class="info-label">팔로워</p>
+				<p id="follower" class="info-value">0</p>
+			</div>
+			<div class="info-item">
+				<p class="info-label">팔로잉</p>
+				<p id="following" class="info-value">0</p>
+			</div>
+		</div>
+		<!-- 팔로잉 모달 -->
+		<div id="followingModal" class="modal">
+			<div class="modal-content">
+				<span class="close" onclick="closeModal('followingModal')">&times;</span>
+				<h2>팔로잉 목록</h2>
+				<ul id="followingList"></ul>
+			</div>
+		</div>
+
+		<!-- 팔로워 모달 -->
+		<div id="followerModal" class="modal">
+			<div class="modal-content">
+				<span class="close" onclick="closeModal('followerModal')">&times;</span>
+				<h2>팔로워 목록</h2>
+				<ul id="followerList"></ul>
+			</div>
+		</div>
+	</div>
+	<style>
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1;
+	padding-top: 100px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 500px;
+}
+
+.close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+ul li {
+	padding: 10px;
+	display: flex;
+	align-items: center;
+}
+
+ul li img {
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+}
+
 .my-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 40px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 헤더에 음영 추가 */
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1); /* 부드러운 구분선 */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px 40px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 헤더에 음영 추가 */
+	border-bottom: 2px solid rgba(255, 255, 255, 0.1); /* 부드러운 구분선 */
 }
 
 /* 프로필 섹션 */
 .profile-section {
-    display: flex;
-    align-items: center;
-    padding-left: 200px; /* 좌측에 여백 */
+	display: flex;
+	align-items: center;
+	padding-left: 200px; /* 좌측에 여백 */
 }
 
 .profile-container {
-    margin-right: 15px; /* 프로필 이미지와 사용자 정보 사이의 간격 증가 */
+	margin-right: 15px; /* 프로필 이미지와 사용자 정보 사이의 간격 증가 */
 }
 
 .profile-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.5); /* 투명한 테두리 */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
-    transition: transform 0.3s ease; /* 부드러운 확대 효과 */
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	border: 3px solid rgba(255, 255, 255, 0.5); /* 투명한 테두리 */
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+	transition: transform 0.3s ease; /* 부드러운 확대 효과 */
 }
 
 .profile-image:hover {
-    transform: scale(1.1); /* 이미지에 호버 시 확대 */
+	transform: scale(1.1); /* 이미지에 호버 시 확대 */
 }
 
 /* 사용자 정보 */
 .user-info p {
-    margin: 0;
-    font-size: 18px;
-    color: #fff; /* 밝은 텍스트 색상 */
+	margin: 0;
+	font-size: 18px;
+	color: #fff; /* 밝은 텍스트 색상 */
 }
 
 .user-info .nickname {
-    font-weight: 700;
-    font-size: 22px;
-    color: black; /* 눈에 띄는 닉네임 색상 (노란색) */
-    background-color: rgba(255, 255, 255, 0.1); /* 닉네임 배경을 반투명하게 */
-    padding: 6px 12px;
-    border-radius: 8px; /* 더 부드러운 둥근 모서리 */
-    transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 전환 */
+	font-weight: 700;
+	font-size: 22px;
+	color: black; /* 눈에 띄는 닉네임 색상 (노란색) */
+	background-color: rgba(255, 255, 255, 0.1); /* 닉네임 배경을 반투명하게 */
+	padding: 6px 12px;
+	border-radius: 8px; /* 더 부드러운 둥근 모서리 */
+	transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 전환 */
 }
 
 .user-info .nickname:hover {
-    background-color: rgba(255, 255, 255, 0.3); /* 호버 시 배경색 변화 */
-    color: #333; /* 호버 시 닉네임 색상 변화 */
+	background-color: rgba(255, 255, 255, 0.3); /* 호버 시 배경색 변화 */
+	color: #333; /* 호버 시 닉네임 색상 변화 */
 }
 
 /* 정보 섹션 */
 .info-section {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 200px; /* 우측에 여백 */
+	display: flex;
+	justify-content: flex-end;
+	padding-right: 200px; /* 우측에 여백 */
 }
 
 .info-item {
-    text-align: center;
-    margin-left: 50px; /* 항목 사이의 간격 증가 */
+	text-align: center;
+	margin-left: 50px; /* 항목 사이의 간격 증가 */
 }
 
 .info-label {
-    font-size: 14px;
-    margin: 0;
-    color: rgba(255, 255, 255, 0.7); /* 연한 흰색 텍스트 */
+	font-size: 14px;
+	margin: 0;
+	color: rgba(255, 255, 255, 0.7); /* 연한 흰색 텍스트 */
 }
 
 .info-value {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0;
-    color: #fff; /* 강조된 흰색 텍스트 */
-    transition: color 0.3s ease; /* 부드러운 전환 */
+	font-size: 20px;
+	font-weight: bold;
+	margin: 0;
+	color: #fff; /* 강조된 흰색 텍스트 */
+	transition: color 0.3s ease; /* 부드러운 전환 */
 }
 
 .info-value:hover {
-    color: #ffeb3b; /* 호버 시 강조 색상 (닉네임과 동일한 색상) */
+	color: #ffeb3b; /* 호버 시 강조 색상 (닉네임과 동일한 색상) */
 }
 
 /* 애니메이션 효과 */
-@keyframes slide-in {
-    0% {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@
+keyframes slide-in { 0% {
+	opacity: 0;
+	transform: translateY(-20px);
 }
 
+100
+
+
+
+
+
+
+
+
+%
+{
+opacity
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+
+1
+
+
+
+
+
+
+;
+transform
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+
+translateY
+
+
+
+
+
+
+(
+
+
+
+
+
+
+
+
+0
+
+
+
+
+
+
+
+
+)
+
+
+
+
+
+
+;
+}
+}
 .my-header {
-    animation: slide-in 0.6s ease forwards; /* 헤더에 애니메이션 적용 */
+	animation: slide-in 0.6s ease forwards; /* 헤더에 애니메이션 적용 */
 }
 </style>
 	<script>
@@ -154,5 +311,74 @@
 						}
 					});
 				});
+		$(document).ready(function() {
+		    // 팔로잉 목록 클릭 이벤트
+		    $('#following').click(function() {
+		        let userNo = [[${session.userNo}]];
+
+		        $.ajax({
+		            url: '/user/following',
+		            method: 'GET',
+		            data: { userNo: userNo },  // 현재 사용자의 ID를 서버로 전송
+		            success: function(data) {
+		                $('#followingList').empty(); // 기존 목록 비우기
+		                data.forEach(function(user) {
+		                    $('#followingList').append(
+			                        '<li data-user-no="' + user.userNo + '">' +
+			                        '<img src="/images/' + (user.profileImg || 'defaultProfile.jpg') + '" alt="Profile Image">' +
+			                        '<span>' + user.nickName + '</span></li>'
+		                    );
+		                });
+		                openModal('followingModal'); // 모달창 열기
+		            },
+		            error: function(xhr, status, error) {
+		                console.error('팔로잉 목록 가져오기 오류:', status, error);
+		            }
+		        });
+		    });
+
+		    // 팔로워 목록 클릭 이벤트
+		    $('#follower').click(function() {
+		        let userNo = [[${session.userNo}]];
+
+		        $.ajax({
+		            url: '/user/follower',
+		            method: 'GET',
+		            data: { userNo: userNo },  // 현재 사용자의 ID를 서버로 전송
+		            success: function(data) {
+		                $('#followerList').empty(); // 기존 목록 비우기
+		                data.forEach(function(user) {
+		                    $('#followerList').append(
+			                        '<li data-user-no="' + user.userNo + '">' +
+			                        '<img src="/images/' + (user.profileImg || 'defaultProfile.jpg') + '" alt="Profile Image">' +
+			                        '<span>' + user.nickName + '</span></li>'
+		                    );
+		                });
+		                openModal('followerModal'); // 모달창 열기
+		            },
+		            error: function(xhr, status, error) {
+		                console.error('팔로워 목록 가져오기 오류:', status, error);
+		            }
+		        });
+		    });
+		});
+	    // 해당 회원 피드로 이동
+	    $(document).on('click', '#followingList li, #followerList li', function() {
+	    	let userNo = $(this).data('user-no');
+	        if (userNo > 0) {
+	            window.location.href = '/userSns?userNo=' + userNo + '';
+	        } else {
+	            console.error('UserNo is undefined or null.');
+	        }
+	    });
+		// 모달창 열기
+		function openModal(modalId) {
+		    document.getElementById(modalId).style.display = "block";
+		}
+
+		// 모달창 닫기
+		function closeModal(modalId) {
+		    document.getElementById(modalId).style.display = "none";
+		}
 	</script>
 </th:block>
