@@ -14,7 +14,7 @@ public class UserVO {
 	private String nickName;  //닉네임
 	private  Date  creaTeat; //가입일
 	private String tell;       //연락처 
-	private String prifileImg;  // 프로필 이미지
+	private String profileImg;  // 프로필 이미지
 	private String resp;        //권한
 	private String country;    //국가
 	private String regiPath;    //가입경로

@@ -6,6 +6,12 @@
     <!-- csrf -->
 	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
  	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+ 	
+ 	<!-- 로그인 상태를 확인하는 메타 태그 -->
+    <th:block sec:authorize="isAuthenticated()">
+	    <meta name="isAuthenticated" content="true"/>
+    </th:block>
+    
     <title>Side</title>
     <!-- Add your CSS and other head elements here -->
  <title>Layout page</title>
@@ -44,6 +50,7 @@ margin-top: 50px;
 <th:block th:replace="common/configs/config :: jQueryConfig"></th:block>
 <th:block th:replace="common/configs/config :: MainTemplateConfig"></th:block>
 <th:block th:replace="common/configs/config :: SweetAlertConfig"></th:block>
+<th:block th:replace="common/configs/config :: AlarmSocketScriptConfig"></th:block>
 <script>
 	 var token = $("meta[name='_csrf']").attr("content");
 	 var header = $("meta[name='_csrf_header']").attr("content");
@@ -69,37 +76,10 @@ margin-top: 50px;
 	    e.addEventListener("click", handleClick);
 	  });
 	  
-	  //인스타그램 연동 api
-$.ajax({
-  url: 'https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url&access_token=IGQWRQbTNBbnpQYnRwN3doNzRoTHRkRmdRU2dGMjU3MDJ5MjVoNGtGcTVfZAGtXbndYTlNYZAmh1WE9ZAamViaFAzSUJzRVFKczRFQmFMa2JWT3U1N1ZAuSmljZAUJoblVTWFllYWhWRkc1N21Ea3pDTmo5NGlYSy02RTQZD',
-  method: 'GET',
-  dataType: 'json',
-  success: function (response) {
-    // API 요청이 성공했을 때 실행될 코드
-    console.log(response);
-    let html = '';
-    
-    for (var i = 0; i < response.data.length; i++) {
-      var imgUrl = response.data[i].media_url;
-      var caption = response.data[i].caption;
-      
-      html += `
-      <div>
-         <img src=${imgUrl}>
-         <p>
-            ${caption}
-         </p>
-      </div>
-      `
-    }
-    
-    $('#container').append(html);
-  },
-  error: function (xhr, status, error) {
-    // API 요청이 실패했을 때 실행될 코드
-    console.log(xhr.responseText);
-  }
-});
+
+	  let userNumber = [[${session.userNo != null ? session.userNo : 'null'}]];
+	  userNumber = userNumber === 'null' ? null : userNumber;
+
  	</script>
 </head>
 <body>
@@ -112,7 +92,6 @@ $.ajax({
 		</div>
 
 	<footer th:insert="common/fragments/footer :: footerFragment"></footer>
-	
 </body>
 <style>
  .sideAc{

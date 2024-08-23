@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/"
+<html xmlns:th="http://www.thymeleaf.org/"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/default_layout}"
       layout:fragment="Content">
@@ -8,6 +8,13 @@
     <title>QNA 상세 정보</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <script src="/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .modal-dialog-centered {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
@@ -30,6 +37,11 @@
                     <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
                     <button type="submit" class="btn btn-danger">삭제</button>
                 </form>
+
+                <!-- 수정 버튼: 답글이 없을 때만 표시 -->
+                <div th:if="${#lists.isEmpty(qnaReplyList)}">
+                    <a th:href="@{/qnaEdit/{qnaNo}(qnaNo=${qna.qnaNo})}" class="btn btn-primary">수정</a>
+                </div>
             </div>
         </div>
 
@@ -56,15 +68,30 @@
         </div>
     </div>
 
-
+    <!-- 오류 모달 -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">오류 발생</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>문제가 발생했습니다. 나중에 다시 시도해 주세요.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // 페이지 로드 시 모달을 표시할지 결정
         document.addEventListener('DOMContentLoaded', function () {
-            // Thymeleaf 변수 'showPermissionDeniedModal'이 true일 경우 모달을 표시
-            const showPermissionDeniedModal = /*[[${showPermissionDeniedModal}]]*/ false;
-            if (showPermissionDeniedModal) {
-                const modal = new bootstrap.Modal(document.getElementById('permissionDeniedModal'));
+            // Thymeleaf 변수 'showErrorModal'이 true일 경우 모달을 표시
+            const showErrorModal = /*[[${showErrorModal}]]*/ false;
+            if (showErrorModal) {
+                const modal = new bootstrap.Modal(document.getElementById('errorModal'));
                 modal.show();
             }
         });

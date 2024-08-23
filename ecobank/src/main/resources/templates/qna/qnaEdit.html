@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default_layout}"
+      layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>QNA 수정</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
 </head>
 <body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">QNA 수정</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/updateQna}" method="post">
+                    <!-- QNA 번호 (숨김 필드) -->
+                    <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
+
+                    <!-- 제목 입력 필드 -->
+                    <div class="mb-3">
+                        <label for="qnaTitle" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="qnaTitle" name="qnaTitle" th:value="${qna.qnaTitle}" required>
+                    </div>
+
+                    <!-- 내용 입력 필드 -->
+                    <div class="mb-3">
+                        <label for="qnaContent" class="form-label">내용</label>
+                        <textarea class="form-control" id="qnaContent" name="qnaContent" rows="5" required th:text="${qna.qnaContent}"></textarea>
+                    </div>
+
+                    <!-- 수정 버튼 -->
+                    <button type="submit" class="btn btn-primary">수정</button>
+                    <!-- 취소 버튼 -->
+                    <a href="/QnaUserList" class="btn btn-secondary">취소</a>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

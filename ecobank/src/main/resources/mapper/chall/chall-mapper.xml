@@ -53,7 +53,7 @@
 		SELECT b.* 
 		FROM (	
 		    SELECT ROWNUM r               
-		           , a.*	    
+		           , a.*
 		    FROM (
 		            SELECT chall_no
 		                    , chall_title
@@ -62,6 +62,7 @@
 		                    , chall_closeAt
 		                    , chall_state
 		                    , main_img
+		                    , to_date(chall_startAt,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd') AS d_day
 		            FROM chall
 					<where>
 						<if test="challState != null and challState != ''.toString()">
@@ -292,6 +293,7 @@
 		     , u.nickname
 		     , u.user_no
 		     , r.chall_no
+		     , u.profile_img
 		FROM chall_review r JOIN users u 
 		                        ON r.user_no = u.user_no
 		WHERE r.chall_no = #{challNo}

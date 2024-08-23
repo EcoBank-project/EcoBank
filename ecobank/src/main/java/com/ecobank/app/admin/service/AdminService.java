@@ -68,7 +68,14 @@ public interface AdminService {
 	
  	//QNA 답글 삭제 
 	 int deleteqnadeclare(int qnaVo);
+	 
 	 //정지된회원수
 	 int stateCount();
+	 
+	//QNA댓글 수정 
+	int updateQnaReplyInfo(QnaVO qnaVO);
+	
+	//QNA댓글 필요한글 수
+	int qnaReplynocount();
 	 
 }

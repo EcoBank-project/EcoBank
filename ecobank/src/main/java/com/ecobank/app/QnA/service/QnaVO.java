@@ -15,5 +15,6 @@ public class QnaVO {
 	private String  qnaReplyContent;	//답글내용
 	private Date qnaReplyat;			//답글 작성일자 
 	private String replyStatus;			//답글 확인
-	
+	private boolean hasReply;
+	private String publicStatus; 
 }

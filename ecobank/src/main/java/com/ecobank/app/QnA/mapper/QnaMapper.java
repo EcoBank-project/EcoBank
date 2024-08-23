@@ -13,7 +13,8 @@ public interface QnaMapper {
 		//QNA 단건 조회
 		 QnaVO qnaSelectInfo(int qnaNo);
 		 //QNA  삭제
-		 int qnaDelete(int qnaVo);
+		 void deleteQna(int qnaNo);
+
 		// QNA 답글 조회
 		 
 		// 답글 리스트 조회

@@ -3,7 +3,7 @@
 <mapper namespace="com.ecobank.app.QnA.mapper.QnaMapper">
 		<!--qna전체조회-->
 	<select id="qnaUserList" resultType="com.ecobank.app.QnA.service.QnaVO">
-		select qna_no,qna_title
+		select qna_no,qna_title,qna_createat,user_no
 		from QnA
 	</select>
 	<!--등록-->
@@ -29,10 +29,17 @@
     </select>
     
     <!--삭제 -->
-    <delete id="qnaDelete">
-    delete from  qna 
-	where qna_no = #{qnaNo}
-	</delete>
+   <!-- QNA 삭제 -->
+<delete id="deleteQna">
+    BEGIN
+        DELETE FROM qna_reply WHERE qna_no = #{id};
+        DELETE FROM qna WHERE qna_no = #{id};
+    END;
+</delete>
+
+
+    
+    
 	<!-- 답글 조회 -->
 	 <select id="qnaReplyList" parameterType="Integer" resultType="com.ecobank.app.QnA.service.QnaVO">
   select 
@@ -45,7 +52,8 @@
     </select>
     <update id="updateQnaInfo" parameterType="ChallVO">
 		UPDATE qna
-        SET qna_content = #{qnaContent}
+        SET qna_content = #{qnaContent},
+        qna_Title = #{qnaTitle}
         WHERE qna_no = #{qnaNo}
     </update>
 	

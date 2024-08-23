@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +25,11 @@ public class QnaController {
 
     // QNA 목록 페이지
     @GetMapping("QnaUserList")
-    public String getQnaUserList(Model model) {
+    public String getQnaUserList(Model model, HttpSession session) {
         List<QnaVO> QnaUserList = qnaService.qnaUserList();
+        Integer userNo = (Integer) session.getAttribute("userNo");
         model.addAttribute("QnaUserList", QnaUserList);
+        model.addAttribute("loggedInUserNo", userNo); // 로그인한 사용자 번호 추가
         return "QnA/QnaUserList";
     }
 
@@ -59,7 +62,7 @@ public class QnaController {
         Integer loggedInUserNo = (Integer) session.getAttribute("userNo");
 
         // 단일 QNA 정보 조회
-        QnaVO qnaVO = qnaService.qnaSelectInfo(qnaNo); 
+        QnaVO qnaVO = qnaService.qnaSelectInfo(qnaNo);
               
         // 작성자 번호와 로그인한 사용자 번호 비교 (int 타입 비교)
         if (qnaVO.getUserNo() != loggedInUserNo) {
@@ -73,24 +76,21 @@ public class QnaController {
         model.addAttribute("qna", qnaVO);
         model.addAttribute("qnaReplyList", qnaReplyList);
 
-        return "QnA/QnaDetail"; // QNA 상세 페이지로 이동
+        return "qna/QnaDetail"; // QNA 상세 페이지로 이동
     }
 
-    // QNA 삭제
     @PostMapping("/qnaDelete")
-    public String qnaDelete(@RequestParam("qnaNo") Integer qnaNo) {
+    public String deleteQna(@RequestParam("qnaNo") Integer qnaNo, Model model) {
         try {
-            qnaService.qnaDelete(qnaNo);
-            return "redirect:/QnaUserList"; // 삭제 후 QNA 목록 페이지로 리디렉션
+        		qnaService.deleteQna(qnaNo);
+        		return "redirect:/QnaUserList";
         } catch (Exception e) {
-            e.printStackTrace();
-            return "error"; // 에러 페이지로 리디렉션
+        	e.printStackTrace();
+        	model.addAttribute("errorMessage","답글 삭제중 오류가 발생했습니다");
+        	return "error";
         }
-       
     }
-    
-    
- // QNA 수정 페이지 조회
+    // QNA 수정 페이지 조회
     @GetMapping("/qnaEdit/{qnaNo}")
     public String editQna(@PathVariable Integer qnaNo, Model model) {
         if (qnaNo == null) {
@@ -103,7 +103,7 @@ public class QnaController {
             model.addAttribute("errorMessage", "QNA 정보가 없습니다.");
             return "error"; // QNA 정보가 없으면 오류 페이지로 이동
         }
-
+        
         model.addAttribute("qna", qnaVO); // QNA 정보를 모델에 추가
         return "qna/qnaEdit"; // QNA 수정 페이지로 이동
     }
@@ -113,11 +113,10 @@ public class QnaController {
     public String updateQna(@ModelAttribute QnaVO qnaVO, Model model) {
         int result = qnaService.updateQnaInfo(qnaVO); // QNA 정보 수정
         if (result > 0) {
-            return "redirect:/qnaDetail?qnaNo=" + qnaVO.getQnaNo(); // 수정 후 QNA 상세 페이지로 리디렉션
+            return "redirect:/qna?qnaNo=" + qnaVO.getQnaNo(); // 수정 후 QNA 상세 페이지로 리디렉션
         } else {
             model.addAttribute("errorMessage", "QNA 수정에 실패했습니다.");
             return "error"; // 수정 실패 시 오류 페이지로 이동
         }
     }
-    
 }

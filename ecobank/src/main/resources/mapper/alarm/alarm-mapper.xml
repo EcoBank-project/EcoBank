@@ -27,4 +27,41 @@
         		         FROM chall_confirm
                 		 WHERE confirm_no=#{confirmNo})
     </select>
+    
+    <select id="getUserIdFromfeedNo" parameterType="Integer" resultType="String">
+    	SELECT use_id
+		FROM users
+		WHERE user_no = (SELECT user_no
+        		         FROM sns
+                		 WHERE feed_no=#{feedNo})
+    </select>
+    
+    <select id="checkAlarmExists" parameterType = "com.ecobank.app.alarm.service.AlarmVO" resultType="Integer">
+	    SELECT COUNT(alarm_no) 
+	    FROM alarm
+	    WHERE alarm_code = #{alarmCode}
+	    AND alarm_ref_no = #{alarmRefNo}
+	    AND user_no = #{userNo}
+	</select>
+	
+	<select id="alarmList" parameterType="Integer" resultType="com.ecobank.app.alarm.service.AlarmVO">
+		SELECT alarm_no, 
+		       alarm_code, 
+		       get_codename(alarm_code) as alarm_type,
+		       alarm_createat, 
+		       alarm_state, 
+		       alarm_ref_no,
+		       getuserNoFromRefNo(alarm_ref_no,alarm_code) as receiver_no,
+		       user_no,
+		       get_nickname(user_no) as sender_nickname
+		FROM alarm
+		WHERE getuserNoFromRefNo(ALARM_REF_NO,ALARM_CODE) = #{receiverNo}
+		AND alarm_state = 'G2'
+	</select>
+	
+	<update id="updateAlarmState" parameterType="com.ecobank.app.alarm.service.AlarmVO" >
+		UPDATE alarm
+		SET alarm_state = 'G1'
+		WHERE alarm_no = #{alarmNo};
+	</update>
 </mapper>

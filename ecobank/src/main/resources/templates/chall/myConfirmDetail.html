@@ -139,6 +139,37 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	.testimonial-carousel:hover .owl-nav {
 	    width: 300px;
 	}
+	
+/* 	.link-icon {
+		position: relative;
+		display: inline-block;
+		width: auto;
+		font-size: 14px;
+		font-weight: 500;
+		color: #333;
+		margin-right: 10px;
+		padding-top: 50px;
+	} 
+	
+ 	.link-icon.twitter {
+		background-image: url(./img/icon-twitter.png);
+		background-repeat: no-repeat;
+	}
+	
+	.link-icon.facebook {
+		background-image: url(./images/icon-facebook.png);
+		background-repeat: no-repeat;
+	}
+	
+	.link-icon.kakao {
+		background-image: url(./images/icon-kakao.png);
+		background-repeat: no-repeat;
+	}
+	
+	.link-icon.naver {
+		background-image: url(./images/icon-naver.png);
+		background-repeat: no-repeat;
+	}  */
 </style>
 </head>
 <body>
@@ -180,19 +211,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 				</div>
 			</div>
 			<!-- Testimonial End -->
-			
- 			<!-- Image Preview 기존거 -->
-<!--/*			<th:block th:each="file : ${list}">
-				<div class="row mb-4">
-					<div class="col-lg-12">
-						<div class="position-relative h-100">
-							<img class="image-preview"
-								th:src="@{/images/{filePath}(filePath=${file.filePath})}"
-								alt="confirm Images">
-						</div>
-					</div>
-				</div>
-			</th:block> */-->
+
 			<!-- Confirm Content -->
 			<div class="row mb-4">
 				<div class="col-lg-12">
@@ -213,7 +232,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 							<i class="bi bi-chat-dots"></i>
 						</button>
 						<span class="comments-count" th:text="${myConfirm.cntReply} + ' Comments'"></span>
-			            <button class="btn btn-outline-success ms-3">
+			            <button class="btn btn-outline-success ms-3" id="shareModal"  th:onclick="shareModal('share', [[${myConfirm.confirmNo}]])">
 			                <i class="bi bi-share"></i>
 			            </button>
 		                <span class="ms-1">Share</span>
@@ -229,8 +248,18 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
             </div>
 		</div>
 	</div>
+		
+<!--/* 						<a id="btnTwitter" class="link-icon twitter"
+						href="javascript:shareTwitter();"> <img
+						src="./img/icon-twitter.png" alt="트위터 공유하기">
+					</a> 
+					<a id="btnKakao" class="link-icon kakao"
+						href="javascript:shareKakao();"> <img
+						src="./img/icon-kakao.png" alt="카카오 공유하기">
+					</a> */-->
+	
 	<!-- 모달영역 -->
- 	<div class="modal">
+ 	<div class="modal declare">
         <div class="modal_body">
 			<div class="inputleft">
 				<h4>신고하기</h4>
@@ -248,6 +277,37 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	        <button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
         </div>
     </div>
+
+    <!-- 모달영역 -->
+	<div class="modal share">
+		<div class="modal_body">
+		<div class="inputleft">
+			<h4>공유하기</h4>
+			<hr style="width: 100%; height: 5px; border: none;" />
+			<form method="get">
+				<div class="mb-3">
+					<a id="btnTwitter" class="link-icon twitter"
+						href="javascript:shareTwitter();"> <img
+						src="./img/icon-twitter.png" alt="트위터 공유하기">
+					</a> 
+					<a id="btnKakao" class="link-icon kakao"
+						href="javascript:shareKakao();"> <img
+						src="./img/icon-kakao.png" alt="카카오 공유하기">
+					</a>
+		            <a type="btnNaver" class="link-icon naver" onclick="shareNaver()">
+		             <img src="./img/icon-naver.png" alt="네이버 공유하기" style="width:40px; height: 40px;">
+		            </a>
+				</div>
+				<hr style="margin: 10px;" />
+			    <button type="button" class="btn btn-primary" id="shareClose" aria-label="Close">닫기</button>
+			</form>
+		</div>
+	    </div>
+	</div>
+
+
+	<!-- 카카오 공유 api -->
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script>
     	let fNo = $('#fNo').val();
     	let cNo = $('#cNo').val();
@@ -369,11 +429,11 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	                        likeIcon.toggleClass('bi-heart bi-heart-fill');
 	                        $('.likes-count').text(result.totalCnt + ' Likes');
 	                        
-	                        if (typeof sendAlarm === "function") {
+	                        // 좋아요 안누른 상태이면 알람 전송 실행(수범)
+	                        if (typeof sendAlarm === "function" && $('#likeIcon').hasClass('bi-heart-fill')) {
 	    	                    sendAlarm('H2', fNo);
-	    	                } else {
-	    	                    console.error("sendAlarm 함수가 정의되지 않았습니다.");
-	    	                }
+	    	                } 
+	                        
 	                    } else {
 	                        alert('처리 오류');
 	                    } 
@@ -398,7 +458,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 		}
     	
     	//모달
-    	const modal = document.querySelector('.modal');
+    	var modal = document.querySelector('.declare');
 
     	$('#btn-close').on('click', function(){
     		 modal.style.display="none";
@@ -436,6 +496,56 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     			}
     		});
     	}
+    	//공유하기 모달창
+    	function shareModal(state, stateNo){
+			event.preventDefault();
+			
+			sModal.style.display="block";
+			console.log(state);
+			if(state == 'share'){
+				 fNo = stateNo;
+			}
+		}
+    	
+    	//모달
+    	var sModal = document.querySelector('.share');
+
+    	$('#shareClose').on('click', function(){
+    		sModal.style.display="none";
+    	});
+
+    		function shareTwitter() {
+   		    var sendText = "Ecobank"; // 전달할 텍스트
+   		    var sendUrl = "http://localhost:8080"; // 전달할 URL
+   		    window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl);
+   		}
+    	
+     	function shareKakao() {
+    		  // 사용할 앱의 JavaScript 키 설정
+    		  Kakao.init('');
+
+    		  // 카카오링크 버튼 생성
+    		  Kakao.Link.createDefaultButton({
+    		    container: '#btnKakao', // 카카오공유버튼ID
+    		    objectType: 'feed',
+    		    content: {
+    		      title: "Ecobank", // 보여질 제목
+    		      description: "Ecobank Challenge", // 보여질 설명
+    		      imageUrl: "./img/favicon.png", // 콘텐츠 URL
+    		      link: {
+    		         webUrl: "http://localhost:8080"
+		      }
+		    }
+		  });
+		}; 
+		
+		// NAVER
+		function shareNaver() {
+			  const title = "Ecobank";
+			  const url = "http://localhost:8080";
+			  window.open("https://share.naver.com/web/shareView?url=" + url + "&title=" + title
+		  );
+		}
     </script>
 </body>
 </html>

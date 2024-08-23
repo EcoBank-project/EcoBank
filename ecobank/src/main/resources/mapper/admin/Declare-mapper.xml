@@ -148,5 +148,15 @@ WHERE s.feed_no = #{feedNo}
     delete from qna_reply
 	where qna_reply_no = #{qnaReplyno}
     </delete>
+    <update id = "updateQnaReplyInfo" parameterType="ChallVo">
+     UPDATE QNA_REPLY 
+    set qna_reply_content = #{qnaReplyContent}
+    where qna_reply_no = #{qnaReplyNo}
+    </update>
+	<select id="qnaReplynocount" parameterType="int" resultType="int">
+		select count(*)
+		from qna a join qna_reply b
+  		on a.qna_no != b.qna_no
+	</select>
 	
 </mapper>
