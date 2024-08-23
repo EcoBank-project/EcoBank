@@ -1,39 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ecobank.app.mypage.mapper.MypageChallMapper">
-	<select id="getChallengeInfo" parameterType="int" resultType="MypageChallVO">
-    WITH RankedChallenges AS (
-        SELECT c.chall_no,
-               c.chall_title,
-               c.chall_content,
-               c.chall_startAt,
-               c.chall_closeAt,
-               ce.chall_enterat,
-               c.chall_state,
-               c.main_img,
-               ce.user_no,
-               cc.confirm_no,
-               ROUND(COUNT(cc.confirm_no) / 
-                     (TRUNC(c.chall_closeAt) - TRUNC(ce.chall_enterat)), 2) * 100 AS progressRate,
-               ROW_NUMBER() OVER (PARTITION BY c.chall_no ORDER BY c.chall_startAt) AS rn
-        FROM chall c
-        JOIN chall_enter ce ON c.chall_no = ce.chall_no
-        JOIN chall_confirm cc ON cc.user_no = ce.user_no
-        WHERE c.chall_state = 'D2'
-        AND ce.user_no = #{userNo}
-        GROUP BY c.chall_no,
-                 c.chall_title,
-                 c.chall_content,
-                 c.chall_startAt,
-                 c.chall_closeAt,
-                 ce.chall_enterat,
-                 c.chall_state,
-                 c.main_img,
-                 ce.user_no,
-                 cc.confirm_no
-    )
-    SELECT *
-    FROM RankedChallenges
-    WHERE rn = 1
+<mapper
+	namespace="com.ecobank.app.mypage.mapper.MypageChallMapper">
+	<!-- 진행중인 챌린지 조회 -->
+	<select id="getChallengeInfo" parameterType="int"
+		resultType="MypageChallVO">
+				WITH  progress as (
+        SELECT chall_no, user_no,
+		COUNT(confirm_no) AS progressCount
+        FROM chall_confirm 
+        group by chall_no, user_no)       
+   
+		SELECT c.chall_no,
+		c.chall_title,
+		c.chall_content,
+		c.chall_startAt,
+		c.chall_closeAt,
+		c.chall_state,
+		c.main_img,
+		ce.user_no,
+        NVL(ROUND(progressCount/ (TRUNC(c.chall_closeAt) - TRUNC(ce.chall_enterAt)),2),0)*100 AS progressRate,
+		ROW_NUMBER() OVER (PARTITION BY c.chall_no ORDER BY c.chall_startAt) AS rn
+		FROM chall c
+		JOIN chall_enter ce ON c.chall_no = ce.chall_no
+        LEFT OUTER JOIN progress p ON (p.chall_no = c.chall_no and p.user_no = ce.user_no)
+		WHERE c.chall_state = 'D2'
+		AND ce.user_no = #{userNo}
+	</select>
+
+	<!-- 챌린지 취소 -->
+	<delete id="cancleChall">
+		DELETE FROM chall_enter
+		WHERE user_no = #{userNo}
+		AND
+		chall_no = #{challNo}
+	</delete>
+
+	<!-- 챌린지 종료 조회  -->
+	<select id="getExitChallengeInfo" parameterType="int"
+		resultType="MypageChallVO">
+	SELECT 
+    c.main_img, 
+    c.chall_title, 
+    c.chall_closeAt, 
+    ce.chall_enterAt, 
+    s.confirm_count, 
+    s.score, 
+    ce.user_no, 
+    s.chall_no,
+    ROUND(s.confirm_count / (TRUNC(c.chall_closeAt) - TRUNC(ce.chall_enterat)+1), 2) * 100 AS progressRate
+FROM 
+    chall c
+LEFT JOIN 
+    chall_enter ce ON c.chall_no = ce.chall_no
+LEFT JOIN 
+    score s ON ce.chall_no = s.chall_no AND ce.user_no = s.user_no
+WHERE 
+    ce.user_no = #{userNo}
+AND
+    c.chall_state = 'D3'
+
+	
 	</select>
 </mapper>
