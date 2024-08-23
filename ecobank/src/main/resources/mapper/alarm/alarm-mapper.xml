@@ -36,8 +36,9 @@
                 		 WHERE feed_no=#{feedNo})
     </select>
     
-    <select id="checkAlarmExists" parameterType = "com.ecobank.app.alarm.service.AlarmVO" resultType="Integer">
-	    SELECT COUNT(alarm_no) 
+    <select id="checkAlarmExists" parameterType = "com.ecobank.app.alarm.service.AlarmVO" resultType="com.ecobank.app.alarm.service.AlarmVO">
+	    SELECT alarm_no,
+	    	   alarm_state 
 	    FROM alarm
 	    WHERE alarm_code = #{alarmCode}
 	    AND alarm_ref_no = #{alarmRefNo}
@@ -59,9 +60,16 @@
 		AND alarm_state = 'G2'
 	</select>
 	
+	<select id="getUserIdFromFollowingNo" parameterType="Integer" resultType="String">
+		SELECT use_id
+		FROM users
+		WHERE user_no = #{followingNo}
+	</select>
+	
 	<update id="updateAlarmState" parameterType="com.ecobank.app.alarm.service.AlarmVO" >
 		UPDATE alarm
-		SET alarm_state = 'G1'
-		WHERE alarm_no = #{alarmNo};
+		SET alarm_state = #{alarmState},
+			alarm_createat = sysdate
+		WHERE alarm_no = #{alarmNo}
 	</update>
 </mapper>

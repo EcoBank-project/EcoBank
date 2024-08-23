@@ -7,6 +7,7 @@ public interface AlarmService {
 	public AlarmVO saveAlarm(AlarmVO alarm);
 	public String getUserIdFromConfirmNo(Integer confirmNo);
 	public String getUserIdFromfeedNo(Integer feedNo);
-	public boolean checkAlarmExists(AlarmVO alarm);
+	public AlarmVO checkAlarmExists(AlarmVO alarm);
 	public boolean updateAlarmState(AlarmVO alarm);
+	public String getUserIdFromFollowingNo(int followingNo);
 }

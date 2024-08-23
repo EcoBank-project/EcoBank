@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -56,15 +57,24 @@ public class AlarmController {
 		} else if (alarmCode.equals("H3")) {
 			userId = alarmService.getUserIdFromfeedNo(Integer.parseInt(refNo));
 		}
+		else if(alarmCode.equals("H5")) {
+			userId = alarmService.getUserIdFromFollowingNo(Integer.parseInt(refNo));
+		}
 		System.out.println(userId);
 
 		// 수신자가 있어야만 메세지 보낼수 있도록 조건
 		if (userId != null) {
-			boolean exists = alarmService.checkAlarmExists(alarm);
-			// 기존에 존재하는 알람이면 테이블에 저장하지 않음.
-			if (!exists) {
+			AlarmVO alarmData = alarmService.checkAlarmExists(alarm);
+			try {
+				System.out.println("existAlarm"+alarmData.getAlarmNo());
+				alarmData.setAlarmState("G2");
+				alarmService.updateAlarmState(alarmData);
+			}
+			catch(NullPointerException e) {
 				AlarmVO savedAlarm = alarmService.saveAlarm(alarm);
 			}
+			
+			
 			// 테이블에 저장되지 않더라도 알람은 가도록 기능 분리
 			messagingTemplate.convertAndSendToUser(userId, "/queue/alarms", alarm);
 			System.out.println("Sent alarm to user: " + userId);
@@ -89,17 +99,17 @@ public class AlarmController {
 	}
 	
 	@PostMapping("updateAlarmState")
-    public Map<String,String> updateAlarmState(@RequestBody AlarmVO alarm) {
+    public ResponseEntity<Map<String, String>> updateAlarmState(@RequestBody AlarmVO alarm) {
         // alarmNo와 alarmState를 이용해 데이터베이스에서 해당 알람의 상태를 업데이트
         Map<String,String> resultMap = new HashMap<>();
 		boolean result = alarmService.updateAlarmState(alarm);
         if(result) {        	
-        	resultMap.put("result", "success");
-        	return resultMap;
-        }
-        else {
-        	resultMap.put("result", "error");
-        }
-        return resultMap;
+        	 resultMap.put("result", "success");
+             return ResponseEntity.ok(resultMap); // HTTP 200 OK 상태 코드 반환
+         } else {
+             resultMap.put("result", "error");
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap); // HTTP 500 상태 코드 반환
+         }
+
     }
 }

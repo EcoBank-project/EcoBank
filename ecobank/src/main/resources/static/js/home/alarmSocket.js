@@ -1,6 +1,16 @@
 var stompClientAlarm = null;
 var socketAlarm = null;
-
+let Toast = Swal.mixin({
+	        toast: true,
+	        position: "bottom-end",
+	        showConfirmButton: false,
+	        showCloseButton: true,  // 닫기 버튼 추가
+	        didOpen: (toast) => {
+	            toast.addEventListener('click', () => {
+	                window.location.href = `/alarms?receiverNo=${userNumber}`; // 클릭 시 이동할 페이지 설정
+	            });
+	        }
+	    });
 function showAlert() {
     Toast.fire({
         icon: "success",
@@ -54,7 +64,7 @@ window.addEventListener('beforeunload', function() {
 window.onload = function() {
 	if (typeof userNumber === 'undefined' || userNumber === null) {
 		console.log("userNumber is not defined or is null");
-		$('.notification-dot').closest('a').attr('href', '/');
+		$('.notification-dot').closest('a').attr('href', '/login');
 	} else {
 		console.log("userNumber is defined and its value is:", userNumber);
 		$('.notification-dot').closest('a').attr('href', `/alarms?receiverNo=${userNumber}`);
@@ -78,6 +88,9 @@ function sendAlarm(alarmCode, alarmRefNo) { // userId : 받는사람
 		}
 		else if (alarmCode == 'H2') {
 			alarmContent = '인증 좋아요!';
+		}
+		else if (alarmCode == 'H5') {
+			alarmContent = '회원님을 팔로우한 회원이 있습니다!';
 		}
 
 		const alarmMessage = {

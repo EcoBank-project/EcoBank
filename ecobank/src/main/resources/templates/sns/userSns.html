@@ -129,12 +129,18 @@ height: 50px;
 		//좋아요버튼
 	  	$('.bi').on('click',function(){
 	  		let feedNo =$(this).data('feedno');
+	  		let likeIcon = $(this).find('i'); // 클릭된 버튼의 좋아요아이콘
+	  	    let isLikedAlready = likeIcon.hasClass('bi-heart-fill'); // 이미 좋아요가 누른 상태인지 확인
 			$.ajax({
 				type : "POST",
 				url : "likeInsert",
 				data : {feedNo},
 				dataType : "json",
 				success : function(result){
+					if (typeof sendAlarm === "function" && !isLikedAlready) {
+	                    console.log(feedNo);
+						sendAlarm('H3', feedNo);
+	                } 
 					location.reload();
 				},
 				error :  function(error){
@@ -171,6 +177,9 @@ height: 50px;
 				data : {userNo, followingId},
 				dataType : "json",
 				success : function(){
+					if (typeof sendAlarm === "function") {
+						sendAlarm('H5', followingId);
+	                } 
 					alert("팔로우 성공");
 					location.reload();
 				},

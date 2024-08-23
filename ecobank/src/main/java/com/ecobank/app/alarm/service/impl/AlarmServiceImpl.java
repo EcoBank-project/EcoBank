@@ -34,10 +34,10 @@ public class AlarmServiceImpl implements AlarmService{
 		return alarmMapper.getUserIdFromfeedNo(feedNo);
 	}
 	@Override
-	public boolean checkAlarmExists(AlarmVO alarm) {
+	public AlarmVO checkAlarmExists(AlarmVO alarm) {
         // 알람이 이미 존재하는지 확인
-        int count = alarmMapper.checkAlarmExists(alarm);
-        return count > 0;
+        AlarmVO getalarm = alarmMapper.checkAlarmExists(alarm);
+        return getalarm;
     }
 
 	@Override
@@ -52,4 +52,10 @@ public class AlarmServiceImpl implements AlarmService{
 		int result = alarmMapper.updateAlarmState(alarm);
         return result>0;
     }
+
+	@Override
+	public String getUserIdFromFollowingNo(int followingNo) {
+		// TODO Auto-generated method stub
+		return alarmMapper.getUserIdFromFollowingNo(followingNo);
+	}
 }

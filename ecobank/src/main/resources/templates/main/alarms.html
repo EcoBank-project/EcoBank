@@ -65,6 +65,16 @@
 						    <td class="text-center" th:text="${alarm.alarmType}"></td>
 						    <td class="text-center" th:text="${#dates.format(alarm.alarmCreateAt, 'yyyy/MM/dd HH:mm:ss')}"></td>
 						</tr>
+						
+						<tr th:each="alarm, iterStat : ${alarmList}"
+						    style="cursor: pointer;"
+						    th:if="${alarm.alarmCode == 'H5'}"
+						    th:onclick="|location.href='/userSns?userNo=' + ${alarm.receiverNo}|">
+						    <td class="text-center" th:text="${iterStat.index + 1}"></td>
+						    <td class="text-center" th:text="${alarm.senderNickname}"></td>
+						    <td class="text-center" th:text="${alarm.alarmType}"></td>
+						    <td class="text-center" th:text="${#dates.format(alarm.alarmCreateAt, 'yyyy/MM/dd HH:mm:ss')}"></td>
+						</tr>
 			        </tbody>
 			    </table>
     </div>
@@ -74,7 +84,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-<script>
+<script th:inline="javascript">
 $(document).ready(function() {
     // 서버에서 받아온 alarmList를 JSON 형태로 가져오기
     const alarmList = [[${alarmList}]];
@@ -90,7 +100,7 @@ $(document).ready(function() {
             $('#alarms tbody tr').on('click', function() {
                 const index = $(this).index(); // 인덱스 가져오기
                 const alarm = alarmList[index];  // 해당 인덱스의 alarm 데이터 가져오기
-
+                console.log(alarm.alarmNo);
                 let url = '';
 
                 if (alarm.alarmCode === 'H2') {
@@ -98,14 +108,21 @@ $(document).ready(function() {
                 } else if (alarm.alarmCode === 'H3') {
                     url = `/snsInfo?feedNo=${alarm.alarmRefNo}&userNo=${alarm.receiverNo}`;
                 }
+                else if(alarm.alarmCode === 'H5'){
+                	url = `/userSns?userNo=${alarm.receiverNo}`
+                }
 
                 if (url) {
                 	 $.ajax({
-                         type: 'POST',
                          url: '/updateAlarmState', // 이 URL을 서버 측에서 처리해야 합니다.
+                         type: 'POST',
                          contentType: 'application/json',
-                         data: JSON.stringify({ alarmNo: alarm.alarmNo, alarmState: 'G1' }),
+                         data: JSON.stringify({ 
+                        	 alarmNo: alarm.alarmNo, 
+                        	 alarmState: 'G1' 
+                         }),
                          success: function(response) {
+                        	 console.log(response);
                              if (response.result === "success") {
                                  // AJAX 요청이 성공하면 페이지 이동
                                  window.location.href = url;
@@ -116,6 +133,8 @@ $(document).ready(function() {
                          },
                          error: function(error) {
                              console.error('Error updating alarm state:', error);
+                             console.error('HTTP Status:', error.status);
+                             console.error('Response:', error.responseText);
                          }
                      });
                 }
