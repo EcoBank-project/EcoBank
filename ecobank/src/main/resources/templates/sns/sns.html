@@ -24,17 +24,16 @@
 	margin: -1px;
 }
 .like{
-      width: 20px;
-      fill: #ddd;
+	width: 20px;
+    fill: #ddd;
 }
 .bi-heart-fill{
 	color: hotpink;
 }
 #speech{
-      width: 20px;
-      fill: #ddd;
+	width: 20px;
+    fill: #ddd;
 }
-
 
 .profile-img {
 	width: 60px;
@@ -47,62 +46,56 @@
 </head>
 <body>
 	<form method="post" enctype="multipart/form-data">
-	<div>
-		<div class="container" style="width:1200px;">	
-			<div class="row">
-				<p th:if="${#request.requestURI != '/snsP'}" >ECO BANK 회원들의 일상을 실시간으로 확인해보세요</p>
-				<p th:if="${#request.requestURI == '/snsP'}">ECO BANK 회원들의 일상을 인기순으로 확인해보세요</p>
-				<th:block th:each="sns, sts : ${snsList}"
-					th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
-					<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0" style="width:350px; margin : 20px;">
-						
-						<div class="author mb-2 d-flex align-items-center">
-							<div class="other">
-								<div th:text=${sns.userNo} class="blind"></div>
-								<img class="profile-img" th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Image">
-								<div class="ml-3 info" style="display:inline-block;">
-									<a href="#" th:text=${sns.nickname}></a>
+		<div>
+			<div class="container" style="width:1200px;">	
+				<div class="row">
+					<p th:if="${#request.requestURI != '/snsP'}" >ECO BANK 회원들의 일상을 실시간으로 확인해보세요</p>
+					<p th:if="${#request.requestURI == '/snsP'}">ECO BANK 회원들의 일상을 인기순으로 확인해보세요</p>
+					<th:block th:each="sns, sts : ${snsList}" th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
+						<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0" style="width:350px; margin : 20px;">
+							<div class="author mb-2 d-flex align-items-center">
+								<div class="other">
+									<div th:text=${sns.userNo} class="blind"></div>
+									<img class="profile-img" th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Image">
+									<div class="ml-3 info" style="display:inline-block;">
+										<a href="#" th:text=${sns.nickname}></a>
+									</div>
+								</div> 
+								<div style="margin-left:auto;">
+									<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null} and ${sns.userNo} != ${session.userNo}">팔로우</button>
+									<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
+							 	</div>
+							 	<input type="number" th:value="${sns.feedNo}" hidden>
+							</div>
+							<div class="imghover">
+								<div  style="position: relative;">
+									<div th:text=${sns.feedNo} class="blind"></div>
+									<svg xmlns="http://www.w3.org/2000/svg" th:if="${sns.fileCount != 1}" style="position:absolute; top:10; left: 280; z-index:100000;" color="gray" width="30" height="30" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+	  									<path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+	  									<path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
+									</svg>
+								 	<img th:src=@{/images/{filePath}(filePath=${sns.filePath})}
+									alt="Image" class="img-fluid" style="position:relative;  width:350px; height:410px; padding:0px;">
 								</div>
-							</div> 
-							<div style="margin-left:auto;">
-							<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null} and ${sns.userNo} != ${session.userNo}">팔로우</button>
-							<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
-							
-							 </div>
-							 <input type="number" th:value="${sns.feedNo}" hidden>
-						</div>
-						<div class="imghover">
-							<div  style="position: relative;">
-							<div th:text=${sns.feedNo} class="blind"></div>
-							
-							<svg xmlns="http://www.w3.org/2000/svg"  style="position:absolute; top:10; left: 280; z-index:100000;" color="gray" width="30" height="30" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
-  								<path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
-  								<path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
-							</svg>
-							
-							 <img th:src=@{/images/{filePath}(filePath=${sns.filePath})}
-								alt="Image" class="img-fluid" style="position:relative;  width:350px; height:410px; padding:0px;">
+							</div>
+							<div class="post-content-entry">
+								<div class="meta" style="margin-bottom:30px; margin-top:10px;">
+									<button  type = "button" id="likeButton" class="btn btn-outline-primary">
+										<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
+										<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
+									</button>
+									<span class="likes-count" th:text=${sns.countLike}></span>
+									<button  type = "button" class="btn btn-outline-secondary ms-3">
+										<i class="bi bi-chat-dots"></i>
+									</button>
+									<span class="comments-count" th:text=${sns.countReply}></span>
 								</div>
-						</div>
-						<div class="post-content-entry">
-							<div class="meta" style="margin-bottom:30px; margin-top:10px;">
-								<button  type = "button" id="likeButton" class="btn btn-outline-primary">
-									<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
-									<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
-								</button>
-								<span class="likes-count" th:text=${sns.countLike}></span>
-								
-								<button  type = "button" class="btn btn-outline-secondary ms-3">
-									<i class="bi bi-chat-dots"></i>
-								</button>
-								<span class="comments-count" th:text=${sns.countReply}></span>
 							</div>
 						</div>
-					</div>
-				</th:block>
+					</th:block>
+				</div>
 			</div>
 		</div>
-	</div>
 	</form>
 	<script th:inline="javascript">
 		let userNo = [[${session.userNo}]];
@@ -158,63 +151,61 @@
 			let snsLikeNo =$(this).data('snslikeno');
 			console.log("팔로우버튼");
 			console.log('누구야',snsLikeNo)
-		// ajax로 좋아요 취소하기
-		$.ajax({
-			type : "delete",
-			url : "likeDelete",
-			data : {snsLikeNo},
-			success : function(){
-				location.reload();
-			},
-			error :  function(error){
-				console.log(error);
-				alert("실패");
-			}
+			// ajax로 좋아요 취소하기
+			$.ajax({
+				type : "delete",
+				url : "likeDelete",
+				data : {snsLikeNo},
+				success : function(){
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
 		});
-	});
 	    
 	    // 팔로우(writeBtn) 버튼을 클릭할 경우
 		$('.followBtn').click(function(){
 			let followingId =$(this).data('userno');
 			console.log("팔로우버튼");
 			console.log('누구야',followingId);
-		// ajax로 팔로우 등록하기
-		$.ajax({
-			type : "POST",
-			url : "insertFollow",
-			data : {userNo, followingId},
-			dataType : "json",
-			success : function(){
-				alert("팔로우 성공");
-			},
-			error :  function(error){
-				console.log(error);
-				alert("팔로우 실패");
-			}
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "POST",
+				url : "insertFollow",
+				data : {userNo, followingId},
+				dataType : "json",
+				success : function(){
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("팔로우 실패");
+				}
+			});
 		});
-	});
 	
-	    
 		//팔로우취소
 		$('.followCancleBtn').click(function(){
 			let followNo =$(this).data('followno');
 			console.log("팔로우버튼");
-		// ajax로 팔로우 등록하기
-		$.ajax({
-			type : "delete",
-			url : "deleteFollow",
-			data : {followNo},
-			dataType : "json",
-			success : function(){
-				alert("팔로우취소 성공");
-			},
-			error :  function(error){
-				console.log(error);
-				alert("실패");
-			}
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "delete",
+				url : "deleteFollow",
+				data : {followNo},
+				dataType : "json",
+				success : function(){
+					alert("팔로우취소 성공");
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
 		});
-	});
-
  </script>
 </body>
 </html>

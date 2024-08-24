@@ -13,7 +13,7 @@
                 ,u.profile_img
 		FROM sns_reply s 
 				LEFT JOIN users u
-                 	ON s.user_no = u.user_no
+                 	   ON s.user_no = u.user_no
 		WHERE s.feed_no = #{feedNo}
 		ORDER BY s.reply_no DESC
 	</select>

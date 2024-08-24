@@ -70,7 +70,6 @@ public class SnsController {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		snsVO.setUserNo(userNo);
 		List<SnsVO> list = snsService.snsSearch(keyword, userNo);
-		System.out.println("검색목록" + list);
 		model.addAttribute("snsSearch", list);
 		return "sns/snsSearch";
 	}
@@ -84,8 +83,6 @@ public class SnsController {
 		List<FileVO> list = fileService.selectFileInfo(snsVO.getFeedNo());
 		model.addAttribute("snsFileInfo", list);
 		model.addAttribute("sns", findVO);
-		System.out.println("언제" + findVO);
-		System.out.println("단건목록" + list);
 		// 신고사유목록
 		List<CodeVO> declarelist = commonService.codeList("0E");
 		model.addAttribute("snsDeclare", declarelist);
@@ -108,9 +105,7 @@ public class SnsController {
 		snsVO.setUserNo(userNo);
 		int fno = snsService.insertSns(snsVO);
 		int snsNum = snsVO.getFeedNo();
-		System.out.println("인서트" + snsNum);
 		fileService.insertFile(images, snsCode, snsNum); // 피드번호
-
 		return "redirect:snsInfo?feedNo=" + snsNum;
 	}
 
@@ -140,7 +135,7 @@ public class SnsController {
 	@PostMapping("declareInsert")
 	public String snsDeclareProcess(SnsVO snsVO) {
 		// 신고하기
-		int declareNo = snsService.insertsnsDeclare(snsVO);
+		snsService.insertsnsDeclare(snsVO);
 		return "redirect:sns";
 	}
 

@@ -46,6 +46,7 @@ public class SnsVO extends Criteria{
 	private Integer followerId;			//팔로워 아이디
 	private Integer followingId;		//팔로잉 아이디
 	private Integer snsBlockNo;			//차단 번호
+	private Integer fileCount;			//파일 갯수
 	
 	
 	
