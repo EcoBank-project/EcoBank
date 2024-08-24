@@ -14,8 +14,12 @@ public interface UserMapper {
     public int updatePassword(@Param("useId") String useId, @Param("encodedPassword") String encodedPassword);
     
     // 구글 회원가입 여부
-    public String findUserInfoByUseId(@Param("useId") String useId)
-    ;
+    public String findUserInfoByUseId(@Param("useId") String useId);
+    
+    // 유저 프로필
+    @Select("SELECT profile_img FROM users WHERE user_no = #{userNo}")
+    String findUserProfileByUserNo(int userNo);
+    
 	// 유저 스코어
 	@Select("SELECT SUM(score) FROM score WHERE user_no = #{userNo}")
 	Integer findTotalScoreByUserNo(int userNo);

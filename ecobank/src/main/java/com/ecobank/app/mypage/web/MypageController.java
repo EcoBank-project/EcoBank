@@ -1,5 +1,8 @@
 package com.ecobank.app.mypage.web;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +11,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.admin.service.UserVO;
 import com.ecobank.app.mypage.service.MypageChallVO;
@@ -38,11 +44,13 @@ public class MypageController {
 
 	@Autowired
 	private MypageFollowService followService;
-
+	
 	@Autowired
 	private UserRepository userRepository;
+	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
 	@GetMapping("mypage")
 	public String getMypage(HttpSession session, Model model) {
 		Integer userNo = (Integer) session.getAttribute("userNo");
@@ -52,7 +60,8 @@ public class MypageController {
 		model.addAttribute("totalScore", userStatistics.getTotalScore());
 		model.addAttribute("followerCount", userStatistics.getFollowerCount());
 		model.addAttribute("followingCount", userStatistics.getFollowingCount());
-
+		model.addAttribute("userProfile", userStatistics.getUserProfile());
+		
 		return "mypage/mypage"; // mypage.html 템플릿을 렌더링 }
 	}
 
@@ -73,7 +82,8 @@ public class MypageController {
 	public String getUserDel() {
 		return "mypage/userDel";
 	}
-	
+		
+
 	
 
 	// 비밀번호 재확인(수정)
@@ -174,6 +184,15 @@ public class MypageController {
 		return response;
 	}
 
+	@GetMapping("/api/withdrawal-info")
+	@ResponseBody
+	public List<MypageChallVO> getWithdrawalInfo(@RequestParam("userNo") Integer userNo) {
+		List<MypageChallVO> challInfo = mypageService.getChallengeInfo(userNo);
+		return challInfo;
+	}
+	
+	
+	
 	@GetMapping("/ongoingChall")
 	public String getChallenge(HttpSession session, Model model) {
 		Integer userNo = (Integer) session.getAttribute("userNo");
@@ -215,13 +234,38 @@ public class MypageController {
         return followService.getFollowingList(userNo);
     }
 
-    // 팔로워 목록 API
+    // 팔로워 목록
     @GetMapping("/user/follower")
     @ResponseBody
     public List<UserVO> getFollowerList(@RequestParam("userNo") int userNo) {
         return followService.getFollowerList(userNo);
     }
 
-    
-    
+    // 프로필 이미지 수정
+    @PostMapping("/user/changeProfileImage")
+    public ResponseEntity<?> changeProfileImage(@RequestParam("profileImage") MultipartFile profileImage, HttpSession session) {
+        Integer userNo = (Integer) session.getAttribute("userNo");
+
+        try {
+            String fileName = profileImage.getOriginalFilename();
+            String filePath = "D:/upload/profile/" + fileName; // 이미지 저장 경로
+            System.out.println("-------" + profileImage.getOriginalFilename());
+            System.out.println("-------" + fileName);
+
+            // 파일 저장
+            File file = new File(filePath);
+            profileImage.transferTo(file);
+
+            // 사용자 정보 업데이트
+            mypageService.updateProfileImage(userNo, fileName);
+
+            // 응답 반환
+            return ResponseEntity.ok(Collections.singletonMap("newImageUrl", "/images/" + fileName));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장 실패");
+        }
+    }
 }
+
+    
+    

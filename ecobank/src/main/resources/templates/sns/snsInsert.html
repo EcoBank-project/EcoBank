@@ -5,7 +5,7 @@
 	  	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 
  <style>
 .insertContainer{
@@ -82,7 +82,7 @@
    <div class="insertContainer"  >
         <h1>게시글 등록</h1>
         <form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
-
+			<p style="text-align:center;">당신의 ECO 일상을 다른 회원들에게 공유해보세요</p>
             <label for="images">이미지 업로드 (최대 3장)</label>
             <input type="file" id="images" name="images" accept="image/*" multiple required>
 

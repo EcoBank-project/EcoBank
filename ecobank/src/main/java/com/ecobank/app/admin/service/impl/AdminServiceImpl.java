@@ -1,6 +1,7 @@
 package com.ecobank.app.admin.service.impl;
 
 import java.util.List;
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import com.ecobank.app.admin.service.ChallDeclareVO;
 import com.ecobank.app.admin.service.SnsDeclareVO;
 import com.ecobank.app.admin.service.UserVO;
 import com.ecobank.app.admin.service.adminSnsVO;
-import com.ecobank.app.sns.service.SnsVO;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -170,4 +170,22 @@ public class AdminServiceImpl implements AdminService {
     public int qnaReplynocount() {
     	return adminMapper.qnaReplynocount();
     }
+
+    @Override
+    public List<UserVO> userSysCreateat() {
+        return adminMapper.userSysCreateat();
+    }
+
+	@Override
+	public List<UserVO> userState() {
+		// TODO Auto-generated method stub
+		return adminMapper.userState();
+	}
+
+	@Override
+	public List<QnaVO> qnaReply() {
+		// TODO Auto-generated method stub
+		return adminMapper.qnaReply();
+	}
+	
 }

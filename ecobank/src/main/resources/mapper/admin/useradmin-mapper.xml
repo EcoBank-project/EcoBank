@@ -74,6 +74,33 @@ ORDER BY a.user_no ASC
 		from users
 		where user_state = 'B2'
     </select>
+    
+   
+  <select id="userSysCreateat" resultType="userVO">
+    SELECT use_id, createat
+    FROM users
+    WHERE TO_CHAR(createat, 'yyyy-MM-dd') = TO_CHAR(SYSDATE, 'yyyy-MM-dd')
+	</select>
+	
+	
+	 <select id="userState" resultType="userVO">
+      select use_id, user_state
+      from users
+      where user_state = 'B2'
+    </select>
+    
+    <select id="qnaReply" resultType="qnaVO">
+    select a.qna_no,a.qna_title
+      from qna a join qna_reply b
+      on a.qna_no != b.qna_no
+    </select>
+    
+    
+	
+	
+
+    
+    
 
     
 </mapper>
