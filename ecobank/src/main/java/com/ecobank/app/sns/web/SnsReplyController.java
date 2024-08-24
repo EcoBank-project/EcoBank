@@ -26,6 +26,7 @@ public class SnsReplyController {
 	public SnsReplyController(SnsReplyService snsReplyService){
 		this.snsReplyService = snsReplyService;
 	}
+	
 	@Autowired
 	private HttpSession httpSession;
 	
@@ -41,7 +42,6 @@ public class SnsReplyController {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		snsReplyVO.setUserNo(userNo);
 		int fReplyno = snsReplyService.insertSnsReply(snsReplyVO);
-		System.out.println("인서트"+ fReplyno);
 		return snsReplyVO;
 	}
 	
@@ -56,7 +56,6 @@ public class SnsReplyController {
 	public int insertSnsLike(SnsReplyVO snsReplyVO) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		snsReplyVO.setUserNo(userNo);
-		System.out.println("좋아요"+snsReplyVO);
 		return snsReplyService.insertSnsLike(snsReplyVO);
 	}
 	
@@ -72,8 +71,6 @@ public class SnsReplyController {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		snsReplyVO.setUserNo(userNo);
 		int followerId = snsReplyService.insertFollow(snsReplyVO);
-		System.out.println("팔로우등록"+ followerId);
-		System.out.println("팔로우등록"+ followerId);
 		return snsReplyVO;
 	}
 	
@@ -87,12 +84,7 @@ public class SnsReplyController {
 	@PostMapping("insertBlock")
 	public SnsReplyVO insertBlock(SnsReplyVO snsReplyVO) {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
-		
-		//snsReplyVO.setBlockUserNo(userNo);
-		
 		int blockId = snsReplyService.insertBlock(snsReplyVO);
-		System.out.println("내가 차단"+ userNo);
-		System.out.println("차단된아이디"+ blockId);
 		return snsReplyVO;
 	}
 	

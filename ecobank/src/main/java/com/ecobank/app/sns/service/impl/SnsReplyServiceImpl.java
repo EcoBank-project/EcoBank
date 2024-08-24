@@ -54,7 +54,6 @@ public class SnsReplyServiceImpl implements SnsReplyService{
 		return snsReplyMapper.deleteSnsLike(snsReplyVO);
 	}
 	
-
 	//팔로우 등록
 	@Override
 	public int insertFollow(SnsReplyVO snsReplyVO) {		

@@ -21,7 +21,6 @@ public interface SnsReplyMapper {
 	
 	//좋아요 삭제
 	public int deleteSnsLike(SnsReplyVO snsReplyVO);
-	
 
 	//팔로우 등록
 	public int insertFollow(SnsReplyVO snsReplyVO);
