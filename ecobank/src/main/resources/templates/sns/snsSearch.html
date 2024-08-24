@@ -5,7 +5,7 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <style>
 
 .like{
@@ -55,6 +55,7 @@ input::placeholder {
 <body>
 	<div class="container"  style="width:1200px;">
 		<h4>Search</h4>
+		<p>다른 회원의 일상을 검색해보세요</p>
 		<br/>
 		<form name="searchForm" th:action="@{/snsSearch}" method="get">		
 			<div class="position-relative mx-auto ">
@@ -83,6 +84,8 @@ input::placeholder {
 					<div class="imghover">
 						<div th:text=${sns.feedNo} hidden></div>
 						<a href="#" class="post-thumbnail transition">
+						
+						
 						<img th:src=@{/images/{filePath}(filePath=${sns.filePath})}
 								alt="Image" class="img-fluid" style="width:350px; height:380px; padding:0px;"></a>
 					</div>

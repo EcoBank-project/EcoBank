@@ -19,7 +19,8 @@
              ,(SELECT file_path
                  FROM files
                 WHERE file_code_no = s.feed_no
-                  and rownum = 1)  as filePath
+                  and rownum = 1
+                  and file_code='J1')  as filePath
              ,(SELECT follow_no 
                  FROM follow 
               	WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
@@ -59,7 +60,8 @@
              ,(SELECT file_path
                  FROM files
                 WHERE file_code_no = s.feed_no
-                  and rownum = 1)  as filePath
+                  and rownum = 1
+                  and file_code='J1')  as filePath
              ,(SELECT follow_no 
                  FROM follow 
               	WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
@@ -204,7 +206,8 @@
                 ,(SELECT file_path
                     FROM files
                    WHERE file_code_no = s.feed_no
-                 	 and rownum = 1)  as filePath
+                 	 and rownum = 1
+                 	 and file_code='J1')  as filePath
                 ,(SELECT follow_no 
                  	FROM follow 
               	   WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
