@@ -356,7 +356,7 @@ height: 30px;
 			   </div>
 			<div class="d-flex">
 				<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
-               	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent"></textarea>
+               	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent" name="replyContent" required> </textarea>
                 <button type="button" id="writeBtn" style="margin-left:10px; height:60px;" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
              </div>
           
@@ -392,6 +392,18 @@ height: 30px;
 			let url = '/userSns?userNo=' + uno;
 			location.href = url;
 		});
+		//댓글 유효성
+		function validationCheck(){
+			let rContent = $('[name="replyContent"]');
+			if(rContent.val()==''){
+				alert('댓글을 입력하세요.');
+				rContent.focus();
+				return false;
+			}
+			
+
+			return true;
+		}
 		
 		//게시글 삭제
 		$('#deleteA').on('click', function(){
@@ -490,7 +502,7 @@ height: 30px;
 			for(let i in list){
 				output += "<div class='comment-item' >";
 				output +=`<div class="d-flex justify-content-between align-items-center">`;
-				output += `<div style="float:left;">`;
+				output += `<div onclick="replyother(${list[i].userNo})" style="float:left;">`;
 				output += `<img src="/images/${list[i].profileImg}" alt="Profile Image" class="profile-img">`;
 				output += "<strong>" + list[i].nickname +"</strong>";
 				output += `</div>`;
@@ -509,7 +521,11 @@ height: 30px;
 			}
 			$('.replyArea').html(output);
 		}
-
+		//개인피드이동
+		function replyother(rUserNo) {
+			let url = '/userSns?userNo=' + rUserNo;
+			location.href = url;
+		};
 		//신고모달		
 		function declareModal(state, stateNo){
 			console.log("qjxms")

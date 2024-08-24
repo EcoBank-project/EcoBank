@@ -83,9 +83,24 @@ li{
 li.active {
    color: red;
  }
-.profile{
-width: 50px;
-height: 50px;
+.profile-img {
+	width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.profile {
+	width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+ .active{
+	 text-decoration: underline #32C36C dotted 3px ;
+
 }
 </style>
 
@@ -95,9 +110,9 @@ height: 50px;
 	<div class="container-xxl py-5">
     	<div class="container" style="width:1200px;">
         	<div class="row g-5" style="border: 3px solid orange; border-radius: 2em; text-align:center;">
-            	<div class="col-md-6 col-lg-3 wow  fadeIn" data-wow-delay="0.1s">
-            	         			<img th:src=@{/images/{filePath}(filePath=${countMySns.profileImg})} alt="Profile Image" class="profile">
-                    <div class="align-items-center mb-4">
+            	<div class="col-md-6 col-lg-3 wow  fadeIn" style="margin-top:20px;"data-wow-delay="0.1s">
+            	 	<img th:src=@{/images/{filePath}(filePath=${countMySns.profileImg})} alt="Profile Image" class="profile-img">
+                    <div class="align-items-center mb-2">
                         <h5 class="mb-0" data-toggle="counter-up" th:text=${countMySns.nickname}></h5>
                     </div>
                     
@@ -159,7 +174,7 @@ height: 50px;
            		<ul>
             		<li><a href="#" class="fer">팔로워</a></li>
 	            	<li><a href="#" class="fing">팔로잉</a></li>
-	            	<li><a href="#" class="b">차단</a></li>
+	            	<li><a href="#" class="b"  th:if="${countMySns.userNo} == ${session.userNo}">차단</a></li>
 	            </ul>
 	        	<hr style="width:100%;height:5px;border:none;"/>
 	        	<div class="author mb-4 d-flex align-items-center"  style="margin-bottom:0px;">
@@ -167,33 +182,33 @@ height: 50px;
 	        		<div class="ferList" style="width:100%;">
 	        			<th:block th:each="follower, sts : ${follower}">
 	        				<div th:text=${follower.userNo} hidden></div>
-	        				<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
-	        				<div class="nicknameB ml-3 info" style="display: flex; align-items: center;">
-								<a href="#"  th:text=${follower.nickname} style="width:50px;" ></a>
+	        				<div class="ml-3 info" style="display: flex; align-items: center;">
+	        					<img th:src=@{/images/{filePath}(filePath=${follower.profileImg})} alt="Profile Image" class="profile">
+								<a href="#" th:onclick="replyother([[${follower.userNo}]])" th:text=${follower.nickname} style="width:80px;" ></a>
 								<button th:data-userno="${follower.userNo}" class="followBtn btn btn-primary" th:if="${follower.followYn == null}">팔로우</button>
 								<button th:data-followno="${follower.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${follower.followYn == null}">팔로잉</button>
 							</div>
 	        			</th:block>
 	        		</div>
 	        	    <!-- 팔로잉 -->
-	        		<div class="fingList" style="display:none; width:100%;">
+	        		<div class="fingList" style="width:100%;">
 	        			<th:block th:each="following, sts : ${following}">
 	        				<div th:text=${following.userNo} hidden></div>
-	        				<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
-	        				<div class="ml-3 info">
-								<a href="#"  style="display: flex; align-items: center; " th:text=${following.nickname} ></a>
+	        				<div class="ml-3 info"  style="display: flex; align-items: center;">
+	        				<img th:src=@{/images/{filePath}(filePath=${following.profileImg})} alt="Profile Image" class="profile">
+								<a href="#"  th:onclick="replyother([[${following.userNo}]])"  th:text=${following.nickname}  style="width:80px;"></a>
 								<button type="button" th:data-userno="${following.userNo}" class="followBtn btn btn-primary" th:if="${following.followYn == null}">팔로우</button>
 								<button type="button" th:data-followno="${following.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${following.followYn == null}">팔로잉</button>
 							</div>		
 	        			</th:block>
 		        	</div>
 	 				<!-- 차단 -->
-	        		<div class="blocbkList" style="display:none; width:100%;">
+	        		<div class="blocbkList" style="width:100%;">
 		        		<th:block th:each="block, sts : ${block}">
 			        		<div th:text=${block.userNo} hidden></div>
-			        		<a href="#" class="img"	style="background-image: url(images/person_2.jpg);"></a>
-			        		<div class="ml-3 info">
-	        					<a href="#"  style="display: flex; align-items: center;" th:text=${block.nickname} ></a>
+			        		<div class="ml-3 info" style="display: flex; align-items: center;">
+			        		<img th:src=@{/images/{filePath}(filePath=${block.profileImg})} alt="Profile Image" class="profile">
+	        					<a href="#"   th:onclick="replyother([[${block.blockUserNo}]])" style="width:80px;" th:text=${block.nickname} ></a>
 	        					<button type="button" th:data-blockno="${block.snsBlockNo}" class="bCancleBtn btn btn-danger"> 차단 해제 </button>
 							</div>
 	        			</th:block>
@@ -211,6 +226,13 @@ height: 50px;
 			let url = '/snsInfo?feedNo=' + fno;
 			location.href = url;
 		});
+		
+		//개인피드이동
+		function replyother(rUserNo) {
+			console.log("dd")
+			let url = '/userSns?userNo=' + rUserNo;
+			location.href = url;
+		};
 		
 		//좋아요버튼
 	  	$('.bi').on('click',function(){
@@ -297,6 +319,10 @@ height: 50px;
 	  	function listModal(){
 			event.preventDefault();
 			modal.style.display="block";
+			$('.fingList').show();
+			$('.ferList').hide();
+			$('.blocbkList').hide();
+			
 		}
 
 		//팔로워,팔로잉,차단 클릭 이벤트
@@ -336,7 +362,7 @@ height: 50px;
 				}
 			});
 		})
-		        const listItems = document.querySelectorAll('li');
+		const listItems = document.querySelectorAll('li');
 
         listItems.forEach(item => {
             item.addEventListener('click', () => {
