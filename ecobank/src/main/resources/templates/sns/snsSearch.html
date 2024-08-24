@@ -5,7 +5,7 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <style>
 
 .like{
@@ -42,9 +42,12 @@ input::placeholder {
 		filter: brightness(0.8);
 }
 
-.profile{
-width: 50px;
-height: 50px;
+.profile-img {
+	width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
 }
 </style>
 
@@ -52,6 +55,7 @@ height: 50px;
 <body>
 	<div class="container"  style="width:1200px;">
 		<h4>Search</h4>
+		<p>다른 회원의 일상을 검색해보세요</p>
 		<br/>
 		<form name="searchForm" th:action="@{/snsSearch}" method="get">		
 			<div class="position-relative mx-auto ">
@@ -62,10 +66,10 @@ height: 50px;
 		<div class="row" style="margin-top:40px; text-align:center; margin-left:50px;">
 			<th:block th:each="sns, sts : ${snsSearch}"	th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
 				<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0" style="width:350px; margin-right:10px;">
-					<div class="author mb-4 d-flex align-items-center">
+					<div class="author mb-2 d-flex align-items-center">
 						<div class="other">
 							<div th:text=${sns.userNo} hidden></div>
-							<img  th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Profile Image" class="profile">
+							<img  th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Profile Image" class="profile-img">
             		
 							<div class="ml-3 info" style="display:inline-block;">
 								<a href="#" th:text=${sns.nickname}></a>
@@ -80,6 +84,8 @@ height: 50px;
 					<div class="imghover">
 						<div th:text=${sns.feedNo} hidden></div>
 						<a href="#" class="post-thumbnail transition">
+						
+						
 						<img th:src=@{/images/{filePath}(filePath=${sns.filePath})}
 								alt="Image" class="img-fluid" style="width:350px; height:380px; padding:0px;"></a>
 					</div>

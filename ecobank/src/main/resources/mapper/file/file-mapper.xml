@@ -8,7 +8,7 @@
                ,f.file_path
 		FROM sns s RIGHT OUTER JOIN files f
                                     ON s.feed_no = f.file_code_no
-        WHERE  f.file_code_no = #{feedNo}
+        WHERE  file_code='J1' AND f.file_code_no = #{feedNo}
 		GROUP BY s.feed_no  
                  ,f.file_no
                  ,f.file_path
