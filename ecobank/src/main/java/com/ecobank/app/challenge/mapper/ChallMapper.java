@@ -29,6 +29,9 @@ public interface ChallMapper {
 	
 	//챌린지 단건 조회
 	public ChallVO selectChallInfo(ChallVO challVO);
+	
+	//챌린지 D2에 참여한 인원 카운트
+	public int enterUserCount(int challNo);
 
 	//챌린지 좋아요 전체 개수
 	public int challLikeTotalCnt(int challNo);

@@ -192,9 +192,6 @@
                         <h1 class="mb-4" th:text="${detail.challTitle}"></h1>
                         <h6>Challenge Guide</h6>
                         <p th:text="${detail.challContent}"></p>
-                        <!--/* <p>Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet
-                        	Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet
-                        </p>*/-->
                         <!--/* <p><i class="fa fa-check-circle text-primary me-3"></i>시작 일시 : [[${#dates.format(detail.challStartAt, 'yyyy/MM/dd')}]]</p> */-->
                         <p><i class="fa fa-check-circle text-primary me-3"></i>챌린지 기간 : [[${#dates.format(detail.challStartAt, 'yyyy/MM/dd')} + ' ~ ' + ${#dates.format(detail.challCloseAt, 'yyyy/MM/dd')}]]</p>
                         <p><i class="fa fa-check-circle text-primary me-3"></i>챌린지 인증 성공 후 받는 점수 : [[${detail.challScore}]]점 획득</p>
