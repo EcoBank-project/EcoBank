@@ -31,6 +31,8 @@ public class ChallVO extends Criteria{
 	
 	private int dDay;				//d-day
 	
+	private int userCnt;			//참여중인 인원(D2)
+	
 	private int confirmNo;			//인증번호
 	
 	//챌린지 좋아요

@@ -37,36 +37,38 @@ public class FileServiceImpl implements FileService{
 			FileVO fileVO = new FileVO();
 
 			for(MultipartFile image : images) {
-				//1)원래 파일이름
-				String fileName = image.getOriginalFilename(); 
-				
-				 //파일 형식
-				//String fileType = image.getContentType();
-				String folderPath = makeFolder();
-				//고유한 식별자로 이미지 저장해서 클라이언트가 업로드했을때 파일이름이 겹치지 않도록 하는거
-				UUID uuid = UUID.randomUUID();
-				String uniqueFileName = folderPath + "/" + uuid + "_" + fileName;
-				
-				//2)실제로 저장할 경로를 생성 : 서버의 업로드 경로 + 파일이름
-				
-				String saveName = uploadPath + "/" + uniqueFileName; //""가 /와 같아
-				
-				Path savePath = Paths.get(saveName); //여기에 경로 담았음
-				//파일의 정보를 가져와서 boardVO에 파일의 이름을 넣어줌
-				//System.out.println("파일"+saveName);
-				fileVO.setFileName(fileName);			//파일 이름
-				fileVO.setFilePath(uniqueFileName); 	//파일 경로
-				//fileVO.setFiletype(fileType); 		//파일 타입
-				fileVO.setFileCode(fileCode);			//파일 분류 코드
-				fileVO.setFileCodeNo(fileCodeNo);		//게시글번호
-				
-				result = fileMapper.insertFileInfo(fileVO);
-				
-				//3)*파일 작성(파일 업로드)
-				try {
-					image.transferTo(savePath); //*실제 경로 지정 /Path는 경로/transferTo=햇살
-				}catch(IOException e) {
-					e.printStackTrace();
+				if(image != null && image.getSize() > 0) {
+					//1)원래 파일이름
+					String fileName = image.getOriginalFilename(); 
+					
+					 //파일 형식
+					//String fileType = image.getContentType();
+					String folderPath = makeFolder();
+					//고유한 식별자로 이미지 저장해서 클라이언트가 업로드했을때 파일이름이 겹치지 않도록 하는거
+					UUID uuid = UUID.randomUUID();
+					String uniqueFileName = folderPath + "/" + uuid + "_" + fileName;
+					
+					//2)실제로 저장할 경로를 생성 : 서버의 업로드 경로 + 파일이름
+					
+					String saveName = uploadPath + "/" + uniqueFileName; //""가 /와 같아
+					
+					Path savePath = Paths.get(saveName); //여기에 경로 담았음
+					//파일의 정보를 가져와서 boardVO에 파일의 이름을 넣어줌
+					//System.out.println("파일"+saveName);
+					fileVO.setFileName(fileName);			//파일 이름
+					fileVO.setFilePath(uniqueFileName); 	//파일 경로
+					//fileVO.setFiletype(fileType); 		//파일 타입
+					fileVO.setFileCode(fileCode);			//파일 분류 코드
+					fileVO.setFileCodeNo(fileCodeNo);		//게시글번호
+					
+					result = fileMapper.insertFileInfo(fileVO);
+					
+					//3)*파일 작성(파일 업로드)
+					try {
+						image.transferTo(savePath); //*실제 경로 지정 /Path는 경로/transferTo=햇살
+					}catch(IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			return result == 1 ? fileVO.getFileNo() : -1;

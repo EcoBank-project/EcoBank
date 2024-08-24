@@ -64,11 +64,15 @@ public class ChallengeController {
 		challVO.setChallState("D2");	//상태값
 		List<ChallVO> list = challService.getDList(criteria); //리스트에 D2만 보이게
         int countD2 = challService.countChallengesByState(challVO); //D2 챌린지 개수
+        //int userCnt = challService.enterUserCount(challVO.getChallNo()); //D2에 참여 중인 인원
         
         model.addAttribute("count", countD2);
         model.addAttribute("status", "D2");
 		model.addAttribute("list", list);
 		model.addAttribute("page", new PageDTO(8, challService.getTotalByState(criteria), criteria));
+		//model.addAttribute("userCnt", userCnt);
+		//System.out.println(userCnt + "몇명참여?");
+		//System.out.println(list + "몇명참여?");
 		return "chall/challenge";
 	}
 	

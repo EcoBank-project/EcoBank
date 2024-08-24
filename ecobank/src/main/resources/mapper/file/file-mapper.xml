@@ -56,7 +56,7 @@
 		                    ON f.file_code_no = c.confirm_no
 		    WHERE c.chall_no = #{challNo}
 		    AND c.user_no = #{userNo}
-		    AND f.file_code = #{fileCode}
+		    AND f.file_code = 'J3'
 		)
 		WHERE rn = 1
 		ORDER BY file_no desc
@@ -74,6 +74,7 @@
 		            --]]>  
 		FROM chall_confirm c
 		WHERE c.chall_no = #{challNo}
+		AND file_code = 'J3'
         ORDER BY c.confirm_no DESC
 	</select>
 	
@@ -85,6 +86,7 @@
 		FROM chall_confirm c RIGHT OUTER JOIN files f
                         		ON c.confirm_no = f.file_code_no
 		WHERE  f.file_code_no = #{confirmNo}
+		AND file_code = 'J3'
 		GROUP BY c.confirm_no
 		         	,f.file_no
 		         	,f.file_path
