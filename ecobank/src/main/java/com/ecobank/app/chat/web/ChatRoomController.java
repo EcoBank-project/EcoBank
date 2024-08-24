@@ -61,7 +61,7 @@ public class ChatRoomController {
 		String userId = (String) httpSession.getAttribute("useId");
 		ChatRoomVO chatRoom = chatService.chatRoomInfo(chatNo, userNo, nickName);
 		if(chatRoom == null) {
-			return "redirect:/";
+			return "redirect:/chatRoom";
 		}
 		
 		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo, nickName);
@@ -69,13 +69,14 @@ public class ChatRoomController {
 		String chatType = chatRoom.getChatType();
 		String chatName = chatRoom.getChatName();
 		
+		ChatRoomUserVO chatRoomUser = chatService.ChatProfileInfo(userNo);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("chatType", chatType);
 		model.addAttribute("chatName", chatName);
 		model.addAttribute("nickname", nickName);
 		model.addAttribute("chatRooms", chatList);
 		model.addAttribute("lagCode", lagCode);
-		
+		model.addAttribute("profiles", chatRoomUser);
 		return "chat/chatRoom";
 	}
 	
@@ -127,6 +128,17 @@ public class ChatRoomController {
 	@ResponseBody
 	public Integer chatPrivateGroup(HttpSession httpSession, @RequestBody ChatRoomDTO chatRoom){
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		
+		Integer result = chatService.getChatName(chatRoom.getChatName());
+		if(result != null) {
+			if("O1".equals(chatRoom.getChatType())){
+				chatService.chatStateUpdate(userNo, result);
+				return result;
+			}else if("O2".equals(chatRoom.getChatType())) {
+				return 0;
+			}
+		}
+
 		Integer chatNo = chatService.ChatRoomInsert(chatRoom, userNo);
 		
 		List<Integer> userNos = chatRoom.getUserNo();

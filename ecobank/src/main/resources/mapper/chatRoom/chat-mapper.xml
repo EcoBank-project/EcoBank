@@ -238,5 +238,17 @@
 	    </set>
 	    WHERE chat_no = #{chatNo}
 	</update>
-		
+	<!-- 1대1 채팅방 -->
+	<select id="selectPrivateName">
+		SELECT chat_no 
+		FROM chat
+		WHERE chat_name = #{chatName}
+	</select>
+	<!-- 채팅방 다시 초대 -->
+	<update id="updateUserState">
+		Update chat_entry
+		SET chat_user_state = 'Q1'
+		WHERE chat_no = #{chatNo}
+		AND user_no = #{userNo}
+	</update> 	
 </mapper>

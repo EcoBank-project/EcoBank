@@ -29,6 +29,8 @@ public interface ChatMapper {
 	public String getChatRoomType(Integer chatNo);
 	// 채팅방 참여자 아이디 조회
 	public List<String> selectAllChatUser(Integer chatNo);
+	// 채팅방 이름 비교
+	public Integer selectPrivateName(String chatName);
 	
 	// 채팅방 참가자 수
 	public int selectUsersChatRoom(Integer chatNo);
@@ -56,6 +58,8 @@ public interface ChatMapper {
 	public List<ChatPartVO> selectChatRoomUsers(Integer chatNo);
 	// 팔로우 목록
 	public List<ChatFollowVO> selectChatFollowAll(Integer userNO);
+	// 1대1
+	public int updateUserState(@Param("userNo")Integer userNo, @Param("chatNo")Integer chatNo);
 	
 	// 언어 조회
 	public String selectLaguageCode(String userId);

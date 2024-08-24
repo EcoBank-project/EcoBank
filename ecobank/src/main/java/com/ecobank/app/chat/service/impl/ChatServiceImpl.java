@@ -277,5 +277,16 @@ public class ChatServiceImpl implements ChatService{
 		return chatRoom;
 	}
 	
+	//채팅방 이름 조회
+	@Override
+	public Integer getChatName(String chatName) {		
+		return chatMapper.selectPrivateName(chatName);
+	}
+	@Override
+	public int chatStateUpdate(Integer userNo, Integer chatNo) {
+		int result = chatMapper.updateUserState(userNo, chatNo);
+		return result;
+	}
+	
 
 }

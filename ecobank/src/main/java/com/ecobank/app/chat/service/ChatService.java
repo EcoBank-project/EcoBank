@@ -2,6 +2,7 @@ package com.ecobank.app.chat.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 // 사용자 기준
@@ -19,6 +20,10 @@ public interface ChatService {
 	public int ChatRoomInsert(ChatRoomDTO chatRoom, Integer userNo);
 	//오픈 채팅방 만들기
 	public int ChatOpenInsert(ChatRoomVO chatRoom, Integer userNo,  MultipartFile[] images);
+	//채팅방 이름 조회
+	public Integer getChatName(String chatName);
+	//채팅방 초대된 사람 나가고 다시 업데이트
+	public int chatStateUpdate(Integer userNo, Integer chatNo);
 	
 	//채팅방 타입 조회
 	public String chatRoomType(Integer chatNo);
