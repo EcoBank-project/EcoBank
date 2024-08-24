@@ -97,6 +97,12 @@ public class ChallServiceImpl implements ChallService{
 	public int getTotal(Criteria criteria) {
 		return challMapper.getTotal(criteria);
 	}
+	
+	//챌린지 D2에 참여한 인원 카운트
+	@Override
+	public int enterUserCount(int challNo) {
+		return challMapper.enterUserCount(challNo);
+	}
 
 	//챌린지 좋아요 개수
 	@Override

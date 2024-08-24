@@ -6,88 +6,138 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+  #confirmation-container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .confirmation-text {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        #challenges-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .challenge-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .challenge-item:last-child {
+            border-bottom: none;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Button spacing */
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button.cancel {
+            background-color: #dc3545; /* Red for cancel */
+        }
+
+        .button.confirm {
+            background-color: #28a745; /* Green for confirm */
+        }
+
+        .button.cancel:hover {
+            background-color: #c82333;
+        }
+
+        .button.confirm:hover {
+            background-color: #218838;
+        }
+</style>
 </head>
 <body>
-	<div id="">
-		<p>
-			<span th:text="${session.nickname}"></span>님 정말 탈퇴 하실건가요?
-		</p>
-		<!-- 소멸되는 포인트, 챌린지 내역 제공 -->
-		<p>현재 참여중인 챌린지 :</p>
-		<br>
-		<ul id="challenges-list">
+ <div id="confirmation-container">
+        <p class="confirmation-text">
+            <span th:text="${session.nickname}"></span>님 정말 탈퇴 하실건가요?
+        </p>
+        <!-- 소멸되는 포인트, 챌린지 내역 제공 -->
+        <p class="confirmation-text">현재 참여중인 챌린지 :</p>
+        <ul id="challenges-list">
+        <!-- 참여 중인 챌린지 목록이 동적으로 여기에 추가됩니다. -->
+        </ul>
+        <p class="confirmation-text">탈퇴하면 모든 포인트와 챌린지 내역은 삭제됩니다.</p>
+        <p class="confirmation-text">그래도 삭제하시겠습니까?</p>
+        <div class="button-container">
+            <button class="button cancel" onclick="cancel()">취소</button>
+            <button class="button confirm" onclick="confirmWithdrawal()">탈퇴</button>
+        </div>
+    </div>
 
-		</ul>
-		<p>탈퇴하면 모든 포인트와 챌린지 내역은 삭제됩니다.</p>
-		<br>
-		<p>
-			그래도 삭제하시겠습니까?
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            var userNo = [[${session.userNo}]];
 
-			<button class="button cancel" onclick="cancel()">취소</button>
-			<button class="button confirm" onclick="confirmWithdrawal()">탈퇴</button>
-	</div>
+            // Ajax 요청을 통해 참여 중인 챌린지를 가져옵니다.
+            $.ajax({
+                url: '/api/withdrawal-info',
+                method: 'GET',
+                data: { userNo: userNo },
+                success: function(response) {
+                    var challengesList = $('#challenges-list');
+                    challengesList.empty();
+                    response.forEach(function(challenge) { 
+                        challengesList.append('<li class="challenge-item">' + challenge.challTitle + '</li>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching withdrawal info:', error);
+                }
+            });
+        });
 
-	<script th:inline="javascript">
-		$(document).ready(
-				function() {
-					var userNo = '';
+        function cancel() {
+            // 취소 버튼 클릭 시 마이페이지로 이동
+            window.location.href = '/mypage';
+        }
 
-					// Ajax 요청을 통해 참여 중인 챌린지를 가져옵니다.
-					$.ajax({
-						url : '/api/withdrawal-info',
-						method : 'GET',
-						data : {
-							userNo : userNo
-						},
-						success : function(response) {
-							// 참여중인 챌린지 목록을 업데이트합니다.
-							var challengesList = $('#challenges-list');
-							challengesList.empty();
-							response.activeChallenges.forEach(function(
-									challenge) {
-								challengesList.append('<li>챌린지 제목: '
-										+ challenge.challTitle + ' (상태: '
-										+ challenge.challState + ')</li>');
-							});
-						},
-						error : function(xhr, status, error) {
-							console.error('Error fetching withdrawal info:',
-									error);
-						}
-					});
-				});
+        function confirmWithdrawal() {
+            // 탈퇴 버튼 클릭 시 탈퇴 처리 요청
+            var userNo = [[${session.userNo}]];
+            console.log("UserNo:", userNo);  // 콘솔에 userNo 출력
 
-		function cancel() {
-			// 취소 버튼 클릭 시 마이페이지로 이동
-			window.location.href = '/mypage';
-		}
-
-		function confirmWithdrawal() {
-			// 탈퇴 버튼 클릭 시 탈퇴 처리 요청
-
-		    var userNo = [[${session.userNo}]];
-			console.log("UserNo:", userNo);  // 콘솔에 userNo 출력				
-	
- 				$.ajax({
-					url : '/api/withdrawal',
-					method : 'POST',
-					data : {
-						userNo : userNo
-					},
-					success : function(response) {
-						if (response.success) {
-							alert('탈퇴가 완료되었습니다.');
-							window.location.href = '/logout?redirect=/'; 
-						} else {
-							alert('탈퇴 처리에 실패했습니다.');
-						}
-					},
-					error : function(xhr, status, error) {
-						console.error('Error processing withdrawal:', error);
-					}
-				}); 
-			}
-		
-	</script>
+            $.ajax({
+                url: '/api/withdrawal',
+                method: 'POST',
+                data: { userNo: userNo },
+                success: function(response) {
+                    if (response.success) {
+                        alert('탈퇴가 완료되었습니다.');
+                        window.location.href = '/logout?redirect=/';
+                    } else {
+                        alert('탈퇴 처리에 실패했습니다.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error processing withdrawal:', error);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

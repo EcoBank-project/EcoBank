@@ -115,6 +115,15 @@
 		WHERE chall_no = #{challNo}
 	</select>
 	
+	<!-- 챌린지 D2에 참여한 인원 카운트 -->
+	<select id="enterUserCount" parameterType="int">
+		SELECT COUNT(e.user_no)
+		FROM chall c JOIN chall_enter e
+		            ON c.chall_no = e.chall_no
+		WHERE c.chall_state = 'D2'
+		AND c.chall_no = #{challNo}
+	</select>
+	
 	<!-- 챌린지 좋아요 개수 -->
 	<select id="challLikeTotalCnt" parameterType="int">
 		SELECT COUNT(*)

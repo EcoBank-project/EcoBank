@@ -19,7 +19,8 @@
              ,(SELECT file_path
                  FROM files
                 WHERE file_code_no = s.feed_no
-                  and rownum = 1)  as filePath
+                  and rownum = 1
+                  and file_code='J1')  as filePath
              ,(SELECT follow_no 
                  FROM follow 
               	WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
@@ -59,7 +60,8 @@
              ,(SELECT file_path
                  FROM files
                 WHERE file_code_no = s.feed_no
-                  and rownum = 1)  as filePath
+                  and rownum = 1
+                  and file_code='J1')  as filePath
              ,(SELECT follow_no 
                  FROM follow 
               	WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
@@ -204,7 +206,8 @@
                 ,(SELECT file_path
                     FROM files
                    WHERE file_code_no = s.feed_no
-                 	 and rownum = 1)  as filePath
+                 	 and rownum = 1
+                 	 and file_code='J1')  as filePath
                 ,(SELECT follow_no 
                  	FROM follow 
               	   WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
@@ -249,6 +252,7 @@
 	<select id="followingList" resultType="SnsVO">
 		SELECT u.user_no
                ,u.nickname
+               ,u.profile_img
                ,f.follower_id
                ,(SELECT follow_no 
                  	FROM follow 
@@ -262,6 +266,7 @@
 	<select id="followerList" resultType="SnsVO">
 		SELECT u.user_no
                ,u.nickname
+               ,u.profile_img
                ,f.following_id
                ,(SELECT follow_no 
                  	FROM follow 
@@ -275,6 +280,7 @@
 	<select id="blockList" resultType="SnsVO">
 		SELECT b.user_no
                ,u.nickname
+               ,u.profile_img
                ,b.block_user_no
                ,b.sns_block_no
 		  FROM users u JOIN sns_block b 

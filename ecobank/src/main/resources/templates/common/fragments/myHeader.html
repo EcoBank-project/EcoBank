@@ -7,7 +7,7 @@
 		<!-- 프로필 이미지와 사용자 정보 -->
 		<div class="profile-section">
 			<div class="profile-container">
-				<img th:src="@{/img/defaultProfile.jpg}" alt="기본 이미지"
+				<img src="" alt="기본 이미지"
 					class="profile-image" />
 			</div>
 			<div class="user-info">
@@ -17,7 +17,17 @@
 				</p>
 			</div>
 		</div>
-
+		<div id="changeProfileModal" class="modal">
+			<div class="modal-content">
+				<span class="close" onclick="closeModal('changeProfileModal')">&times;</span>
+				<h2>프로필 이미지 변경</h2>
+				<form id="changeProfileForm" enctype="multipart/form-data">
+					<input type="file" id="profileImageInput" name="profileImage"
+						accept="image/*" required />
+					<button type="submit">변경하기</button>
+				</form>
+			</div>
+		</div>
 		<!-- 정보 레이아웃 -->
 		<div class="info-section">
 			<div class="info-item">
@@ -191,105 +201,42 @@ ul li img {
 	color: #ffeb3b; /* 호버 시 강조 색상 (닉네임과 동일한 색상) */
 }
 
-/* 애니메이션 효과 */
-@
-keyframes slide-in { 0% {
-	opacity: 0;
-	transform: translateY(-20px);
-}
-
-100
-
-
-
-
-
-
-
-
-%
-{
-opacity
-
-
-
-
-
-
-
-
-:
-
-
-
-
-
-
-
-
-1
-
-
-
-
-
-
-;
-transform
-
-
-
-
-
-
-
-
-:
-
-
-
-
-
-
-
-
-translateY
-
-
-
-
-
-
-(
-
-
-
-
-
-
-
-
-0
-
-
-
-
-
-
-
-
-)
-
-
-
-
-
-
-;
-}
-}
 .my-header {
 	animation: slide-in 0.6s ease forwards; /* 헤더에 애니메이션 적용 */
+}
+/* 프로필 이미지 변경 모달 스타일 */
+#changeProfileModal .modal-content {
+	background-color: #fff;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 500px;
+	text-align: center;
+}
+
+#changeProfileModal form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#changeProfileModal input[type="file"] {
+	margin-bottom: 15px;
+}
+
+#changeProfileModal button {
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	border: none;
+	background-color: #007bff;
+	color: #fff;
+	border-radius: 5px;
+	transition: background-color 0.3s ease;
+}
+
+#changeProfileModal button:hover {
+	background-color: #0056b3;
 }
 </style>
 	<script>
@@ -305,13 +252,16 @@ translateY
 											: data.totalScore);
 							$('#follower').text(data.followerCount);
 							$('#following').text(data.followingCount);
+							$('.profile-image').attr('src', '/images/' + data.userProfile);
+							console.log("0000data.userProfile : " +  data.userProfile)
 						},
 						error : function(xhr, status, error) {
 							console.error('사용자 정보 가져오기 오류:', status, error);
 						}
 					});
 				});
-		$(document).ready(function() {
+		$(document).ready(
+				function() {
 		    // 팔로잉 목록 클릭 이벤트
 		    $('#following').click(function() {
 		        let userNo = [[${session.userNo}]];
@@ -325,7 +275,7 @@ translateY
 		                data.forEach(function(user) {
 		                    $('#followingList').append(
 			                        '<li data-user-no="' + user.userNo + '">' +
-			                        '<img src="/images/' + (user.profileImg || 'defaultProfile.jpg') + '" alt="Profile Image">' +
+			                        '<img src="/images/' + user.profileImg + '" alt="Profile Image">' +
 			                        '<span>' + user.nickName + '</span></li>'
 		                    );
 		                });
@@ -350,7 +300,7 @@ translateY
 		                data.forEach(function(user) {
 		                    $('#followerList').append(
 			                        '<li data-user-no="' + user.userNo + '">' +
-			                        '<img src="/images/' + (user.profileImg || 'defaultProfile.jpg') + '" alt="Profile Image">' +
+			                        '<img src="/images/' + user.profileImg + '" alt="Profile Image">' +
 			                        '<span>' + user.nickName + '</span></li>'
 		                    );
 		                });
@@ -380,5 +330,36 @@ translateY
 		function closeModal(modalId) {
 		    document.getElementById(modalId).style.display = "none";
 		}
+
+		// 프로필 이미지 변경하기
+		$(document).ready(function() {
+		    // 프로필 이미지 클릭 이벤트
+		    $('.profile-image').click(function() {
+		        openModal('changeProfileModal');
+		    });
+
+		    // 프로필 이미지 변경 폼 제출 이벤트
+		    $('#changeProfileForm').submit(function(event) {
+		        event.preventDefault(); // 기본 폼 제출 방지
+
+		        var formData = new FormData(this);
+				console.log("----------formData : " + formData)
+		        $.ajax({
+		            url: '/user/changeProfileImage',
+		            method: 'POST',
+		            data: formData,
+		            contentType: false,
+		            processData: false,
+		            success: function(response) {
+		                // 이미지 변경 성공 시
+		                $('.profile-image').attr('src', response.newImageUrl);
+		                closeModal('changeProfileModal');
+		            },
+		            error: function(xhr, status, error) {
+		                console.error('프로필 이미지 변경 오류:', status, error);
+		            }
+		        });
+		    });
+		});
 	</script>
 </th:block>

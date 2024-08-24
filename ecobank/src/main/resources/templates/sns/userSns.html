@@ -5,7 +5,7 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <style>
 .imghover {
 	transition: background-img 0.5s;
@@ -43,9 +43,12 @@
 	top:80px;
 	right:300px;
 }
-.profile{
-width: 50px;
-height: 50px;
+.profile-img {
+	width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
 }
 </style>
 
@@ -61,8 +64,8 @@ height: 50px;
         </div>
     	<div class="container" style="width:1200px;">
         		<div class="row g-5" style="border: 3px solid orange; border-radius: 2em; text-align:center;">
-            		<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
-            			<img th:src=@{/images/{filePath}(filePath=${countMySns.profileImg})} alt="Profile Image" class="profile">
+            		<div class="col-md-6 col-lg-3 wow fadeIn" style="margin-top:20px;" data-wow-delay="0.1s">
+            			<img th:src=@{/images/{filePath}(filePath=${countMySns.profileImg})} alt="Profile Image" class="profile-img">
             		
                     	<div class="align-items-center mb-4">
                         	<h5 class="mb-0" data-toggle="counter-up" th:text=${countMySns.nickname}></h5>

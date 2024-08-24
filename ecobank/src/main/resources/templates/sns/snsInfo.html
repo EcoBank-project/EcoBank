@@ -5,7 +5,7 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <style>
 .comment-section {
 	margin-top: 20px;
@@ -260,6 +260,68 @@ height: 50px;
 width: 30px;
 height: 30px;
 }
+.slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    align-items: center; /* Center align items vertically */
+    overflow: hidden;
+    width: 100%;
+}
+
+.slider-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+}
+
+.slide {
+    min-width: 100%;
+    display: flex;
+    justify-content: center; /* Center align images horizontally */
+    box-sizing: border-box;
+    position: relative;
+}
+
+img {
+    max-width: 50%;
+    height:400px;
+  
+    display: block;
+}
+
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.3s;
+    visibility: hidden; /* Initially hide */
+}
+
+.prev-btn {
+    left: 0;
+}
+
+.next-btn {
+    right: 0;
+}
+
+.prev-btn.visible, .next-btn.visible {
+    visibility: visible; /* Show when class added */
+}
+
+
 </style>
 
 
@@ -293,22 +355,26 @@ height: 30px;
             </div>
         </div>
     
- 	   <!-- image Start -->
-    	<div class="container-xxl py-5">
-        	<div class="container">
-          		<input type="number" th:value="${sns.feedNo}" hidden>
-            	<div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
-                   	<th:block th:each="file, sts : ${snsFileInfo}">
-               			<div class="testimonial-item text-center">
-                   			<div class="testimonial-img position-relative">
-                       			<img class="img-fluid mx-auto mb-5" th:src=@{/images/{filePath}(filePath=${file.filePath})}>
-                   			</div>
-               			</div>
-                     </th:block>
-            	</div>
-       		</div>
-    	</div>
-    	<!-- image End -->
+    <div class="container-xxl py-5">
+    <div class="container">
+        <input type="number" th:value="${sns.feedNo}" hidden>
+        <div class="slider-container">
+            <button class="prev-btn">&#10094;</button>
+            <div class="slider">
+                <div class="slider-wrapper wow fadeInUp" data-wow-delay="0.1s">
+                    <th:block th:each="file, sts : ${snsFileInfo}">
+                        <div class="slide">
+                            <img class="img-fluid"    style="width: 400px;  height:400px;"   th:src="@{/images/{filePath}(filePath=${file.filePath})}" alt="Slide Image">
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+            <button class="next-btn">&#10095;</button>
+        </div>
+    </div>
+</div>
+    
+
         <!-- Confirm Content -->
         <div class="row mb-4">
         	<div class="col-lg-12">
@@ -356,7 +422,7 @@ height: 30px;
 			   </div>
 			<div class="d-flex">
 				<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
-               	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent"></textarea>
+               	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent" name="replyContent" required> </textarea>
                 <button type="button" id="writeBtn" style="margin-left:10px; height:60px;" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
              </div>
           
@@ -392,6 +458,65 @@ height: 30px;
 			let url = '/userSns?userNo=' + uno;
 			location.href = url;
 		});
+		
+		document.addEventListener("DOMContentLoaded", function() {
+		    const prevBtn = document.querySelector('.prev-btn');
+		    const nextBtn = document.querySelector('.next-btn');
+		    const sliderWrapper = document.querySelector('.slider-wrapper');
+		    let currentIndex = 0;
+
+		    const slides = document.querySelectorAll('.slide');
+		    const totalSlides = slides.length;
+
+		    function updateSliderPosition() {
+		        const offset = -currentIndex * 100;
+		        sliderWrapper.style.transform = `translateX(${offset}%)`;
+		        updateButtonVisibility();
+		    }
+
+		    function updateButtonVisibility() {
+		        if (currentIndex === 0) {
+		            prevBtn.classList.remove('visible');
+		        } else {
+		            prevBtn.classList.add('visible');
+		        }
+
+		        if (currentIndex === totalSlides - 1) {
+		            nextBtn.classList.remove('visible');
+		        } else {
+		            nextBtn.classList.add('visible');
+		        }
+		    }
+
+		    prevBtn.addEventListener('click', function() {
+		        if (currentIndex > 0) {
+		            currentIndex--;
+		            updateSliderPosition();
+		        }
+		    });
+
+		    nextBtn.addEventListener('click', function() {
+		        if (currentIndex < totalSlides - 1) {
+		            currentIndex++;
+		            updateSliderPosition();
+		        }
+		    });
+
+		    updateSliderPosition(); // Initialize slider position
+		});
+
+		//댓글 유효성
+		function validationCheck(){
+			let rContent = $('[name="replyContent"]');
+			if(rContent.val()==''){
+				alert('댓글을 입력하세요.');
+				rContent.focus();
+				return false;
+			}
+			
+
+			return true;
+		}
 		
 		//게시글 삭제
 		$('#deleteA').on('click', function(){
@@ -490,7 +615,7 @@ height: 30px;
 			for(let i in list){
 				output += "<div class='comment-item' >";
 				output +=`<div class="d-flex justify-content-between align-items-center">`;
-				output += `<div style="float:left;">`;
+				output += `<div onclick="replyother(${list[i].userNo})" style="float:left;">`;
 				output += `<img src="/images/${list[i].profileImg}" alt="Profile Image" class="profile-img">`;
 				output += "<strong>" + list[i].nickname +"</strong>";
 				output += `</div>`;
@@ -509,7 +634,11 @@ height: 30px;
 			}
 			$('.replyArea').html(output);
 		}
-
+		//개인피드이동
+		function replyother(rUserNo) {
+			let url = '/userSns?userNo=' + rUserNo;
+			location.href = url;
+		};
 		//신고모달		
 		function declareModal(state, stateNo){
 			console.log("qjxms")

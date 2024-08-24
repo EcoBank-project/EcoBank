@@ -31,12 +31,14 @@
     	align-items: flex-start;
     	margin-bottom: 20px;
     	align-self: flex-start;
+    	max-width: 50%;
 	}
 	.message_right {
 		display: flex;
     	align-items: flex-start;
     	margin-bottom: 20px;
     	align-self: flex-end;
+    	max-width: 50%;
 	}
 
 	.chat_profil_img {
@@ -540,4 +542,10 @@
 	.profile-info h1 {
 		margin: 0;
 		font-size: 2em;
+ 	}
+ 	
+ 	
+ 	.message_content a{
+ 		color: #FFFFFF;
+ 		text-decoration:underline; 
  	}

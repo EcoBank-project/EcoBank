@@ -38,23 +38,35 @@ public class AdminController {
     // 관리자 페이지에 대한 전체 조회
     @GetMapping("/admin")
     public String intro(Model model) {
-        List<UserVO> userList = adminService.UserList(); // 사용자 목록 조회
+        List<UserVO> userList = adminService.UserList(); // 전체 사용자 목록 조회
         model.addAttribute("userList", userList);
+
+        List<UserVO> userSysCreateat = adminService.userSysCreateat(); // 오늘 가입한 유저 조회
+        model.addAttribute("userSysCreateat", userSysCreateat);
+        
+        List<UserVO> userState = adminService.userState(); // 전체 사용자 목록 조회
+        model.addAttribute("userState", userState);
+        
+        List<QnaVO> qnaReply = adminService.qnaReply();
+        model.addAttribute("qnaReply",qnaReply);
 
         int todaySignUpCount = adminService.getcreaTeat(); // 오늘의 회원 가입 수 조회
         model.addAttribute("todaySignUpCount", todaySignUpCount);
 
         int users = adminService.getusers(); // 전체 사용자 수 조회
         model.addAttribute("users", users);
-        
-        int state = adminService.stateCount();
-        model.addAttribute("state",state);
-        
-        int QnaState = adminService.qnaReplynocount();
-        model.addAttribute("QnaState",QnaState);
-        
+
+        int state = adminService.stateCount(); // 정지된 회원 수 조회
+        model.addAttribute("state", state);
+
+        int QnaState = adminService.qnaReplynocount(); // QNA 댓글 필요한 수 조회
+        model.addAttribute("QnaState", QnaState);
+
         return "admins/admin"; // 관리자 대시보드 페이지로 이동
     }
+    
+
+   
 
     // 회원 목록 페이지
     @GetMapping("/adminUser")

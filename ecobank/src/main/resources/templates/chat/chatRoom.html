@@ -5,7 +5,7 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>채팅</title>
+<title>에코뱅크</title>
 <link rel="stylesheet" href="../css/chatRoom/chat.css" />
 <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
@@ -259,8 +259,8 @@
 	// 소켓 연결
 	function connect(roomId,roomType) {
 		var socket = new SockJS('/ws');
-		
 		stompClient = Stomp.over(socket);
+		stompClient.debug = null;
 	    stompClient.connect({}, function(frame) {
 			if(roomType != null){
 			    // 채팅
@@ -309,7 +309,6 @@
 	}
 	// 상태 메시지
 	function stateMessage(message){
-		console.log(message);
         let tagDiv = $('<div />').prop('class','chat-message exit-message');
         let tagSpan = $('<span />').prop('class','exit-name').text(message.msgContent);
         tagDiv.append(tagSpan);
@@ -348,6 +347,29 @@
 		}
 	}
 	
+	// URL 유효성 검사 함수
+	function isValidUrl(url) {
+	    try {
+	        new URL(url); 
+	        return true;
+	    } catch (e) {
+	        return false;
+	    }
+	}
+
+	// URL을 하이퍼링크로 변환
+	function linkify(text) {
+	    var urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[-A-Z0-9+&@#\/%=~_|$])?/gi;
+	    return text.replace(urlPattern, function(url) {
+	        if (isValidUrl(url)) {
+	            return '<a href="' + url + '" target="_blank">' + url + '</a>';
+	        } else {
+	            return url;
+	        }
+	    });
+	}
+	
+	
 	// 메시지를 보여줌
 	function showMessage(message) {
 	    let chatbox = document.getElementById("chatbox");
@@ -378,7 +400,7 @@
 	    //내용
 	    let texts = document.createElement("div");
 	    texts.classList.add('text');
-	    texts.textContent = message.msgContent;
+	    texts.innerHTML = linkify(message.msgContent);
 	    
 	    content.appendChild(uname);
 	    content.appendChild(totime);
@@ -435,7 +457,6 @@
         		method : 'POST',
         		data : {chatNo},
         		success : function(result){
-        			console.log("확인"+result);
         			if(result > 0){
         				let tagI = $('<i />').prop('class', 'fas fa-user-plus');
         		        let tagI1 = $('<i />').prop('class','bi bi-gear');
@@ -576,10 +597,8 @@
 			method: "POST",
 			data: {roomId},
 			success: function(result){
-				console.log(result);
 				$('.chat-user-list').empty();
 				result.forEach(function(users){
-					console.log(users);
 					showChatUsers(users);
 				})
 			}
@@ -819,8 +838,21 @@
 			data : JSON.stringify(formObj),
 			contentType: 'application/json',
 			success: function(result){
-				allClose();
-				stompClient.send("/app/update.chatList", {}, JSON.stringify(result));			
+				if(result == 0){
+					alert("이미 사용 중인 채팅방 이름입니다.")
+				}else{
+					allClose();
+					stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
+					let today = new Date();
+					const chatMessage = {
+						msgType : 'I3',
+						msgSendTime: today,
+						chatType : formObj['chatType'],
+						chatNo : result,
+						userNos : formObj['userNo']
+					}
+					stompClient.send("/app/chat.enter/" + result, {}, JSON.stringify(chatMessage));
+				}
 			},
 			error: function(error){
 				console.log(error);

@@ -77,5 +77,14 @@ public interface AdminService {
 	
 	//QNA댓글 필요한글 수
 	int qnaReplynocount();
+
+	 // 오늘 회원가입한 유저 조회
+	List<UserVO> userSysCreateat();
+	
+	// 오늘 회원가입한 유저 조회
+	List<UserVO> userState();	
+	
+	 List<QnaVO>  qnaReply();
+	 
 	 
 }

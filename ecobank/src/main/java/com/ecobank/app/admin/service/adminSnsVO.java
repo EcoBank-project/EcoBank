@@ -1,5 +1,6 @@
 package com.ecobank.app.admin.service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,6 +38,8 @@ public class adminSnsVO {
 	private Date replyCreateat; //댓글 작성일자
 	private String  snsSituation;
 	private int	 confirmUserNo;			 //신고한 회원 번호
+    private LocalDateTime creaTeat;
+
 
 	
 	

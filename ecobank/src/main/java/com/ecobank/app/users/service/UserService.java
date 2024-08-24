@@ -63,8 +63,9 @@ public class UserService {
 		Integer totalScore = userMapper.findTotalScoreByUserNo(userNo);
 		Integer followerCount = userMapper.findFollowerCountByUserNo(userNo);
 		Integer followingCount = userMapper.findFollowingCountByUserNo(userNo);
+		String userProfile = userMapper.findUserProfileByUserNo(userNo);
 
-		return new UserStatistics(totalScore, followerCount, followingCount);
+		return new UserStatistics(totalScore, followerCount, followingCount, userProfile);
 	}
 	
     public Optional<Users> findByUserId(String useId) {
