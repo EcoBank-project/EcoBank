@@ -59,7 +59,6 @@ WHERE
     ce.user_no = #{userNo}
 AND
     c.chall_state = 'D3'
-
-	
 	</select>
+		
 </mapper>
