@@ -40,7 +40,7 @@ public class SpringSecurityConfig {
         http
             .authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/img/**", "/lib/**").permitAll() // 정적 자원 허용
-                .antMatchers("/", "/login*", "/signup", "/user/**", "/about", "/find*", "/ip-info", "/set-country", "/reset_pw").permitAll() // 인증 필요 없는 경로
+                .antMatchers("/", "/login*", "/signup", "/user/**", "/about", "/find*", "/ip-info", "/set-country", "/reset_pw", "/introduce").permitAll() // 인증 필요 없는 경로
                 .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 .and()
             .formLogin()

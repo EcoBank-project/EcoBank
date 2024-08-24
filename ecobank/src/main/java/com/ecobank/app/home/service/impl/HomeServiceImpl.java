@@ -44,4 +44,10 @@ private HomeMapper homeMapper;
 		return homeMapper.getTopRankedUsers();
 	}
 
+	@Override
+	public ChallengeVO getonechall() {
+		// TODO Auto-generated method stub
+		return homeMapper.getonechall();
+	}
+
 }

@@ -90,10 +90,10 @@ canvas {
 <!--  BreadCrumb Start -->
 <div class="container-fluid page-header py-5">
   <div class="container py-5">
-      <h1 class="display-3 text-white mb-3 animated slideInDown">About Us</h1>
+      <h1 class="display-3 text-white mb-3 animated slideInDown" th:text="#{about}"></h1>
       <nav aria-label="breadcrumb animated slideInDown">
           <ol class="breadcrumb">
-              <li class="breadcrumb-item text-white active" aria-current="page">About</li>
+              <li class="breadcrumb-item text-white active" aria-current="page" th:text="#{about}"></li>
           </ol>
       </nav>
   </div>
@@ -111,8 +111,8 @@ canvas {
         <div class="container">
           <div class="row justify-content-start">
             <div class="col-10 col-lg-8">
-              <h1 class="display-2 text-white  slideInDown">Eco Bank</h1>
-              <p class="fs-5 fw-medium text-white mb-4 pb-3">The Ecobank is working to combat climate change We are urging a variety of activities and providing community.</p>
+              <h1 class="display-2 text-white  slideInDown" th:text="#{Eco_Bank}"></h1>
+              <p class="fs-5 fw-medium text-white mb-4 pb-3" th:text="#{The_Ecobank_is_working_to}"></p>
             </div>
           </div>
         </div>
@@ -143,7 +143,7 @@ canvas {
 <div class="container-xxl py-5">
         <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
-                <h6 class="text-primary">우리의 활동</h6>
+                <h6 class="text-primary" th:text="#{Our_activities}"></h6>
                 <h1 class="mb-4" th:text="#{how_did_the_activities_of_members_who_joined_the_eco_bank_affect_the_earth?}"></h1>
                 
                 <input type="hidden" th:if="${userNo}" id="userNo" th:value="${userNo}"/>
@@ -157,8 +157,8 @@ canvas {
                         </div>
                         <h1 class="mb-0" data-toggle="counter-up" th:text="${#numbers.formatInteger(challEnterUserCount, 3, 'COMMA')}"></h1>
                     </div>
-                    <h5 class="mb-3">챌린지 참여</h5>
-                    <span><span th:text="${#numbers.formatInteger(challEnterUserCount, 3, 'COMMA')}"></span>명의 회원이 챌린지에 참여해주셨습니다.</span>
+                    <h5 class="mb-3" th:text="#{Participate_challenges}"></h5>
+                    <span th:text="#{participate_message(${#numbers.formatInteger(challEnterUserCount, 3, 'COMMA')})}"></span>
                 </div>
                 <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeIn;">
                     <div class="d-flex align-items-center mb-4">
@@ -167,24 +167,24 @@ canvas {
                         </div>
                         <h1 class="mb-0"><span data-toggle="counter-up" th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span></h1>
                     </div>
-                    <h5 class="mb-3">입금 환경 점수</h5>
-                    <span>에코 뱅크에 <span th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span>점 적립되었습니다.</span>
+                    <h5 class="mb-3" th:text="#{Eco_point_earned}"></h5>
+                    <span th:text="#{deposit_message(${#numbers.formatInteger(totalScore, 3, 'COMMA')})}"></span>
                     <button th:if="${usableScore!='0' and usableScore != null}" class="btn btn-primary" onclick="OpenScoreModal()" th:text="#{deposit}"></button>
                 </div>
                 <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.7s" style="visibility: visible; animation-delay: 0.7s; animation-name: fadeIn;">
                     <div class="d-flex align-items-center mb-4">
                         <div class="btn-lg-square bg-primary rounded-circle me-3">
-                            <i class="fa fa-users-cog text-white"></i>
+                            <i class="fas fa-tree text-white"></i>
                         </div>
                         <h1 class="mb-0"><span data-toggle="counter-up" th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span> TCo2</h1>
                     </div>
-                    <h5 class="mb-3">예상 탄소 저감량</h5>
-                    <span><span th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span> Tco2/kWh 감소가 예상됩니다.</span>
+                    <h5 class="mb-3" th:text="#{Estimate_carbon_reduce}"></h5>
+                    <span th:text="#{reduction_message(${#numbers.formatInteger(totalScore, 3, 'COMMA')})}"></span>
                 </div>
             </div>
             <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
-                <h6 class="text-secondary">활동 흥미 촉구를 위해 점수에 따른 탄소저감량은 배율조정이 되었습니다.</h6>
-                <h6 class="text-secondary">실제 데이터와 오차가 있습니다.</h6>
+                <h6 class="text-secondary" th:text="#{toencourage}"></h6>
+                <h6 class="text-secondary" th:text="#{actual_data}"></h6>
             </div>
         </div>
     </div>
@@ -202,7 +202,7 @@ canvas {
 	<div id="map"></div>
 	<!-- Map div End -->
 	<div class="legend">
-		<h6 id="datatype">data: carbon emission(TonCO2/kWh)</h6>
+		<h6 id="datatype" th:text="#{Data_unit}"></h6>
 	</div>
 	<!-- Legend div Start -->
 	<div class="legend mb-5">
@@ -247,51 +247,56 @@ canvas {
 	<!-- chart div End -->
 	
 	<!-- Explain Section Start -->
-	<div class="container-xxl py-5">
-	  <div class="container">
-	    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s"
-	      style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
-	      <h1 class="mb-4">탄소 <span data-toggle="counter-up"
-	          th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span>TonCo2/kWh를 절감한다면</h1>
-	    </div>
-	
-	    <div class="row g-5 mb-5">
-	      <div class="col-lg-4 col-md-6 wow fadeInLeft" data-wow-delay="0.1s"
-	        style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
-	        <div class="team-item overflow-hidden">
-	          <div class="">
-	            <img class="img-fluid" src="img/tree.png" alt="">
-	          </div>
-	
-	        </div>
-	      </div>
-	      <div class="col-lg-4 col-md-6 wow fadeInLeft d-flex justify-content-center align-items-center" 
-                data-wow-delay="0.5s"
-                style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
-                <i class="bi bi-arrow-right" style="font-size: 5rem; color: green;"></i>
-           </div>
-           
-           <div class="col-lg-4 col-md-6 wow fadeInLeft d-flex justify-content-center align-items-center" 
-                data-wow-delay="1.0s"
-                style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
-                <h1 class="mb-4"><span data-toggle="counter-up"
-	          th:text="${#numbers.formatInteger(treeCount, 3, 'COMMA')}"></span>그루를 심은 효과!</h1>
-           </div>
-           
-           <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
-                <h6 class="text-secondary">나무 한 그루가 연평균 20kg의 CO2를 흡수한다고 가정하여 산정되었습니다.</h6>
-            </div>
-	    </div>
-	    <div class="text-center mx-auto mb-1 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
-                <h1 class="mb-1">해수면 상승을 <span data-toggle="counter-up"
-	          th:text="${seaLevel}"></span>mm 방지할 수 있습니다.</h1>
-            </div>
-	    <div class="container-xxl py-5 wow fadeInUp d-flex justify-content-center align-items-center" 
-                data-wow-delay="1.0s"
-                style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;" id="container"></div>
-	  </div>
-	</div>
-	<!-- Explain Section End -->
+<div class="container-xxl py-5">
+  <div class="container">
+    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s"
+      style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+      <!-- "탄소 totalScore TonCo2/kWh를 절감한다면" -->
+		<h1 class="mb-4">탄소 <span data-toggle="counter-up"
+			          th:text="${#numbers.formatInteger(totalScore, 3, 'COMMA')}"></span>TonCo2/kWh를 절감한다면</h1>
+    </div>
+
+    <div class="row g-5 mb-5">
+      <div class="col-lg-4 col-md-6 wow fadeInLeft" data-wow-delay="0.1s"
+        style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
+        <div class="team-item overflow-hidden">
+          <div class="">
+            <img class="img-fluid" src="img/tree.png" alt="">
+          </div>
+
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 wow fadeInLeft d-flex justify-content-center align-items-center" 
+            data-wow-delay="0.5s"
+            style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
+            <i class="bi bi-arrow-right" style="font-size: 5rem; color: green;"></i>
+       </div>
+       
+       <div class="col-lg-4 col-md-6 wow fadeInLeft d-flex justify-content-center align-items-center" 
+            data-wow-delay="1.0s"
+            style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
+          <!-- "treeCount 그루를 심은 효과!" -->
+		<h1 class="mb-4"><span data-toggle="counter-up"
+			          th:text="${#numbers.formatInteger(treeCount, 3, 'COMMA')}"></span>그루를 심은 효과!</h1>
+
+       </div>
+       
+       <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+            <h6 class="text-secondary" th:text="#{It_was_calculated_assuming}"></h6>
+        </div>
+    </div>
+    <div class="text-center mx-auto mb-1 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+          <!-- "해수면 상승을 seaLevel mm 방지할 수 있습니다." -->
+		<h1 class="mb-1">해수면 상승을 <span data-toggle="counter-up"
+			          th:text="${seaLevel}"></span>mm 방지할 수 있습니다.</h1>
+
+        </div>
+    <div class="container-xxl py-5 wow fadeInUp d-flex justify-content-center align-items-center" 
+            data-wow-delay="1.0s"
+            style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;" id="container"></div>
+  </div>
+</div>
+<!-- Explain Section End -->
 
 	<script src="https://climateclock.world/widget-v2.js" async></script>
 

@@ -6,9 +6,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.trace.http.HttpTrace.Principal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,21 +41,25 @@ public class HomeController {
 
 	@GetMapping("/")
 	public String home(Model model) {
-		// 1. 기능수행
-
+		// String userId = principal.getName(); // 로그인한 사용자의 ID를 가져옴
+		// System.out.println(userId);
 		// 2. 클라이언트에 전달할 데이터 담기
 		ChallengeVO chall = homeService.getMostPopularChallenge();
 		List<ChallengeVO> overSoonList = homeService.getOverSoonChallenges();
 		List<ChallengeVO> finishedList = homeService.getTopFiveFinishedChallenges();
 		List<RankingVO> topUsers = homeService.getTopRankedUsers();
-		System.out.println(finishedList);
-
+		// System.out.println(finishedList);
+		
+		if(chall==null) {chall=homeService.getonechall();}
+		
 		model.addAttribute("chall", chall);
 		model.addAttribute("overSoonList", overSoonList);
 		model.addAttribute("finishedList", finishedList);
 		model.addAttribute("topUsers", topUsers);
-		System.out.println("랭킹 : ");
-		System.out.println(topUsers);
+		// model.addAttribute("userId", userId);
+		/*
+		 * System.out.println("랭킹 : "); System.out.println(topUsers);
+		 */
 		// 3. 데이터를 출력할 페이지 결정
 		return "main/home";
 	}
@@ -101,12 +107,19 @@ public class HomeController {
 		}
 	}
 
-		@PostMapping("getuserNo")
-		@ResponseBody
-		public String getUserNo(@RequestBody CarbUserVO userData) {
+	@PostMapping("getuserNo")
+	@ResponseBody
+	public String getUserNo(@RequestBody CarbUserVO userData) {
 
-			// userNo
-			String userNo = scoreService.getUserNoFromId(userData);
-			return userNo;
-		}
+		// userNo
+		String userNo = scoreService.getUserNoFromId(userData);
+		return userNo;
+	}
+	
+	@GetMapping("introduce")
+	public String introduce(Model model) {
+
+		return "main/introduce";
+	}
+
 }

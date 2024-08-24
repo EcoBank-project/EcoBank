@@ -16,4 +16,7 @@ public interface HomeMapper {
 	
 	// 회원 랭킹 조회(사용 점수 기준 1~3위)
 	public List<RankingVO> getTopRankedUsers();
+	
+	// 무작위 한건 조회(예외처리용)
+	public ChallengeVO getonechall();
 }

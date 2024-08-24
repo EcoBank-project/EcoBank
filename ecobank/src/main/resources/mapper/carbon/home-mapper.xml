@@ -106,6 +106,28 @@
 		)
 		WHERE ROWNUM = 1
 	</select>
+	
+	<select id="getonechall" resultType="com.ecobank.app.home.service.ChallengeVO">
+		SELECT chall_no, 
+		       chall_title,
+		       chall_content,
+		       chall_startat, 
+		       chall_closeat, 
+		       chall_state, 
+		       main_img, 
+		       detail_img, 
+		       chall_score, 
+		       view_count, 
+		       chall_createat, 
+		       chall_updateat, 
+		       user_no
+		FROM chall
+		WHERE ROWNUM = 1
+	</select>
+	
+	
+	
+	
 	<!-- 종료임박챌린지 -->
 	<select id="getOverSoonChallenges" resultType="com.ecobank.app.home.service.ChallengeVO">
 		SELECT chall_no, 

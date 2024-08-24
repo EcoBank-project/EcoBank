@@ -62,6 +62,7 @@ window.addEventListener('beforeunload', function() {
 });
 
 window.onload = function() {
+	//console.log(useId);
 	if (typeof userNumber === 'undefined' || userNumber === null) {
 		console.log("userNumber is not defined or is null");
 		$('.notification-dot').closest('a').attr('href', '/login');
