@@ -96,8 +96,28 @@
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5); 
 }
-   
 .modal_body {
+	background-color: #ffffff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    color: #333; 
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+.sModal {
+	display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); 
+}   
+.sModal_body {
 	background-color: #ffffff;
     margin: 15% auto;
     padding: 20px;
@@ -324,7 +344,6 @@ img {
 
 </style>
 
-
 </head>
 <body>
 	<div class="container" style="width:1000px;">
@@ -398,13 +417,16 @@ img {
 						<i class="bi bi-chat-dots"></i>
 					</button>
 					<span class="comments-count" th:text="${sns.countReply} + ' Comments'"></span>
-			        <button class="btn btn-outline-success ms-3">
+			        <button class="btn btn-outline-success ms-3" th:onclick="sModal('feed',[[${sns.feedNo}]])">
 			        	<i class="bi bi-share"></i>
 			        </button>
 		            <span class="ms-1">Share</span>
+		            
 			        <button class="btn btn-outline-danger ms-auto" th:onclick="declareModal('feed',[[${sns.feedNo}]])"  th:if="${sns.userNo} != ${session.userNo}">
 			        	<i class="declareModal bi bi-exclamation-triangle"  ></i>
 			        </button>
+			       
+
 				</div>
 			</div>
 		</div>
@@ -445,13 +467,80 @@ img {
           		<button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
         	</div>
     	</div>
+    	
+    	<!-- 공유모달영역 -->
+ 		<div class="sModal">
+       		<div class="sModal_body">
+            	<div class="inputleft">
+		            <h4>공유하기</h4>
+		        	<hr style="width:100%;height:5px;border:none;"/>
+		        	<div class="mb-3">
+			             <a type="btnTwitter" class="link-icon twitter" onclick="shareToTwitter()">
+		             <img src="./img/icon-twitter.png" alt="트위터 공유하기" style="width:40px; height: 40px;">
+		            </a>
+			            <a type="btnKakao" class="link-icon kakao" onclick="shareToKakao()">
+		             <img src="./img/icon-kakao.png" alt="카카오 공유하기" style="width:40px; height: 40px;">
+		            </a>
+		  	   <a type="btnNaver" class="link-icon naver" onclick="shareToNaver()">
+		             <img src="./img/icon-naver.png" alt="네이버 공유하기" style="width:40px; height: 40px;">
+		            </a>
+				</div>
+          		<button type="button"  class="btn btn-primary" id="s-close" aria-label="Close">닫기</button>
+        	</div>
+    	</div>
     </div>
+    </div>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 	<script th:inline="javascript">
+		
 		let feedNo = $('#feedNo').val();
 		let replyNo = $('#replyNo').val();
 		let replyContent = $('#replyContent');
+	
 		let userNo = [[${session.userNo}]];
 		
+		 Kakao.init('7c62496966b3d918a5362dc448ca959d'); // 자신의 앱 키로 교체하세요
+
+	        function shareToTwitter() {
+	            const text = encodeURIComponent('EcoBank');
+	            const url = encodeURIComponent('http://localhost:8080');
+	            const twitterShareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+	            window.open(twitterShareUrl, 'twitter-share-dialog', 'width=800,height=600');
+	        }
+		 
+	        function shareToKakao() {
+	            Kakao.Link.sendDefault({
+	                objectType: 'feed',
+	                content: {
+	                    title: "Ecobank",
+	                    description: "Ecobank Sns",
+	                    imageUrl: '이미지 URL을 입력하세요',
+	                    link: {
+	                        webUrl: 'http://localhost:8080'
+	                    }
+	                },
+	                social: {
+	                    likeCount: 100,
+	                    commentCount: 200,
+	                    sharedCount: 300
+	                },
+	                buttons: [
+	                    {
+	                        title: '웹에서 보기',
+	                        link: {
+	                            webUrl: '공유할 웹 페이지의 URL을 입력하세요'
+	                        }
+	                    }
+	                ]
+	            });
+	        }
+
+	        function shareToNaver() {
+	            const url = encodeURIComponent('http://localhost:8080');
+	            const title = encodeURIComponent('EcoBank');
+	            const naverShareUrl = `https://share.naver.com/web/shareView.nhn?url=${url}&title=${title}`;
+	            window.open(naverShareUrl, 'naver-share-dialog', 'width=800,height=600');
+	        }
 		//개인피드이동
 		$(".other").on('click', function(event) {
 			let uno = $(event.currentTarget).children().first().text();
@@ -639,10 +728,13 @@ img {
 			let url = '/userSns?userNo=' + rUserNo;
 			location.href = url;
 		};
+		
 		//신고모달		
+		const modal = document.querySelector('.modal');
+	
 		function declareModal(state, stateNo){
 			console.log("qjxms")
-			//event.preventDefault();
+			event.preventDefault();
 			
 			modal.style.display="block";
 			console.log(state);
@@ -655,11 +747,23 @@ img {
 			}
 		}
 		
-		//모달
-		const modal = document.querySelector('.modal');
-	
 		$('#btn-close').on('click', function(){
 			 modal.style.display="none";
+		});
+		
+		//공유모달		
+		const shModal = document.querySelector('.sModal');
+		
+		function sModal(state, stateNo){
+			event.preventDefault();
+			
+			shModal.style.display="block";
+			console.log(state);
+		
+		}
+			
+		$('#s-close').on('click', function(){
+			shModal.style.display="none";
 		});
 		
 		//신고하기
