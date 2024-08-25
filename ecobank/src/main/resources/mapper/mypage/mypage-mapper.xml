@@ -19,6 +19,7 @@
 		c.chall_state,
 		c.main_img,
 		ce.user_no,
+		to_date(c.chall_closeAt,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd') AS d_day,
         NVL(ROUND(progressCount/ (TRUNC(c.chall_closeAt) - TRUNC(ce.chall_enterAt)),2),0)*100 AS progressRate,
 		ROW_NUMBER() OVER (PARTITION BY c.chall_no ORDER BY c.chall_startAt) AS rn
 		FROM chall c

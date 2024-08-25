@@ -25,5 +25,5 @@ public class MypageChallVO {
 	private int confirmCount;
 	private int score;
 	private int rn;
-		
+	private int dDay;
 }

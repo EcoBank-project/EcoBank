@@ -37,12 +37,12 @@
 					<label for="password1" class="form-label">비밀번호</label> <input
 						type="password" th:field="*{password1}" class="form-control"
 						id="password1">
+    			<div class="strongPassword-message hide"></div>
 				</div>
 				<div class="mb-3">
 					<label for="password2" class="form-label">비밀번호 확인</label> <input
 						type="password" th:field="*{password2}" class="form-control"
 						id="password2">
-					<p id="password-error" class="error-message">비밀번호가 일치하지 않습니다.</p>
 				</div>
 				<div class="mb-3">
 					<label for="nickname" class="form-label">닉네임</label> <input
