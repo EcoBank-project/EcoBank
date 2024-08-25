@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.chat.mapper.ChatSearchMapper">
+	<!-- 오픈채팅방 조회 -->
+	<select id="selectOpenChatAll">
+		SELECT chat_name, chat_image, chat_no
+        FROM (
+            SELECT chat_name, chat_image, chat_no,
+                   ROW_NUMBER() OVER (ORDER BY chat_no DESC) AS rn
+            FROM chat
+            WHERE chat_search_allow = 'Y'
+            AND chat_type = 'O3'
+            AND LOWER(chat_name) LIKE LOWER('%' || #{search} || '%')
+        )
+        WHERE rn BETWEEN #{startRow} AND #{endRow}
+	</select>
+	<!-- 페이징 처리위한 갯수 -->
+	<select id="selectOpenChatCnt">
+		SELECT count(*)
+        FROM (
+            SELECT chat_name, chat_image, chat_no,
+                   ROW_NUMBER() OVER (ORDER BY chat_no DESC) AS rn
+            FROM chat
+            WHERE chat_search_allow = 'Y'
+            AND chat_type = 'O3'
+            AND LOWER(chat_name) LIKE LOWER('%' || #{search} || '%')
+        )
+	</select>
+</mapper>

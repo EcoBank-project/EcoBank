@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>에코뱅크</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="../css/chatRoom/chat.css" />
 <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
@@ -19,7 +20,7 @@
 	                <div class="col-md-2 col-sm-12 d-flex flex-column align-items-center">
 	                	<div class="iconSlde">
 	                		<a href="/chatRoom">
-		                    	<i class="bi bi-chat"></i>
+		                    	<i class="fas fa-comments"></i>
 		                    </a>
 		                    <!-- 오픈채팅방 아이콘 -->
 		                    <div class="openChatList">
@@ -28,12 +29,10 @@
 		                    	</th:block>
 		                    </div>
 		                    <i class="bi bi-plus-circle"></i>
-	                	</div>
-	                	<div class="openSearch">
-	                		<a href="#">
-	                			<i class="bi bi-search search-icon"></i>
-	                		</a>
-		                </div>	                	
+		                    <a href="/chatSearch">
+			                    <i class="material-icons">group</i>		                    
+		                    </a>
+	                	</div>               	
 	                </div>
 	                <!-- 채팅방 목록 -->
 			        <div class="chatRoom-list col-md-10 col-sm-12 d-flex flex-column">
@@ -843,15 +842,6 @@
 				}else{
 					allClose();
 					stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
-					let today = new Date();
-					const chatMessage = {
-						msgType : 'I3',
-						msgSendTime: today,
-						chatType : formObj['chatType'],
-						chatNo : result,
-						userNos : formObj['userNo']
-					}
-					stompClient.send("/app/chat.enter/" + result, {}, JSON.stringify(chatMessage));
 				}
 			},
 			error: function(error){

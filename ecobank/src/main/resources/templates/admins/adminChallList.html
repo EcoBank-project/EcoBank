@@ -5,7 +5,7 @@
       layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <style>
 	 /* 색상 테마 */
 	:root {
@@ -175,8 +175,6 @@
 				<div th:object="${page}" th:if="${#lists.size(challList) > 0}">
 				  <nav aria-label="Page navigation">
 				    <ul class="pagination">
-				      <!-- 데이터가 있을 때 -->
-				      <th:block th:if="${#lists.size(challList) > 0}">
 				        <!-- Previous Button -->
 				        <li class="page-item" th:classappend="*{prev} ? '' : 'disabled'">
 				          <a class="page-link changePage" th:href="*{startPage - 1}" aria-label="Previous" th:if="*{prev}">
@@ -204,14 +202,6 @@
 				            <span aria-hidden="true">&raquo;</span>
 				          </span>
 				        </li>
-				      </th:block>
-				      
-				      <!-- 데이터가 없을 때 페이지 1만 표시 -->
-				      <th:block th:unless="${#lists.size(challList) > 0}">
-				        <li class="page-item active">
-				          <span class="page-link">1</span>
-				        </li>
-				      </th:block>
 				    </ul>
 				  </nav>
 				  

@@ -5,7 +5,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <style>
 	.action-buttons button {
 	    margin-right: 10px;
@@ -127,49 +127,59 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	    text-align: center;
 	    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 	}
-	
-	.testimonial-carousel .testimonial-img img {
-	    width: 300px;
-	    height: 300px;
-	}
-   .testimonial-carousel .owl-nav {
-         top:120px;
+	.slider-container {
+	    position: relative;
+	    width: 100%;
+	    overflow: hidden;
 	}
 	
-	.testimonial-carousel:hover .owl-nav {
-	    width: 300px;
+	.slider {
+	    display: flex;
+	    overflow: hidden;
+	    width: 100%;
 	}
 	
-/* 	.link-icon {
-		position: relative;
-		display: inline-block;
-		width: auto;
-		font-size: 14px;
-		font-weight: 500;
-		color: #333;
-		margin-right: 10px;
-		padding-top: 50px;
-	} 
-	
- 	.link-icon.twitter {
-		background-image: url(./img/icon-twitter.png);
-		background-repeat: no-repeat;
+	.slider-wrapper {
+	    display: flex;
+	    transition: transform 0.5s ease-in-out;
+	    width: 100%;
 	}
 	
-	.link-icon.facebook {
-		background-image: url(./images/icon-facebook.png);
-		background-repeat: no-repeat;
+	.slide {
+	    min-width: 100%; /* 한 번에 한 장의 슬라이드만 보이도록 설정 */
+	    display: flex;
+	    justify-content: center;
+	    box-sizing: border-box;
+	    position: relative;
 	}
 	
-	.link-icon.kakao {
-		background-image: url(./images/icon-kakao.png);
-		background-repeat: no-repeat;
+	.prev-btn, .next-btn {
+	    position: absolute;
+	    top: 50%;
+	    transform: translateY(-50%);
+	    background-color: rgba(0, 0, 0, 0);
+	    color: grey;
+	    font-size: 30px;
+	    border: none;
+	    padding: 10px;
+	    cursor: pointer;
+	    z-index: 10;
+	    opacity: 1;
+	    transition: opacity 0.3s;
+	    visibility: hidden; 
 	}
 	
-	.link-icon.naver {
-		background-image: url(./images/icon-naver.png);
-		background-repeat: no-repeat;
-	}  */
+	.prev-btn {
+	    left: 0;
+	}
+	
+	.next-btn {
+	    right: 0;
+	}
+	
+	.prev-btn.visible, .next-btn.visible {
+	    visibility: visible; 
+	}
 </style>
 </head>
 <body>
@@ -193,24 +203,23 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 				</div>
 			</div>
 			            
-		    <!-- Testimonial Start -->
 			<div class="container-xxl py-5">
-				<div class="container">
-					<div class="owl-carousel testimonial-carousel wow fadeInUp"
-						data-wow-delay="0.1s">
-						<th:block th:each="file, sts : ${list}">
-							<div class="testimonial-item text-center">
-								<div class="testimonial-img position-relative">
-									<img class="img-fluid mx-auto mb-5"
-										th:src=@{/images/{filePath}(filePath=${file.filePath})}
-										alt="인증 이미지">
-								</div>
-							</div>
-						</th:block>
-					</div>
-				</div>
-			</div>
-			<!-- Testimonial End -->
+		        <div class="container">
+		            <div class="slider-container">
+		            	<button class="prev-btn">&#10094;</button>
+		                <div class="slider">
+		                	<div class="slider-wrapper wow fadeInUp" data-wow-delay="0.1s">
+			                    <th:block th:each="file, sts : ${list}">
+			                        <div class="slide">
+			                            <img class="img-fluid" th:src="@{/images/{filePath}(filePath=${file.filePath})}" alt="인증 이미지" style="width: 400px; height: 500px;">
+			                        </div>
+			                    </th:block>
+			                </div>
+		                </div>
+		                <button class="next-btn">&#10095;</button>
+		            </div>
+		        </div>
+		    </div>
 
 			<!-- Confirm Content -->
 			<div class="row mb-4">
@@ -248,15 +257,6 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
             </div>
 		</div>
 	</div>
-		
-<!--/* 						<a id="btnTwitter" class="link-icon twitter"
-						href="javascript:shareTwitter();"> <img
-						src="./img/icon-twitter.png" alt="트위터 공유하기">
-					</a> 
-					<a id="btnKakao" class="link-icon kakao"
-						href="javascript:shareKakao();"> <img
-						src="./img/icon-kakao.png" alt="카카오 공유하기">
-					</a> */-->
 	
 	<!-- 모달영역 -->
  	<div class="modal declare">
@@ -304,14 +304,57 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 		</div>
 	    </div>
 	</div>
-
-
 	<!-- 카카오 공유 api -->
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script>
     	let fNo = $('#fNo').val();
     	let cNo = $('#cNo').val();
     	let uNo = $('#uNo').val();
+    	
+    	//이미지 슬라이더
+    	$(document).ready(function() {
+    	    const $prevBtn = $('.prev-btn');
+    	    const $nextBtn = $('.next-btn');
+    	    const $sliderWrapper = $('.slider-wrapper');
+    	    const $slides = $('.slide');
+    	    let currentIndex = 0;
+    	    const totalSlides = $slides.length;
+
+    	    function updateSliderPosition() {
+    	        const offset = -currentIndex * 100; //슬라이드를 100%씩 이동하여 한 번에 한 장만 보이도록 설정
+    	        $sliderWrapper.css('transform', `translateX(${offset}%)`);
+    	        updateButtonVisibility();
+    	    }
+
+    	    function updateButtonVisibility() {
+    	        $prevBtn.toggleClass('visible', currentIndex > 0);
+    	        $nextBtn.toggleClass('visible', currentIndex < totalSlides - 1);
+    	    }
+
+    	    //초기 슬라이더 상태 설정
+    	    if (totalSlides > 1) {
+    	        $nextBtn.addClass('visible').prop('disabled', false);
+    	    } else {
+    	        $nextBtn.removeClass('visible').prop('disabled', true);
+    	        $prevBtn.removeClass('visible').prop('disabled', true);
+    	    }
+
+    	    $prevBtn.on('click', function() {
+    	        if (currentIndex > 0) {
+    	            currentIndex--;
+    	            updateSliderPosition();
+    	        }
+    	    });
+
+    	    $nextBtn.on('click', function() {
+    	        if (currentIndex < totalSlides - 1) {
+    	            currentIndex++;
+    	            updateSliderPosition();
+    	        }
+    	    });
+
+    	    updateSliderPosition(); //슬라이더 초기화
+    	});
     	
     	//댓글 부분 html로 따로 빼서 load()
     	replyList();

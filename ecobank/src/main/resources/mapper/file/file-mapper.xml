@@ -66,15 +66,15 @@
 	<select id="selectOtherConfirm" resultType="FileVO">
 		SELECT c.chall_no
 					, c.confirm_no,
-					( select f.file_name
-		            from files f
-		            where f.file_code_no = c.confirm_no
-		            --<![CDATA[
-		            and rownum < 2 ) as file_name
-		            --]]>  
+					( SELECT f.file_name
+			            FROM files f
+			            WHERE f.file_code_no = c.confirm_no
+			            AND file_code = 'J3'
+			            <![CDATA[
+			            and rownum < 2 ) as file_name
+			            ]]>  
 		FROM chall_confirm c
 		WHERE c.chall_no = #{challNo}
-		AND file_code = 'J3'
         ORDER BY c.confirm_no DESC
 	</select>
 	
@@ -86,7 +86,7 @@
 		FROM chall_confirm c RIGHT OUTER JOIN files f
                         		ON c.confirm_no = f.file_code_no
 		WHERE  f.file_code_no = #{confirmNo}
-		AND file_code = 'J3'
+		AND f.file_code = 'J3'
 		GROUP BY c.confirm_no
 		         	,f.file_no
 		         	,f.file_path
