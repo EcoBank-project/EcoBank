@@ -210,6 +210,16 @@
 	width: 600px;
 	height: 300px;
 }
+.d-day-text {
+	font-size: 1.5em;
+	font-weight: bold;
+	color: #dc3545;
+	background-color: #fff3f3; 
+	border-radius: 5px; 
+	padding: 5px 10px; 
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin: 10px 0; 
+}
 </style>
 </head>
 <body id="challenge-page">
@@ -219,11 +229,12 @@
 		</div>
 		<div class="challenge-card-container">
 			<div class="challenge-card" th:each="challenge : ${challengeInfo}">
-
 				<img th:src="@{${challenge.mainImg}}" alt="Challenge Image" /> <input
 					type="hidden" th:value="${challenge.challNo}" class="cNo">
 				<div class="challenge-card-body">
+					<p class="d-day-text" th:text="${challenge.dDay}"></p>
 					<h2 class="challenge-card-title" th:text="${challenge.challTitle}"></h2>
+					<!-- dDay 값 출력 -->
 					<p class="challenge-card-progress"
 						th:text="${challenge.progressRate} + '%'"></p>
 					<div class="challenge-button-container">
@@ -267,6 +278,18 @@
 	</div>
 </body>
 <script>
+$(document).ready(function () {
+    // 모든 D-Day 텍스트에 대해 'D-' 추가
+    $('.d-day-text').each(function () {
+        // 현재 p 태그의 텍스트를 가져옴
+        const dDayText = $(this).text().trim();
+
+        // 텍스트가 비어있지 않은 경우 'D-'를 추가
+        if (dDayText) {
+            $(this).text(`D-${dDayText}`);
+        }
+    });
+});
 // 인증 버튼 클릭 이벤트
 $('.confirmBtn').click(function(event) {
     event.preventDefault();
