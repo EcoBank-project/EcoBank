@@ -1,116 +1,146 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-		layout:decorate="~{common/layouts/default_layout}"
-		layout:fragment="Content">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 </head>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="../css/chatRoom/openChatSearch.css" />
 <style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
-#search-bar {
-    width: 300px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-}
-
-.card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    width: 300px;
-    text-align: center;
-}
-
-.card-img {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
-.card h2 {
-    margin-top: 10px;
-    font-size: 24px;
-}
-
-.card p {
-    font-size: 16px;
-}
 
 </style>
 <body>
-<div class="container-fluid">
-    	<div class="row">
-            <div class="col-md-1 col-sm-12">
-            	<div class="col-md-2 col-sm-12 d-flex flex-column align-items-center">
-            		확인
-            	</div>
-            </div>
-            <div class="col-md-11 col-sm-12">
-            <header>
-        <input type="text" id="search-bar" placeholder="검색어를 입력하세요...">
-    </header>
-    <main>
-        <section class="card-container">
-            <div class="card">
-                <img src="https://via.placeholder.com/300" alt="카드 이미지 1" class="card-img">
-                <h2>카드 제목 1</h2>
-                <p>카드 내용 1</p>
-            </div>
-            <div class="card">
-                <img src="image2.jpg" alt="카드 이미지 2" class="card-img">
-                <h2>카드 제목 2</h2>
-                <p>카드 내용 2</p>
-            </div>
-            <div class="card">
-                <img src="image3.jpg" alt="카드 이미지 3" class="card-img">
-                <h2>카드 제목 3</h2>
-                <p>카드 내용 3</p>
-            </div>
-            <div class="card">
-                <img src="https://via.placeholder.com/300" alt="카드 이미지 1" class="card-img">
-                <h2>카드 제목 1</h2>
-                <p>카드 내용 1</p>
-            </div>
-            <div class="card">
-                <img src="image2.jpg" alt="카드 이미지 2" class="card-img">
-                <h2>카드 제목 2</h2>
-                <p>카드 내용 2</p>
-            </div>
-            <div class="card">
-                <img src="image3.jpg" alt="카드 이미지 3" class="card-img">
-                <h2>카드 제목 3</h2>
-                <p>카드 내용 3</p>
-            </div>
-        </section>
-    </main>
-            </div>
-        </div>
-</div>             
+	<div class="container-fluid">
+		<div class="row custom-flex">
+			<div class="col-md-1 col-sm-12 custom-width">
+				<a href="/chatRoom"> 
+					<i class="fas fa-comments"></i>
+				</a> 
+				<a href="/chatSearch">
+					<i class="material-icons">group</i>		                    
+				</a>
+			</div>
+			<div class="col-md-11 col-sm-12">
+				<div class="search-container">
+					<input type="text" id="searchInput" th:value="${search}" placeholder="검색어 입력" onkeydown="enterKeyDown(event)">
+					<button onclick="performSearch()">검색</button>
+				</div>
+				<div id="chatListContainer">
+					<!-- 카드 목록 -->
+					<div class="containers">
+						<div class="card" th:onclick="showPasswordModal([[${chatRoom.chatNo}]])" th:each="chatRoom : ${openChatList}">
+							<img th:src="@{/images/{filePath}(filePath=${chatRoom.chatImage})}" alt="제목 1">
+							<div class="card-title" th:text="${chatRoom.chatName}">제목 1</div>
+						</div>
+					</div>
+					
+					<div th:object="${page}" th:if="${#lists.size(openChatList) > 0}">
+						<nav aria-label="Page navigation">
+							<ul class="pagination">
+								<li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+	            					<a class="page-link" th:href="@{/chatSearch(page=${currentPage - 1}, search=${search})}" aria-label="Previous">
+										<span aria-hidden="true">&laquo;</span>
+									</a>
+								</li>
+								<li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
+						            th:classappend="${pageNum == currentPage ? 'active' : ''}">
+						            <a class="page-link" th:href="@{/chatSearch(page=${pageNum}, search=${search})}" th:text="${pageNum}"></a>
+						        </li>
+								<li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+	            					<a class="page-link" th:href="@{/chatSearch(page=${currentPage + 1}, search=${search})}" aria-label="Next">
+										<span aria-hidden="true">&raquo;</span>
+									</a>
+								</li>
+							</ul>
+						</nav>				
+					</div>				
+				</div>
+				<th:block th:unless="${#lists.size(openChatList) > 0}">
+			    	<p class="text-center">검색 결과가 없어요.</p>
+			    </th:block>
+			</div>
+		</div>
+	</div>
+
+	<!-- 비밀번호 입력 모달 -->
+	<div class="modal" id="passwordModal">
+		<div class="modal-content">
+			<span class="close" onclick="closeModal()">&times;</span>
+			<h2>비밀번호 입력</h2>
+			<input type="password" id="passwordInput" placeholder="비밀번호 입력"
+				class="input-field">
+			<button onclick="submitPassword()" class="option-button">제출</button>
+			<div id="errorMessage" class="error-message"></div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	$(window).click(function(event) {
+	    if ($(event.target).is($('.modal'))) {
+	    	closeModal();
+	    }
+	});
+	
+ 	// 비밀번호 입력 모달을 보여주는 함수
+    function showPasswordModal(id) {
+        const modal = document.getElementById('passwordModal');
+        modal.style.display = 'flex';
+        modal.dataset.itemId = id;
+    }
+
+    // 모달을 닫는 함수
+    function closeModal() {
+    	$('#passwordModal').hide();
+    	$('#passwordInput').val('');
+    	$('#errorMessage').text('');
+    }
+
+    // 비밀번호를 제출하는 함수
+    function submitPassword() {
+        const modal = document.getElementById('passwordModal');
+        const password = document.getElementById('passwordInput').value;
+        const itemId = modal.dataset.itemId;
+
+        if (validatePassword(password)) {
+            alert(`비밀번호가 맞습니다. 아이템 ID: ${itemId}`);
+            closeModal();
+        } else {
+            document.getElementById('errorMessage').textContent = '비밀번호가 맞지 않습니다.';
+        }
+    }
+
+    // 비밀번호 검증 함수
+    function validatePassword(password) {
+        // 비밀번호 검증 로직
+        // 예시로 'password123'을 사용합니다.
+        return password === 'password123';
+    }
+
+    function enterKeyDown(event){
+		if(event.key === 'Enter'){
+			event.preventDefault();
+			performSearch();
+		}
+	}
+    function performSearch() {
+        const query = $('#searchInput').val();
+        const currentPage = 1;
+        $.ajax({
+            url: `/chatSearch?page=${currentPage}&search=${query}`,
+            type: 'GET',
+            success: function(response) {
+            	$('#chatListContainer').html($(response).find('#chatListContainer').html());
+                $('ul.pagination').html($(response).find('ul.pagination').html());
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    </script>
 </body>
 </html>
