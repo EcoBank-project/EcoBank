@@ -199,11 +199,21 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	            method: 'post',
 	            data: { challNo: cNo },
 	            success: function(result){
-	            	alert("챌린지에 도전합니다.");
+					Swal.fire({
+		                title: '챌린지에 도전합니다',
+		                icon: 'success',
+		                confirmButtonText: 'OK',
+		                confirmButtonColor: "#32C36C"
+		            });
 	                console.log(result);
 	            },
 	            error: function(err){
-	                alert("이미 도전 중인 챌린지입니다.");
+	            	Swal.fire({
+		                title: '이미 도전 중인 챌린지입니다',
+		                icon: 'info',
+		                confirmButtonText: 'OK',
+		                confirmButtonColor: "#32C36C"
+		            });
 	                console.log(err);
 	            }
 	        });

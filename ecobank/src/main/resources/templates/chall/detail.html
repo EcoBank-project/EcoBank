@@ -13,10 +13,19 @@
 <link href="assets/css/maindd.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 <style>
-	.event-icon {
-	  max-width: 50px;
-	  margin: 0 auto;
+	/* CSS 파일에 추가하거나 <style> 태그로 추가 */
+	.fc-daygrid-day-frame {
+	    height: 100px; /* 원하는 높이로 설정 */
+	    overflow: hidden; /* 콘텐츠가 칸을 넘지 않도록 숨김 처리 */
+	    align-items: center; /* 수직 중앙 정렬 */
+	    justify-content: center; /* 수평 중앙 정렬 */
 	}
+	
+	.event-icon {
+	    max-width: 70px; /* 원하는 이미지 크기로 설정 */
+	    max-height: 60px; /* 이미지의 최대 높이를 설정 */
+	}
+
 	/* 하트 아이콘 기본 색상 */
 	.bi-heart {
 	    color: pink; /* 기본 하트 색상 */
@@ -314,12 +323,22 @@
 					challNo : cNo
 				},
 				success : function(result) {
-					alert("챌린지에 도전합니다.");
+					Swal.fire({
+		                title: '챌린지에 도전합니다',
+		                icon: 'success',
+		                confirmButtonText: 'OK',
+		                confirmButtonColor: "#32C36C"
+		            });
 					$('#confirmBtn').show();
 					console.log(result);
 				},
 				error : function(err) {
-					alert("이미 도전 중인 챌린지입니다.");
+					Swal.fire({
+		                title: '이미 도전 중인 챌린지입니다',
+		                icon: 'info',
+		                confirmButtonText: 'OK',
+		                confirmButtonColor: "#32C36C"
+		            });
 					console.log(err);
 				}
 			});
@@ -431,17 +450,27 @@
 				data : {
 					challNo : cNo
 				},
-				success : function(isConfirmed) {
-					console.log("isConfirmed:", isConfirmed);
-					if (isConfirmed) {
-						alert("이미 오늘 인증되었습니다.");
-					} else {
-						location.href = 'confirmInsert?challNo=' + cNo;
-					}
-				},
+				success: function(isConfirmed) {
+					//console.log("isConfirmed:", isConfirmed);
+		            if (isConfirmed) {
+		                Swal.fire({
+		                    title: '이미 오늘 인증되었습니다.',
+		                    icon: 'info',
+		                    confirmButtonText: 'OK',
+		                    confirmButtonColor: "#32C36C"
+		                });
+		            } else {
+		                location.href = 'confirmInsert?challNo=' + cNo;
+		            }
+		        },
 				error : function(err) {
+					Swal.fire({
+		                title: '인증 오류',
+		                icon: 'error',
+		                confirmButtonText: 'OK',
+		                confirmButtonColor: "#32C36C"
+		            });
 					console.log(err);
-					alert("인증 오류");
 				}
 			});
 		});
@@ -526,14 +555,18 @@
 									}
 								});
 					},
-					eventContent : {
-						html : `<div><img src="/img/congratulation.jpg" class="event-icon" /><br><b>오늘 인증 성공!</b></div>`,
+					eventContent: function(info) {
+					    return {
+					        html: `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%;">
+					                  <img src="/img/congratulation.jpg" class="event-icon" style="background-color: transparent;" />
+					                  <b>오늘 인증 성공!</b>
+					               </div>`
+					    };
 					},
 				});
 				calendar.render();
 			})
 		})
-
 	</script>
 </body>
 </html>

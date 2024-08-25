@@ -22,8 +22,8 @@
 	<select id="myConfirm" resultType="MyConfirmDTO" parameterType="MyConfirmDTO">
 		SELECT e.user_no,
 		       e.chall_no,
-		       COUNT(c.confirm_no) AS confirm_count, 
-		       COUNT(c.confirm_no) * 10 AS score,
+		       COUNT(DISTINCT c.confirm_no) AS confirm_count, 
+		       COUNT(DISTINCT c.confirm_no) * 10 AS score,
 		       MAX(f.file_path) AS filePath
 		  FROM chall_enter e
 		       JOIN chall_confirm c ON e.user_no = c.user_no
