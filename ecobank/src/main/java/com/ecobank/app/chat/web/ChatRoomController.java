@@ -70,6 +70,7 @@ public class ChatRoomController {
 		String chatName = chatRoom.getChatName();
 		
 		ChatRoomUserVO chatRoomUser = chatService.ChatProfileInfo(userNo);
+		
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("chatType", chatType);
 		model.addAttribute("chatName", chatName);
@@ -77,6 +78,7 @@ public class ChatRoomController {
 		model.addAttribute("chatRooms", chatList);
 		model.addAttribute("lagCode", lagCode);
 		model.addAttribute("profiles", chatRoomUser);
+		
 		return "chat/chatRoom";
 	}
 	
@@ -154,10 +156,19 @@ public class ChatRoomController {
 	public Integer chatOpenCreate(HttpSession httpSession,
 			                @ModelAttribute ChatRoomVO chatRoom, 
 			                @RequestPart(value = "image", required = false) MultipartFile[] images) {
+		
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
+		Integer result = chatService.getChatName(chatRoom.getChatName());
+		if(result != null) {
+			if("O3".equals(chatRoom.getChatType())){
+				return 0;
+			}
+		}
+		
 		Integer chatNo = chatService.ChatOpenInsert(chatRoom, userNo, images);
 		return chatNo;
 	}
+	
 	// 채팅방 업데이트 - 오픈 채팅
 	@PostMapping("/chatRoom/updateOpenChat")
 	@ResponseBody

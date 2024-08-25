@@ -11,4 +11,10 @@ public interface ChatSearchMapper {
 	public List<ChatRoomVO> selectOpenChatAll (@Param("search") String search, @Param("startRow") int startRow, @Param("endRow") int endRow);
 	//오픈 채팅 조건에 따른 갯수
 	public int selectOpenChatCnt(String search);
+	//채팅방에 있는지 체크
+	public int selectOpenUserCheck(@Param("chatNo") Integer chatNo, @Param("userNo") Integer userNo);
+	//채팅방 비밀번호 체크
+	public String selectOpenChatPasswordCheck(Integer chatNo);
+	//채팅방 비밀번호 확인
+	public String selectOpenChatPassword(@Param("chatNo") Integer chatNo, @Param("userNo") Integer userNo);
 }

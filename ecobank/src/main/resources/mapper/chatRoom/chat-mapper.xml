@@ -62,7 +62,6 @@
 				msg_no
 				,msg_content
 				,msg_type
-				,msg_send_time
 				,user_no
 				,chat_no
 			)
@@ -71,7 +70,6 @@
 				#{msgNo}
 				,#{msgContent}
 				,#{msgType}
-				,#{msgSendTime}
 				,#{userNo}
 				,#{chatNo}
 			)	
