@@ -5,7 +5,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <link rel="stylesheet" href="../css/challenges/challenge.css" />
 <style>
 	.pagination {
@@ -83,7 +83,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	    <p>총 <span th:text="${count}" style="text-decoration: underline; font-weight: bold"></span>개의 챌린지</p>
 	    <div class="inputSearchBox">
 		    <div th:if="${status=='D2'}">
-			    <select class="form-select" aria-label="Default select example" id="orderSelect">
+			    <select class="form-select" aria-label="Default select example" id="orderSelect" onchange="updateDisplay()">
 			        <option value="1">최근 날짜 순</option>
 			        <option value="2">좋아요 순</option>
 			        <option value="3">내가 참여 중인 챌린지</option>
@@ -108,23 +108,23 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     </div>
     
 	<!-- 데이터가 있을 때 -->
-		<div class="challenge-container" id="sort">
-	<th:block th:if="${#lists.size(list) > 0}">
-		    <div class="challenge-card" th:each="challenge : ${list}">
-		        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 
-		        <div class="card-body">
-		        	<input type="hidden" th:value="${challenge.challNo}" class="cNo">
-		            <div th:if="${status=='D1'}" class="d-day" id="dDay"  th:text="'D-' + ${challenge.dDay}"></div>
-		            <h5 class="card-title" th:text="${challenge.challTitle}"></h5>
-		            <p class="card-text" th:text="${challenge.challContent}"></p>
-		            <p th:if="${status=='D1'}" class="card-text" th:text="'시작 일자 : ' + ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')}"></p>
-		            <p th:if="${status=='D2'} OR ${status=='D3'}" class="card-text" th:text="'진행 기간 : ' + ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} + ' ~ ' + ${#dates.format(challenge.challCloseAt, 'yyyy-MM-dd')}"></p>
-		            <a th:onclick="|location.href='@{detail(challNo=${challenge.challNo})}'|" class="btn btn-primary">챌린지 둘러보기</a>
-			        <a th:if="${status=='D2'}" class="btn btn-primary go-challenge">도전하기</a>
-		        </div>
-		    </div>
-	<th:block>
-		</div>
+	<div class="challenge-container" id="sort">
+		<th:block th:if="${#lists.size(list) > 0}">
+			    <div class="challenge-card" th:each="challenge : ${list}">
+			        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 
+			        <div class="card-body">
+			        	<input type="hidden" th:value="${challenge.challNo}" class="cNo">
+			            <div th:if="${status == 'D1'}" class="d-day" id="dDay" th:text="'D-' + ${challenge.dDay}"></div>
+			            <h5 class="card-title" th:text="${challenge.challTitle}"></h5>
+			            <p class="card-text" th:text="${challenge.challContent}"></p>
+			            <p th:if="${status == 'D1'}" class="card-text" th:text="'시작 일자 : ' + ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')}"></p>
+			            <p th:if="${status == 'D2' or status == 'D3'}" class="card-text" th:text="'진행 기간 : ' + ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} + ' ~ ' + ${#dates.format(challenge.challCloseAt, 'yyyy-MM-dd')}"></p>
+			            <a th:onclick="|location.href='@{detail(challNo=${challenge.challNo})}'|" class="btn btn-primary">챌린지 둘러보기</a>
+				        <a th:if="${status == 'D2'}" class="btn btn-primary go-challenge">도전하기</a>
+			        </div>
+			    </div>
+		<th:block>
+	</div>
 	<!-- 데이터가 없을 때 -->
     <th:block th:unless="${#lists.size(list) > 0}">
     	<p class="text-center">등록된 챌린지가 없습니다.</p>
@@ -178,6 +178,20 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	 		$('#sort').load("challengeSort?select=" + sel);
 		})
 		
+		//D2에 Dday표시 안하게
+/* 		function updateDisplay() {
+	        var status = document.getElementById("orderSelect").value;
+	        var dDayDivs = document.querySelectorAll("#dDay");
+	
+	        dDayDivs.forEach(function(div) {
+	            if(status === "D2") {
+	                div.style.display = "none";
+	            } else {
+	                div.style.display = "block";
+	            }
+	        });
+	    } */
+		
 		$(document).on('click', '.go-challenge', function(){
 	        let cNo = $(this).closest('.card-body').find('.cNo').val();
 	        $.ajax({
@@ -185,7 +199,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	            method: 'post',
 	            data: { challNo: cNo },
 	            success: function(result){
-	                alert("챌린지 도전~!");
+	            	alert("챌린지에 도전합니다.");
 	                console.log(result);
 	            },
 	            error: function(err){

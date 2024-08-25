@@ -22,9 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class SnsServiceImpl implements SnsService{
 	
 	private final SnsMapper snsMapper;
-	private final SnsReplyMapper snsReplyMapper;
 	private final FileMapper fileMapper;
-	
 	
 	//전체조회
 	@Override
@@ -103,7 +101,6 @@ public class SnsServiceImpl implements SnsService{
 		snsVO.setDeclareat(new Date());
 		int result = snsMapper.insertSnsDeclare(snsVO);
 		return result == 1 ? snsVO.getDeclareNo() : -1;
-		
 	}
 	
 	//마이피드 조회

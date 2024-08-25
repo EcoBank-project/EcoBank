@@ -6,9 +6,10 @@
 		SELECT c.user_no
 		        , c.confirm_no
 		        , c.chall_no
-		        , ( select f.file_path
-		            from files f
-		            where f.file_code_no = c.confirm_no
+		        , ( SELECT f.file_path
+		            FROM files f
+		            WHERE f.file_code_no = c.confirm_no
+		            AND f.file_code = 'J3'
 		            <![CDATA[
 		            and rownum < 2 ) as file_path
 		            ]]>  
@@ -22,15 +23,15 @@
 		SELECT e.user_no,
 		       e.chall_no,
 		       COUNT(c.confirm_no) AS confirm_count, 
-		       COUNT(c.confirm_no) * 10 AS score
-		       
-		FROM chall_enter e
-							JOIN chall_confirm c
-							ON e.user_no = c.user_no
-							AND e.chall_no = c.chall_no
-		WHERE e.chall_no = #{challNo}
-		  AND e.user_no = #{userNo}
-		  
+		       COUNT(c.confirm_no) * 10 AS score,
+		       MAX(f.file_path) AS filePath
+		  FROM chall_enter e
+		       JOIN chall_confirm c ON e.user_no = c.user_no
+		                            AND e.chall_no = c.chall_no
+		       LEFT JOIN files f ON f.file_code_no = c.confirm_no
+		                         AND f.file_code = 'J3'
+		 WHERE e.chall_no = #{challNo}
+		   AND e.user_no = #{userNo}
 		GROUP BY e.user_no, e.chall_no
 	</select>
 	
@@ -64,6 +65,7 @@
 		AND user_no = #{userNo}
 	</select>
 	
+	<!-- 남은 인증 횟수 -->
 	<select id="getConfirmCnt" resultType="int" parameterType="int">
 		SELECT TRUNC(chall_closeAt - SYSDATE) AS remaining_days
 		FROM chall

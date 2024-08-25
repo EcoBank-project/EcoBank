@@ -27,6 +27,10 @@
              ,(SELECT sns_like_no 
                  FROM sns_like
             	WHERE feed_no=s.feed_no) as snslike_yn
+             , (SELECT count(file_path)
+                 FROM files
+                WHERE file_code_no = s.feed_no
+                  AND file_code='J1')  as fileCount
       FROM sns s JOIN users u 
                    ON s.user_no = u.user_no
       WHERE feed_state = 'F1' 
@@ -64,10 +68,15 @@
                   and file_code='J1')  as filePath
              ,(SELECT follow_no 
                  FROM follow 
-              	WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
+              	WHERE follower_id=#{userNo} 
+              	  AND following_id = s.user_no) as follow_yn
              ,(SELECT sns_like_no 
                  FROM sns_like
                 WHERE feed_no=s.feed_no) as snslike_yn
+             ,(SELECT count(file_path)
+                 FROM files
+                WHERE file_code_no = s.feed_no
+                  AND file_code='J1')  as fileCount
       FROM sns s JOIN users u 
                    ON s.user_no = u.user_no
       WHERE feed_state = 'F1'  
@@ -102,7 +111,8 @@
                 ,s.hashtag 
                 ,(SELECT follow_no 
                  	FROM follow 
-              	   WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
+              	   WHERE follower_id=#{userNo} 
+              	     AND following_id = s.user_no) as follow_yn
               	,(SELECT sns_like_no 
                     FROM sns_like
             	   WHERE feed_no=s.feed_no) as snslike_yn
@@ -210,12 +220,17 @@
                  	 and file_code='J1')  as filePath
                 ,(SELECT follow_no 
                  	FROM follow 
-              	   WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
+              	   WHERE follower_id=#{userNo} 
+              	     AND following_id = s.user_no) as follow_yn
                 ,(SELECT sns_like_no 
                     FROM sns_like
                    WHERE feed_no=s.feed_no) as snslike_yn
+                ,(SELECT count(file_path)
+                 	FROM files
+               	   WHERE file_code_no = s.feed_no
+                     AND file_code='J1')  as fileCount
       	 FROM sns s JOIN users u 
-                   ON s.user_no = u.user_no
+                      ON s.user_no = u.user_no
      	 WHERE feed_state = 'F1' 
       	   AND u.user_no= #{userNo}
    		ORDER BY s.feed_no DESC
@@ -245,7 +260,7 @@
 		SELECT follow_no 
           FROM follow 
          WHERE follower_id = #{userNo} 
-         and following_id = #{otherNo}
+           AND following_id = #{otherNo}
 	</select>
 	
 	<!-- 팔로잉 목록 -->
@@ -255,10 +270,11 @@
                ,u.profile_img
                ,f.follower_id
                ,(SELECT follow_no 
-                 	FROM follow 
-              	   WHERE follower_id= #{userNo} and following_id = u.user_no) as follow_yn 
+                   FROM follow 
+              	  WHERE follower_id= #{userNo} 
+              	    AND following_id = u.user_no) as follow_yn 
 	      FROM users u JOIN follow f 
-					   ON f.following_id = u.user_no
+					     ON f.following_id = u.user_no
 		  WHERE follower_id= #{userNo}
 	</select>
 	
@@ -269,8 +285,9 @@
                ,u.profile_img
                ,f.following_id
                ,(SELECT follow_no 
-                 	FROM follow 
-              	   WHERE follower_id= #{userNo} and following_id = u.user_no) as follow_yn 
+                   FROM follow 
+              	  WHERE follower_id= #{userNo} 
+              	    AND following_id = u.user_no) as follow_yn 
 		  FROM users u JOIN follow f 
 					   ON f.follower_id = u.user_no
 		 WHERE following_id= #{userNo}
@@ -287,8 +304,5 @@
 		                 ON b.block_user_no = u.user_no
 		 WHERE b.user_no= #{userNo}
 	</select>
-	
-	
-	
-	
+
 </mapper>
