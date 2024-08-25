@@ -1,22 +1,23 @@
-<html xmlns:th="https://www.thymeleaf.org/">
 <meta charset="UTF-8">
 	<div class="row g-4 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
-		<h4 class="text-center mb-2">♡ Other Challengers Room ♡</h4>
+		<h3 class="text-center mb-2">모두의 행동</h3>
 		<div class="row g-4 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
-			<div class="col-lg-4 col-md-6 portfolio-item first">
-			<th:block th:each="confirm : ${confirmList}">
-				<div class="portfolio-img rounded overflow-hidden">
-					<img class="img-fluid" th:src="@{/images/{filePath}(filePath=${confirm.filePath})}" alt="다른 참가자 인증 이미지" style="width:295px; height:197px">
-					<div class="portfolio-btn">
-						<a class="btn btn-lg-square btn-outline-light rounded-circle mx-1"
-							src="img/img-600x400-6.jpg" data-lightbox="portfolio"><i
-							class="fa fa-eye"></i></a> <a
-							class="btn btn-lg-square btn-outline-light rounded-circle mx-1"
-							th:href="@{/othersDetail}"><i class="fa fa-link"></i></a>
-					</div>
+			<!-- 데이터가 있을 때 -->
+			<th:block th:if="${#lists.size(confirmList) > 0}">
+				<div class="col-lg-4 col-md-6 portfolio-item first" th:each="confirm : ${confirmList}">
+					<img class="img-fluid" th:src="@{/images/{filePath}(filePath=${confirm.filePath})}" 
+						alt="다른 참가자 인증 이미지" style="width:300px; height:350px"
+						th:onclick="|location.href='@{/othersInfo(confirmNo=${confirm.confirmNo},userNo=${confirm.userNo})}'|">
 				</div>
 			</th:block>
-			</div>
+			
+			<!-- 데이터가 없을 때 -->
+            <th:block th:unless="${#lists.size(confirmList) > 0}">
+                <div style="text-align:center;">
+                    <p>아직 등록된 인증 내역이 없습니다</p>
+                    <p>오늘의 인증 사진을 올려 <b>Eco Bank</b>의 첫 챌린저가 되어보세요!</p>
+                </div>
+            </th:block>
 		</div>
 	</div>
 </html>

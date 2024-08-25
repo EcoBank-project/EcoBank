@@ -8,26 +8,16 @@
                 <nav>
                     <ul class="nav">
                         <li><a href="admin" class=""><i class="lnr lnr-home"></i> <span>관리자 페이지</span></a></li>
-                        <li><a href="/" class=""><i class="lnr lnr-users"></i> <span>메인페이지로 이동 </span></a></li>          
                         <li><a href="adminUser" class=""><i class="lnr lnr-code"></i> <span>회원 관리</span></a></li>                    
                         <li><a th:href="@{/challList}" class=""><i class="lnr lnr-chart-bars"></i> <span>챌린지 관리</span></a></li>
                         <li><a th:href="ChallDeclareList" class=""><i class="lnr lnr-chart-bars"></i> <span>챌린지 신고 관리</span></a></li>
                         
                         
                         <li><a th:href="@{/scoreList}" class=""><i class="lnr lnr-linearicons"></i> <span>점수 관리</span></a></li>
-                      
-                        <li>
-                            <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>SNS</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
-                            <div id="subPages" class="collapse">
-                                <ul class="nav">
-                                    <li><a href="SnsReplyDeclareList" class="">SNS 댓글</a></li>
-                                    <li><a href="adminSns" class=""> <span>SNS</span></a></li>                  
-                                    
-                                </ul>
-                            </div>
-                        </li>
-                        <li><a href="panels.html" class=""><i class="lnr lnr-cog"></i> <span>1:1 문의 관리</span></a></li>
-                         <li><a href="panels.html" class=""><i class="lnr lnr-cog"></i> <span>공지사항 관리</span></a></li>
+						<li><a href="adminSns" class=""><i class="lnr lnr-home"></i> <span>SNS</span></a></li>
+
+                  
+                        <li><a href="/QnaUser" class=""><i class="lnr lnr-cog"></i> <span>1:1 문의 관리</span></a></li>
 
                     </ul>
                 </nav>

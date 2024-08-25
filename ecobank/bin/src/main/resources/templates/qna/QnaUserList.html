@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout/QNA/assets"
+      layout:decorate="~{common/layouts/default_layout}"
+      layout:fragment="Content">
+      
+
+    <meta charset="UTF-8">
+    <title>QNA List</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <script src="https://kit.fontawesome.com/3a115195d8.js" crossorigin="anonymous"></script>
+    <script>
+        // 선택된 QNA의 세부 정보 페이지로 이동
+        function goToQnaDetail(qnaNo) {
+            window.location.href = '/qna?qnaNo=' + qnaNo;
+        }
+    </script>
+     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    
+    <script th:inline="javascript">
+        window.addEventListener('DOMContentLoaded', event => {
+            const datatablesSimple = document.getElementById('adminUsers');
+            if (datatablesSimple) {
+                new simpleDatatables.DataTable(datatablesSimple);
+            }
+        });
+    </script>
+
+<body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <!-- 버튼 클릭 시 QNA 등록 페이지로 이동 -->
+                <button class="btn btn-primary" onclick="window.location.href='/QnaForm'">등록</button>
+            </div>
+            <div class="card-body">
+                <table class="table table-light table-striped" id="adminUsers">
+                    <thead>
+                        <tr>
+                            <th class="text-center">번호</th>
+                            <th class="text-center">제목</th>
+                            <th class="text-center">답변 상태</th> 
+                            <th class="text-center">상세 보기</th>
+                            <th class="text-center">등록 일자</th>
+                            <th class="text-center">공개여부</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 각 QNA 항목에 대해 행을 생성 -->
+                        <tr th:each="qna : ${QnaUserList}" id="adminUsers">
+                            <td class="text-center" th:text="${qna.qnaNo}"></td>
+                            <td class="text-center" th:text="${qna.qnaTitle}"></td>
+                            <td class="text-center" th:text="${qna.replyStatus}"></td>
+                            <!-- 상세 보기 버튼 추가 -->
+                            <td class="text-center">
+                                <button class="btn btn-primary" 
+                                        th:onclick="'goToQnaDetail(' + ${qna.qnaNo} + ')'">
+                                    상세 보기
+                                </button>
+                            </td>
+                            <td class="text-center" th:text="${qna.qnaCreateat}"></td>    
+                            <td class="text-center">
+                                <!-- 공개여부 조건 표시 -->
+                                <span th:text="${qna.userNo == loggedInUserNo ? '공개' : '비공개'}"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- 부트스트랩 JS 및 의존성 스크립트 포함 -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

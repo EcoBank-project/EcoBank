@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/mypage_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>종료 챌린지</title>
+<style>
+#challenge-page {
+	padding: 20px;
+}
+
+.progress-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center; /* Center-align content horizontally */
+	width: 100%; /* Ensure it takes up the full width available */
+}
+
+.title-container {
+	margin-bottom: 20px; /* Space between title and cards */
+	text-align: center; /* Center-align title text */
+}
+
+.challenge-card-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: center; /* Center align cards horizontally */
+}
+
+.challenge-card {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	width: 300px;
+	overflow: hidden;
+	background-color: #fff;
+	transition: transform 0.2s;
+}
+
+.challenge-card:hover {
+	transform: scale(1.05);
+}
+
+.challenge-card img {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+}
+
+.challenge-card-body {
+	padding: 15px;
+	text-align: center;
+}
+
+.challenge-card-title {
+	font-size: 1.25em;
+	margin: 0;
+}
+
+.challenge-card-progress {
+	color: #007bff;
+	font-weight: bold;
+}
+
+.challenge-button-container {
+	margin-top: 15px;
+}
+
+.challenge-btn {
+	display: inline-block;
+	padding: 10px 15px;
+	margin: 5px;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.challenge-btn-confirm {
+	background-color: #28a745; /* Green for confirm */
+}
+
+.challenge-btn-review {
+	background-color: #007bff; /* Blue for review */
+}
+
+.challenge-btn-cancel {
+	background-color: #dc3545; /* Red for cancel */
+}
+
+.challenge-button-container .challenge-btn:hover {
+	opacity: 0.9;
+}
+
+.no-challenge-message {
+	font-size: 1.5em;
+	color: #777;
+	margin-top: 20px;
+	text-align: center;
+}
+</style>
+</head>
+<body id="challenge-page">
+	<div class="progress-container">
+		<div class="title-container">
+			<h1>종료 챌린지</h1>
+		</div>
+
+		<!-- Show message if no challenges are available -->
+		<p class="no-challenge-message"
+			th:if="${challengeInfo == null || #lists.isEmpty(challengeInfo)}">
+			완료한 챌린지가 없습니다.</p>
+
+		<!-- Show cards if challenges are available -->
+		<div class="challenge-card-container"
+			th:if="${challengeInfo != null && !#lists.isEmpty(challengeInfo)}">
+			<div class="challenge-card" th:each="challenge : ${challengeInfo}">
+				<img th:src="@{${challenge.mainImg}}" alt="Challenge Image" /> <input
+					type="hidden" th:value="${challenge.challNo}" class="cNo">
+				<div class="challenge-card-body">
+					<h2 class="challenge-card-title" th:text="${challenge.challTitle}"></h2>
+					<p class="challenge-card-progress"
+						th:text="${challenge.progressRate} + '%'"></p>
+					<p class="challenge-card-point" th:text="${challenge.score} + '점'"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	
+</script>
+</html>

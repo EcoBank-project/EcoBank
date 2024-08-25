@@ -17,7 +17,7 @@
 	</select>
 	
 	<!-- 회원 아이디로부터 사용가능한 점수를 가져오는 쿼리 -->
-	<select id="selectScoreUsableByUserId" resultType="int"
+	<select id="selectScoreUsableByUserId" resultType="String"
 		parameterType="String">
 		SELECT s.total_score - NVL(u.total_use_score, 0) AS score_usable
 		FROM
@@ -44,5 +44,31 @@
 		SELECT count(1)
 		FROM chall_enter
 	</select>
+	
+
+	<insert id="insertToUseScore" parameterType="com.ecobank.app.score.service.ScoreVO">
+		<selectKey keyProperty="useScoreNo"
+				resultType="Integer"
+				order="BEFORE">
+				SELECT NVL(MAX(use_score_no), 0) + 1
+				FROM use_score
+		</selectKey>
+		INSERT INTO use_score(use_score_no, 
+							  user_no, 
+							  use_score, 
+							  useat)
+		VALUES(#{useScoreNo},
+			   #{userNo},
+			   #{useScore},
+			   SYSDATE)
+	</insert>
+	
+	    <select id="getUserNoFromId" 
+    		parameterType="com.ecobank.app.intro.service.CarbUserVO"
+    		resultType="String">
+    	SELECT user_no
+    	FROM users
+    	WHERE use_id = #{useId}
+    </select>
 </mapper>
 	

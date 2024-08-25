@@ -1,31 +1,219 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
-		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  	layout:decorate="~{common/layouts/sns_default_layout}"
-	  	layout:fragment="Content">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/sns_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
- <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
+<title>에코뱅크</title>
+<style>
+
+.like{
+	width: 25px;
+    fill: #ddd;
+}
+.bi-heart-fill{
+	color: hotpink;
+}
+
+#speech{
+	width: 20px;
+    fill: #ddd;
+}
+
+.nokeyword{
+	text-align: center;
+  	font-weight: bold;
+  	margin-top:100px;
+}
+
+input{
+	outline: 1px solid gray;
+}
+
+input::placeholder {
+  	font-weight: bold;
+}
+
+.imghover {
+	transition: background-img 0.5s;
+}
+
+.imghover:hover {
+	filter: brightness(0.8);
+}
+
+.profile-img {
+	width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+</style>
+
 </head>
 <body>
-	<h3>sns 검색</h3>
-	<form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
-
-	<div>피드작성자<input name="userNo"></div>
-	<div>피드내용<input name="feedContent"></div>
-	
-	<input type="file" name="images" multiple>
-			
-		<div>
-			<button type="submit" >저장</button>
-			<button type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
-			
-		</div>
+	<div class="container"  style="width:1200px;">
+		<h4>Search</h4>
+		<p>다른 회원의 일상을 검색해보세요</p>
+		<br/>
+		<form name="searchForm" th:action="@{/snsSearch}" method="get">		
+			<div class="position-relative mx-auto ">
+            	<input class="form-control border-0 w-100 py-3 ps-4 pe-5 "  name="keyword" type="text" placeholder="#해시태그 또는 닉네임을 입력하세요">
+                <button type="submit" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Search</button>
+            </div>
 		</form>
+		<div class="row" style="margin-top:40px; text-align:center; margin-left:50px;">
+			<th:block th:each="sns, sts : ${snsSearch}"	th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
+				<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0" style="width:350px; margin-right:10px;">
+					<div class="author mb-2 d-flex align-items-center">
+						<div class="other">
+							<div th:text=${sns.userNo} hidden></div>
+							<img  th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Profile Image" class="profile-img">
+							<div class="ml-3 info" style="display:inline-block;">
+								<a href="#" th:text=${sns.nickname}></a>
+							</div>
+						</div> 
+						<div style="margin-left:auto;">
+							<button type="button"  th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null} and ${sns.userNo} != ${session.userNo}">팔로우</button>
+							<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
+						 </div>
+						 <input type="number" th:value="${sns.feedNo}" hidden>
+					</div>
+					<div class="imghover">
+						<div  style="position: relative;">
+							<div th:text=${sns.feedNo} hidden></div>
+							<svg xmlns="http://www.w3.org/2000/svg" th:if="${sns.fileCount != 1}" style="position:absolute; top:10; left: 280; z-index:100000;" color="gray" width="30" height="30" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+  								<path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+  								<path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
+							</svg>
+							 <img th:src=@{/images/{filePath}(filePath=${sns.filePath})}
+								alt="Image" class="img-fluid" style="position:relative;  width:350px; height:410px; padding:0px;">
+						</div>
+					</div>
+					<div class="post-content-entry" style="text-align:left;">
+						<div class="meta" style="margin-bottom:30px;  margin-top:10px;">
+							<button type="button" id="likeButton" class="btn btn-outline-primary">
+								<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
+								<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
+							</button>
+							<span class="likes-count" th:text=${sns.countLike}></span>
+							<button class="btn btn-outline-secondary ms-3">
+								<i class="bi bi-chat-dots"></i>
+							</button>
+							<span class="comments-count" th:text=${sns.countReply}>></span>
+						</div>
+					</div>
+				</div>
+			</th:block>
+			<div class="nokeyword" th:if="${snsSearch == null} or ${snsSearch.size() == 0}">
+				<h4 class="text-secondary">검색어를 입력하세요.</h4>
+			</div>
+		</div>
+	</div>
+
 	<script>
+		let userNo = [[${session.userNo}]];
 	
-	</script>
+		$(".imghover").on('click', function(event) {
+			/* if(event.target.tagName == 'BUTTON') return; */
+			let fno = $(event.currentTarget).children().first().text();
+			console.log(fno);
+			let url = '/snsInfo?feedNo=' + fno;
+			console.log('url : ' + url);
+			location.href = url;
+		});
+		
+		$(".other").on('click', function(event) {
+			let uno = $(event.currentTarget).children().first().text();
+			let url = '/userSns?userNo=' + uno;
+			location.href = url;
+		});
+		
+	    //좋아요버튼
+	  	$('.bi').on('click',function(){
+	  		let feedNo =$(this).data('feedno');
+	  		console.log('하트하으',feedNo);
+			$.ajax({
+				type : "POST",
+				url : "likeInsert",
+				data : {feedNo},
+				dataType : "json",
+				success : function(result){
+					location.reload();
+				},
+				error :  function(error){
+					console.log('에러',error);
+					alert("좋아요 실패");
+				}
+			});
+	    })
+		
+		//좋아요취소
+		$('.bi-heart-fill').click(function(){
+			let snsLikeNo =$(this).data('snslikeno');
+			console.log("팔로우버튼");
+			console.log('누구야',snsLikeNo)
+			// ajax로 좋아요 취소하기
+			$.ajax({
+				type : "delete",
+				url : "likeDelete",
+				data : {snsLikeNo},
+				success : function(){
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		});
+	    
+	    // 팔로우(writeBtn) 버튼을 클릭할 경우
+		$('.followBtn').click(function(){
+			let followingId =$(this).data('userno');
+			console.log("팔로우버튼");
+			console.log('누구야',followingId);
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "POST",
+				url : "insertFollow",
+				data : {userNo, followingId},
+				dataType : "json",
+				success : function(){
+					alert("팔로우 성공");
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("팔로우 실패");
+				}
+			});
+		});
+	
+		//팔로우취소
+		$('.followCancleBtn').click(function(){
+			let followNo =$(this).data('followno');
+			console.log("팔로우버튼");
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "delete",
+				url : "deleteFollow",
+				data : {followNo},
+				dataType : "json",
+				success : function(){
+					alert("팔로우취소 성공");
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		});
+
+</script>
 </body>
 
 </html>

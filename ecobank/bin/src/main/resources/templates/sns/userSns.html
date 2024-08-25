@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/sns_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>에코뱅크</title>
+<style>
+.imghover {
+	transition: background-img 0.5s;
+}
+
+.imghover:hover {
+	filter: brightness(0.8);
+}
+
+.blind {
+	position: absolute;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+
+}
+
+.like{
+    width: 20px;
+    fill: #ddd;
+}
+
+.bi-heart-fill{
+	color: hotpink;
+}
+
+#speech{
+	width: 20px;
+    fill: #ddd;
+}
+
+.ubtn{
+	position: absolute;
+	top:80px;
+	right:300px;
+}
+
+.profile-img {
+	width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+</style>
+
+</head>
+<body>
+<!-- Feature Start -->
+	<div class="container-xxl py-5">
+       <div class="ubtn" style="text-align:right;">
+        	<div th:text=${countMySns.userNo} class="blind"></div>
+        	<button type="button" th:data-followno="${followCheck}" th:data-userno="${countMySns.userNo}" class="followBtn btn btn-primary" th:if="${followCheck == 0}">팔로우</button>
+			<button type="button" th:data-followno="${followCheck}" class="followCancleBtn btn btn-secondary" th:unless="${followCheck == 0}">팔로잉</button>
+			<button type="button" th:data-blockid="${countMySns.userNo}" class="blockBtn btn btn-danger" > 차단 </button>
+        </div>
+    	<div class="container" style="width:1200px;">
+        	<div class="row g-5" style="border: 3px solid orange; border-radius: 2em; text-align:center;">
+            	<div class="col-md-6 col-lg-3 wow fadeIn" style="margin-top:20px;" data-wow-delay="0.1s">
+            		<img th:src=@{/images/{filePath}(filePath=${countMySns.profileImg})} alt="Profile Image" class="profile-img">
+                   	<div class="align-items-center mb-4">
+                       	<h5 class="mb-0" data-toggle="counter-up" th:text=${countMySns.nickname}></h5>
+                   	</div>
+               	</div>
+               	<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
+                   	<div class="align-items-center mb-4">
+                       	<h5 class="mb-0" data-toggle="counter-up">게시물</h5>
+                   	</div>
+                   	<h3 class="mb-3" th:text=${countMySns.countFeed}></h3>
+               	</div>
+               	<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
+                   	<div class="align-items-center mb-4">
+                       	<h5 class="mb-0" data-toggle="counter-up">팔로워</h5>
+                   	</div>
+                   	<h3 class="mb-3" th:text=${countMySns.countFollowing}></h3>
+               	</div>
+              		<div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
+                   	<div class="align-items-center mb-4">
+                       	<h5 class="mb-0" data-toggle="counter-up">팔로잉</h5>
+                   	</div>
+                   	<h3 class="mb-3" th:text=${countMySns.countFollower}></h3>
+               	</div>
+           	</div>
+        </div>
+    </div>
+    <!-- Feature Start -->
+     <div class="container" style="width:1200px;">	
+		<div class="row">
+			<th:block th:each="sns, sts : ${mySns}" th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
+				<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0">
+					<div class="imghover">
+						<div  style="position: relative;">
+							<div th:text=${sns.feedNo} class="blind"></div>
+							<svg xmlns="http://www.w3.org/2000/svg" th:if="${sns.fileCount != 1}" style="position:absolute; top:10; left: 280; z-index:100000;" color="gray" width="30" height="30" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+  								<path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+  								<path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
+							</svg>
+							<img th:src=@{/images/{filePath}(filePath=${sns.filePath})} alt="Image" class="img-fluid" style="position:relative;  width:350px; height:410px; padding:0px;">
+						</div>
+					</div>
+					<div class="post-content-entry">
+						<div class="meta" style="margin-bottom:30px; margin-top:10px;">
+							<button id="likeButton" class="btn btn-outline-primary">
+								<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
+								<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
+							</button>
+							<span class="likes-count" th:text=${sns.countLike}></span>
+							<button class="btn btn-outline-secondary ms-3">
+								<i class="bi bi-chat-dots"></i>
+							</button>
+							<span class="comments-count" th:text=${sns.countReply}>></span>
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</div>
+	</div>
+
+	<script>
+		let userNo = [[${session.userNo}]];
+		
+		$(".imghover").on('click', function(event) {
+			let fno = $(event.currentTarget).children().first().text();
+			let url = '/snsInfo?feedNo=' + fno;
+			location.href = url;
+		});
+		
+		//좋아요버튼
+	  	$('.bi').on('click',function(){
+	  		let feedNo =$(this).data('feedno');
+	  		let likeIcon = $(this).find('i'); // 클릭된 버튼의 좋아요아이콘
+	  	    let isLikedAlready = likeIcon.hasClass('bi-heart-fill'); // 이미 좋아요가 누른 상태인지 확인
+			$.ajax({
+				type : "POST",
+				url : "likeInsert",
+				data : {feedNo},
+				dataType : "json",
+				success : function(result){
+					if (typeof sendAlarm === "function" && !isLikedAlready) {
+	                    console.log(feedNo);
+						sendAlarm('H3', feedNo);
+	                } 
+					location.reload();
+				},
+				error :  function(error){
+					alert("좋아요 실패");
+				}
+			});
+	    })
+			    
+		//좋아요취소
+		$('.bi-heart-fill').click(function(){
+			let snsLikeNo =$(this).data('snslikeno');
+			// ajax로 좋아요 취소하기
+			$.ajax({
+				type : "delete",
+				url : "likeDelete",
+				data : {snsLikeNo},
+				success : function(){
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		});
+		    
+	    // 팔로우(writeBtn) 버튼을 클릭할 경우
+		$('.followBtn').click(function(){
+			let followingId =$(this).data('userno');
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "POST",
+				url : "insertFollow",
+				data : {userNo, followingId},
+				dataType : "json",
+				success : function(){
+					if (typeof sendAlarm === "function") {
+						sendAlarm('H5', followingId);
+	                } 
+					alert("팔로우 성공");
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("팔로우 실패");
+				}
+			});
+		});
+	
+		//팔로우취소
+		$('.followCancleBtn').click(function(){
+			let followNo =$(this).data('followno');
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "delete",
+				url : "deleteFollow",
+				data : {followNo},
+				dataType : "json",
+				success : function(){
+					alert("팔로우취소 성공");
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		});
+		
+		// 차단 버튼을 클릭할 경우
+		$('.blockBtn').click(function(){
+			let blockUserNo =$(this).data('blockid');
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "POST",
+				url : "insertBlock",
+				data : {userNo, blockUserNo},
+				dataType : "json",
+				success : function(){
+					alert("차단 성공");
+					location.href="sns";
+					
+				},
+				error :  function(error){
+					console.log(error);
+					alert("차단 실패");
+				}
+			});
+		});
+	
+	</script>
+</body>
+</html>
