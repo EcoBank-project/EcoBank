@@ -31,7 +31,7 @@
 				<div id="chatListContainer">
 					<!-- 카드 목록 -->
 					<div class="containers">
-						<div class="card" th:onclick="showPasswordModal([[${chatRoom.chatNo}]])" th:each="chatRoom : ${openChatList}">
+						<div class="card" th:onclick="handleCardClick([[${chatRoom.chatNo}]])" th:each="chatRoom : ${openChatList}">
 							<img th:src="@{/images/{filePath}(filePath=${chatRoom.chatImage})}" alt="제목 1">
 							<div class="card-title" th:text="${chatRoom.chatName}">제목 1</div>
 						</div>
@@ -90,55 +90,64 @@
         modal.style.display = 'flex';
         modal.dataset.itemId = id;
     }
-
+	
     // 모달을 닫는 함수
     function closeModal() {
     	$('#passwordModal').hide();
     	$('#passwordInput').val('');
     	$('#errorMessage').text('');
     }
-
+    
+    // 채팅방 참여 여부 확인
+    function handleCardClick(chatRoomId) {
+        $.ajax({
+            url: `/checkParticipation`,
+            type: 'POST',
+            data: { chatRoomId: chatRoomId },
+            success: function(response) {
+                if (response > 0) {
+                    window.location.href = `/chatRoom/${chatRoomId}`;
+                } else {
+                    showPasswordModal(chatRoomId);
+                }
+            }
+        });
+    }
+    
     // 비밀번호를 제출하는 함수
     function submitPassword() {
-        const modal = document.getElementById('passwordModal');
+    	const modal = document.getElementById('passwordModal');
         const password = document.getElementById('passwordInput').value;
         const itemId = modal.dataset.itemId;
 
-        if (validatePassword(password)) {
-            alert(`비밀번호가 맞습니다. 아이템 ID: ${itemId}`);
-            closeModal();
-        } else {
-            document.getElementById('errorMessage').textContent = '비밀번호가 맞지 않습니다.';
-        }
+        $.ajax({
+            url: `/verifyPassword`,
+            type: 'POST',
+            data: { chatRoomId: itemId, password: password },
+            success: function(response) {
+                if (response > 0) {
+                    window.location.href = `/chatRoom/${itemId}`;
+                    closeModal();
+                } else {
+                    $('#errorMessage').text('비밀번호가 맞지 않습니다.');
+                }
+            }
+        });
     }
 
-    // 비밀번호 검증 함수
-    function validatePassword(password) {
-        // 비밀번호 검증 로직
-        // 예시로 'password123'을 사용합니다.
-        return password === 'password123';
-    }
-
+	// 엔터키
     function enterKeyDown(event){
 		if(event.key === 'Enter'){
 			event.preventDefault();
 			performSearch();
 		}
 	}
+	// 검색
     function performSearch() {
         const query = $('#searchInput').val();
         const currentPage = 1;
-        $.ajax({
-            url: `/chatSearch?page=${currentPage}&search=${query}`,
-            type: 'GET',
-            success: function(response) {
-            	$('#chatListContainer').html($(response).find('#chatListContainer').html());
-                $('ul.pagination').html($(response).find('ul.pagination').html());
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
+        location.href = `/chatSearch?page=${currentPage}&search=${query}`;
+
     }
 
     </script>

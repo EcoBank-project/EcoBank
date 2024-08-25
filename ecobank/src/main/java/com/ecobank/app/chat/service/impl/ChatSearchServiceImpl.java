@@ -26,6 +26,7 @@ public class ChatSearchServiceImpl implements ChatSearchService{
         int endRow = page * itemsPerPage;
 		return chatSearchMapper.selectOpenChatAll(search, startRow, endRow);
 	}
+	//오픈 채팅방 갯수
 	@Override
 	public int getTotalPages(String search) {
 		int itemsPerPage = 8;
