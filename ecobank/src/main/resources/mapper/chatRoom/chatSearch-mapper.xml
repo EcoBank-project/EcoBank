@@ -26,4 +26,26 @@
             AND LOWER(chat_name) LIKE LOWER('%' || #{search} || '%')
         )
 	</select>
+	<!-- 방에 있는 체크 -->
+	<select id="selectOpenUserCheck">
+		SELECT count(*)
+		FROM chat c join chat_entry ce
+		              on c.chat_no = ce.chat_no
+		WHERE user_no = #{userNo}
+		AND c.chat_no = #{chatNo}
+	</select>
+	<!-- 비밀번호 체크-->
+	<select id="selectOpenChatPasswordCheck">
+		SELECT chat_password
+		FROM chat c 
+		WHERE chat_no = #{chatNo}
+	</select>
+	<!-- 비밀번호 확인 -->
+	<select id="selectOpenChatPassword">
+		SELECT chat_password
+		FROM chat c join chat_entry ce
+		              on c.chat_no = ce.chat_no
+		WHERE user_no = #{userNo}
+		AND c.chat_no = #{chatNo}
+	</select>
 </mapper>

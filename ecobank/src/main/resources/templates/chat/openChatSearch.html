@@ -105,13 +105,39 @@
             type: 'POST',
             data: { chatRoomId: chatRoomId },
             success: function(response) {
-                if (response > 0) {
-                    window.location.href = `/chatRoom/${chatRoomId}`;
+            	console.log(response);
+            	if (response.participating) {
+            		//Y => 그방번호로 이동
+            		window.location.href = `/chatRoom/${chatRoomId}`;
                 } else {
-                    showPasswordModal(chatRoomId);
+                	//N => 비밀번호가 있어? => Y => 비밀번호 입력칸
+                    //                  => N => 들어가시겠습니까? 물어보고 ㄱㄱ
+                	if (response.requiresPassword) {
+                        showPasswordModal(chatRoomId);
+                    } else {
+                    	searchEnter(chatRoomId);
+                    }
                 }
-            }
+            },
+			err: function(error) {
+    			
+    		}
         });
+    }
+    
+    // 채팅방 들어가는 확인
+    function searchEnter(chatRoomId) {
+    	$.ajax({
+    		url: `/searchOpenChatEnter`,
+    		type: 'POST',
+    		data: { chatRoomId: chatRoomId },
+    		success: function(response) {
+    			window.location.href = `/chatRoom/${chatRoomId}`;
+    		},
+    		err: function(error) {
+    			
+    		}
+    	});
     }
     
     // 비밀번호를 제출하는 함수
@@ -125,13 +151,16 @@
             type: 'POST',
             data: { chatRoomId: itemId, password: password },
             success: function(response) {
-                if (response > 0) {
+                if (response) {
                     window.location.href = `/chatRoom/${itemId}`;
                     closeModal();
                 } else {
                     $('#errorMessage').text('비밀번호가 맞지 않습니다.');
                 }
-            }
+            },
+			err: function(error) {
+    			
+    		}
         });
     }
 
