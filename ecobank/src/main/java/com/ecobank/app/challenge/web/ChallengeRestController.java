@@ -87,6 +87,7 @@ public class ChallengeRestController {
 	@GetMapping("enterStatus")
 	public boolean isUserParticipated(@RequestParam("challNo") int challNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
+		//System.out.println(challConfirmService.isUserParticipated(userNo, challNo) + "뭘 반환해 안했으면 false/했으면 true");
 		return challConfirmService.isUserParticipated(userNo, challNo);
 	}
 	
@@ -159,6 +160,7 @@ public class ChallengeRestController {
 	public int reviewStatus(@RequestParam("challNo") int challNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		int isConfirmed = challService.reviewStatus(userNo, challNo);
+		//System.out.println(isConfirmed + "0인지 1인지 /작성했을때 1 안했을때 0");
 		return isConfirmed;
 	}
 	

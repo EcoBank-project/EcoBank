@@ -84,12 +84,12 @@
 	</th:block>
 	</section><!-- End Testimonials Section -->
 	<script>
-    //리뷰 등록 여부
+    	//리뷰 등록 여부
 	    $('#writeBtn').click(function(event){
     	event.preventDefault();
     	
     	let cNo = $('#cNo').val();
-    	console.log(cNo, "cno");
+    	//console.log(cNo, "cno");
     	$.ajax({
     		url : '/reviewStatus',
     		type : 'get',
@@ -97,20 +97,30 @@
     			challNo : cNo
     		},
     		success : function(isConfirmed) {
-				console.log("isConfirmed:", isConfirmed);
+				//console.log("isConfirmed:", isConfirmed);
 				if (isConfirmed) {
-					alert("후기 작성이 이미 완료되었습니다.");
-					
+	                Swal.fire({
+	                    title: '<span style="font-size: 20px;">후기 작성이 이미 완료되었습니다</span>',
+	                    icon: 'info',
+	                    confirmButtonText: 'OK',
+	                    confirmButtonColor: "#32C36C"
+	                });
 				}else{
 					reviewModal();
 				}
 			},
 			error : function(err) {
+				Swal.fire({
+	                title: '오류',
+	                icon: 'error',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
 				console.log(err);
-				alert("오류");
-			}
-    	})
-    });  
+				}
+	    	})
+	    });  
+    	
 		//리뷰 등록 모달창
 		function reviewModal(){
 			event.preventDefault();
@@ -131,13 +141,25 @@
 	    		type : 'post',
 	    		data : $('#reviewStar').serialize(), //form태그안에 값 다 가져오려고
 	    		success : function(result){
-	    			console.log(result);
-	    			alert('리뷰 작성이 완료되었습니다.');
-	    			modal.style.display="none";
-	    			detailImg();
-	    			$('#reviewContent').val('');
+	    			Swal.fire({
+	                    title: '리뷰 작성이 완료되었습니다',
+	                    icon: 'success',
+	                    confirmButtonText: 'OK',
+	                    confirmButtonColor: "#32C36C"
+	                }).then(() => {
+	                    modal.style.display = "none"; //모달 닫기
+	                    detailImg(); 
+	                    $('#reviewContent').val(''); //초기화
+	                });
+	                console.log(result);
 	    		},
 	    		error : function(err){
+	    			Swal.fire({
+                        title: '<span style="font-size: 20px;">도전하기 버튼을 누른 후 작성해주세요</span>',
+                        icon: 'info',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: "#32C36C"
+                    });
 	    			console.log(err);
 	    		}
 	    	})
@@ -145,29 +167,59 @@
 	    
 	    //리뷰 삭제
 	    $(document).on('click', '#reviewDelete', function() {
-	    	let rNo = $(this).data('reviewno');
-	    	console.log(rNo,"리뷰넘버");
-	    	if(confirm('해당 리뷰 글을 삭제하겠습니까?')){
-		    	$.ajax({
-		    		url : 'reviewDelete',
-		    		type : 'post',
-		    		data : {
-		    			reviewNo : rNo
-		    		},
-		    		success : function(result){
-	    				if(result == 1){
-	    					alert('리뷰가 삭제되었습니다.');
-	    					detailImg();
-	    				}else{
-	    					alert('삭제 권한이 없습니다.');
-	    				}
-	    			},
-	    			error : function(err){
-	    				console.log(err);
-	    			}
-		    	})
-	    	}
-	    })	
+		    let rNo = $(this).data('reviewno');
+		    //console.log(rNo,"리뷰넘버");
+		
+		    Swal.fire({
+		        title: '해당 리뷰 글을 삭제하겠습니까?',
+		        text: '삭제 후 다시 작성할 수 있습니다',
+		        icon: 'warning',
+		        showCancelButton: true,
+		        confirmButtonColor: "#32C36C",
+		        cancelButtonColor: "#d33",
+		        confirmButtonText: '삭제',
+		        cancelButtonText: '취소'
+		    }).then((result) => {
+		        if (result.isConfirmed) {
+		            $.ajax({
+		                url: 'reviewDelete',
+		                type: 'post',
+		                data: {
+		                    reviewNo: rNo
+		                },
+		                success: function(result) {
+		                    if (result == 1) {
+		                        Swal.fire({
+		                            title: '리뷰가 삭제되었습니다',
+		                            icon: 'success',
+		                            confirmButtonText: 'OK',
+		                            confirmButtonColor: "#32C36C"
+		                        }).then(() => {
+		                            detailImg(); 
+		                        });
+		                    } else {
+		                        Swal.fire({
+		                            title: '삭제 권한이 없습니다',
+		                            icon: 'info',
+		                            confirmButtonText: 'OK',
+		                            confirmButtonColor: "#32C36C"
+		                        });
+		                    }
+		                },
+		                error: function(err) {
+		                    Swal.fire({
+		                        title: '서버 오류',
+		                        text: '리뷰 삭제 중 오류가 발생했습니다',
+		                        icon: 'error',
+		                        confirmButtonText: 'OK',
+		                        confirmButtonColor: "#32C36C"
+		                    });
+		                    console.log(err);
+		                }
+		            });
+		        }
+		    });
+		});
 	
 		//리뷰 목록 스와이퍼
 		var swiper = new Swiper('.testimonial-carousel', {
@@ -181,6 +233,6 @@
 			autoplay : {
 				delay : 5000, //자동 슬라이드 속도 (밀리초 단위), 5초
 				disableOnInteraction : false, //사용자가 클릭해도 자동 슬라이드 유지
-			},
+			}
 		});
 	</script>	

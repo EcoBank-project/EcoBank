@@ -65,7 +65,7 @@ public class FileServiceImpl implements FileService{
 					
 					//3)*파일 작성(파일 업로드)
 					try {
-						image.transferTo(savePath); //*실제 경로 지정 /Path는 경로/transferTo=햇살
+						image.transferTo(savePath); //*실제 경로 지정 /Path는 경로/transferTo/이미지 저장
 					}catch(IOException e) {
 						e.printStackTrace();
 					}
