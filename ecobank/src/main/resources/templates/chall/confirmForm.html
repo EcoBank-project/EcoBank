@@ -33,23 +33,46 @@
         </div>
     </div>
     <script>
-	    $(document).ready(function () {
-	        $('#images').on('change', function () {
+    	$(document).ready(function() {
+	        $('#images').on('change', function() {
 	            var files = $(this)[0].files;
 	            var previewContainer = $('#imagePreview');
-	            previewContainer.empty(); //기존에 있던 미리보기 비우기
+	            previewContainer.empty(); //기존에 있던 미리보기 컨테이너 비워
 	
-	            $.each(files, function (index, file) {
-	                if (file && file.type.startsWith('image/')) {
+	            $.each(files, function(index, file) {
+	                if(file && file.type.startsWith('image/')) {
 	                    var reader = new FileReader();
-	                    reader.onload = function (e) {
-	                        var img = $('<img>').attr('src', e.target.result);
-	                        previewContainer.append(img);
+	                    reader.onload = function(e) {
+	                        var imgContainer = $('<div>').addClass('image-container'); //미리보기 컨테이너
+	                        var img = $('<img>').attr('src', e.target.result); 
+	                        var removeBtn = $('<button>').addClass('remove-btn').text('×'); //미리보기 사진 지우기 버튼
+	
+	                        removeBtn.on('click', function () {
+	                            $(this).parent().remove(); //파일지우기
+	                            removeFile(index);
+	                        });
+	
+	                        imgContainer.append(img).append(removeBtn); //미리보기에다 이미지, 삭제 버튼 같이
+	                        previewContainer.append(imgContainer); //미리보기 컨테이너에 append
 	                    };
-	                    reader.readAsDataURL(file);
+	                    reader.readAsDataURL(file); //파일의 url을 읽는거(비동기)
 	                }
 	            });
 	        });
+	        
+	        function removeFile(index) {
+	            var dt = new DataTransfer();
+	            var input = document.getElementById('images');
+	            var files = input.files;
+	
+	            for(var i = 0; i < files.length; i++) {
+	                if(i !== index) {
+	                    dt.items.add(files[i]); //현재 파일 인덱스를 제외하고 추가하기
+	                }
+	            }
+	
+	            input.files = dt.files; //새로운 파일 리스트로 바꿈
+	        }
 	    });
     </script>
 </body>
