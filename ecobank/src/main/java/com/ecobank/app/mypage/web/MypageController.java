@@ -249,7 +249,6 @@ public class MypageController {
         try {
             String fileName = profileImage.getOriginalFilename();
             String filePath = "D:/upload/profile/" + fileName; // 이미지 저장 경로
-            System.out.println("-------" + profileImage.getOriginalFilename());
             System.out.println("-------" + fileName);
 
             // 파일 저장
@@ -257,10 +256,10 @@ public class MypageController {
             profileImage.transferTo(file);
 
             // 사용자 정보 업데이트
-            mypageService.updateProfileImage(userNo, fileName);
+            mypageService.updateProfileImage(userNo, "profile/"+fileName);
 
             // 응답 반환
-            return ResponseEntity.ok(Collections.singletonMap("newImageUrl", "/images/" + fileName));
+            return ResponseEntity.ok(Collections.singletonMap("newImageUrl", "/images/profile/" + fileName));
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장 실패");
         }
