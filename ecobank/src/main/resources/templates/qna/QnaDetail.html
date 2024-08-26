@@ -1,100 +1,178 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org/"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/default_layout}"
-      layout:fragment="Content">
+<html xmlns:th="http://www.thymeleaf.org/" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}" layout:fragment="Content">
+
 <head>
-    <meta charset="UTF-8">
-    <title>QNA 상세 정보</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <style>
-        .modal-dialog-centered {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<title>QNA 상세 정보</title>
+	<link rel="stylesheet" href="/css/bootstrap.min.css" />
+	<script src="/js/bootstrap.bundle.min.js"></script>
+	<style>
+		.modal-dialog-centered {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.card-body {
+			padding: 20px;
+			background-color: #f9f9f9;
+			border: 1px solid #e0e0e0;
+			border-radius: 8px;
+		}
+
+		.card-body p {
+			margin-bottom: 15px;
+			padding: 10px;
+			background-color: #ffffff;
+			border: 1px solid #dcdcdc;
+			border-radius: 4px;
+		}
+
+		.btn-secondary {
+			background-color: #28a745;
+			border-color: #28a745;
+		}
+
+		.btn-secondary:hover {
+			background-color: #218838;
+			border-color: #1e7e34;
+		}
+
+		.btn-danger {
+			background-color: #dc3545;
+			border-color: #dc3545;
+		}
+
+		.btn-danger:hover {
+			background-color: #c82333;
+			border-color: #bd2130;
+		}
+
+		.btn-primary {
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.btn-primary:hover {
+			background-color: #0056b3;
+			border-color: #004085;
+		}
+
+		.card-header {
+			background-color: #28a745;
+		}
+
+		.centered-button-container {
+			display: flex;
+			justify-content: center;
+			margin-top: 20px;
+			/* 버튼과 카드 사이에 여백 추가 */
+		}
+
+		.button-group {
+			display: flex;
+			gap: 10px;
+			/* 버튼 사이에 여백 추가 */
+		}
+	</style>
 </head>
+
 <body>
-    <div class="container mt-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">QNA 상세 정보</h5>
-            </div>
-            <div class="card-body">
-                <!-- QNA 세부 정보 표시 -->
-                <p><strong>번호:</strong> <span th:text="${qna.qnaNo}"></span></p>
-                <p><strong>제목:</strong> <span th:text="${qna.qnaTitle}"></span></p>
-                <p><strong>내용:</strong> <span th:text="${qna.qnaContent}"></span></p>
-                <p><strong>등록일:</strong> <span th:text="${qna.qnaCreateat}"></span></p>
-                <p><strong>작성자 번호:</strong> <span th:text="${qna.userNo}"></span></p>
-                <!-- 답변 상태 표시 -->
-                <p><strong>답변 상태:</strong> <span th:text="${qna.replyStatus}"></span></p>
-                <!-- 뒤로 가기 버튼 -->
-                <a href="/QnaUserList" class="btn btn-secondary">목록으로 돌아가기</a>
-                <form th:action="@{/qnaDelete}" method="post" style="display:inline;">
-                    <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
-                    <button type="submit" class="btn btn-danger">삭제</button>
-                </form>
+	<div class="container mt-4">
+		<div class="card">
+			<div class="card-header">
+				<h5 class="card-title">QNA 상세 정보</h5>
+			</div>
+			<div class="card-body">
+				<!-- QNA 세부 정보 표시 -->
+				<div class="row">
+					<div class="col">
+						<p><strong>번호:</strong> <span th:text="${qna.qnaNo}"></span>
+					</div>
+					<div class="col">
+						<p><strong>등록일:</strong> <span th:text="${qna.qnaCreateat}"></span></p>
+					</div>
+					<div class="col">
+						<p><strong>작성자 번호:</strong> <span th:text="${qna.userNo}"></span></p>
 
-                <!-- 수정 버튼: 답글이 없을 때만 표시 -->
-                <div th:if="${#lists.isEmpty(qnaReplyList)}">
-                    <a th:href="@{/qnaEdit/{qnaNo}(qnaNo=${qna.qnaNo})}" class="btn btn-primary">수정</a>
-                </div>
-            </div>
-        </div>
+					</div>
+					<p><strong>제목:</strong> <span th:text="${qna.qnaTitle}"></span></p>
 
-        <!-- 답글 목록 표시 -->
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="card-title">답글 목록</h5>
-            </div>
-            <div class="card-body">
-                <!-- 답글 목록 출력 -->
-                <div th:if="${not #lists.isEmpty(qnaReplyList)}">
-                    <ul class="list-group">
-                        <li th:each="reply : ${qnaReplyList}" class="list-group-item">
-                            <p><strong>답글 번호:</strong> <span th:text="${reply.qnaReplyNo}"></span></p>
-                            <p><strong>답글 내용:</strong> <span th:text="${reply.qnaReplyContent}"></span></p>
-                            <p><strong>등록일:</strong> <span th:text="${reply.qnaReplyat}"></span></p>
-                        </li>
-                    </ul>
-                </div>
-                <div th:if="${#lists.isEmpty(qnaReplyList)}">
-                    <p>답글이 없습니다.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+					<p><strong>내용:</strong> <span th:text="${qna.qnaContent}"></span></p>
 
-    <!-- 오류 모달 -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">오류 발생</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>문제가 발생했습니다. 나중에 다시 시도해 주세요.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                </div>
-            </div>
-        </div>
-    </div>
+					<!-- 버튼 그룹 -->
+					<div class="centered-button-container">
+						<div class="button-group">
+							<form th:action="@{/qnaDelete}" method="post">
+								<input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
+								<button type="submit" class="btn btn-danger">삭제</button>
+							</form>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Thymeleaf 변수 'showErrorModal'이 true일 경우 모달을 표시
-            const showErrorModal = /*[[${showErrorModal}]]*/ false;
-            if (showErrorModal) {
-                const modal = new bootstrap.Modal(document.getElementById('errorModal'));
-                modal.show();
-            }
-        });
-    </script>
+							<!-- 수정 버튼: 답글이 없을 때만 표시 -->
+							<div th:if="${#lists.isEmpty(qnaReplyList)}">
+								<a th:href="@{/qnaEdit/{qnaNo}(qnaNo=${qna.qnaNo})}" class="btn btn-primary">수정</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 답글 목록 표시 -->
+			<div class="card mt-4">
+				<div class="card-header">
+					<h5 class="card-title">답글 목록</h5>
+				</div>
+				<div class="card-body">
+					<!-- 답글 목록 출력 -->
+					<div th:if="${not #lists.isEmpty(qnaReplyList)}">
+						<ul class="list-group">
+							<li th:each="reply : ${qnaReplyList}" class="list-group-item">
+								<p><strong>답글 번호:</strong> <span th:text="${reply.qnaReplyNo}"></span></p>
+								<p><strong>답글 내용:</strong> <span th:text="${reply.qnaReplyContent}"></span></p>
+								<p><strong>등록일:</strong> <span th:text="${reply.qnaReplyat}"></span></p>
+							</li>
+						</ul>
+					</div>
+					<div th:if="${#lists.isEmpty(qnaReplyList)}">
+						<p>답글이 없습니다.</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="centered-button-container">
+				<a href="/QnaUserList" class="btn btn-secondary">목록으로 돌아가기</a>
+			</div>
+		</div>
+
+		<!-- 오류 모달 -->
+		<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="errorModalLabel">오류 발생</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>문제가 발생했습니다. 나중에 다시 시도해 주세요.</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				// Thymeleaf 변수 'showErrorModal'이 true일 경우 모달을 표시
+				const showErrorModal = /*[[${showErrorModal}]]*/ false;
+				if (showErrorModal) {
+					const modal = new bootstrap.Modal(document.getElementById('errorModal'));
+					modal.show();
+				}
+			});
+		</script>
 </body>
+
 </html>

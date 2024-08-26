@@ -5,49 +5,52 @@
       layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<style>
-	.form-container {
-	    display: flex;
-	    justify-content: center;
-	    align-items: center;
-	    height: 100vh;
-	    background-color: #f8f9fa;
-	}
-	
-	.form-box {
-	    width: 100%;
-		max-width: 1000px;
-		max-height: 1000px;
-		padding: 20px;
-		border: 1px solid grey;
-		background-color: #fff;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-		border-radius: 8px;
-	}
-</style>
+<title>에코뱅크</title>
+<link rel="stylesheet" href="../css/challenges/challenge.css" />
 </head>
 <body>
     <div class="form-container">
         <div class="form-box">
-            <h6 class="text-primary">To Do My Challenge</h6>
-            <h1 class="mb-4">Challenge Certification Form</h1>
-            <p class="mb-2 pb-2">챌린지 인증 내용을 작성해주세요.</p>
+            <h6 class="text-primary" style="text-align:center;">Today's challenge</h6>
+            <h1 class="mb-4" style="text-align:center; ">Share your challenge</h1>
             <form name="insertForm" th:action="@{/confirmInsert}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="challNo" id="challNo" th:value="${param.challNo}">
                 <div class="mb-3">
-                    <textarea class="form-control border-0" rows="5" name="confirmContent" placeholder="Challenge Note"></textarea>
+		            <label for="confirmContent" class="mb-2 pb-2">인증 내용을 작성해주세요 (300자 내외)</label>
+                    <textarea rows="7" id="confirmContent" name="confirmContent" placeholder="오늘 기후를 위해 여러분들이 실천한 행동을 공유해주세요" required></textarea>
                 </div>
                 <div class="mb-3">
-                    <input type="file" name="images" multiple>
+                	<label for="images" class="mb-2 pb-2">인증 이미지를 선택해주세요 (최대 3장)</label>
+                    <input type="file" id="images" name="images" multiple required>
                 </div>
+                <!-- image preview -->
+                <div class="image-preview" id="imagePreview"></div>
                 <div class="d-flex justify-content-between">
                     <button class="btn btn-primary" type="submit">Submit</button>
                     <button class="btn btn-secondary" type="button" th:onclick="|location.href='@{/detail(challNo=${param.challNo})}'|">Cancel</button>
-                    <!--/* <button class="btn btn-secondary" type="button" th:onclick="|location.href='@{/confirm}'|">Cancel</button> */-->
                 </div>
             </form>
         </div>
     </div>
+    <script>
+	    $(document).ready(function () {
+	        $('#images').on('change', function () {
+	            var files = $(this)[0].files;
+	            var previewContainer = $('#imagePreview');
+	            previewContainer.empty(); //기존에 있던 미리보기 비우기
+	
+	            $.each(files, function (index, file) {
+	                if (file && file.type.startsWith('image/')) {
+	                    var reader = new FileReader();
+	                    reader.onload = function (e) {
+	                        var img = $('<img>').attr('src', e.target.result);
+	                        previewContainer.append(img);
+	                    };
+	                    reader.readAsDataURL(file);
+	                }
+	            });
+	        });
+	    });
+    </script>
 </body>
 </html>

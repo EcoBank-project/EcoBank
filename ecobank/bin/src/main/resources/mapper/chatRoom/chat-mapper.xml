@@ -6,12 +6,28 @@
 		select ce.chat_no, 
 			   chat_name, 
 			   chat_enter_time,
-			   chat_type 
+			   chat_type,
+			   chat_create_user,
+			   chat_image 
 		from chat_entry ce join chat c 
                      		 on ce.chat_no = c.chat_no
 		where user_no = #{userNo}
+		AND chat_user_state = 'Q1'
 	</select>
-	
+	<!-- 채팅방 상세 조회 -->
+	<select id="selectChatRoomInfo" resultType="chatRoomVO">
+		SELECT chat_name, 
+		       chat_type, 
+		       user_no,
+		       chat_password,
+		       chat_search_allow,
+		       chat_image
+		FROM chat c join chat_entry ce
+		              on c.chat_no = ce.chat_no
+		WHERE c.chat_no = #{chatNo}
+		AND user_no = #{userNo}
+		AND chat_user_state = 'Q1'
+	</select>
 	<!-- 채팅방 채팅 로그 조회 -->
 	<select id="selectChatMessage" resultType="ChatMessageVO">
 		select msg_no, 
@@ -20,11 +36,18 @@
 		       msg_send_time, 
 		       m.user_no, 
 		       chat_no,
-		       nickname
+		       nickname,
+		       profile_img
 		from msg m join users u 
 		           on m.user_no = u.user_no
 		where chat_no = #{chatNO}
 		order by msg_send_time
+	</select>
+	<!-- 채팅한 사람의 정보 조회 -->
+	<select id="selectChatUserInfo">
+		SELECT profile_img
+		FROM users
+		WHERE user_no = #{userNo}
 	</select>
 	<!-- 채팅방 채팅 로그 저장 -->
 	<insert id="insertChatMessage" parameterType="ChatMessageVO">
@@ -54,20 +77,61 @@
 			)	
 	</insert>
 	<!-- 채팅방 팔로우 목록 -->
-	<select id="selectChatFollowAll" parameterType="ChatFollowVO">
+	<select id="selectChatFollowAll">
 		select following_id,
 			   use_id, 
-			   nickname
+			   nickname,
+			   profile_img
 		from follow f join users u 
 		                on u.user_no = following_id
 		where f.follower_id = #{followingId}
 	</select>
+	<!-- 채팅방 대화 상대 -->
+	<select id="selectChatRoomUsers">
+		SELECT nickname, profile_img
+		FROM chat_entry ce join users u
+		                     on ce.user_no = u.user_no
+		WHERE chat_no = #{chatNo}
+		AND chat_user_state = 'Q1'
+	</select>
+	<!-- 오픈 채팅방에 참여하고 있지 않는 팔로우 목록 -->
+	<select id="selectChatFollowInfo">
+		select following_id,
+		       use_id, 
+		       nickname,
+		       profile_img
+		from follow f join users u 
+		                on u.user_no = following_id
+		where follower_id = #{followerId}
+		AND following_id not In (select following_id
+		                         from follow f join users u 
+		                                         on u.user_no = following_id
+		                                       join chat_entry ce
+		                                         on ce.user_no = following_id
+		                         where f.follower_id = #{followerId}
+		                         and chat_no = #{chatNo})
+	</select>
+	<!-- 회원 언어 조회 -->
+	<select id="selectLaguageCode">
+		SELECT language_code
+		FROM users
+		WHERE use_id = #{userId}
+	</select>
+	<!-- 회원 언어 변경 -->
+	<update id="updateLaguageCode">
+		UPDATE users
+		SET language_code = #{laguageCode}
+		WHERE user_no = #{userNo}
+	</update>
 	<!-- 채팅방 생성 -->
 	<insert id="insertChatRoom" statementType="CALLABLE">
 		{call insertChatRoom(
 		    #{chatName, mode=IN},
 		    #{userNo, mode=IN},
 		    #{chatType, mode=IN},
+		    #{chatPassWord, mode=IN},
+		    #{chatSearchAllow, mode=IN},
+		    #{chatImage, mode=IN},
 		    #{chatNo, mode=OUT, jdbcType=INTEGER}
 		    )
 		}
@@ -84,12 +148,107 @@
 		INSERT INTO chat_entry (user_no, chat_no)
 		VALUES (#{userNo}, #{chatNo})
 	</insert>
-	<!-- 채팅방에 아이디 조회 -->
-	<select id="selectChatUser">
+	<!-- 채팅방 아이디 조회 -->
+	<select id="selectAllChatUser">
 		SELECT use_id
 		FROM users
 		WHERE user_no IN (SELECT user_no
                   		  FROM chat_entry
-                  		  WHERE chat_no = #{chatNo})
+                  		  WHERE chat_no = #{chatNo}
+                  		  AND chat_user_state = 'Q1')
 	</select>
+	<!-- 채팅방 참가자 닉네임 조회 -->
+	<select id="selectChatUserName">
+		SELECT nickname
+		FROM users
+		WHERE user_no = #{userNo}
+	</select>
+	<!-- 채팅방 타입 조회 -->
+	<select id="getChatRoomType">
+		SELECT chat_type
+		FROM chat
+		WHERE chat_no = #{chatNo}
+	</select>
+	
+	<!-- 채팅방 참가자 수 -->
+	<select id="selectUsersChatRoom">
+		SELECT count(*)
+		FROM chat_entry
+		WHERE chat_no = #{chatNo}
+		AND chat_user_state = 'Q1'
+	</select>
+	<!-- 채팅방 나가기 -->
+	<update id="updateChatEntry">
+		UPDATE chat_entry
+		SET chat_user_state = 'Q2'
+		WHERE user_no = #{userNo} 
+		AND chat_no = #{chatNo}
+	</update>
+	<!-- 참가자 없으면 채팅방 삭제 -->
+	<delete id="deleteChatRoom">
+		DELETE FROM chat
+		WHERE chat_no = #{chatNo}
+	</delete>
+	<!-- 참가자 삭제 -->
+	<delete id="deleteChatPart">
+		DELETE FROM chat_entry
+		WHERE chat_no = #{chatNo}
+	</delete>
+	<!-- 채팅방 메시지 전부 삭제 -->
+	<delete id="deleteAllMessage">
+		DELETE FROM msg
+		WHERE chat_no = #{chatNo}
+	</delete>
+	<!-- 채팅방 남은 사람 조회 -->
+	<select id="selectLeaveUser">
+		SELECT use_id
+		FROM users
+		WHERE user_no IN (SELECT user_no
+                  		  FROM chat_entry
+                  		  WHERE chat_no = #{chatNo}
+                  		  AND chat_user_state = 'Q1'
+						  <![CDATA[
+						  AND user_no <> #{userNo})
+						  ]]>
+	</select>
+	<!-- 채팅방 방장 조회 -->
+	<select id="selectRoomManager">
+		SELECT count(*)
+		FROM chat
+		WHERE chat_create_user = #{userNo}
+		AND chat_no = #{chatNo}
+		AND (chat_type = 'O2' OR chat_type = 'O3')
+	</select>
+	<!-- 채팅방 이름 변경 -->
+	<update id="updateChatChangeName">
+		UPDATE chat
+		SET chat_name = #{chatName}
+		WHERE chat_no = #{chatNo}
+	</update>
+	<!-- 오픈채팅방 변경 -->
+	<update id="updateOpenChatChange" parameterType="ChatRoomVO">
+		UPDATE chat
+	    <set>
+	        <if test="chatImage != null and chatImage != ''">
+	            chat_image = #{chatImage},
+	        </if>
+	        chat_name = #{chatName},
+	        chat_password = #{chatPassWord},
+	        chat_search_allow = #{chatSearchAllow}
+	    </set>
+	    WHERE chat_no = #{chatNo}
+	</update>
+	<!-- 1대1 채팅방 -->
+	<select id="selectPrivateName">
+		SELECT chat_no 
+		FROM chat
+		WHERE chat_name = #{chatName}
+	</select>
+	<!-- 채팅방 다시 초대 -->
+	<update id="updateUserState">
+		Update chat_entry
+		SET chat_user_state = 'Q1'
+		WHERE chat_no = #{chatNo}
+		AND user_no = #{userNo}
+	</update> 	
 </mapper>

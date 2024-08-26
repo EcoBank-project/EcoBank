@@ -6,13 +6,19 @@
     <!-- csrf -->
 	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
  	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+ 	
+ 	<!-- 로그인 상태를 확인하는 메타 태그 -->
+    <th:block sec:authorize="isAuthenticated()">
+	    <meta name="isAuthenticated" content="true"/>
+    </th:block>
+    
     <title>Side</title>
     <!-- Add your CSS and other head elements here -->
  <title>Layout page</title>
  <style>
 	.side {
 	list-style-type: none;
-	width: 100px;
+	width: 220px;
 	padding: 0;
 	margin: 0;
 	position: fixed;
@@ -21,34 +27,31 @@
 	margin-top: 50px;
 }
 
-.sideBtn {
+.side .sideL .sideBtn {
 	text-decoration: none;
 	display: block;
 	padding: 8px 15px 8px 15px;
 	font-weight: bold;
+	margin-left: 30px;
+	color: var(--dark);
+	text-align: left;
 }
 
 .main{
-margin-left: 130px;
+margin-left: 220px;
 min-height: 600px;
 margin-top: 50px;
 }
+
+
+
+
 	</style>
 <th:block th:replace="common/configs/config :: jQueryConfig"></th:block>
 <th:block th:replace="common/configs/config :: MainTemplateConfig"></th:block>
 <th:block th:replace="common/configs/config :: SweetAlertConfig"></th:block>
-
-</head>
-<body>
-	<header class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0" th:insert="common/fragments/header :: headerFragment"></header>
-
-			<th:block th:replace="common/fragments/snsSide ::snsSideFragment"></th:block>
-		<div class="main">	
-			<th:block layout:fragment="Content"></th:block>
-		</div>
-
-	<footer th:insert="common/fragments/footer :: footerFragment"></footer>
-	<script>
+<th:block th:replace="common/configs/config :: AlarmSocketScriptConfig"></th:block>
+<script>
 	 var token = $("meta[name='_csrf']").attr("content");
 	 var header = $("meta[name='_csrf_header']").attr("content");
 	  $.ajaxSetup({
@@ -56,6 +59,45 @@ margin-top: 50px;
 	          xhr.setRequestHeader(header, token);
 	      }
 	  });
+	  
+
+	  const nonClick = document.querySelectorAll(".sideL");
+
+	  function handleClick(event) {
+	    // div에서 모든 "click" 클래스 제거
+	    nonClick.forEach((e) => {
+	    	e.classList.remove("sideAc");
+	    });
+	    // 클릭한 div만 "click"클래스 추가
+	    event.target.classList.add("sideAc");
+	  }
+
+	  nonClick.forEach((e) => {
+	    e.addEventListener("click", handleClick);
+	  });
+	  
+
+	  let userNumber = [[${session.userNo != null ? session.userNo : 'null'}]];
+	  userNumber = userNumber === 'null' ? null : userNumber;
+
  	</script>
+</head>
+<body>
+	<header class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0" th:insert="common/fragments/header :: headerFragment"></header>
+
+			<th:block th:replace="common/fragments/snsSide ::snsSideFragment"></th:block>
+		<div class="main">
+			
+			<th:block layout:fragment="Content"></th:block>
+		</div>
+
+	<footer th:insert="common/fragments/footer :: footerFragment"></footer>
 </body>
+<style>
+ .sideAc{
+	 text-decoration: underline #32C36C dotted 3px ;
+
+}
+
+</style>
 </html>
