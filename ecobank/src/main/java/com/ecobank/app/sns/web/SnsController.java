@@ -113,7 +113,14 @@ public class SnsController {
 	@GetMapping("snsUpdate")
 	public String snsUpdateForm(SnsVO snsVO, Model model) {
 		SnsVO findVO = snsService.snsInfo(snsVO);
+		List<FileVO> list  = fileService.selectFileInfo(snsVO.getFeedNo());
+		int delete = fileService.deleteFile(snsVO.getFeedNo());
 		model.addAttribute("snsInfo", findVO);
+		model.addAttribute("fileInfo", list);
+		model.addAttribute("filedelete", delete);
+		System.out.println("수정"+findVO);
+		System.out.println("이미지"+list);
+		System.out.println("삭제"+delete);
 		return "sns/snsUpdate";
 	}
 
@@ -168,14 +175,14 @@ public class SnsController {
 	public String otherSns(SnsVO snsVO, Model model) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		Integer result = snsService.selectFollow(userNo, snsVO.getUserNo());
-		List<SnsVO> list = snsService.mySns(snsVO.getUserNo(), snsVO.getUserNo());
-		System.out.println("확인 ㄱㄱ"+snsVO.getUserNo());
+		List<SnsVO> list = snsService.mySns(snsVO.getUserNo(), userNo);
+		System.out.println("확인 ㄱㄱ"+userNo); //feeduser
 		SnsVO findVO = snsService.countMySns(snsVO);
 		model.addAttribute("userSns", list);
 		model.addAttribute("countMySns", findVO);
 		model.addAttribute("followCheck", result);
 		
-		System.out.println("확인1"+userNo);
+		System.out.println("확인1"+userNo); //나번호
 		System.out.println("확인2"+result);
 		System.out.println("확인2"+findVO);
 		System.out.println("확인3"+list);

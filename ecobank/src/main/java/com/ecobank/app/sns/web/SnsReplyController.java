@@ -5,27 +5,29 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecobank.app.common.service.CommonService;
 import com.ecobank.app.sns.service.SnsReplyService;
 import com.ecobank.app.sns.service.SnsReplyVO;
-import com.ecobank.app.sns.service.SnsVO;
+import com.ecobank.app.sns.service.SnsService;
+import com.ecobank.app.upload.service.FileService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 public class SnsReplyController {
 
-	private SnsReplyService snsReplyService;
-	
+	private final SnsReplyService snsReplyService;
+	private final FileService fileService;
 	//ajax로 보내기!
 	//DI 생성자 주입 방식=> 생성자 선언하기
-	@Autowired
-	public SnsReplyController(SnsReplyService snsReplyService){
-		this.snsReplyService = snsReplyService;
-	}
+	
+
 	
 	@Autowired
 	private HttpSession httpSession;
@@ -94,5 +96,9 @@ public class SnsReplyController {
 		return snsReplyService.deleteBlock(snsReplyVO);
 	}
 	
-	
+	//파일 삭제
+	@DeleteMapping("deletesnsImg")
+	public int deleteFile(int feedNo) {
+		return fileService.deleteFile(feedNo);
+	}
 }

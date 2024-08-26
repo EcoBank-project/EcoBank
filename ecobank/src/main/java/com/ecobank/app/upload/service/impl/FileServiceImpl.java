@@ -91,7 +91,7 @@ public class FileServiceImpl implements FileService{
 			return str;
 		}
 		
-		//삭제
+		//sns 사진 삭제
 		@Override
 		public int deleteFile(int feedNo) {
 			return fileMapper.deleteFileInfo(feedNo);

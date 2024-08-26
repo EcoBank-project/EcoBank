@@ -82,7 +82,14 @@ textarea {
 			<input type= "hidden" th:field ="*{feedNo}">
             <label for="images">이미지 업로드 (최대 3장)</label>
             <input type="file" id="images" name="images" th:field="*{fileName}" accept="image/*" multiple required>
-			<img th:src =@{/images/{fileName}(fileName=*{fileName})} style="width : 40%;" >
+			<div>
+            	<th:block th:each="file, sts : ${fileInfo}">
+					<input type="number" th:value="${file.fileNo}" name="fileNo" hidden>
+        		<!-- 현재 이미지 미리보기 -->
+        			<img th:src="@{/images/{filePath}(filePath=${file.filePath})}" alt="Current Image" style="width: 200px; height: 200px;">
+        			<button type="button" class="delete-btn" data-file-path="${file.filePath}">x</button>
+   				</th:block>
+    		</div>
             <div class="image-preview" id="imagePreview">
                 <!-- 이미지 미리보기 영역 -->
             </div>
@@ -99,6 +106,8 @@ textarea {
 </body>
 	<script>
 		let feedNo = $('#feedNo').val();
+		
+		var fileNo = $('input[name=fileNo]').val()
 		//이미지 미리보기
 	    document.getElementById('images').addEventListener('change', function(event) {
 	        const files = event.target.files;
@@ -177,6 +186,29 @@ textarea {
 				return formObj;
 					//{empid : 209, empname:'Hong', ...} -> 이 형태가 됨, 객체(input.name) 이름과 VO이름이 같아서 전달 가능
 			}
+			
+			
+	    	//사진삭제
+			$('.delete-btn').click(function(){
+				console.log("사진삭제버튼");
+				console.log('글번호',feedNo);
+				console.log('파일번호',fileNo);
+			// ajax로 좋아요 취소하기
+			$.ajax({
+				type : "delete",
+				url : "deletesnsImg",
+				data : {feedNo, fileNo},
+				success : function(){
+					//location.reload();
+					alert("성공");
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		});
+		    
 			
 	</script>
 </html>
