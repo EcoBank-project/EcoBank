@@ -290,6 +290,20 @@ $(document).ready(function () {
         }
     });
 });
+
+function truncateText(selector, maxLength) {
+    document.querySelectorAll(selector).forEach(element => {
+        let text = element.textContent;
+        if (text.length > maxLength) {
+            element.textContent = text.slice(0, maxLength) + '...';
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    truncateText('.challenge-card-title', 13); // Adjust maxLength as needed
+});
+
 // 인증 버튼 클릭 이벤트
 $('.confirmBtn').click(function(event) {
     event.preventDefault();

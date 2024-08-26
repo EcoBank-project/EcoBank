@@ -120,8 +120,9 @@
 		<div class="challenge-card-container"
 			th:if="${challengeInfo != null && !#lists.isEmpty(challengeInfo)}">
 			<div class="challenge-card" th:each="challenge : ${challengeInfo}">
-				<img th:src="@{'/images/' + ${challenge.mainImg}}" alt="Challenge Image" /> <input
-					type="hidden" th:value="${challenge.challNo}" class="cNo">
+				<img th:src="@{'/images/' + ${challenge.mainImg}}"
+					alt="Challenge Image" /> <input type="hidden"
+					th:value="${challenge.challNo}" class="cNo">
 				<div class="challenge-card-body">
 					<h2 class="challenge-card-title" th:text="${challenge.challTitle}"></h2>
 					<p class="challenge-card-progress"
@@ -133,6 +134,17 @@
 	</div>
 </body>
 <script>
+	function truncateText(selector, maxLength) {
+	    document.querySelectorAll(selector).forEach(element => {
+	        let text = element.textContent;
+	        if (text.length > maxLength) {
+	            element.textContent = text.slice(0, maxLength) + '...';
+	        }
+	    });
+	}
 	
+	document.addEventListener('DOMContentLoaded', function() {
+	    truncateText('.challenge-card-title', 13); // Adjust maxLength as needed
+	});
 </script>
 </html>
