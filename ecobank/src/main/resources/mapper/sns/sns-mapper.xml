@@ -82,6 +82,9 @@
       FROM sns s JOIN users u 
                    ON s.user_no = u.user_no
       WHERE feed_state = 'F1'  
+      	AND s.user_no not in (SELECT block_user_no
+                                FROM sns_block b
+                                WHERE b.user_no =#{userNo})
       	<if test ="nickname == null and hashtag == null">
       		and feed_no is null
       	</if> 
@@ -228,7 +231,7 @@
                 ,(SELECT sns_like_no 
                     FROM sns_like
                    WHERE feed_no=s.feed_no
-                     AND user_no=#{userNo}) as snslike_yn
+                     AND user_no=#{feedUser}) as snslike_yn
                 ,(SELECT count(file_path)
                  	FROM files
                	   WHERE file_code_no = s.feed_no

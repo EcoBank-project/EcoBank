@@ -142,13 +142,17 @@ public class SnsController {
 	// 마이피드 조회
 	@GetMapping("mySns")
 	public String mySns(SnsVO snsVO, Model model) {
-		int userNo = (Integer) httpSession.getAttribute("userNo");
+		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		snsVO.setUserNo(userNo);
-		List<SnsVO> list = snsService.mySns(snsVO);
+		List<SnsVO> list = snsService.mySns(userNo, userNo);
 		SnsVO findVO = snsService.countMySns(snsVO);
 		List<SnsVO> followerList = snsService.followerInfo(snsVO);
 		List<SnsVO> followingList = snsService.followingInfo(snsVO);
 		List<SnsVO> blockList = snsService.blockInfo(snsVO);
+		System.out.println("확인1"+findVO);
+		System.out.println("확인2"+followerList);
+		System.out.println("확인3"+followingList);
+		System.out.println("확인4"+blockList);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("mySns", list);
 		model.addAttribute("countMySns", findVO);
@@ -164,11 +168,18 @@ public class SnsController {
 	public String otherSns(SnsVO snsVO, Model model) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		Integer result = snsService.selectFollow(userNo, snsVO.getUserNo());
-		List<SnsVO> list = snsService.mySns(snsVO);
+		List<SnsVO> list = snsService.mySns(snsVO.getUserNo(), snsVO.getUserNo());
+		System.out.println("확인 ㄱㄱ"+snsVO.getUserNo());
 		SnsVO findVO = snsService.countMySns(snsVO);
-		model.addAttribute("mySns", list);
+		model.addAttribute("userSns", list);
 		model.addAttribute("countMySns", findVO);
 		model.addAttribute("followCheck", result);
+		
+		System.out.println("확인1"+userNo);
+		System.out.println("확인2"+result);
+		System.out.println("확인2"+findVO);
+		System.out.println("확인3"+list);
+	
 		if(userNo == findVO.getUserNo()) {
 			return "sns/mySns";
 		}
