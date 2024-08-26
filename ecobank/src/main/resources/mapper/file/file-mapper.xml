@@ -42,7 +42,7 @@
 	<!-- 수정 및 삭제 -->
 	<delete id="deleteFileInfo" parameterType="int">
 		DELETE FROM files
-		WHERE file_code_no = #{feedNo} and file_code='J1'
+		WHERE file_code_no = #{feedNo} and file_code='J1' and file_no = #{fileNo} 
 	</delete>
 	
 	<!-- 나의 인증내역에 해당 인증게시글에 사진 하나만 불러오게 -->
