@@ -60,11 +60,6 @@
 <div class="container-fluid page-header py-5">
   <div class="container py-5">
       <h1 class="display-3 text-white mb-3 animated slideInDown" th:text="#{home}"></h1>
-      <nav aria-label="breadcrumb animated slideInDown">
-          <ol class="breadcrumb">
-              <li class="breadcrumb-item text-white active" aria-current="page" th:text="#{home}"></li>
-          </ol>
-      </nav>
   </div>
 </div>
 <!--  BreadCrumb End -->
@@ -79,7 +74,7 @@
                     <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px; visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
 		                <h6 class="text-primary" th:text="#{top_rated} + ' ' + #{challenge}"></h6>
 		                <h1 class="mb-4" th:text="#{top} + ' 1 ' + #{challenge}"></h1>
-		                <img class="mb-4" th:src="@{'/images/' + ${chall.mainImg}}" th:onclick="|location.href='@{detail(challNo=${chall.challNo})}'|" />
+		                <img class="mb-4" th:src="@{'/images/' + ${chall.mainImg}}" th:onclick="|location.href='@{detail(challNo=${chall.challNo})}'|" style="width:200px; height:200px"/>
 		                <h3 class="mb-4" th:text="${chall.challTitle}"></h3>
 		            </div>
 		            
@@ -95,7 +90,7 @@
 							<div class="testimonial-item text-center">
 								<div class="testimonial-img position-relative">
 									<img class="img-fluid rounded-circle mx-auto mb-5"
-										th:src="@{'/images/' + ${user.profileImg}}">
+										th:src="@{'/images/' + ${user.profileImg}}" style="width:200px; height:200px">
 								</div>
 								<div class="testimonial-text text-center rounded p-4">
 									<h5 class="mb-1" th:text="${user.nickname}"></h5>

@@ -196,9 +196,7 @@
 		       resp, 
 		       country, 
 		       user_no, 
-		       user_state, 
-		       provider, 
-		       provider_id, 
+		       user_state,
 		       confirm_createat,
 		       use_score
 		FROM (
@@ -211,9 +209,7 @@
 		               u.resp, 
 		               u.country, 
 		               u.user_no, 
-		               u.user_state, 
-		               u.provider, 
-		               u.provider_id, 
+		               u.user_state,
 		               u.confirm_createat,
 		               sum(us.use_score) as use_score
 		        FROM users u join use_score us on u.user_no = us.user_no
@@ -227,8 +223,6 @@
 		                 u.country, 
 		                 u.user_no, 
 		                 u.user_state, 
-		                 u.provider, 
-		                 u.provider_id, 
 		                 u.confirm_createat
 		)
 		WHERE ROWNUM BETWEEN 1 AND 4
