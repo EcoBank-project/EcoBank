@@ -81,10 +81,6 @@ li{
  	margin-bottom: 5px;
  }
  
-li.active {
-   color: red;
- }
- 
 .profile-img {
 	width: 100px;
     height: 100px;
@@ -157,7 +153,7 @@ li.active {
 					</div>
 					<div class="post-content-entry">
 						<div class="meta" style="margin-bottom:30px;  margin-top:10px;">
-							<button id="likeButton" class="btn btn-outline-primary">
+							<button  type = "button" id="likeButton" class="btn btn-outline-primary">
 								<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
 								<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
 							</button>
@@ -165,7 +161,7 @@ li.active {
 							<button class="btn btn-outline-secondary ms-3">
 								<i class="bi bi-chat-dots"></i>
 							</button>
-							<span class="comments-count" th:text=${sns.countReply}>></span>
+							<span class="comments-count" th:text=${sns.countReply}></span>
 						</div>
 					</div>
 				</div>
@@ -225,7 +221,7 @@ li.active {
    	</div>
 	<script>
 	let userNo = [[${session.userNo}]];
-	
+	let feedUserNo = [[${session.userNo}]];
 		$(".imghover").on('click', function(event) {
 			let fno = $(event.currentTarget).children().first().text();
 			let url = '/snsInfo?feedNo=' + fno;
@@ -260,21 +256,24 @@ li.active {
 			    
 		//좋아요취소
 		$('.bi-heart-fill').click(function(){
-			let snsLikeNo =$(this).data('snslikeno');
-			// ajax로 좋아요 취소하기
-			$.ajax({
-				type : "delete",
-				url : "likeDelete",
-				data : {snsLikeNo},
-				success : function(){
-					location.reload();
-				},
-				error :  function(error){
-					console.log(error);
-					alert("실패");
-				}
+				let snsLikeNo =$(this).data('snslikeno');
+				console.log("팔로우버튼");
+				console.log('누구야',snsLikeNo)
+				// ajax로 좋아요 취소하기
+				$.ajax({
+					type : "delete",
+					url : "likeDelete",
+					data : {snsLikeNo},
+					success : function(){
+						location.reload();
+					},
+					error :  function(error){
+						console.log(error);
+						alert("실패");
+					}
+				});
 			});
-		});
+	    
 		  
 	    // 팔로우(writeBtn) 버튼을 클릭할 경우
 		$('.followBtn').click(function(){

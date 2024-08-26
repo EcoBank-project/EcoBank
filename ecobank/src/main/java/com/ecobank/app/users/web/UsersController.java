@@ -29,8 +29,6 @@ public class UsersController {
 
 	@Autowired
 	private UserRepository userRepository;
-
-
 	
 	@GetMapping("login")
 	public String goLogin() {

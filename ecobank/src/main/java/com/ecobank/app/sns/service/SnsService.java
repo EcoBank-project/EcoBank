@@ -32,7 +32,7 @@ public interface SnsService {
 	public int insertsnsDeclare(SnsVO snsVO);
 	
 	//마이피드 조회
-	public List<SnsVO> mySns(SnsVO snsVO);
+	public List<SnsVO> mySns(Integer userNo, Integer feedUser);
 	
 	//마이피드 세부 정보 조회
 	public SnsVO countMySns(SnsVO snsVO);

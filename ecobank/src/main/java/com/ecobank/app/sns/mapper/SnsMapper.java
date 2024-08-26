@@ -41,7 +41,7 @@ public interface SnsMapper {
 	public int insertSnsDeclare(SnsVO snsVO);	
 	
 	//마이피드 조회
-	public List<SnsVO> selectMySns(SnsVO snsVO);
+	public List<SnsVO> selectMySns(@Param("userNo") Integer userNo, @Param("feedUser") Integer feedUser);
 	
 	//마이피드 세부 정보
 	public SnsVO countMySns(SnsVO snsVO);
