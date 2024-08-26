@@ -103,43 +103,21 @@ public class ChatMessageController {
 	@MessageMapping("/chat.exit/{roomId}")
 	public void exitUser(@DestinationVariable Integer roomId, ChatMessageVO message, Principal principal) {
 		int result = chatService.getRoomManager(message.getUserNo(), roomId);
+		String nickName = principal.getName();
 		// 채팅방 참가자 나가기
+		
 		// 채팅방 주인 아닐경우
 		if(result < 1) {
 			chatService.chatEntryUpdate(message.getUserNo(), roomId);
-			Integer countUser = chatService.getUsersChatRoom(roomId);
-			// 채팅방에 아무도 없을 경우
-			if(countUser < 1) {
-				// 채팅방 메시지 삭제
-				chatService.chatAllMessageDelete(roomId);
-				// 채팅방 참여자 삭제
-				chatService.ChatPartDelete(roomId);
-				// 채팅방 삭제
-				chatService.chatRoomDelete(roomId);
-				
-				messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/chatList", message);
-			}else {
-				// 채팅방 나가는 메시지 저장
-				chatService.ChatMessageInsert(message);
-				// 채팅방 남은 사람에게 메시지
-				messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/chatList", message);
-				List<String> receiverIds = chatService.chatLeaveUser(message.getUserNo(), roomId);
-				for(String receiverId : receiverIds) {
-					messagingTemplate.convertAndSendToUser(receiverId, "/queue/leaveChatRoom", message);
-				}
-			}
+			chatService.getUsersChatRoom(roomId, message, nickName);
 		// 채팅방 주인일 경우
 		}else {
 			List<String> receiverIds = chatService.chatLeaveUser(message.getUserNo(), roomId);
 			
-			// 채팅방 메시지 삭제
+			// 채팅방 메시지 삭제 & 채팅방 참여자 삭제 & 채팅방 삭제
 			chatService.chatAllMessageDelete(roomId);
-			// 채팅방 참여자 삭제
-			chatService.ChatPartDelete(roomId);
-			// 채팅방 삭제
-			chatService.chatRoomDelete(roomId);
 			
-			messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/chatList", message);		
+			messagingTemplate.convertAndSendToUser(nickName, "/queue/chatList", message);		
 			for(String receiverId : receiverIds) {
 				messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", message);
 				messagingTemplate.convertAndSendToUser(receiverId, "/queue/leaveChatRoomManager" + roomId, message);
