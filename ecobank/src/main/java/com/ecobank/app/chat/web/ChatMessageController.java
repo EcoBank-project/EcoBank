@@ -127,13 +127,18 @@ public class ChatMessageController {
 	//채팅방 이름 변경 - 그룹
 	@PostMapping("/chat.changeName")
 	@ResponseBody
-	public void changeRoomName(@RequestParam String chatName, @RequestParam Integer chatNo ) {
+	public String changeRoomName(@RequestParam String chatName, @RequestParam Integer chatNo ) {
+		Integer result = chatService.getChatName(chatName);
+		if(result != null) {
+			return chatName;
+		}
 		chatService.chatNameChangeUpdate(chatName, chatNo);
 		List<String> receiverIds = chatService.ChatUserList(chatNo);
 		for(String receiverId : receiverIds) {
 			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", chatNo);
 			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatUpdate/" + chatNo, chatName);
 		}
+		return null;
 	}
 	
 }
