@@ -49,9 +49,7 @@ public class Users {
 	
 	@Column(name = "resp")
 	private String resp = "A1"; // 일반회원
-	
-
-    
+ 
     public void deactivate() {
         this.nickName = null;
         this.password = null;

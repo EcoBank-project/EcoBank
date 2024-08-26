@@ -8,5 +8,10 @@
     "name": "coolsms.api.secret",
     "type": "java.lang.String",
     "description": "A description for 'coolsms.api.secret'"
+  },
+  {
+    "name": "coolsms.fromnumber",
+    "type": "java.lang.String",
+    "description": "A description for 'coolsms.fromnumber'"
   }
 ]}
