@@ -5,7 +5,8 @@
     .challenge-container {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        /* justify-content: space-between; */
+        justify-content: space-evenly;
         padding: 20px;
     }
     .challenge-card {
@@ -73,15 +74,19 @@
     	display: flex;
     	padding: 10px 20px;
     	color: black;
+    	justify-content: space-between;
     }
-    
+    .inputSearchBox {
+    	display: flex;
+    	margin-left: auto;
+    }
 /*
 회원용 챌린지 view detail css
 */
 	/* 전체 컨테이너 스타일 */
 	.container {
-	width: 80%;
-	margin: auto;
+		width: 80%;
+		margin: auto;
 	}
   /* 챌린지 카테고리 네비게이션 스타일 */
     .nav-links {
@@ -172,4 +177,126 @@
     }
     .active{
     	border-bottom: 1px solid black;
+    }
+    /* 한줄 ... 처리 */
+	.card-title {
+		width: 100%;
+		display : inline-block;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis; 
+	}   
+	
+	/* 여러줄 ... 처리 */ 
+	.card-text {
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  display: -webkit-box;
+	  -webkit-line-clamp: 2;
+	  -webkit-box-orient: vertical;
+	}
+	
+	/* 챌린지 인증 폼 css */
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f8f9fa;
+    }
+
+    .form-box {
+        width: 1000px;
+        padding: 20px;
+        border: 1px solid grey;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    
+	textarea,
+	input[type="file"] {
+		width: 100%;
+	    padding: 12px;
+	    border-radius: 8px;
+	    border: 1px solid #ddd;
+	    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	    box-sizing: border-box;
+	}
+
+    label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .image-preview {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .image-preview .image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .image-preview img {
+        max-width: 100%;
+        max-height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .image-preview img:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .remove-btn {
+		position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        border: none;
+        color: black;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+    /* myConfirm.html */
+    .info-container {
+        max-width: 1000px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 0 auto;
+    }
+    .info-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .info-row span {
+        display: inline-block;
+        margin: 0 5px;
+    }
+    .text-primary {
+        color: #007bff;
+        font-weight: bold;
     }

@@ -5,8 +5,52 @@
       layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <style>
+	 /* 색상 테마 */
+	:root {
+	    --primary-color: #007bff;
+	    --secondary-color: #6c757d;
+	    --dark-color: #343a40;
+	    --light-color: #f8f9fa;
+	}
+	
+	/* 전체 레이아웃 조정 */
+	body {
+	    background-color: var(--light-color);
+	    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	}
+
+	.searchContainer{
+		justify-content: center;
+		margin :  0 auto;
+		width: 300px;
+	}
+	
+	/* 검색창 스타일링 */
+	.search-form {
+	    border-radius: 8px;
+	}
+	
+	.search-form input[type="text"] {
+	    border-radius: 8px;
+	    border: 1px solid var(--dark-color);
+	}
+	
+	.search-form .btn {
+	    border-radius: 0;
+	    background-color: var(--primary-color);
+	    border: none;
+	}
+	
+	.search-form .btn:hover {
+	    background-color: darken(var(--primary-color), 10%);
+	}
+	
+	.search-form .form-check-label {
+	    margin-right: 15px;
+	}
+	
     /* 사이드바와 동일한 색상으로 변경 */
     .pagination .page-item.active .page-link {
         background-color: #343a40; /* 이 색상을 사이드바와 동일하게 변경 */
@@ -30,9 +74,67 @@
 	  	display: flex;
 	  	justify-content: center;
 	}
+	.search-form {
+		position: relative;
+		width: 300px;
+	}
+	
+	.newInput {
+		width: 100%;
+		border: 1px solid #bbb;
+		border-radius: 8px;
+		padding: 10px 12px;
+		font-size: 14px;
+	}
+	
+	.newImg {
+		position : absolute;
+		width: 17px;
+		top: 10px;
+		right: 12px;
+		margin: 0;
+	}
 </style>
 </head>
 <body>
+	<div class="searchContainer">
+		<div class="search-form">
+			<form name="searchForm" class="d-flex align-items-center"
+				id="searchForm">
+				<input name="pageNum" type="hidden" value="1">
+				<div class="d-flex align-items-center w-100">
+					<input type="text" id="searchValue" name="keyword"
+						th:value="${criteria.keyword}" placeholder="챌린지 제목으로 검색하세요."
+						class="newInput" aria-label="Search"> <img
+						src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
+						class="newImg">
+				</div>
+
+						<input class="form-check-input" type="radio" value=""
+							name="challState" id="challStateAll" checked> <label
+							class="form-check-label" for="challStateAll">전체</label>
+
+						<input class="form-check-input" type="radio" value="D1"
+							name="challState" id="challStateD1"
+							th:checked="${criteria.challState eq 'D1'}"> <label
+							class="form-check-label" for="challStateD1">오픈 예정</label>
+
+						<input class="form-check-input" type="radio" value="D2"
+							name="challState" id="challStateD2"
+							th:checked="${criteria.challState eq 'D2'}"> <label
+							class="form-check-label" for="challStateD2">진행</label>
+
+						<input class="form-check-input" type="radio" value="D3"
+							name="challState" id="challStateD3"
+							th:checked="${criteria.challState eq 'D3'}"> <label
+							class="form-check-label" for="challStateD3">종료</label>
+
+
+			</form>
+		</div>
+	</div>
+	
+	<!-- 테이블 -->
 	<div class="container mt-5">
         <h3 class="mb-4">챌린지 전체 조회</h3>
         <div class="card">
@@ -47,62 +149,83 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <th:block th:each="challenge : ${challList}">
-                            <tr th:onclick="|location.href='@{/challInfo(challNo=${challenge.challNo})}'|">
-                                <td th:text="${challenge.challNo}"></td>
-                                <td th:text="${challenge.challTitle}"></td>
-                                <td th:text="${#dates.format(challenge.challCreateAt, 'yyyy/MM/dd')}"></td>
-                                <td th:if="${challenge.challState == 'D1'}">오픈 예정</td>
-                                <td th:if="${challenge.challState == 'D2'}">진행 중</td>
-                                <td th:if="${challenge.challState == 'D3'}">종료</td>
-                            </tr>
+                    <!-- 데이터가 있을 때 -->
+					    <th:block th:if="${#lists.size(challList) > 0}">
+	                        <th:block th:each="challenge : ${challList}">
+	                            <tr th:onclick="|location.href='@{/challInfo(challNo=${challenge.challNo})}'|">
+	                                <td th:text="${challenge.challNo}"></td>
+	                                <td th:text="${challenge.challTitle}"></td>
+	                                <td th:text="${#dates.format(challenge.challCreateAt, 'yyyy/MM/dd')}"></td>
+	                                <td th:if="${challenge.challState == 'D1'}">오픈 예정</td>
+	                                <td th:if="${challenge.challState == 'D2'}">진행 중</td>
+	                                <td th:if="${challenge.challState == 'D3'}">종료</td>
+	                            </tr>
+	                        </th:block>
                         </th:block>
+                        
+					    <!-- 데이터가 없을 때 -->
+					    <th:block th:unless="${#lists.size(challList) > 0}">
+					        <tr>
+					            <td colspan="6" class="text-center">데이터가 없습니다.</td>
+					        </tr>
+					    </th:block>
                     </tbody>
                 </table>
-                <div th:object="${page}">
+                <!-- 페이징 -->
+				<div th:object="${page}" th:if="${#lists.size(challList) > 0}">
 				  <nav aria-label="Page navigation">
 				    <ul class="pagination">
-				      <!-- Previous Button -->
-				      <li class="page-item" th:classappend="*{prev} ? '' : 'disabled'">
-				        <a class="page-link changePage" th:href="*{startPage - 1}" aria-label="Previous" th:if="*{prev}">
-				          <span aria-hidden="true">&laquo;</span>
-				        </a>
-				        <span class="page-link" th:if="*{!prev}">
-				          <span aria-hidden="true">&laquo;</span>
-				        </span>
-				      </li>
-				
-				      <!-- Page Numbers -->
-				      <th:block th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}">
-				        <li class="page-item" th:classappend="${page.criteria.getPageNum() == num} ? 'active'">
-				          <a class="page-link changePage" th:href="@{/challList (pageNum=${num})}" th:text="${num}" th:unless="${page.criteria.getPageNum() == num}"></a>
-				          <span class="page-link" th:if="${page.criteria.getPageNum() == num}" th:text="${num}"></span>
+				        <!-- Previous Button -->
+				        <li class="page-item" th:classappend="*{prev} ? '' : 'disabled'">
+				          <a class="page-link changePage" th:href="*{startPage - 1}" aria-label="Previous" th:if="*{prev}">
+				            <span aria-hidden="true">&laquo;</span>
+				          </a>
+				          <span class="page-link" th:if="*{!prev}">
+				            <span aria-hidden="true">&laquo;</span>
+				          </span>
 				        </li>
-				      </th:block>
-				
-				      <!-- Next Button -->
-				      <li class="page-item" th:classappend="*{next} ? '' : 'disabled'">
-				        <a class="page-link changePage" th:href="*{endPage + 1}" aria-label="Next" th:if="*{next}">
-				          <span aria-hidden="true">&raquo;</span>
-				        </a>
-				        <span class="page-link" th:if="*{!next}">
-				          <span aria-hidden="true">&raquo;</span>
-				        </span>
-				      </li>
+				      
+				        <!-- Page Numbers -->
+				        <th:block th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}">
+				          <li class="page-item" th:classappend="${page.criteria.getPageNum() == num} ? 'active'">
+				            <a class="page-link changePage" th:href="|javascript:gopage(${num})|" th:text="${num}" th:unless="${page.criteria.getPageNum() == num}"></a>
+				            <span class="page-link" th:if="${page.criteria.getPageNum() == num}" th:text="${num}"></span>
+				          </li>
+				        </th:block>
+				      
+				        <!-- Next Button -->
+				        <li class="page-item" th:classappend="*{next} ? '' : 'disabled'">
+				          <a class="page-link changePage" th:href="*{endPage + 1}" aria-label="Next" th:if="*{next}">
+				            <span aria-hidden="true">&raquo;</span>
+				          </a>
+				          <span class="page-link" th:if="*{!next}">
+				            <span aria-hidden="true">&raquo;</span>
+				          </span>
+				        </li>
 				    </ul>
 				  </nav>
-				
+				  
 				  <!-- Hidden Form for Page Parameters -->
 				  <form action="/challList" th:object="${criteria}" name="pageForm">
 				    <input type="hidden" name="pageNum" th:field="*{pageNum}">
 				    <input type="hidden" name="amount" th:field="*{amount}">
 				  </form>
 				</div>
+
                 <div class="text-end mt-3">
                     <button type="button" class="btn btn-custom" th:onclick="|location.href='@{/challInsert}'|">등록</button>
                 </div>
             </div>
         </div>
     </div>
+<script>
+	function gopage(num){
+		searchForm.pageNum.value = num;
+		searchForm.submit();		
+	}
+ 	$('.newImg').on('click', function(){
+		$('#searchForm').trigger( "submit" );
+	}) 
+</script>
 </body>
 </html>

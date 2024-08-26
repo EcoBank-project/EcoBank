@@ -5,8 +5,65 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <link rel="stylesheet" href="../css/challenges/challenge.css" />
+<style>
+	.pagination {
+	  	display: flex;
+	  	justify-content: center;
+	}
+	.searchContainer{
+		justify-content: center;
+		margin :  0 auto;
+		width: 300px;
+	}
+	/* 검색창 스타일링 */
+	.search-form {
+	    border-radius: 8px;
+	}
+	
+	.search-form input[type="text"] {
+	    border-radius: 8px;
+	    border: 1px solid black;
+	}
+	
+	.search-form .btn {
+	    border-radius: 0;
+	    background-color: var(--primary-color);
+	    border: none;
+	}
+	.search-form {
+		position: relative;
+		width: 300px;
+	}
+		
+	.search-form .btn:hover {
+	    background-color: darken(var(--primary-color), 10%);
+	}
+	
+	.search-form .form-check-label {
+	    margin-right: 15px;
+	}
+	.search-form {
+		position: relative;
+		width: 300px;
+	}
+	.newInput {
+		width: 100%;
+		border: 1px solid black;
+		border-radius: 8px;
+		padding: 10px 12px;
+		font-size: 14px;
+	}
+	
+	.newImg {
+		position : absolute;
+		width: 17px;
+		top: 10px;
+		right: 12px;
+		margin: 0;
+	}
+</style>
 </head>
 <body>
 	<div class="challenge-links">
@@ -24,32 +81,125 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     </div>
     <div class="challenge-count">
 	    <p>총 <span th:text="${count}" style="text-decoration: underline; font-weight: bold"></span>개의 챌린지</p>
-    </div>
-	<div class="challenge-container">
-	    <div class="challenge-card" th:each="challenge : ${list}">
-	        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 
-	        <div class="card-body">
-	        	<input type="hidden" th:value="${challenge.challNo}" class="cNo">
-	            <div class="d-day" id="dDay"  th:text="'D-' + ${challenge.daysUntilStart}"></div>
-	            <h5 class="card-title">챌린지 제목 : [[ ${challenge.challTitle} ]]</h5>
-	            <p class="card-text">챌린지 가이드 : [[ ${challenge.challContent} ]]</p>
-	            <p th:if="${status=='D1'}" class="card-text">시작 일자 : [[ ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} ]]</p>
-	            <p th:if="${status=='D2'} OR ${status=='D3'}" class="card-text">진행 기간 : [[ ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} ]] ~ [[ ${#dates.format(challenge.challCloseAt, 'yyyy-MM-dd')} ]]</p>
-	            <a th:onclick="|location.href='@{detail(challNo=${challenge.challNo})}'|" class="btn btn-primary">챌린지 둘러보기</a>
-		        <a th:if="${status=='D2'}" class="btn btn-primary go-challenge">도전하기</a>
-	        </div>
+	    <div class="inputSearchBox">
+		    <div th:if="${status=='D2'}">
+			    <select class="form-select" aria-label="Default select example" id="orderSelect" onchange="updateDisplay()">
+			        <option value="1">최근 날짜 순</option>
+			        <option value="2">좋아요 순</option>
+			        <option value="3">내가 참여 중인 챌린지</option>
+			    </select>
+		    </div>
+		    <div class="searchContainer">
+				<div class="search-form">
+					<form name="searchForm" class="d-flex align-items-center"
+						id="searchForm">
+						<input name="pageNum" type="hidden" value="1">
+						<div class="d-flex align-items-center w-100">
+							<input type="text" id="searchValue" name="keyword"
+								th:value="${criteria.keyword}" placeholder="챌린지 제목으로 검색하세요."
+								class="newInput" aria-label="Search"> <img
+								src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/icon/search.png"
+								class="newImg">
+						</div>
+					</form>
+				</div>
+			</div>
 	    </div>
+    </div>
+    
+	<!-- 데이터가 있을 때 -->
+	<div class="challenge-container" id="sort">
+		<th:block th:if="${#lists.size(list) > 0}">
+			    <div class="challenge-card" th:each="challenge : ${list}">
+			        <img th:src="@{'/images/' + ${challenge.mainImg}}" alt="챌린지 메인 이미지" > 
+			        <div class="card-body">
+			        	<input type="hidden" th:value="${challenge.challNo}" class="cNo">
+			            <div th:if="${status == 'D1'}" class="d-day" id="dDay" th:text="'D-' + ${challenge.dDay}"></div>
+			            <h5 class="card-title" th:text="${challenge.challTitle}"></h5>
+			            <p class="card-text" th:text="${challenge.challContent}"></p>
+			            <p th:if="${status == 'D1'}" class="card-text" th:text="'시작 일자 : ' + ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')}"></p>
+			            <p th:if="${status == 'D2' or status == 'D3'}" class="card-text" th:text="'진행 기간 : ' + ${#dates.format(challenge.challStartAt, 'yyyy-MM-dd')} + ' ~ ' + ${#dates.format(challenge.challCloseAt, 'yyyy-MM-dd')}"></p>
+			            <a th:onclick="|location.href='@{detail(challNo=${challenge.challNo})}'|" class="btn btn-primary">챌린지 둘러보기</a>
+				        <a th:if="${status == 'D2'}" class="btn btn-primary go-challenge">도전하기</a>
+			        </div>
+			    </div>
+		<th:block>
 	</div>
+	<!-- 데이터가 없을 때 -->
+    <th:block th:unless="${#lists.size(list) > 0}">
+    	<p class="text-center">등록된 챌린지가 없습니다.</p>
+    </th:block>
+	
+	<!-- 페이징 -->
+	<div th:object="${page}" th:if="${#lists.size(list) > 0}">
+		<nav aria-label="Page navigation">
+		  <ul class="pagination">
+		    <!-- Previous Button -->
+		    <li class="page-item" th:classappend="*{prev} ? '' : 'disabled'">
+		      <a class="page-link changePage" th:href="*{startPage - 1}" aria-label="Previous" th:if="*{prev}">
+		        <span aria-hidden="true">&laquo;</span>
+		      </a>
+		      <span class="page-link" th:if="*{!prev}">
+		        <span aria-hidden="true">&laquo;</span>
+		      </span>
+		    </li>
+		
+		    <!-- Page Numbers -->
+		    <th:block th:each="num : ${#numbers.sequence(page.getStartPage(), page.getEndPage())}">
+		      <li class="page-item" th:classappend="${page.criteria.getPageNum() == num} ? 'active'">
+		        <a class="page-link changePage" th:href="|javascript:gopage(${num})|" th:text="${num}" th:unless="${page.criteria.getPageNum() == num}"></a>
+		        <span class="page-link" th:if="${page.criteria.getPageNum() == num}" th:text="${num}"></span>
+		      </li>
+		    </th:block>
+		
+		    <!-- Next Button -->
+		    <li class="page-item" th:classappend="*{next} ? '' : 'disabled'">
+		      <a class="page-link changePage" th:href="*{endPage + 1}" aria-label="Next" th:if="*{next}">
+		        <span aria-hidden="true">&raquo;</span>
+		      </a>
+		      <span class="page-link" th:if="*{!next}">
+		        <span aria-hidden="true">&raquo;</span>
+		      </span>
+		    </li>
+		  </ul>
+		</nav>
+		
+		<!-- Hidden Form for Page Parameters -->
+		  <form th:object="${criteria}" name="pageForm">
+		    <input type="hidden" name="pageNum" th:field="*{pageNum}">
+		    <input type="hidden" name="amount" th:field="*{amount}">
+		  </form>
+	</div>
+	
 	<script>
+		//정렬 기능 load()
+		$('#orderSelect').change(function(){
+			let sel = $('#orderSelect').val();
+	 		$('#sort').load("challengeSort?select=" + sel);
+		})
+		
+		//D2에 Dday표시 안하게
+/* 		function updateDisplay() {
+	        var status = document.getElementById("orderSelect").value;
+	        var dDayDivs = document.querySelectorAll("#dDay");
+	
+	        dDayDivs.forEach(function(div) {
+	            if(status === "D2") {
+	                div.style.display = "none";
+	            } else {
+	                div.style.display = "block";
+	            }
+	        });
+	    } */
+		
 		$(document).on('click', '.go-challenge', function(){
 	        let cNo = $(this).closest('.card-body').find('.cNo').val();
-	        console.log('챌린지 번호', cNo);
 	        $.ajax({
 	            url: '/goChallenge',
 	            method: 'post',
 	            data: { challNo: cNo },
 	            success: function(result){
-	                alert("챌린지 도전~!");
+	            	alert("챌린지에 도전합니다.");
 	                console.log(result);
 	            },
 	            error: function(err){
@@ -58,6 +208,14 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	            }
 	        });
 	    });
+		//페이징
+		function gopage(num){
+			searchForm.pageNum.value = num;
+			searchForm.submit();		
+		}
+	 	$('.newImg').on('click', function(){
+			$('#searchForm').trigger( "submit" );
+		}) 
 	</script>
 </body>
 </html>

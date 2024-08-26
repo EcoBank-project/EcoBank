@@ -90,9 +90,10 @@ ORDER BY a.user_no ASC
     </select>
     
     <select id="qnaReply" resultType="qnaVO">
-    select a.qna_no,a.qna_title
-      from qna a join qna_reply b
-      on a.qna_no != b.qna_no
+  SELECT a.qna_no, a.qna_title
+FROM qna a
+LEFT JOIN qna_reply b ON a.qna_no = b.qna_no
+WHERE b.qna_no IS NULL
     </select>
     
     

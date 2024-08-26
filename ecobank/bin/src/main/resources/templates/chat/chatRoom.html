@@ -5,25 +5,35 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>채팅</title>
+<title>에코뱅크</title>
 <link rel="stylesheet" href="../css/chatRoom/chat.css" />
 <script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 </head>
 <body>
-    <h3>채팅</h3>
     <div class="container-fluid">
     	<div class="row">
             <div class="col-md-2 col-sm-12">
                 <div class="row">
 	                <!-- 아이콘 -->
 	                <div class="col-md-2 col-sm-12 d-flex flex-column align-items-center">
-                		<h5>콘</h5>
-	                    <a href="#">S1</a>
-	                    <a href="#">
-	                    	<i class="bi bi-plus-circle"></i>
-	                    </a>
-	                    <a href="#">S3</a>
+	                	<div class="iconSlde">
+	                		<a href="/chatRoom">
+		                    	<i class="bi bi-chat"></i>
+		                    </a>
+		                    <!-- 오픈채팅방 아이콘 -->
+		                    <div class="openChatList">
+		                    	<th:block th:each="room : ${chatRooms}" th:if="${room.chatType} == 'O3'">
+		                    		<img th:src="@{/images/{filePath}(filePath=${room.chatImage})}" class="iconImage" th:onclick="enterRoom([[${room.chatName}]], [[${room.chatNo}]], [[${room.chatType}]])">
+		                    	</th:block>
+		                    </div>
+		                    <i class="bi bi-plus-circle"></i>
+	                	</div>
+	                	<div class="openSearch">
+	                		<a href="#">
+	                			<i class="bi bi-search search-icon"></i>
+	                		</a>
+		                </div>	                	
 	                </div>
 	                <!-- 채팅방 목록 -->
 			        <div class="chatRoom-list col-md-10 col-sm-12 d-flex flex-column">
@@ -31,24 +41,29 @@
 			        	<div>다이렉트 메시지</div>
 			            <ul class="chat-room-list private flex-grow-1">
 			                <li th:each="room : ${chatRooms}" th:if="${room.chatType} == 'O1'">
-			                    <a href="#" th:text="${room.chatName}" th:onclick="enterRoom(event, [[${room.chatNo}]])"></a>
+			                    <a th:href="@{/chatRoom/{chatNo}(chatNo=${room.chatNo})}" th:text="${room.chatName}" th:onclick="enterRoom([[${room.chatName}]], [[${room.chatNo}]], [[${room.chatType}]])"></a>
+			                    <i class="fa fa-sign-out-alt" th:onclick="leaveRoom([[${room.chatType}]],[[${room.chatNo}]],[[${userNo}]])"></i>
 			                </li>
 			            </ul>
 			            <div>그룹 메시지</div>
 			            <ul class="chat-room-list group flex-grow-2">
 			            	<li th:each="room : ${chatRooms}" th:if="${room.chatType} == 'O2'">
-			                    <a href="#" th:text="${room.chatName}" th:onclick="enterRoom(event, [[${room.chatNo}]])"></a>
+			                    <a href="#" th:text="${room.chatName}" th:onclick="enterRoom([[${room.chatName}]], [[${room.chatNo}]], [[${room.chatType}]])"></a>
+			                    <th:block th:if="${room.chatCreateUser == userNo}">
+				                    <i class="bi bi-gear group-gear" th:onclick="groupUpdateName([[${room.chatNo}]])"></i>			                    		                			                    
+			                    </th:block>
+			                    <i class="fa fa-sign-out-alt" th:onclick="leaveRoom([[${room.chatType}]],[[${room.chatNo}]],[[${userNo}]])"></i>
 			                </li>
 			            </ul>
 			            <!-- 유저 정보 -->
 			            <div class="user-info d-flex align-items-center">
-			                <img src="https://via.placeholder.com/40" class="profil_img">
+			                <img th:src="@{/images/{path}(path=${profiles.profileImg})}" class="profil_img">
 			                <div class="user-details">
 			                    <div class="user-name">[[${nickname}]]</div>
-			                    <div class="user-status">KR</div>
+			                    <div class="user-status">[[${lagCode}]]</div>
 			                </div>
 			                <div class="user-actions">
-			                    <i class="bi bi-gear"></i>
+			                    <i class="bi bi-gear" id="profilSetting"></i>
 			                </div>
 			            </div>
 			        </div>   
@@ -58,48 +73,42 @@
             <!-- 채팅 -->
             <div class="col-md-10 col-sm-12 d-flex flex-column">
             	<div class="row">            	
-	                <div>
-	                    <h3 id="roomName">채팅창 제목</h3>
+	                <div class="chatHeader">
+	                    <span id="roomName">채팅방 제목</span>
+	                    <div class="stateIcon">
+		                    
+	                    </div>
 	                </div>
             	</div>
                 <div class="row">
-                	<div class="col-md-10 col-sm-12">
+                	<div id="rightChatLog" class="col-md-10 col-sm-12">
 		                <div class="chatForm flex-grow-1 border-bottom" id="chatForm" style="overflow-y: auto;">
 		                <!-- 메시지 로그 -->
                             <div class="chatbox" id="chatbox">
-		
+								
                             </div>
 		                </div>
 		                <!-- 메시지 입력 -->
 		                <div class="input-group mt-3">
-		                    <input type="text" class="form-control" placeholder="메시지..." id="message">
+		                    <input type="text" class="form-control" placeholder="메시지..." id="message" th:onkeydown="enterKeyDown(event, [[${userNo}]])">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button" th:attr="onclick=${'sendMessage(' + userNo + ')'}">보내기</button>
+                                <button class="btn btn-primary" type="button" th:onclick="sendMessage([[${userNo}]])">보내기</button>
                             </div>                	
                 	    </div>
                     </div>
                     <!-- 유저 -->
-                    <div class="col-md-2 col-sm-12">
-                		<!-- 세션을 이용-->
-                        <h5>접속중인 유저</h5>
-                        <div>
-                            <div>User1</div>
-                            <div>User2</div>
-                            <div>User3</div>
-                        </div>
-                        <!-- DB를 이용 -->
-                        <h5>오프라인 유저</h5>
-                        <div>
-                            <div>User1</div>
-                            <div>User2</div>
-                            <div>User3</div>
-                        </div>
+                    <div class="chatUser-list col-md-2 col-sm-12">
+                    	<h5>대화상대</h5>
+                    	<ul class="chat-user-list">
+                    	
+                    	</ul>
                 	</div>
                 </div>
             </div>
             
         </div>
     </div>
+    
     <!-- 채팅방 만들기 모달-->
     <div id="chatModal" class="modal">
         <div class="modal-content">
@@ -112,15 +121,19 @@
                 <div class="option-card">
                     <button id="groupChat" class="option-button">그룹 채팅</button>
                 </div>
+                <div class="option-card">
+                    <button id="openChat" class="option-button">오픈 채팅</button>
+                </div>
             </div>     
 		</div>
     </div>
     
+    <!-- 1대1 채팅 모달 -->
 	<div id="privateChatModal" class="modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
             <h2>1대1 채팅 만들기</h2>
-            <input type="text" placeholder="사용자명 입력" class="input-field">
+            <input type="text" placeholder="사용자명 입력" class="input-field" id="privateFollowInput">
             <h4>팔로우 목록</h4>
             <div id="followListPrivate">
 
@@ -129,61 +142,233 @@
         </div>
     </div>
     
+    <!-- 그룹 채팅 모달 -->
     <div id="groupChatModal" class="modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
             <h2>그룹 채팅 만들기</h2>
             <input type="text" placeholder="그룹 채팅방 이름 입력" class="input-field" id="groupChatname">
-            <input type="text" id="inviteUsernames" placeholder="초대할 사용자명 입력" class="input-field">
+            <input type="text" id="groupFollowInput" placeholder="초대할 사용자명 입력" class="input-field">
             <h4>팔로우 목록</h4>
-            <div id="followListGroup">
-                
-            </div>
+	            <div id="followListGroup">
+	                
+	            </div>
             <button class="option-button" id="followGroupBtn">그룹 채팅 만들기</button>
+        </div>
+    </div>
+    
+    <!-- 그룹 채팅 이름 바꾸기 -->
+    <div id="groupChangeName" class="modal">
+    	<div class="modal-content">
+    		<span class="modal-close">&times;</span>
+    		<h2>채팅방 이름 바꾸기</h2>
+    		<input type="text" class="input-field" id="groupChatChange">
+    		<button class="option-button" id="GroupNameBtn">채팅방명 변경</button>
+    	</div>
+    </div>
+    
+    <!-- 오픈 채팅방 -->
+    <div id="openChatModal" class="modal">
+        <div class="modal-content">
+        	<span class="modal-close">&times;</span>
+        	<h2>오픈 채팅 만들기</h2>
+        	<div class="image-upload">
+	            <label for="chatImage" class="upload-label">
+	                <img id="imagePreview" src="https://via.placeholder.com/350x200" alt="대표 이미지" />
+	                <input type="file" id="chatImage" accept="image/*" />
+	            </label>
+	        </div>
+        	<input type="text" placeholder="채팅방 제목 입력" class="input-field" id="openChatName">
+        	<div class="switch-container">
+	            <span>검색 허용</span>
+	            <label class="switch">
+	                <input type="checkbox" id="allowSearch">
+	                <span class="slider round"></span>
+	            </label>
+	        </div>
+        	<input type="password" placeholder="비밀번호 입력 (선택)" class="input-field" id="openChatPassword">
+        	<button class="option-button" id="OpenChatBtn">채팅방 만들기</button>
+        </div>
+    </div>
+    
+    <!-- 오픈 채팅방 초대 -->
+    <div id="openChatInviteModal" class="modal">
+        <div class="modal-content">
+        	<span class="modal-close">&times;</span>
+        	<h2>오픈 채팅 초대</h2>
+        	<input type="text" id="openFollowInput" placeholder="초대할 사용자명 입력" class="input-field">
+            <h4>팔로우 목록</h4>
+	            <div id="followListOpen">
+	                
+	            </div>
+            <button class="option-button" id="openInviteBtn">오픈 채팅 초대</button>
+        </div>
+    </div>
+    
+    <!-- 오픈 채팅방 설정 -->
+    <div id="openChatUpdateModal" class="modal">
+    	<div class="modal-content">
+        	<span class="modal-close">&times;</span>
+        	<h2>오픈 채팅 변경</h2>
+        	<div class="image-upload">
+	            <label for="chatImageUpdate" class="upload-label">
+	                <img id="imagePreviewUpdate" src="https://via.placeholder.com/350x200" alt="대표 이미지" />
+	                <input type="file" id="chatImageUpdate" accept="image/*" />
+	            </label>
+	        </div>
+        	<input type="text" placeholder="채팅방 제목 입력" class="input-field" id="openChatNameUpdate">
+        	<div class="switch-container">
+	            <span>검색 허용</span>
+	            <label class="switch">
+	                <input type="checkbox" id="allowSearchUpdate">
+	                <span class="slider round"></span>
+	            </label>
+	        </div>
+        	<input type="password" placeholder="비밀번호 입력 (선택)" class="input-field" id="openChatPasswordUpdate">
+        	<button class="option-button" id="OpenChatUpdateBtn">채팅방 만들기</button>
+        </div>
+    </div>
+    
+    <!-- 프로필 -->
+    <div id="profilChatModal" class="modal">
+        <div class="modal-content">
+        	<span class="modal-close">&times;</span>
+        	<div class="profile-info">
+        		<img th:src="@{/images/{path}(path=${profiles.profileImg})}" alt="프로필 사진">
+	            <div>
+	                <h1>[[${nickname}]]</h1>
+	            </div>
+        	</div>
+        	<div class="language-selector">
+                <label for="language" id="language-text">언어 선택</label>
+                <select id="language_code" name="language">
+                    <option value="ko" selected>한국어</option>
+                    <option value="en">English</option>
+                    <option value="ja">日本語</option>
+                </select>
+            </div>
+            <button class="option-button" id="userLanguageBtn">언어 변경</button>
         </div>
     </div>
     
 <script type="text/javascript">
 	var stompClient = null;			// stomp 프로토콜
 	var currentRoomId = null;		// 방번호
-	const userNo = "[[${userNo}]]"; // 세션정보
+	var chatSubScription = null;	// 채팅방 구독
+	
 	// 소켓 연결
-	function connect(roomId) {
+	function connect(roomId,roomType) {
 		var socket = new SockJS('/ws');
 		stompClient = Stomp.over(socket);
+		stompClient.debug = null;
 	    stompClient.connect({}, function(frame) {
-			
-		    // 메시지 구독한 것 받을 때
-		    stompClient.subscribe('/user/queue/messages/' + roomId, function(message) {
-		    	showMessage(JSON.parse(message.body));
-		    });
-		    
-		    // 그룹채팅
-	        stompClient.subscribe('/topic/messages/' + roomId, function(message) {
-	            showMessage(JSON.parse(message.body));	     
-	        });
+			if(roomType != null){
+			    // 채팅
+			    chatSubScription = stompClient.subscribe('/user/queue/messages/' + roomId, function(message) {
+			    	showMessage(JSON.parse(message.body));
+			    });
+			    // 채팅방 변경
+			    if(roomType == 'O2' || roomType == 'O3'){
+				    stompClient.subscribe('/user/queue/chatUpdate/' + roomId, function(message){
+				    	$('#roomName').text(message.body);
+				    })
+				    
+				    // 채팅방 방장이 퇴장
+				 	stompClient.subscribe('/user/queue/leaveChatRoomManager' + roomId, function(message){
+				 		$('#roomName').text('채팅방 제목');
+				 		$('.stateIcon').empty();
+					    $('#chatbox').empty();
+					    $('.chat-user-list').empty();
+					    if(chatSubScription){
+							chatSubScription.unsubscribe();
+							chatSubScription = null;
+						}
+				 	})
+			    }
+			    // 채팅방 입장
+			    stompClient.subscribe('/user/queue/enterChatRoom/' + roomId, function(message){
+			    	loadRoom();
+			    	loadChatUsers(roomId);
+			    	stateMessage(JSON.parse(message.body));
+				});
+			    
+			 	// 채팅방 퇴장
+				stompClient.subscribe('/user/queue/leaveChatRoom', function(message){
+					loadRoom();
+					loadChatUsers(roomId);
+					stateMessage(JSON.parse(message.body));
+				});
+			 	
+			 	
+	    	}
 			// 채팅방 목록 로드
 	        stompClient.subscribe('/user/queue/chatList', function(message) {
-	        	console.log(message);
 	        	loadRoom();
 	        });
 	    });
 	}
+	// 상태 메시지
+	function stateMessage(message){
+        let tagDiv = $('<div />').prop('class','chat-message exit-message');
+        let tagSpan = $('<span />').prop('class','exit-name').text(message.msgContent);
+        tagDiv.append(tagSpan);
+        $('.chatbox').append(tagDiv);
+	}
+	
+	
+	// 메시지 엔터키
+	function enterKeyDown(event, userNo){
+		if(event.key === 'Enter'){
+			event.preventDefault();
+			sendMessage(userNo);
+		}
+	}
+	
+	
 	// 채팅방 - 메시지 입력 - 보내기
 	function sendMessage(userNo) {
-	    let input = document.getElementById("message");
-	    let today = new Date(); 
-	    const chatMessage = {
-	        userNo: userNo,
-	        chatNo: currentRoomId,
-	        msgContent: input.value,
-	        msgType: 'CHAR',
-	        msgSendTime: today,
-	        nickName: "[[${nickname}]]",
-	    };
-	    stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
-	    input.value = "";
+		if(chatSubScription){
+		    let input = document.getElementById("message");
+		    let today = new Date(); 
+		    const chatMessage = {
+		        userNo: userNo,
+		        chatNo: currentRoomId,
+		        msgContent: input.value,
+		        msgType: 'I1',
+		        msgSendTime: today,
+		        nickName: "[[${nickname}]]",
+		    };
+		    stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
+		    input.value = "";			
+		}else{
+			alert("채팅방에 입장하세요");
+			let input = document.getElementById("message");
+			input.value = "";				
+		}
 	}
+	
+	// URL 유효성 검사 함수
+	function isValidUrl(url) {
+	    try {
+	        new URL(url); 
+	        return true;
+	    } catch (e) {
+	        return false;
+	    }
+	}
+
+	// URL을 하이퍼링크로 변환
+	function linkify(text) {
+	    var urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[-A-Z0-9+&@#\/%=~_|$])?/gi;
+	    return text.replace(urlPattern, function(url) {
+	        if (isValidUrl(url)) {
+	            return '<a href="' + url + '" target="_blank">' + url + '</a>';
+	        } else {
+	            return url;
+	        }
+	    });
+	}
+	
 	
 	// 메시지를 보여줌
 	function showMessage(message) {
@@ -199,7 +384,7 @@
 	    //채팅 프로필 이미지
 	    let img = document.createElement("img");
 	    img.classList.add("chat_profil_img");
-	    img.src="https://via.placeholder.com/40";
+	    img.src="/images/"+message.profileImg;
 	    newMessage.appendChild(img);
 	    //메시지 덩어리
 	    let content = document.createElement("div");
@@ -215,7 +400,7 @@
 	    //내용
 	    let texts = document.createElement("div");
 	    texts.classList.add('text');
-	    texts.textContent = message.msgContent;
+	    texts.innerHTML = linkify(message.msgContent);
 	    
 	    content.appendChild(uname);
 	    content.appendChild(totime);
@@ -225,28 +410,113 @@
 	    chatbox.scrollTop = chatbox.scrollHeight;
 	}
 	
+	// 주소창
+	$(document).ready(function() {
+	    const path = window.location.pathname;
+	    const match = path.match(/\/chatRoom\/(\d+)/);
+	    if (match) {
+	        let chatNo = match[1];
+	        let chatType = '[[${chatType}]]'; 
+	        let chatName = '[[${chatName}]]';
+	        enterRoom(chatName, chatNo, chatType);
+	    }else{
+	    	connect('@me');
+	    }
+	});
+	// history.pushState
+	window.onpopstate = function(event) {
+	    const path = window.location.pathname;
+	    const match = path.match(/\/chatRoom\/(\d+)/);
+	    if (match) {
+	    	let chatNo = match[1];
+	        let chatType = '[[${chatType}]]'; 
+	        let chatName = '[[${chatName}]]';
+	        enterRoom(chatName, chatNo, chatType);
+	    }
+	};
+	
 	//채팅방 들어가기
-	function enterRoom(event, roomId) {
-		event.preventDefault();
-	    currentRoomId = roomId;
+	function enterRoom(chatName, chatNo, roomType) {
+		if(event){
+			event.preventDefault();
+		}
+	    currentRoomId = chatNo;
+	    
+	    window.history.pushState(null, '', '/chatRoom/' + chatNo);
 	    
 	    // 채팅방 UI 표시
 	    $('#chatForm').show();
-	    $('#roomName').text($(event.target).text());	// 채팅방 제목 바꿈
+	    $('#roomName').text(chatName);	// 채팅방 제목 바꿈
 	    $('#chatbox').empty(); // 이전 메시지 초기화
 	
+        // 오픈 채팅방 
+	    $('.stateIcon').empty();
+        if(roomType == 'O3'){
+        	$.ajax({
+        		url : '/chatRoom/getChatCreateUser',
+        		method : 'POST',
+        		data : {chatNo},
+        		success : function(result){
+        			if(result > 0){
+        				let tagI = $('<i />').prop('class', 'fas fa-user-plus');
+        		        let tagI1 = $('<i />').prop('class','bi bi-gear');
+        		        let tagI2 = $('<i />').prop('class','fa fa-sign-out-alt');
+        		        tagI.on('click', function(event){
+        		        	$('#openChatInviteModal').show();
+        		        	inviteFollow(chatNo);
+        		        });
+        		        tagI1.on('click', function(event){
+        					$.ajax({
+        						url : '/chatRoom/getChatOpenInfo',
+        						method : 'POST',
+        						data : {chatNo},
+        						success : function(result){
+        							$('#openChatUpdateModal').show();
+        		
+        				        	$('#openChatNameUpdate').val(result.chatName);
+        				    	    $('#openChatPasswordUpdate').val(result.chatPassWord);
+        				    	    if(result.chatSearchAllow == 'Y'){
+        					    	    $('#allowSearchUpdate').prop("checked", true);        		    	    	
+        				    	    }else{
+        				    	    	$('#allowSearchUpdate').prop("checked", false);
+        				    	    }
+        				    	    $('#imagePreviewUpdate').prop("src", "/images/"+result.chatImage);
+        						}
+        					})
+        		        })
+        		        tagI2.on('click', function(event){
+        					leaveRoom(roomType, chatNo, '[[${userNo}]]');
+        				});
+        		        $('.stateIcon').append(tagI,tagI1,tagI2);	
+        			}else{
+        				let tagI2 = $('<i />').prop('class','fa fa-sign-out-alt');
+        				tagI2.on('click', function(event){
+        					leaveRoom(roomType, chatNo, '[[${userNo}]]');
+        				});
+        				$('.stateIcon').append(tagI2);
+        			}
+        		},
+        		err : function(err){
+        			console.log(err);
+        		}
+        	})
+        }
+        
+        loadChatUsers(chatNo);
+        
 	    // 소켓 연결중
 	    if (stompClient !== null) {
 	        stompClient.disconnect(function() {
-	            connect(roomId);
-	            loadMessage(roomId);
+	            connect(chatNo , roomType);
+	            loadMessage(chatNo);
 	        });
 	    // 소켓 처음 연결
 	    } else {
-	        connect(roomId);
-	        loadMessage(roomId);
+	        connect(chatNo, roomType);
+	        loadMessage(chatNo);
 	    }
 	}
+	
 	// 채팅방 로드
 	function loadRoom(){
 		$.ajax({
@@ -254,6 +524,7 @@
 			method: "GET",
 			success: function(result){
 				$('.chat-room-list').empty();
+				$('.openChatList').empty();
 				result.forEach(function(list){
 					showRoom(list);
 				});
@@ -263,41 +534,127 @@
 			}
 		})
 	}
+	// 채팅방 폼
 	function showRoom(list){
 		let tagli = $('<li />');
 		let tagA = $('<a />').prop('href','#').text(list.chatName);
 		tagA.on('click', function(event){
-			enterRoom(event,list.chatNo)
+			enterRoom(list.chatName, list.chatNo, list.chatType);
+		});
+		let tagI1 = $('<i />').addClass('bi bi-gear');
+		tagI1.on('click', function(event){
+			groupUpdateName(list.chatNo);
+		})
+		let tagI2 = $('<i />').addClass('fa fa-sign-out-alt');
+		tagI2.on('click', function(event){
+			leaveRoom(list.chatType, list.chatNo, '[[${userNo}]]');
 		});
 		tagli.append(tagA);
+		
 		if(list.chatType == 'O1'){
+			tagli.append(tagI2);
 			$('.chat-room-list.private').append(tagli);			
 		}else if(list.chatType == 'O2'){
+			if(list.chatCreateUser == '[[${userNo}]]'){
+				tagli.append(tagI1);				
+			}
+			tagli.append(tagI2);
 			$('.chat-room-list.group').append(tagli);
+		}else if(list.chatType == 'O3'){
+			let tagImg = $('<img />').prop('src','/images/'+list.chatImage).addClass('iconImage');
+			tagImg.on('click', function(evnet){
+				enterRoom(list.chatName, list.chatNo, list.chatType);
+			})
+			$('.openChatList').append(tagImg);
+			
 		}
 	}
 	
 	// 이전 메시지 로드
 	function loadMessage(roomId){
 		$.ajax({
-	    	url: "/chatRoom/" + roomId,
-	    	method: "GET",
+	    	url: "/chatRoom/logs",
+	    	method: "POST",
+	    	data: {roomId},
 	    	success: function(result){
 	    		result.forEach(function(message){
-	    			showMessage(message);
+	    			if(message.msgType == 'I4' || message.msgType == 'I3'){
+	    				stateMessage(message);
+	    			}else if(message.msgType == 'I1'){
+		    			showMessage(message);	    				
+	    			}
 	    		});
 	    	},
 	    	error: function(error){
-	    		
+	    		console.log(error);
 	    	}
 	    });
+	}
+	// 채팅방 유저목록
+	function loadChatUsers(roomId){
+		$.ajax({
+			url: "/chatRoom/getChatUserInfo",
+			method: "POST",
+			data: {roomId},
+			success: function(result){
+				$('.chat-user-list').empty();
+				result.forEach(function(users){
+					showChatUsers(users);
+				})
+			}
+		})
+	}
+	function showChatUsers(users){	
+		let tagImg = $('<img />').prop('src','/images/'+users.profileImg).prop('class','profil_img');
+		let tagA = $('<a />').prop('href','#').text(users.nickName);
+		tagA.on('click',function(){
+			event.preventDefault();
+		})
+		let tagli = $('<li />');
+		tagli.append(tagImg, tagA);
+		$('.chat-user-list').append(tagli);
 	}
 	
 	//아이콘 기능 모음
 	//채팅홈
 	
+	// 검색 기능
+	$('#privateFollowInput').on('input', function() {
+	    let search = $(this).val().toLowerCase();
+	    $('#followListPrivate .follow-item').each(function() {
+	        let userName = $(this).find('span').text().toLowerCase();
+	        $(this).toggle(userName.includes(search));
+	    });
+	});
+	
+	$('#groupFollowInput').on('input', function() {
+	    let search = $(this).val().toLowerCase();
+	    $('#followListGroup .follow-item').each(function() {
+	        let userName = $(this).find('span').text().toLowerCase();
+	        $(this).toggle(userName.includes(search));
+	    });
+	});
+	
+	//채팅방 이름 검색
+	$('.chat-room-search').on('input', function() {
+        let search = $(this).val().toLowerCase();
+        searchChatRooms(search);
+    });
+
+    function searchChatRooms(search) {
+        $('.chat-room-list.private li').each(function() {
+            let chatName = $(this).find('a').text().toLowerCase();
+            $(this).toggle(chatName.includes(search));
+        });
+
+        $('.chat-room-list.group li').each(function() {
+            let chatName = $(this).find('a').text().toLowerCase();
+            $(this).toggle(chatName.includes(search));
+        });
+    }
+	
+	
 	//채팅방 팔로우 목록
-	loadFollow();
 	function loadFollow(){
 		$.ajax({
 			url: "/chatRoom/follow",
@@ -306,19 +663,18 @@
 				result.forEach(function(follow){
 					showFollow(follow);
 				})
-				$('#followPrivateBtn').on('click', insertPrivate);
-				$('#followGroupBtn').on('click', insertGroup);
 			},
 			error: function(error){
 				console.log(error);	
 			}
 		});
 	}
-	//채팅방 모달 
+	//채팅방 팔로우목록 만들기 
 	function showFollow(follow){
+		console.log(follow);
 		let label1 = $('<label />').prop('for','private_'+follow.followingId).addClass('follow-item');
 		let span1 = $('<span />')
-		let pro_img1 = $('<img />').prop('src','https://via.placeholder.com/40').addClass('profil_img');
+		let pro_img1 = $('<img />').prop('src','/images/'+follow.profileImg).addClass('profil_img');
 		span1.append(pro_img1, follow.nickName);
 
 		let radio = $('<input />').prop('type','radio')
@@ -332,7 +688,7 @@
 		
 		let label2 = $('<label />').prop('for','group_'+follow.followingId).addClass('follow-item');
 		let span2 = $('<span />')
-		let pro_img2 = $('<img />').prop('src','https://via.placeholder.com/40').addClass('profil_img');
+		let pro_img2 = $('<img />').prop('src','/images/'+follow.profileImg).addClass('profil_img');
 		span2.append(pro_img2, follow.nickName);
 		let checkbox = $('<input />').prop('type','checkbox')
 		                             .addClass('select-follow')
@@ -342,32 +698,57 @@
 		label2.append(span2, checkbox);
 		$('#followListGroup').append(label2);
 	}
-	
-	
-	//채팅방 모달 on/off
+
+	// 채팅방 모달 on/off
+	// 채팅방 + 아이콘
 	$('.bi-plus-circle').on('click', function(){
 	    $('#chatModal').show();
 	    $('#modalOverlay').show();
 	})
+	// 1대1
 	$('#privateChat').on('click', function(){
 		$('#chatModal').hide();
 		$('#privateChatModal').show();
+		loadFollow();
 		//$('#followListPrivate').empty();
 		
 	});
+	// 그룹채팅방
 	$('#groupChat').on('click', function(){
 		$('#chatModal').hide();
 		$('#groupChatModal').show();
+		loadFollow();
 		//$('#followListGroup').empty();
 		
 	});
-	function allClose(){
+	// 오픈채팅방
+	$('#openChat').on('click', function(){
 		$('#chatModal').hide();
-		$('#privateChatModal').hide();
-		$('#groupChatModal').hide();
-		$('#modalOverlay').hide();
-		$('.select-follow').prop("checked",false);
+		$('#openChatModal').show();
+	});
+	// 프로필
+	$('#profilSetting').on('click', function(){
+		$('#profilChatModal').show();
+	});
+	
+	
+	function allClose(){
+		$('.modal').hide();
+	    $('#modalOverlay').hide();
+	    $('.select-follow').prop("checked", false);
+	    $('#privateChatname').val('');
+	    $('#groupChatname').val('');
+	    $('#groupFollowInput').val('');
+	    $('#followListPrivate').empty();
+	    $('#followListGroup').empty();
+	    
+	    $('#openChatName').val('');
+	    $('#openChatPassword').val('');
+	    $('#allowSearch').prop("checked", false);
+	    $('#chatImage').val('');
+	    $('#imagePreview').prop("src", 'https://via.placeholder.com/350x200');
 	}
+	
 	$('.modal-close').on('click', function() {
 		allClose();
 		$('#privateChatModal .input-field').val('');
@@ -381,80 +762,373 @@
 	    }
 	});
 	
-
+	// 채팅방 만들기 버튼
+	$('#followPrivateBtn').on('click', insertPrivate);
+	$('#followGroupBtn').on('click', insertGroup);
+	
 	// 1대1 채팅방 만들기
 	function insertPrivate(){
-		let process = null;
-		let formObj = {};
-		formObj['userNo'] = [];
-		formObj['userName'] = [];
-		formObj['chatType'] = 'O1';
-		$('#followListPrivate .select-follow').each(function() {
-			if($(this).is(":checked")){
-				formObj['chatName'] = $(this).prev().text();
-				formObj['userNo'].push(Number($(this).val()));
-				formObj['userName'].push($(this).prev().text());
-			}
-		});
-		if($('.chat-room-list.private li a').length > 0){
-			$('.chat-room-list.private li a').each(function() {
-				if($(this).text() == formObj['chatName']){
-					process = $(this);
+		let isRadioCheck = $('#followListPrivate .select-follow').is(":checked");
+		if(isRadioCheck){
+			let process = null;
+			let formObj = {};
+			formObj['userNo'] = [];
+			formObj['userName'] = [];
+			formObj['chatType'] = 'O1';
+			let checkName = null;
+			$('#followListPrivate .select-follow').each(function() {
+				if($(this).is(":checked")){
+					formObj['chatName'] = "[[${nickname}]]" + '-' + $(this).prev().text();
+					checkName = $(this).prev().text(); 
+					formObj['userNo'].push(Number($(this).val()));
+					formObj['userName'].push($(this).prev().text());
 				}
-				//insertChatRoom(formObj);
-			});			
-			if(!process){
-				insertChatRoom(formObj);
+			});
+			if($('.chat-room-list.private li a').length > 0){
+				$('.chat-room-list.private li a').each(function() {
+					if($(this).text() == checkName){
+						process = $(this);
+					}
+				});			
+				if(!process){
+					insertChatRoom(formObj);
+				}else{
+					allClose();
+					process.get(0).click();
+				};
 			}else{
-				allClose();
-				process.get(0).click();
-			};
+				insertChatRoom(formObj);
+			}			
 		}else{
-			insertChatRoom(formObj);
+			alert("채팅방 초대할 사람을 체크하세요");
 		}
 	}
 	 
 	// 그룹 채팅방 만들기
 	function insertGroup(){
-		let formObj = {};
-		let chatName = $('#groupChatname').val();
-		formObj['chatName'] = chatName;
-		formObj['userNo'] = [];
-		formObj['userName'] = [];
-		formObj['chatType'] = 'O2';
-		$('#followListGroup .select-follow').each(function() {
-			if($(this).is(":checked")){
-				formObj['userNo'].push(Number($(this).val()));
-				formObj['userName'].push($(this).prev().text());
-			}
-		});
-		
-		insertChatRoom(formObj);
+		let isCheckbox = $('#followListGroup .select-follow').is(":checked");
+		if(isCheckbox){
+			let chatName = $('#groupChatname').val();
+			if(!chatName){
+				alert("채팅방 제목을 입력하세요");
+			}else{
+				let formObj = {};
+				formObj['chatName'] = chatName;
+				formObj['userNo'] = [];
+				formObj['userName'] = [];
+				formObj['chatType'] = 'O2';
+				$('#followListGroup .select-follow').each(function() {
+					if($(this).is(":checked")){
+						formObj['userNo'].push(Number($(this).val()));
+						formObj['userName'].push($(this).prev().text());
+					}
+				});	
+				insertChatRoom(formObj);			
+			}			
+		}else{
+			alert("채팅방 초대할 사람을 체크하세요");
+		}
 	}
-	// 채팅 만들기 함수
+	
+	// 채팅 만들기 
 	function insertChatRoom(formObj){
-		console.log(formObj);
 		$.ajax({
-			url: '/chatRoom/CreateChat',
+			url: '/chatRoom/createChat',
 			method: 'POST',
 			data : JSON.stringify(formObj),
 			contentType: 'application/json',
 			success: function(result){
-				allClose();
-				stompClient.send("/app/update.chatList", {}, JSON.stringify(result));			
+				if(result == 0){
+					alert("이미 사용 중인 채팅방 이름입니다.")
+				}else{
+					allClose();
+					stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
+					let today = new Date();
+					const chatMessage = {
+						msgType : 'I3',
+						msgSendTime: today,
+						chatType : formObj['chatType'],
+						chatNo : result,
+						userNos : formObj['userNo']
+					}
+					stompClient.send("/app/chat.enter/" + result, {}, JSON.stringify(chatMessage));
+				}
 			},
 			error: function(error){
 				console.log(error);
 			}
 		}); 
 	}
-	// 소켓 연결
-	window.onload = function() {
-		connect('@me');
-	};
-	//오픈채팅 만들기
 	
-	//오픈채팅 검색
+	// 채팅방 나가기
+	function leaveRoom(chatType, chatNo, userNo){
+		if(confirm("나가겠습니까?")){
+			let today = new Date();
+			const chatMessage = {
+				msgContent : "[[${nickname}]]" + "님이 나가셨습니다",
+				msgType : 'I4',
+				userNo : userNo,
+				chatNo : chatNo,
+				msgSendTime: today,
+				chatType : chatType
+			};
+			stompClient.send("/app/chat.exit/" + chatNo, {}, JSON.stringify(chatMessage));
+			$('#roomName').text("채팅방 제목");
+			$('.stateIcon').empty();
+			$('#chatbox').empty();
+			$('.chat-user-list').empty();
+			if(chatSubScription){
+				chatSubScription.unsubscribe();
+				chatSubScription = null;
+			}
+		}
+	}
+	// 채팅방 수정(그룹채팅만)
+	function groupUpdateName(chatNo){
+		$('#groupChangeName').show();
+		$('#groupChatChange').val($(event.target).prev().text());
+		$('#GroupNameBtn').on('click', function(){
+			let chatName = $('#groupChatChange').val();
+			allClose();
+			$.ajax({
+				url : "/chat.changeName",
+				method : "POST",
+				data: {
+					chatNo : chatNo,
+					chatName : chatName
+				},
+				success: function(result){
+					console.log(result);
+				},
+				err : function(err){
+					console.log(err);
+				}
+			})
+		});
+	};
+
+	
+	//오픈채팅 이미지 보여주기
+	$('#chatImage').on('change', function(evnet){
+		const file = event.target.files[0];
+		const reader = new FileReader();
+		
+		reader.onload = function(e){
+			$('#imagePreview').attr("src", e.target.result);
+		};
+		
+		if (file) {
+	        reader.readAsDataURL(file);
+	    }
+	});
+	
+	$('#chatImageUpdate').on('change', function(evnet){
+		const file = event.target.files[0];
+		const reader = new FileReader();
+		
+		reader.onload = function(e){
+			$('#imagePreviewUpdate').attr("src", e.target.result);
+		};
+		
+		if (file) {
+	        reader.readAsDataURL(file);
+	    }
+	});
+	
+	
+	
+	//오픈채팅 만들기
+	$('#OpenChatBtn').on('click', function(evnet){
+		let chatName = $('#openChatName').val();
+        let passWord = $('#openChatPassword').val();
+        let allowSearch = $('#allowSearch').is(':checked') ? 'Y' : 'N';
+        
+        let fileInput = $('#chatImage')[0];
+        let formData = new FormData();
+
+        formData.append('chatName', chatName);
+        formData.append('chatPassWord', passWord);
+        formData.append('chatSearchAllow', allowSearch);
+        formData.append('chatType', 'O3');
+        
+        if (fileInput.files.length > 0) {
+            formData.append('image', fileInput.files[0]);
+        } 
+        
+        $.ajax({
+        	url: '/chatRoom/createOpenChat',
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(result) {
+            	allClose();
+                stompClient.send("/app/update.chatList", {}, JSON.stringify(result));
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+	});
+	
+	// 오픈 채팅 업데이트
+	$('#OpenChatUpdateBtn').on('click', function(evnet){
+		let chatNo = currentRoomId;
+		let chatName = $('#openChatNameUpdate').val();
+        let passWord = $('#openChatPasswordUpdate').val();
+        let allowSearch = $('#allowSearchUpdate').is(':checked') ? 'Y' : 'N';
+        
+        let fileInput = $('#chatImageUpdate')[0];
+        let formData = new FormData();
+		
+        formData.append('chatNo', chatNo);
+        formData.append('chatName', chatName);
+        formData.append('chatPassWord', passWord);
+        formData.append('chatSearchAllow', allowSearch);
+        formData.append('chatType', 'O3');
+        
+        if (fileInput.files.length > 0) {
+            formData.append('image', fileInput.files[0]);
+        } 
+        
+        $.ajax({
+        	url: '/chatRoom/updateOpenChat',
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(result) {
+            	allClose();
+                $.ajax({
+					url : "/chat.changeName",
+					method : "POST",
+					data: {
+						chatNo : result,
+						chatName : chatName
+					},
+					success: function(result){
+						console.log(result);
+					},
+					err : function(err){
+						console.log(err);
+					}
+				})
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+	});
+	
+	// 오픈채팅방 초대 팔로우 목록
+	function inviteFollow(chatNo){
+		$.ajax({
+			url : "/chatRoom/inviteFollowList",
+			method : "POST",
+			data : {chatNo},
+			success: function(result){
+				$('#followListOpen').empty();
+				result.forEach(function(follow){
+					let label = $('<label />').prop('for','open_'+follow.followingId).addClass('follow-item');
+					let span = $('<span />')
+					let pro_img = $('<img />').prop('src','/images/'+follow.profileImg).addClass('profil_img');
+					span.append(pro_img, follow.nickName);
+					let checkbox = $('<input />').prop('type','checkbox')
+					                             .addClass('select-follow')
+					                             .attr('name','follow')
+					                             .attr('id','open_'+follow.followingId)
+					                             .val(follow.followingId);
+					label.append(span, checkbox);
+					$('#followListOpen').append(label);
+				})
+			},
+			error: function(error){
+				console.log(error);	
+			}
+		});
+	}	
+	
+	// 오픈채팅 검색
+	$('#openFollowInput').on('input', function() {
+	    let search = $(this).val().toLowerCase();
+	    $('#followListOpen .follow-item').each(function() {
+	        let userName = $(this).find('span').text().toLowerCase();
+	        $(this).toggle(userName.includes(search));
+	    });
+	});
+	
+	//오픈 채팅방 초대
+	$('#openInviteBtn').on('click', function(){
+		let isCheckbox = $('#followListOpen .select-follow').is(":checked");
+		if(isCheckbox){
+			let formObj = {};
+			let formObj2 = {};
+			formObj['userNo'] = [];
+			formObj['chatNo'] = currentRoomId;
+			$('#followListOpen .select-follow').each(function() {
+				if($(this).is(":checked")){
+					formObj['userNo'].push(Number($(this).val()));
+				}
+			});
+			
+			$.ajax({
+				url: '/chatRoom/inviteOpenChat',
+				method: 'POST',
+				data : JSON.stringify(formObj),
+				contentType: 'application/json',
+				success: function(result){
+					allClose();
+					let today = new Date();
+					const chatMessage = {
+						msgType : 'I3',
+						msgSendTime: today,
+						chatType : 'O3',
+						chatNo : result,
+						userNos : formObj['userNo']
+					}
+					stompClient.send("/app/chat.enter/" + result, {}, JSON.stringify(chatMessage));
+				},
+				error: function(error){
+					console.log(error);
+				}
+			});
+			
+		}else{
+			alert("채팅방 초대할 사람을 체크하세요");
+		}
+	})
+		
+	// 프로필 설정
+	$('#language_code').on('change',function(){
+		if($(this).val() == 'ko'){
+			$('#language-text').text('언어 선택');
+		}else if($(this).val() == 'en'){
+			$('#language-text').text('Select Language');
+		}else if($(this).val() == 'ja'){
+			$('#language-text').text('言語を選択');
+		}
+		$('#user-status').text($(this).val());
+	})
+	
+	$('#userLanguageBtn').on('click',function(){
+		let lagCode = $('#language_code').val();	
+		profilChange(lagCode);
+	})
+	
+	function profilChange(language){
+		$.ajax({
+			url: '/chatRoom/languageChange/'+ language,
+            method: 'GET',
+            success: function(result){
+            	$('#profilChatModal').hide();
+            	$('.user-status').text(language);
+            },
+            error: function(error){
+            	console.log(error);
+            }
+		})
+	}
+	
 </script>
 </body>
 </html>

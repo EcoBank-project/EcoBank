@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{common/layouts/default_layout}"
+		layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+#search-bar {
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 300px;
+    text-align: center;
+}
+
+.card-img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.card h2 {
+    margin-top: 10px;
+    font-size: 24px;
+}
+
+.card p {
+    font-size: 16px;
+}
+
+</style>
+<body>
+<div class="container-fluid">
+    	<div class="row">
+            <div class="col-md-1 col-sm-12">
+            	<div class="col-md-2 col-sm-12 d-flex flex-column align-items-center">
+            		확인
+            	</div>
+            </div>
+            <div class="col-md-11 col-sm-12">
+            <header>
+        <input type="text" id="search-bar" placeholder="검색어를 입력하세요...">
+    </header>
+    <main>
+        <section class="card-container">
+            <div class="card">
+                <img src="https://via.placeholder.com/300" alt="카드 이미지 1" class="card-img">
+                <h2>카드 제목 1</h2>
+                <p>카드 내용 1</p>
+            </div>
+            <div class="card">
+                <img src="image2.jpg" alt="카드 이미지 2" class="card-img">
+                <h2>카드 제목 2</h2>
+                <p>카드 내용 2</p>
+            </div>
+            <div class="card">
+                <img src="image3.jpg" alt="카드 이미지 3" class="card-img">
+                <h2>카드 제목 3</h2>
+                <p>카드 내용 3</p>
+            </div>
+            <div class="card">
+                <img src="https://via.placeholder.com/300" alt="카드 이미지 1" class="card-img">
+                <h2>카드 제목 1</h2>
+                <p>카드 내용 1</p>
+            </div>
+            <div class="card">
+                <img src="image2.jpg" alt="카드 이미지 2" class="card-img">
+                <h2>카드 제목 2</h2>
+                <p>카드 내용 2</p>
+            </div>
+            <div class="card">
+                <img src="image3.jpg" alt="카드 이미지 3" class="card-img">
+                <h2>카드 제목 3</h2>
+                <p>카드 내용 3</p>
+            </div>
+        </section>
+    </main>
+            </div>
+        </div>
+</div>             
+</body>
+</html>

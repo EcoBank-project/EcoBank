@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/mypage_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Challenge Information</title>
+<style>
+#challenge-page {
+	padding: 20px;
+}
+
+.progress-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center; /* Center-align content horizontally */
+	width: 100%; /* Ensure it takes up the full width available */
+}
+
+.title-container {
+	margin-bottom: 20px; /* Space between title and cards */
+	text-align: center; /* Center-align title text */
+}
+
+.challenge-card-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: center; /* Center align cards horizontally */
+}
+
+.challenge-card {
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	width: 300px;
+	overflow: hidden;
+	background-color: #fff;
+	transition: transform 0.2s;
+}
+
+.challenge-card:hover {
+	transform: scale(1.05);
+}
+
+.challenge-card img {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+}
+
+.challenge-card-body {
+	padding: 15px;
+	text-align: center;
+}
+
+.challenge-card-title {
+	font-size: 1.25em;
+	margin: 0;
+}
+
+.challenge-card-progress {
+	color: #007bff;
+	font-weight: bold;
+}
+
+.challenge-button-container {
+	margin-top: 15px;
+}
+
+.challenge-btn {
+	display: inline-block;
+	padding: 10px 15px;
+	margin: 5px;
+	border: none;
+	border-radius: 5px;
+	color: #fff;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.challenge-btn-confirm {
+	background-color: #28a745; /* Green for confirm */
+}
+
+.challenge-btn-review {
+	background-color: #007bff; /* Blue for review */
+}
+
+.challenge-btn-cancel {
+	background-color: #dc3545; /* Red for cancel */
+}
+
+.challenge-button-container .challenge-btn:hover {
+	opacity: 0.9;
+}
+/*모달*/
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal_body {
+	background-color: #ffffff;
+	margin: 15% auto;
+	padding: 20px;
+	border-radius: 10px;
+	width: 400px;
+	color: #333;
+	text-align: center;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+/*리뷰 작성 폼 모달*/
+#reviewStar fieldset {
+	display: inline-block;
+	direction: rtl;
+	border: 0;
+}
+
+#reviewStar fieldset legend {
+	text-align: right;
+}
+
+#reviewStar input[type=radio] {
+	display: none;
+}
+
+#reviewStar label {
+	font-size: 2em;
+	color: transparent;
+	text-shadow: 0 0 0 #f0f0f0;
+}
+
+#reviewStar label:hover {
+	text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+
+#reviewStar label:hover ~ label {
+	text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+
+#reviewStar input[type=radio]:checked ~ label {
+	text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+
+#reviewContent {
+	width: 100%;
+	height: 150px;
+	padding: 10px;
+	box-sizing: border-box;
+	border: solid 1.5px #D3D3D3;
+	border-radius: 5px;
+	font-size: 16px;
+	resize: none;
+}
+
+.bi-star-fill {
+	color: #ffc107;
+}
+
+.bi-star {
+	color: #e4e5e9;
+}
+/*여기 수정해야함*/
+.testimonial-carousel .testimonial-img img {
+	width: 300px;
+	height: 300px;
+}
+
+.testimonial-carousel .owl-nav {
+	top: 120px;
+}
+
+.testimonial-carousel:hover .owl-nav {
+	width: 300px;
+}
+
+.testimonial-carousel .swiper-button-next, .testimonial-carousel .swiper-button-prev
+	{
+	color: #000; /* 화살표 색상 */
+	background: rgba(255, 255, 255, 0.5); /* 배경 색상 */
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+}
+
+.testimonial-carousel .swiper-button-next:hover, .testimonial-carousel .swiper-button-prev:hover
+	{
+	background: rgba(255, 255, 255, 0.8);
+}
+
+.profile-img {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-right: 15px;
+}
+
+.swiper {
+	width: 600px;
+	height: 300px;
+}
+</style>
+</head>
+<body id="challenge-page">
+	<div class="progress-container">
+		<div class="title-container">
+			<h1>진행중인 챌린지</h1>
+		</div>
+		<div class="challenge-card-container">
+			<div class="challenge-card" th:each="challenge : ${challengeInfo}">
+
+				<img th:src="@{${challenge.mainImg}}" alt="Challenge Image" /> <input
+					type="hidden" th:value="${challenge.challNo}" class="cNo">
+				<div class="challenge-card-body">
+					<h2 class="challenge-card-title" th:text="${challenge.challTitle}"></h2>
+					<p class="challenge-card-progress"
+						th:text="${challenge.progressRate} + '%'"></p>
+					<div class="challenge-button-container">
+						<a class="challenge-btn challenge-btn-confirm confirmBtn">인증</a> <a
+							class="challenge-btn challenge-btn-review writeBtn">후기</a> <a
+							class="challenge-btn challenge-btn-cancel cancleBtn">취소</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal">
+		<div class="modal_body">
+			<div class="inputleft">
+				<h4>리뷰 작성하기</h4>
+				<hr style="width: 100%; height: 5px; border: none;" />
+				<form name="insertForm" th:action="@{/reviewInsert}" method="post"
+					id="reviewStar">
+					<input type="hidden" name="challNo" class="modalChallNo">
+					<fieldset>
+						<span class="text-bold">별점을 선택해주세요</span> <input type="radio"
+							name="reviewStar" value="5" id="rate1"><label for="rate1">★</label>
+						<input type="radio" name="reviewStar" value="4" id="rate2"><label
+							for="rate2">★</label> <input type="radio" name="reviewStar"
+							value="3" id="rate3"><label for="rate3">★</label> <input
+							type="radio" name="reviewStar" value="2" id="rate4"><label
+							for="rate4">★</label> <input type="radio" name="reviewStar"
+							value="1" id="rate5"><label for="rate5">★</label>
+					</fieldset>
+					<div class="mb-3">
+						<textarea class="form-control border-0" rows="5"
+							name="reviewContent" id="reviewContent"
+							placeholder="챌린지에 대해 리뷰를 남겨주세요"></textarea>
+					</div>
+					<hr style="margin: 10px;" />
+					<button type="button" class="btn btn-primary" id="btn-review">작성하기</button>
+					<button type="button" class="btn btn-primary" id="btn-close">닫기</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+// 인증 버튼 클릭 이벤트
+$('.confirmBtn').click(function(event) {
+    event.preventDefault();
+
+    // 클릭한 카드에 해당하는 challNo 값을 가져옴
+    let cNo = $(this).closest('.challenge-card').find('.cNo').val();
+
+    $.ajax({
+        url: '/confirmStatus',
+        method: 'get',
+        data: {
+            challNo: cNo
+        },
+        success: function(isConfirmed) {
+            console.log("isConfirmed:", isConfirmed);
+            if (isConfirmed) {
+                alert("이미 오늘 인증되었습니다.");
+            } else {
+                location.href = 'confirmInsert?challNo=' + cNo;
+            }
+        },
+        error: function(err) {
+            console.log(err);
+            alert("인증 오류");
+        }
+    });
+});
+
+// 후기 작성 버튼 클릭 이벤트
+$('.writeBtn').click(function(event) {
+    event.preventDefault();
+
+    // 클릭한 카드에 해당하는 challNo 값을 가져옴
+    let cNo = $(this).closest('.challenge-card').find('.cNo').val();
+    $('.modalChallNo').val(cNo); // 모달 내부의 hidden input에 challNo 값을 설정
+
+    $.ajax({
+        url: '/reviewStatus',
+        type: 'get',
+        data: {
+            challNo: cNo
+        },
+        success: function(isConfirmed) {
+            console.log("isConfirmed:", isConfirmed);
+            if (isConfirmed) {
+                alert("후기 작성이 이미 완료되었습니다.");
+            } else {
+                reviewModal(); // 모달 열기
+            }
+        },
+        error: function(err) {
+            console.log(err);
+            alert("오류");
+        }
+    });
+});
+
+// 취소 버튼
+$('.cancleBtn').click(function(event){
+	event.preventDefault();
+	
+	let cNo = $(this).closest('.challenge-card').find('.cNo').val();
+    let userNo = [[${session.userNo}]];
+
+	$.ajax({
+		url : '/cancelChallenge',
+		type: 'POST',
+		data : {
+			challNo : cNo,
+			userNo : userNo
+		},
+		success: function(response) {
+            alert("챌린지가 성공적으로 취소되었습니다.");
+            location.reload();  // 페이지를 새로고침하여 변경사항을 반영
+        },
+        error: function(err) {
+            console.log(err);
+            alert("챌린지 취소 오류");
+        }
+		
+	})
+})
+
+// 리뷰 모달 열기
+function reviewModal() {
+    $('.modal').css('display', 'block');
+}
+
+// 모달 닫기
+$('#btn-close').on('click', function() {
+    $('.modal').css('display', 'none');
+});
+
+// 리뷰 등록
+$('#btn-review').click(function() {
+    $.ajax({
+        url: 'reviewInsert',
+        type: 'post',
+        data: $('#reviewStar').serialize(), // form 태그 내의 모든 값을 가져옴
+        success: function(result) {
+            console.log(result);
+            alert('리뷰 작성이 완료되었습니다.');
+            $('.modal').css('display', 'none');
+            $('#reviewContent').val(''); // 리뷰 내용 초기화
+        },
+        error: function(err) {
+            console.log(err);
+        }
+    });
+});
+</script>
+</html>

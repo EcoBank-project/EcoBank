@@ -41,8 +41,8 @@ $().ready(async () => {
 	// 국가 코드
 	let countryCode = ''+location['country_code'];
 	// 로그인 아이디
-	let userID = $("input[id='userID']").val();
-	
+	let userID = useId;
+	//console.log(userID);
 	if (userID !== null && userID !== undefined && userID.trim() !== '') {
         $.ajax({
             url: '/set-country',

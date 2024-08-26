@@ -1,28 +1,43 @@
-<html xmlns:th="https://www.thymeleaf.org/">
-<meta charset="UTF-8">
-<div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 1000px; border: 1px solid #ccc; padding: 20px; border-radius: 5px;">
-    <div style="text-align: center; margin-bottom: 20px;">
-        <h4 class="mb-2" style="display: inline-block;">나의 인증 횟수 : </h4>
-        <h4 class="text-primary" id="myConfirmCnt" style="display: inline-block;"></h4><h4 class="mb-2" style="display: inline-block;">회</h4>
-    </div>
-    <div style="text-align: center; margin-bottom: 20px;">
-        <h4 class="mb-2" style="display: inline-block; ">챌린지 완료 후 얻는 점수 : </h4>
-        <h4 class="text-primary" id="score" style="display: inline-block;"></h4><h4 class="mb-2" style="display: inline-block;">점</h4>
-    </div>
-    <div style="text-align: center; margin-bottom: 20px;">
-        <h4 class="mb-2" style="display: inline-block; ">남은 인증 횟수 : </h4>
-        <h4 class="text-primary" id="remainCnt" style="display: inline-block;"></h4><h4 class="mb-2" style="display: inline-block;">회</h4>
-    </div>
-</div>
-<div class="row g-4 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
-	<h4 class="text-center mb-2">♡ My Challenge Room ♡</h4>
-	<div class="row g-4 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
-		<div class="col-lg-4 col-md-6 portfolio-item first" th:each="file : ${fileList}">
-			<input type="hidden" th:value="${file.userNo}">
-			<div class="portfolio-img rounded overflow-hidden" th:onclick="|location.href='@{/confirmInfo(confirmNo=${file.confirmNo})}'|">
-				<img class="img-fluid" th:src="@{/images/{filePath}(filePath=${file.filePath})}" alt="나의 인증 이미지" style="width:295px; height:197px">
-			</div>
-		</div>
+<!-- challenge.css -->
+<!-- 데이터가 있을 때 -->
+<th:block th:if="${#lists.size(fileList) > 0}">
+<div class="text-center mx-auto mb-5 wow fadeInUp info-container" data-wow-delay="0.1s">
+	<div class="info-row">
+	    <span class="mb-2">나의 인증 횟수 : </span>
+	    <span id="myConfirmCnt" class="text-primary"></span>
+	    <span class="mb-2">회</span>
+	</div>
+	<div class="info-row">
+	    <span class="mb-2">챌린지 완료 후 얻는 점수 : </span>
+	    <span id="score" class="text-primary"></span>
+	    <span class="mb-2">점</span>
+	</div>
+	<div class="info-row">
+	    <span class="mb-2">남은 인증 횟수 : </span>
+	    <span id="remainCnt" class="text-primary"></span>
+	    <span class="mb-2">회</span>
 	</div>
 </div>
-</html>
+</th:block>
+<div class="row g-2 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
+	<h3 class="text-center mb-2">나의 행동</h3>
+	<div class="row g-4 portfolio-container wow fadeInUp" data-wow-delay="0.5s">
+		<!-- 데이터가 있을 때 -->
+		<th:block th:if="${#lists.size(fileList) > 0}">
+			<div class="col-lg-4 col-md-6 portfolio-item first" th:each="file : ${fileList}">
+				<input type="hidden" th:value="${file.userNo}">
+				<img class="img-fluid" th:src="@{/images/{filePath}(filePath=${file.filePath})}" 
+					alt="나의 인증 이미지" style="width:300px; height:350px"
+					th:onclick="|location.href='@{/confirmInfo(confirmNo=${file.confirmNo})}'|">
+			</div>
+		</th:block>
+		
+		<!-- 데이터가 없을 때 -->
+        <th:block th:unless="${#lists.size(fileList) > 0}">
+            <div style="text-align:center;">
+                <p>아직 등록된 인증 내역이 없습니다</p>
+                <p>오늘의 인증 사진을 올려 <b>Eco Bank</b>의 첫 챌린저가 되어보세요!</p>
+            </div>
+        </th:block>
+	</div>
+</div>
