@@ -90,8 +90,7 @@ public class HomeController {
 		// 요청 처리(user테이블 국가코드 update 프로시저 실행)
 		System.out.println(countryCode);
 		System.out.println(userId);
-		// 처리 결과에 따라 적절한 응답을 반환합니다.
-		// 처리 결과에 따라 적절한 응답을 반환합니다.
+
 		if (countryCode != null && userId != null) {
 			try {
 				userService.updateCountryInfo(userId, countryCode);
