@@ -97,10 +97,10 @@
 	opacity: 0.9;
 }
 /*모달*/
-.modal {
+.modal-review {
 	display: none;
 	position: fixed;
-	z-index: 1000;
+	z-index: 500;
 	left: 0;
 	top: 0;
 	width: 100%;
@@ -229,7 +229,7 @@
 		</div>
 		<div class="challenge-card-container">
 			<div class="challenge-card" th:each="challenge : ${challengeInfo}">
-				<img th:src="@{${challenge.mainImg}}" alt="Challenge Image" /> <input
+				<img th:src="@{'/images/' + ${challenge.mainImg}}" alt="Challenge Image" /> <input
 					type="hidden" th:value="${challenge.challNo}" class="cNo">
 				<div class="challenge-card-body">
 					<p class="d-day-text" th:text="${challenge.dDay}"></p>
@@ -246,7 +246,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal">
+	<div class="modal-review">
 		<div class="modal_body">
 			<div class="inputleft">
 				<h4>리뷰 작성하기</h4>
@@ -375,12 +375,12 @@ $('.cancleBtn').click(function(event){
 
 // 리뷰 모달 열기
 function reviewModal() {
-    $('.modal').css('display', 'block');
+    $('.modal-review').css('display', 'block');
 }
 
 // 모달 닫기
 $('#btn-close').on('click', function() {
-    $('.modal').css('display', 'none');
+    $('.modal-review').css('display', 'none');
 });
 
 // 리뷰 등록
@@ -392,7 +392,7 @@ $('#btn-review').click(function() {
         success: function(result) {
             console.log(result);
             alert('리뷰 작성이 완료되었습니다.');
-            $('.modal').css('display', 'none');
+            $('.modal-review').css('display', 'none');
             $('#reviewContent').val(''); // 리뷰 내용 초기화
         },
         error: function(err) {

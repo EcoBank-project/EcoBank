@@ -120,7 +120,7 @@
 		<div class="challenge-card-container"
 			th:if="${challengeInfo != null && !#lists.isEmpty(challengeInfo)}">
 			<div class="challenge-card" th:each="challenge : ${challengeInfo}">
-				<img th:src="@{${challenge.mainImg}}" alt="Challenge Image" /> <input
+				<img th:src="@{'/images/' + ${challenge.mainImg}}" alt="Challenge Image" /> <input
 					type="hidden" th:value="${challenge.challNo}" class="cNo">
 				<div class="challenge-card-body">
 					<h2 class="challenge-card-title" th:text="${challenge.challTitle}"></h2>
