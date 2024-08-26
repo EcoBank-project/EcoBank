@@ -2,42 +2,113 @@
 <html xmlns:th="https://www.thymeleaf.org/"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{common/layouts/default_layout}"
-    layout:fragment="Content"> 
+    layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>회원가입</title>
+<style>
+
+/* 폼 컨테이너 스타일 */
+.signup-container {
+    max-width: 500px; /* 폼의 최대 너비 설정 */
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    background: #fff; /* 배경 색상 */
+    margin: 0 auto;
+}
+
+/* 폼 제목 스타일 */
+.signup-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* 폼 그룹 스타일 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* 라벨 스타일 */
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* 입력 필드 스타일 */
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* 패딩과 테두리를 포함하여 전체 너비 설정 */
+}
+
+/* 읽기 전용 입력 필드 스타일 */
+.form-input-readonly {
+    background-color: #f8f9fa; /* 배경 색상 */
+    cursor: not-allowed; /* 마우스 커서 스타일 */
+}
+
+/* 오류 메시지 스타일 */
+.form-error {
+    color: red;
+    font-size: 0.875em;
+    display: none; /* 기본적으로 숨김 처리 */
+}
+
+/* 버튼 컨테이너 스타일 */
+.form-button-container {
+    text-align: center;
+}
+
+/* 제출 버튼 스타일 */
+.form-submit-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.form-submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* 유효성 검사 실패 시 오류 메시지 표시 */
+.form-input:invalid + .form-error {
+    display: b
+</style>
 </head>
 <body>
 <main class="main-content">
-        <div class="signup-container">
-            <h2>회원가입</h2>
-            <!--
-            	 th:action : /signup 페이지로 요청 (post 방식으로 요청)
-            	 th:object : form 태그의 데이터가 userCreateForm 로 설정한 객체에 담아짐.
-            	 th:field : th:object에 설정해 준 객체의 내부와 매칭	
-             -->
-            <form th:action="@{/googleSignup}" th:object="${googleUserInfoForm}" 
-                method="post">
-                <div class="mb-3">
-                    <label for="useid" class="form-label">아이디(이메일)</label> 
-                    <input type="text" th:field="*{useId}" class="form-control" id="useid" readonly>
-                    
-                </div>
-                <div class="mb-3">
-                    <label for="nickname" class="form-label">닉네임</label>
-                    <input type="text" th:field="*{nickName}" class="form-control" id="nickname" placeholder="6글자 이상 20글자 이하">
-                    <p id="nickname-error" class="error-message">닉네임은 6자 이상 20자 이하이어야 합니다.</p>
-                </div>
-                <div class="mb-3">
-                    <label for="tell" class="form-label">연락처</label> 
-                    <input type="text" th:field="*{tell}" class="form-control" id="tell">
-                    <p id="tell-error" class="error-message">연락처는 필수 항목입니다.</p>
-                </div>
-                <div class="button-container">
-                    <button type="submit" id="submit-button">회원가입</button>
-                </div>
-            </form>
-        </div>
-    </main>
+    <div class="signup-container">
+        <h2 class="signup-title">회원가입</h2>
+        <form th:action="@{/googleSignup}" th:object="${googleUserInfoForm}" 
+            method="post" class="signup-form">
+            <div class="form-group">
+                <label for="useId" class="form-label">아이디(이메일)</label> 
+                <input type="text" th:field="*{useId}" class="form-input form-input-readonly" id="useId" readonly>
+            </div>
+            <div class="form-group">
+                <label for="nickname" class="form-label">닉네임</label>
+                <input type="text" th:field="*{nickName}" class="form-input" id="nickname" placeholder="6글자 이상 20글자 이하">
+                <p id="nickname-error" class="form-error">닉네임은 6자 이상 20자 이하이어야 합니다.</p>
+            </div>
+            <div class="form-group">
+                <label for="tell" class="form-label">연락처</label> 
+                <input type="text" th:field="*{tell}" class="form-input" id="tell">
+                <p id="tell-error" class="form-error">연락처는 필수 항목입니다.</p>
+            </div>
+            <div class="form-button-container">
+                <button type="submit" class="form-submit-button">회원가입</button>
+            </div>
+        </form>
+    </div>
+</main>
 </body>
 </html>
