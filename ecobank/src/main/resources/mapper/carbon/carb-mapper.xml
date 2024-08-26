@@ -4,20 +4,20 @@
 	<!-- 챌린지 전체 조회 -->
 	<select id="selectCarbonAll"
 		resultType="com.ecobank.app.intro.service.CarbonVO">
+		with country_score as (
+		SELECT u.country, SUM(s.score) score
+		  FROM users u JOIN score s 
+		               ON u.user_no = s.user_no
+		  GROUP BY u.country)  
 		SELECT c.carbon_no,
 			   c.region_code,
 			   c.nation_code,
-			   GREATEST(NVL(c.carbon_emissions, 0) - NVL((SELECT SUM(s.score)
-			                                              FROM users u JOIN score s 
-			                                              			   ON u.user_no = s.user_no
-			                                              WHERE u.country = c.nation_code
-			                                              GROUP BY u.country
-			                                              ), 0)
-		       , 0) AS carbon_emissions
+               c.carbon_emissions,
+               s.score
+               , GREATEST(NVL(c.carbon_emissions, 0) - NVL( s.score , 0), 0 )  AS carbon_emissions2
 		FROM 
-		    carbon c
-		ORDER BY 
-		    carbon_emissions
+		    carbon c left outer join country_score s on  s.country = c.nation_code
+		ORDER BY    carbon_emissions2
 	</select>
 
 </mapper>
