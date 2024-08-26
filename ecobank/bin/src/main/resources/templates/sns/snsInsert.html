@@ -1,30 +1,119 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
 		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layouts/sns_layout}"
+		layout:decorate="~{common/layouts/sns_layout}"
 	  	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 
- <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"> </script>
+ <style>
+.insertContainer{
+	width:900px; 
+ 	border: 2px solid gray;   
+ 	border-radius: 12px; 
+  	padding: 30px;
+    margin: auto;
+}
+
+h1 {
+	text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+form {
+     display: flex;
+     flex-direction: column;
+     gap: 20px;
+}
+
+label {
+     font-size: 1.1rem;
+     font-weight: 600;
+     color: #555;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+	width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.image-preview {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.image-preview img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.insertBtn{
+	text-align:  center; 
+}
+</style>
 </head>
 <body>
-	<h3>sns 등록</h3>
-	<form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
-
-	<input type="file" name="images" multiple><br>
-	<textarea rows="5" cols="30" name="feedContent" placeholder="내용작성"></textarea><br>
-	<textarea rows="1" cols="30" name="hashtag" placeholder="#해시태그"></textarea>
-	
-			
-		<div>
-			<button class="btn btn-primary" type="submit" >저장</button>
-			<button class="btn btn-primary" type="button" th:onclick="|location.href='@{/sns}'|">목록</button>
-			
-		</div>
+   <div class="insertContainer"  >
+		<h1>게시글 등록</h1>
+        <form name="insertForm" th:action="@{/snsInsert}" method="post" enctype="multipart/form-data">
+			<p style="text-align:center;">당신의 ECO 일상을 다른 회원들에게 공유해보세요</p>
+            <label for="images">이미지 업로드 (최대 3장)</label>
+            <input type="file" id="images" name="images" accept="image/*" multiple required>
+            <div class="image-preview" id="imagePreview">
+            	<!-- 이미지 미리보기 영역 -->
+            </div>
+            <label for="content">내용을 작성하세요(1000자 내외)</label>
+            <textarea id="content" name="feedContent" rows="4" required></textarea>
+            <label for="title">#해시태그를 작성하세요(#필수 입력)</label>
+            <input type="text" id="title"name="hashtag" >
+			<div class="insertBtn">
+				<button class="btn btn-primary" type="submit" >저장</button>
+			</div>
 		</form>
+    </div>
 
+   <script>
+        document.getElementById('images').addEventListener('change', function(event) {
+            const files = event.target.files;
+            const previewContainer = document.getElementById('imagePreview');
+            previewContainer.innerHTML = '';
+            for (let i = 0; i < files.length; i++) {
+                if (files[i] && files[i].type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(files[i]);
+                }
+            }
+        });
+</script>
 </body>
 
 </html>

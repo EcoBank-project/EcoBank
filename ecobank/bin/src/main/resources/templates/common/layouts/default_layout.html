@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  th:with="lang=${#locale.language}" th:lang="${lang}">
 <head>
 <meta charset="UTF-8">
     <!-- csrf -->
 	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
  	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <title>Header</title>
+ 	<!-- 로그인 상태를 확인하는 메타 태그 -->
+    <th:block sec:authorize="isAuthenticated()">
+	    <meta name="isAuthenticated" content="true"/>
+    </th:block>
+    
     <!-- Add your CSS and other head elements here -->
- <title>Layout page</title>
+
 <th:block th:replace="common/configs/config :: jQueryConfig"></th:block>
 <th:block th:replace="common/configs/config :: MainTemplateConfig"></th:block>
 <th:block th:replace="common/configs/config :: SweetAlertConfig"></th:block>
@@ -27,6 +33,12 @@
 	          xhr.setRequestHeader(header, token);
 	      }
 	  });
+	  let userNumber = [[${session.userNo != null ? session.userNo : 'null'}]];
+	  userNumber = userNumber === 'null' ? null : userNumber;
+
  	</script>
+
+ 	<th:block th:replace="common/configs/config :: MainTemplateScriptConfig"></th:block>
+ 	 <th:block th:replace="common/configs/config :: AlarmSocketScriptConfig"></th:block>
 </body>
 </html>

@@ -4,7 +4,71 @@
       layout:decorate="~{adminCommon/layouts/default_layout}"
       layout:fragment="Content">
 <body>
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script th:inline="javascript">
 
+	window.addEventListener('DOMContentLoaded', event => {
+	    // Simple-DataTables
+	    // https://github.com/fiduswriter/Simple-DataTables/wiki
+
+	    const datatablesSimple = document.getElementById('adminUser1');	
+	    if (datatablesSimple) {
+	        new simpleDatatables.DataTable(datatablesSimple);
+	    }
+	});
+	</script>
+	<script th:inline="javascript">
+
+	window.addEventListener('DOMContentLoaded', event => {
+	    // Simple-DataTables
+	    // https://github.com/fiduswriter/Simple-DataTables/wiki
+
+	    const datatablesSimple = document.getElementById('adminUser2');	
+	    if (datatablesSimple) {
+	        new simpleDatatables.DataTable(datatablesSimple);
+	    }
+	});
+	</script>
+	
+		<script th:inline="javascript">
+
+	window.addEventListener('DOMContentLoaded', event => {
+	    // Simple-DataTables
+	    // https://github.com/fiduswriter/Simple-DataTables/wiki
+
+	    const datatablesSimple = document.getElementById('adminUser3');	
+	    if (datatablesSimple) {
+	        new simpleDatatables.DataTable(datatablesSimple);
+	    }
+	});
+	</script>
+	
+		<script th:inline="javascript">
+
+	window.addEventListener('DOMContentLoaded', event => {
+	    // Simple-DataTables
+	    // https://github.com/fiduswriter/Simple-DataTables/wiki
+
+	    const datatablesSimple = document.getElementById('adminUser4');	
+	    if (datatablesSimple) {
+	        new simpleDatatables.DataTable(datatablesSimple);
+	    }
+	});
+	</script>
+	
+		<script th:inline="javascript">
+
+	window.addEventListener('DOMContentLoaded', event => {
+	    // Simple-DataTables
+	    // https://github.com/fiduswriter/Simple-DataTables/wiki
+
+	    const datatablesSimple = document.getElementById('adminUser');	
+	    if (datatablesSimple) {
+	        new simpleDatatables.DataTable(datatablesSimple);
+	    }
+	});
+	</script>
     <!-- OVERVIEW -->
     <div class="panel panel-headline">
         <div class="panel-heading">
@@ -35,8 +99,8 @@
 									<div class="metric">
 										<span class="icon"><i class="fa fa-eye"></i></span>
 										<p>
-											<span class="number">274,678</span>
-											<span class="title">Visits</span>
+										     <span class="number" th:text="${state}">0</span>
+                          					  <span class="title">정지된회원수</span>
 										</p>
 									</div>
 								</div>
@@ -44,51 +108,112 @@
 									<div class="metric">
 										<span class="icon"><i class="fa fa-bar-chart"></i></span>
 										<p>
-											<span class="number">35%</span>
-											<span class="title">Conversions</span>
+											<span class="number" th:text="${QnaState}">0</span>
+											<span class="title">QNA 댓글 필요한 수 </span>
 										</p>
 									</div>
 								</div>
 							</div>
 							
-							<div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                DataTable Example
-                            </div>
+							 <div class="col-lg-3">
+             
                             <div class="card-body">
-                               <table class="table table-dark table-striped">
+                            <h3>오늘 가입한 회원 </h3>
+                               <table class="table table-dark table-striped" id = "adminUser1">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">아이디 </th>
-                                            <th class="text-center">닉네임          </th>
-                                            <th class="text-center">가입날짜       </th>
-                                            <th class="text-center">전화번호       </th>
-                                            <th class="text-center">권한</th>
-                                            <th class="text-center">국가</th>
-                                            <th class="text-center">회원상태</th>
+                                            <th class="text-center">아이디</th>
+                                            <th class="text-center">회원상태</th>                                   
                                         </tr>
                                     </thead>
-                               
                                     <tbody>
-                                       	<th:block th:each="user : ${userList}">
+                                       	<th:block th:each="user : ${userSysCreateat}">
                                        		<tr>
                                        			<td class="text-center">[[${user.useId} ]]</td>
-                                       			<td class="text-center">[[${user.nickName} ]]</td>
-                                       			<td class="text-center">[[${user.creaTeat} ]]</td>
-                                       			<td class="text-center">[[${user.tell} ]]</td>
-                                       			<td class="text-center">[[${user.resp} ]]</td>
-                                       			<td class="text-center">[[${user.country} ]]</td>
-                                       			<td class="text-center">[[${user.userState} ]]</td>
-                      							
-                                       		</tr>
-                                   
+                                       			<td class="text-center" th:text="${#dates.format(user.creaTeat, 'yyyy/MM/dd')}">[[${user.creaTeat} ]]</td>		
+                                       		</tr>                                
                                        	</th:block>
                                        	                                                                                                           
                                     </tbody>
                                 </table>
                             </div>
+                            </div>
+							
+							
+							<div class="card mb-4">
+							<div class="col-lg-3">
+                          
+                            <div class="card-body">
+                            <h3>전체 회원 </h3>
+                               <table class="table table-dark table-striped" id = "adminUser2">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">아이디 </th>
+                                            <th class="text-center">가입날짜</th>                                   
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       	<th:block th:each="user : ${userList}">
+                                       		<tr>
+                                       			<td class="text-center">[[${user.useId} ]]</td>
+                                       			<td class="text-center" th:text="${#dates.format(user.creaTeat, 'yyyy/MM/dd')}">[[${user.creaTeat} ]]</td>		
+                                       		</tr>                                
+                                       	</th:block>
+                                       	                                                                                                           
+                                    </tbody>
+                                </table>
+                            </div>
+                            </div>
                             
+                            
+                            
+                            <div class="col-lg-3">
+             
+                            <div class="card-body">
+                            <h3>정지된 회원</h3>
+                               <table class="table table-dark table-striped" id = "adminUser3">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">아이디 </th>
+                                            <th class="text-center">회원상태</th>                                   
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       	<th:block th:each="user : ${userState}">
+                                       		<tr>
+                                       			<td class="text-center">[[${user.useId} ]]</td>
+                                       			<td class="text-center">[[${user.userState} ]]</td>		
+                                       		</tr>                                
+                                       	</th:block>
+                                       	                                                                                                           
+                                    </tbody>
+                                </table>
+                            </div>
+                            </div>
+                            
+                            <div class="col-lg-3">
+             
+                            <div class="card-body">
+                            <h3>QnA댓글 필요한 게시물</h3>
+                               <table class="table table-dark table-striped" id = "adminUser4">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">QNA번호 </th>
+                                            <th class="text-center">QNA제목</th>                                   
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       	<th:block th:each="user : ${qnaReply}">
+                                       		<tr>
+                                       			<td class="text-center">[[${user.qnaNo} ]]</td>
+                                       			<td class="text-center">[[${user.qnaTitle} ]]</td>		
+                                       		</tr>                                
+                                       	</th:block>
+                                       	                                                                                                           
+                                    </tbody>
+                                </table>
+                            </div>
+                            </div>
 							
 		</div>
 		</div>

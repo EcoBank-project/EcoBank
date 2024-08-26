@@ -154,9 +154,11 @@ WHERE s.feed_no = #{feedNo}
     where qna_reply_no = #{qnaReplyNo}
     </update>
 	<select id="qnaReplynocount" parameterType="int" resultType="int">
-		select count(*)
-		from qna a join qna_reply b
-  		on a.qna_no != b.qna_no
+		SELECT COUNT(*)
+FROM qna a
+LEFT JOIN qna_reply b ON a.qna_no = b.qna_no
+WHERE b.qna_no IS NULL
+
 	</select>
 	
 </mapper>

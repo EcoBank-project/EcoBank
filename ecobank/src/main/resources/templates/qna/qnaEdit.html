@@ -3,12 +3,19 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/default_layout}"
       layout:fragment="Content">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>QNA 수정</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-</head>
+	
+	<style>
+	     .centered-button-container {
+	         text-align: center;
+	         margin-top: 20px;
+	     }
+		 .card-header {
+		 			background-color: #28a745;
+		 		}
+	 </style>
+
 <body>
     <div class="container mt-4">
         <div class="card">
@@ -29,13 +36,14 @@
                     <!-- 내용 입력 필드 -->
                     <div class="mb-3">
                         <label for="qnaContent" class="form-label">내용</label>
-                        <textarea class="form-control" id="qnaContent" name="qnaContent" rows="5" required th:text="${qna.qnaContent}"></textarea>
+                        <textarea class="form-control" id="qnaContent" name="qnaContent"  rows="20" required th:text="${qna.qnaContent}"></textarea>
                     </div>
-
+					<div class = "centered-button-container">
                     <!-- 수정 버튼 -->
                     <button type="submit" class="btn btn-primary">수정</button>
                     <!-- 취소 버튼 -->
                     <a href="/QnaUserList" class="btn btn-secondary">취소</a>
+					</div>
                 </form>
             </div>
         </div>

@@ -5,14 +5,14 @@
 	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>에코뱅크</title>
 <style>
 .imghover {
 	transition: background-img 0.5s;
 }
 
 .imghover:hover {
-	filter: brightness(120%)
+		filter: brightness(0.8);
 }
 
 .blind {
@@ -24,64 +24,82 @@
 	margin: -1px;
 }
 .like{
-      width: 20px;
-      fill: #ddd;
+	width: 20px;
+    fill: #ddd;
 }
-
-.like.active{
-      fill: red;
+.bi-heart-fill{
+	color: hotpink;
 }
-
 #speech{
-      width: 20px;
-      fill: #ddd;
+	width: 20px;
+    fill: #ddd;
+}
+
+.profile-img {
+	width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
 }
 </style>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js">
-	
-</script>
 </head>
 <body>
-	<form action="uploadForm" method="post" enctype="multipart/form-data">
-	<div>
-		<div class="container">
-			<div class="row">
-				<th:block th:each="sns, sts : ${snsList}"
-					th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
-					<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0">
-						<div class="author mb-4 d-flex align-items-center">
-							<a href="#" class="img"
-								style="background-image: url(images/person_2.jpg);"></a>
-							<div class="ml-3 info">
-								<a href="#" th:text=${sns.nickname}></a>
+	<form method="post" enctype="multipart/form-data">
+		<div>
+			<div class="container" style="width:1200px;">	
+				<div class="row">
+					<p th:if="${#request.requestURI != '/snsP'}" >ECO BANK 회원들의 일상을 실시간으로 확인해보세요</p>
+					<p th:if="${#request.requestURI == '/snsP'}">ECO BANK 회원들의 일상을 인기순으로 확인해보세요</p>
+					<th:block th:each="sns, sts : ${snsList}" th:onclick="|location.href='@{/snsInfo(feedNo=${sns.feedNo})}'|">
+						<div class="post-entry col-lg-4 col-sm-12 col-md-6 mb-4 mb-md-0" style="width:350px; margin : 20px;">
+							<div class="author mb-2 d-flex align-items-center">
+								<div class="other">
+									<div th:text=${sns.userNo} class="blind"></div>
+									<img class="profile-img" th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Image">
+									<div class="ml-3 info" style="display:inline-block;">
+										<a href="#" th:text=${sns.nickname}></a>
+									</div>
+								</div> 
+								<div style="margin-left:auto;">
+									<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null} and ${sns.userNo} != ${session.userNo}">팔로우</button>
+									<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
+							 	</div>
+							 	<input type="number" th:value="${sns.feedNo}" hidden>
 							</div>
-							<button class="btn btn-primary">팔로우</button>
-						</div>
-						<div class="imghover">
-							<div th:text=${sns.feedNo} class="blind"></div>
-							<a href="#" class="post-thumbnail transition">
-							 <img th:src=@{/images/{filePath}(filePath=${sns.filePath})}
-								alt="Image" class="img-fluid"></a>
-							</div>
-							<div class="post-content-entry">
-								<div class="meta">
-									<svg class="like" th:id="'like_'+${sns.feedNo}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-									<path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg>
-									<span><a href="#" th:text=${sns.countLike}></a></span>
-									<svg id="speech" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M512 240c0 114.9-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6C73.6 471.1 44.7 480 16 480c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4c0 0 0 0 0 0s0 0 0 0s0 0 0 0c0 0 0 0 0 0l.3-.3c.3-.3 .7-.7 1.3-1.4c1.1-1.2 2.8-3.1 4.9-5.7c4.1-5 9.6-12.4 15.2-21.6c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208z"/></svg>
-									 <span><a href="#" th:text=${sns.countReply}></a>
-									</span>
+							<div class="imghover">
+								<div  style="position: relative;">
+									<div th:text=${sns.feedNo} class="blind"></div>
+									<svg xmlns="http://www.w3.org/2000/svg" th:if="${sns.fileCount != 1}" style="position:absolute; top:10; left: 280; z-index:100000;" color="gray" width="30" height="30" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+	  									<path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+	  									<path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
+									</svg>
+								 	<img th:src=@{/images/{filePath}(filePath=${sns.filePath})}
+									alt="Image" class="img-fluid" style="position:relative;  width:350px; height:410px; padding:0px;">
 								</div>
 							</div>
-						
-					</div>
-				</th:block>
+							<div class="post-content-entry">
+								<div class="meta" style="margin-bottom:30px; margin-top:10px;">
+									<button  type = "button" id="likeButton" class="btn btn-outline-primary">
+										<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
+										<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
+									</button>
+									<span class="likes-count" th:text=${sns.countLike}></span>
+									<button  type = "button" class="btn btn-outline-secondary ms-3">
+										<i class="bi bi-chat-dots"></i>
+									</button>
+									<span class="comments-count" th:text=${sns.countReply}></span>
+								</div>
+							</div>
+						</div>
+					</th:block>
+				</div>
 			</div>
 		</div>
-	</div>
 	</form>
-	<script>
+	<script th:inline="javascript">
+		let userNo = [[${session.userNo}]];
+
 		$(".imghover").on('click', function(event) {
 			/* if(event.target.tagName == 'BUTTON') return; */
 			let fno = $(event.currentTarget).children().first().text();
@@ -91,22 +109,103 @@
 			location.href = url;
 		});
 		
+		$(".other").on('click', function(event) {
+			/* if(event.target.tagName == 'BUTTON') return; */
+			let uno = $(event.currentTarget).children().first().text();
+			console.log('클릭햇어',uno);
+			let url = '/userSns?userNo=' + uno;
+			console.log('url : ' + url);
+			location.href = url;
+		});
+		
 	    //좋아요버튼
-
-	    $('.like').on('click', function(event){
-	    	console.log($(this));
-	    	console.log(event);
-	    	$(this).toggleClass('active');
-	    	//아작스(if해서 active인지 아닌지 구분해서 아작스 두개 넣기)
+	  	$('.bi').on('click',function(){
+	  		let feedNo =$(this).data('feedno');
+	  		let likeIcon = $(this).find('i'); // 클릭된 버튼의 좋아요아이콘
+	  	    let isLikedAlready = likeIcon.hasClass('bi-heart-fill'); // 이미 좋아요가 누른 상태인지 확인
+	  	    
+	  		console.log('하트하으',feedNo);
+			console.log(isLikedAlready);
+	  	    $.ajax({
+				type : "POST",
+				url : "likeInsert",
+				data : {feedNo},
+				dataType : "json",
+				success : function(result){
+					console.log(result);
+					if (typeof sendAlarm === "function" && !isLikedAlready) {
+	                    console.log(feedNo);
+						sendAlarm('H3', feedNo);
+	                } 
+					location.reload();
+				},
+				error :  function(error){
+					console.log('에러',error);
+					alert("좋아요 실패");
+				}
+			});
 	    })
-/* 		  var btn = document.getElementById("like")
-class="like active"
-.like .active
-		  btn.addEventListener('click',function(){
-		            btn.classList.toggle('active')
-		            addclass removeclass
-		    })하트 다시 눌럿을때 사라져야하고, 내가 눌렀던 하트면 남아잇기
-		    if문으로 feedno like 비교.......데이터에서 좋아요가 null 일때 0으로 바꾸고 nvl 1이면 calss like-active 0이면 like
- */	</script>
+			    
+		//좋아요취소
+		$('.bi-heart-fill').click(function(){
+			let snsLikeNo =$(this).data('snslikeno');
+			console.log("팔로우버튼");
+			console.log('누구야',snsLikeNo)
+			// ajax로 좋아요 취소하기
+			$.ajax({
+				type : "delete",
+				url : "likeDelete",
+				data : {snsLikeNo},
+				success : function(){
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		});
+	    
+	    // 팔로우(writeBtn) 버튼을 클릭할 경우
+		$('.followBtn').click(function(){
+			let followingId =$(this).data('userno');
+			console.log("팔로우버튼");
+			console.log('누구야',followingId);
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "POST",
+				url : "insertFollow",
+				data : {userNo, followingId},
+				dataType : "json",
+				success : function(){
+					location.reload();
+				},
+				error :  function(error){
+					console.log(error);
+					alert("팔로우 실패");
+				}
+			});
+		});
+	
+		//팔로우취소
+		$('.followCancleBtn').click(function(){
+			let followNo =$(this).data('followno');
+			console.log("팔로우버튼");
+			// ajax로 팔로우 등록하기
+			$.ajax({
+				type : "delete",
+				url : "deleteFollow",
+				data : {followNo},
+				dataType : "json",
+				success : function(){
+					alert("팔로우취소 성공");
+				},
+				error :  function(error){
+					console.log(error);
+					alert("실패");
+				}
+			});
+		});
+ </script>
 </body>
 </html>

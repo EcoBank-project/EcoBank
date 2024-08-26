@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecobank.app.alarm.mapper.AlarmMapper">
+<insert id="insertAlarm">
+	    <selectKey keyProperty="alarmNo" 
+	    		   resultType="Integer"
+	    		   order="BEFORE">
+			SELECT NVL(MAX(alarm_no), 0) + 1
+			FROM alarm
+		</selectKey>
+        INSERT INTO alarm (alarm_no, 
+        				   alarm_content, 
+        				   alarm_code, 
+        				   alarm_ref_no, 
+        				   user_no)
+        VALUES (#{alarmNo}, 
+        		#{alarmContent}, 
+        		#{alarmCode}, 
+        		#{alarmRefNo}, 
+        		#{userNo})
+    </insert>
+    
+    <select id="getUserIdFromConfirmNo" parameterType="Integer" resultType="String">
+    	SELECT use_id
+		FROM users
+		WHERE user_no = (SELECT user_no
+        		         FROM chall_confirm
+                		 WHERE confirm_no=#{confirmNo})
+    </select>
+    
+    <select id="getUserIdFromfeedNo" parameterType="Integer" resultType="String">
+    	SELECT use_id
+		FROM users
+		WHERE user_no = (SELECT user_no
+        		         FROM sns
+                		 WHERE feed_no=#{feedNo})
+    </select>
+    
+    <select id="checkAlarmExists" parameterType = "com.ecobank.app.alarm.service.AlarmVO" resultType="com.ecobank.app.alarm.service.AlarmVO">
+	    SELECT alarm_no,
+	    	   alarm_state 
+	    FROM alarm
+	    WHERE alarm_code = #{alarmCode}
+	    AND alarm_ref_no = #{alarmRefNo}
+	    AND user_no = #{userNo}
+	</select>
+	
+	<select id="alarmList" parameterType="Integer" resultType="com.ecobank.app.alarm.service.AlarmVO">
+		SELECT alarm_no, 
+		       alarm_code, 
+		       get_codename(alarm_code) as alarm_type,
+		       alarm_createat, 
+		       alarm_state, 
+		       alarm_ref_no,
+		       getuserNoFromRefNo(alarm_ref_no,alarm_code) as receiver_no,
+		       user_no,
+		       get_nickname(user_no) as sender_nickname
+		FROM alarm
+		WHERE getuserNoFromRefNo(ALARM_REF_NO,ALARM_CODE) = #{receiverNo}
+		AND alarm_state = 'G2'
+	</select>
+	
+	<select id="getUserIdFromFollowingNo" parameterType="Integer" resultType="String">
+		SELECT use_id
+		FROM users
+		WHERE user_no = #{followingNo}
+	</select>
+	
+	<update id="updateAlarmState" parameterType="com.ecobank.app.alarm.service.AlarmVO" >
+		UPDATE alarm
+		SET alarm_state = #{alarmState},
+			alarm_createat = sysdate
+		WHERE alarm_no = #{alarmNo}
+	</update>
+</mapper>

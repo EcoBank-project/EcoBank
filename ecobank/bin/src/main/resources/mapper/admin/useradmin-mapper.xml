@@ -4,32 +4,48 @@
     
     <!-- 유저 목록 조회 -->
     <select id="userList" resultType="com.ecobank.app.admin.service.UserVO">
+WITH declare1 AS (
+    SELECT 
+        a.user_no,
+        COUNT(*) cnt, 
+        COUNT(CASE b.CONFIRM_DECLARE_SITUATION WHEN 'N1' THEN 1 ELSE NULL END) N1,
+        COUNT(CASE b.CONFIRM_DECLARE_SITUATION WHEN 'N2' THEN 1 ELSE NULL END) N2
 
-with declare as(
-    	select a.user_no,
-       count(*) cnt, 
-       count( case b.CONFIRM_DECLARE_SITUATION when 'N1' then 1 else  null end) N1,
-       count( case b.CONFIRM_DECLARE_SITUATION when 'N2' then 1 else  null end) N2
-       
-		from chall_confirm a
-		join chall_confirm_declare b 
-		on a.confirm_no = b.confirm_no
-		group by a.user_no )        
-               SELECT
-        		a.user_no,
-         		use_Id,
-               nickname,
-               creaTeat,
-               tell,
-               get_codename(resp) as resp,
-               country,
-               user_State,  
-               CONFIRM_CREATEAT,
-               cnt,
-               N1,
-               N2               
-        FROM users a left outer join declare b on  a.user_no = b.user_no
-        ORDER BY user_no ASC
+    FROM chall_confirm a
+    JOIN chall_confirm_declare b 
+      ON a.confirm_no = b.confirm_no
+    GROUP BY a.user_no
+),
+sns_situation AS(
+select user_no,
+ COUNT(CASE d.reply_SITUATION WHEN 'R1' THEN 1 ELSE NULL END) R1,
+ COUNT(CASE d.reply_SITUATION WHEN 'R2' THEN 1 ELSE NULL END) R2
+from sns_declare d
+join  sns f
+on d.feed_no = f.feed_no
+group by user_no
+)
+SELECT
+    a.user_no,
+    use_Id,
+    nickname,
+    creaTeat,
+    tell,
+    get_codename(resp) AS resp,
+    country,
+    user_State,  
+    CONFIRM_CREATEAT,
+    COALESCE(b.cnt, 0) AS cnt,  -- NULL 대신 0으로 대체
+    COALESCE(b.N1, 0) AS N1,
+    COALESCE(b.N2, 0) AS N2,
+    R1,
+    R2
+FROM users a
+LEFT JOIN declare1 b ON a.user_no = b.user_no
+LEFT JOIN sns_situation e ON a.user_no = e.user_no
+ORDER BY a.user_no ASC
+
+
     </select>
     
     <!-- 오늘 가입한 회원 수 조회 -->
@@ -46,10 +62,45 @@ with declare as(
     </select>
     <!-- 회원 상태 업데이트 -->
     <update id="updateUserState">
-        UPDATE users
-        SET USER_STATE = #{userState}
-        WHERE use_id = #{useId}
+      UPDATE users
+	SET USER_STATE = #{userState},
+    CONFIRM_CREATEAT = SYSDATE
+	WHERE use_id = #{useId}
         
     </update>
+    <!-- 정지된회원 리스트  -->
+    <select id="stateCount" resultType="int">
+    	select count(*)
+		from users
+		where user_state = 'B2'
+    </select>
+    
+   
+  <select id="userSysCreateat" resultType="userVO">
+    SELECT use_id, createat
+    FROM users
+    WHERE TO_CHAR(createat, 'yyyy-MM-dd') = TO_CHAR(SYSDATE, 'yyyy-MM-dd')
+	</select>
+	
+	
+	 <select id="userState" resultType="userVO">
+      select use_id, user_state
+      from users
+      where user_state = 'B2'
+    </select>
+    
+    <select id="qnaReply" resultType="qnaVO">
+    select a.qna_no,a.qna_title
+      from qna a join qna_reply b
+      on a.qna_no != b.qna_no
+    </select>
+    
+    
+	
+	
+
+    
+    
+
     
 </mapper>
