@@ -96,7 +96,9 @@ public class ChallengeController {
 	public String challengeSort(Model model, @RequestParam("select") int select) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		List<ChallVO> list = challService.challengeSort(userNo, select);
+		
 		model.addAttribute("list", list);
+		model.addAttribute("status", "D2");
 		return "chall/search";
 	}
 	
@@ -104,17 +106,22 @@ public class ChallengeController {
 	//챌린지 단건 조회 - 회원
 	@GetMapping("detail")
 	public String challdetail(ChallVO challVO, Model model) {
+		String challState = challService.getChallState(challVO.getChallNo());
+		System.out.println(challState + "스테이트는 ");
 		ChallVO findVO = challService.challInfo(challVO);
+		
 		model.addAttribute("detail", findVO);
+		model.addAttribute("status", challState);
 		return "chall/detail";
 	}
 	
 	//챌린지 목록 - 관리자
 	@GetMapping("challList")
 	public String challList(Model model, Criteria criteria) {
+		criteria.setAmount(5);
 		List<ChallVO> list = challService.challList(criteria);
 		model.addAttribute("challList", list);
-		model.addAttribute("page", new PageDTO(5, challService.getTotal(criteria), criteria));
+		model.addAttribute("page", new PageDTO(criteria.getAmount(), challService.getTotal(criteria), criteria));
 
 		return "admins/adminChallList";
 	}
@@ -196,9 +203,10 @@ public class ChallengeController {
 	//챌린지 목록 - 관리자
 	@GetMapping("scoreList")
 	public String scoreList(Model model, Criteria criteria) {
+		criteria.setAmount(5);
 		List<Map<String, Object>> list = challService.scoreList(criteria);
 		model.addAttribute("scoreList", list);
-		model.addAttribute("page", new PageDTO(5, challService.getScoreTotal(criteria), criteria));
+		model.addAttribute("page", new PageDTO(criteria.getAmount(), challService.getScoreTotal(criteria), criteria));
 		return "admins/adminScoreList";
 	}
 }
