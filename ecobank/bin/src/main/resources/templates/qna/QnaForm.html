@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default_layout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>QNA 등록</title>
+</head>
+<body>
+    <h1>QNA 등록</h1>
+
+    <!-- 등록 폼 -->
+    <form th:action="@{/QnaForm}" method="post" th:object="${qnaVO}">
+        <div>
+            <label for="qnaTitle">제목:</label>
+            <input type="text" id="qnaTitle" name="qnaTitle" th:field="*{qnaTitle}" required>
+        </div>
+        <div>
+            <label for="qnaContent">내용:</label>
+            <textarea id="qnaContent" name="qnaContent" th:field="*{qnaContent}" required></textarea>
+        </div>
+        <div>
+            <input type="hidden" id="userNo" name="userNo" th:field="*{userNo}">
+        </div>
+        <button type="submit">등록</button>
+    </form>
+
+    <!-- 오류 메시지 -->
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
+
+    <a href="#" th:href="@{/QnaUserList}">목록으로 돌아가기</a>
+</body>
+</html>

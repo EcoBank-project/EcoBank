@@ -16,19 +16,27 @@
              ,(SELECT count(feed_no)
                  FROM sns_reply
                 WHERE feed_no = s.feed_no) as countReply
-               ,(SELECT file_path
+             ,(SELECT file_path
                  FROM files
                 WHERE file_code_no = s.feed_no
-                 and rownum = 1)  as filePath
+                  and rownum = 1
+                  and file_code='J1')  as filePath
+             ,(SELECT follow_no 
+                 FROM follow 
+              	WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
+             ,(SELECT sns_like_no 
+                 FROM sns_like
+            	WHERE feed_no=s.feed_no) as snslike_yn
+             , (SELECT count(file_path)
+                 FROM files
+                WHERE file_code_no = s.feed_no
+                  AND file_code='J1')  as fileCount
       FROM sns s JOIN users u 
                    ON s.user_no = u.user_no
-      WHERE feed_state = 'F1'  
-      	<if test="hashtag != null and hashtag != ''">
-      		and hashtag like '%'||#{hashtag}||'%'      
-      	</if>
-       	<if test="nickname != null and nickname != ''">
-      		and nickname like '%'||#{nickname}||'%'      
-      	</if>    
+      WHERE feed_state = 'F1' 
+        AND s.user_no not in (SELECT block_user_no
+                                FROM sns_block b
+                                WHERE b.user_no =#{userNo})
       <choose>
       	<when test="orderSns == 1">
       		ORDER BY countLike DESC
@@ -37,6 +45,51 @@
         	ORDER BY s.feed_no DESC
       	</otherwise>
       </choose>
+	</select>
+	
+	<!-- 검색조회 type=s&keyword=다은-->
+	<select id="searchSnsAll" resultType="SnsVO" parameterType="SnsVO" >
+		SELECT s.feed_no    
+             ,u.profile_img
+             ,u.nickname
+             ,s.feed_createAt
+             ,s.user_no
+             ,s.feed_state
+             ,(SELECT count(feed_no) 
+                 FROM sns_like
+                WHERE feed_no = s.feed_no) as countLike
+             ,(SELECT count(feed_no)
+                 FROM sns_reply
+                WHERE feed_no = s.feed_no) as countReply
+             ,(SELECT file_path
+                 FROM files
+                WHERE file_code_no = s.feed_no
+                  and rownum = 1
+                  and file_code='J1')  as filePath
+             ,(SELECT follow_no 
+                 FROM follow 
+              	WHERE follower_id=#{userNo} 
+              	  AND following_id = s.user_no) as follow_yn
+             ,(SELECT sns_like_no 
+                 FROM sns_like
+                WHERE feed_no=s.feed_no) as snslike_yn
+             ,(SELECT count(file_path)
+                 FROM files
+                WHERE file_code_no = s.feed_no
+                  AND file_code='J1')  as fileCount
+      FROM sns s JOIN users u 
+                   ON s.user_no = u.user_no
+      WHERE feed_state = 'F1'  
+      	<if test ="nickname == null and hashtag == null">
+      		and feed_no is null
+      	</if> 
+      	<if test="hashtag != null and hashtag != ''">
+      		and hashtag like '%'||#{hashtag}||'%'      
+      	</if>
+       	<if test="nickname != null and nickname != ''">
+      		and nickname like '%'||#{nickname}||'%'      
+      	</if>
+        	ORDER BY s.feed_no DESC
 	</select>
 	
 	<!-- 단건조회 -->
@@ -56,6 +109,13 @@
                   	FROM sns_reply
                    WHERE feed_no = s.feed_no) as countReply
                 ,s.hashtag 
+                ,(SELECT follow_no 
+                 	FROM follow 
+              	   WHERE follower_id=#{userNo} 
+              	     AND following_id = s.user_no) as follow_yn
+              	,(SELECT sns_like_no 
+                    FROM sns_like
+            	   WHERE feed_no=s.feed_no) as snslike_yn
 		FROM sns s JOIN users u 
 		             ON s.user_no = u.user_no
 		WHERE s.feed_no = #{feedNo} 
@@ -66,7 +126,7 @@
 		<selectKey keyProperty="feedNo" 
 					resultType="Integer"
 					order="BEFORE">
-			SELECT NVL(MAX(feed_no),1)+1
+			SELECT NVL(MAX(feed_no),0)+1
 			  FROM sns
 		</selectKey>
 		INSERT INTO sns 
@@ -121,7 +181,7 @@
 		<selectKey keyProperty="declareNo" 
 					resultType="Integer"
 					order="BEFORE">
-			SELECT NVL(MAX(declare_no),1)+1
+			SELECT NVL(MAX(declare_no),0)+1
 			FROM sns_declare
 		</selectKey>
 		INSERT INTO sns_declare(declare_no
@@ -156,14 +216,93 @@
                 ,(SELECT file_path
                     FROM files
                    WHERE file_code_no = s.feed_no
-                 	 and rownum = 1)  as filePath
-      FROM sns s JOIN users u 
-                   ON s.user_no = u.user_no
-      WHERE feed_state = 'F1' 
-      	and u.user_no= #{userNo}
-      ORDER BY s.feed_no DESC
+                 	 and rownum = 1
+                 	 and file_code='J1')  as filePath
+                ,(SELECT follow_no 
+                 	FROM follow 
+              	   WHERE follower_id=#{userNo} 
+              	     AND following_id = s.user_no) as follow_yn
+                ,(SELECT sns_like_no 
+                    FROM sns_like
+                   WHERE feed_no=s.feed_no) as snslike_yn
+                ,(SELECT count(file_path)
+                 	FROM files
+               	   WHERE file_code_no = s.feed_no
+                     AND file_code='J1')  as fileCount
+      	 FROM sns s JOIN users u 
+                      ON s.user_no = u.user_no
+     	 WHERE feed_state = 'F1' 
+      	   AND u.user_no= #{userNo}
+   		ORDER BY s.feed_no DESC
+	</select>
+	
+	<!-- 마이피드 조회 시 정보 -->
+	<select id="countMySns" resultType="SnsVO">
+		SELECT user_no
+               ,nickname
+               ,profile_img
+               , (SELECT count(feed_no) 
+                    FROM sns
+                   WHERE sns.user_no = users.user_no) as count_feed
+               , (SELECT count(following_id) 
+                    FROM follow
+                   WHERE follow.following_id = users.user_no) as count_following      
+               , (SELECT count(follower_id) 
+                    FROM follow
+                   WHERE follow.follower_id = users.user_no) as count_follower                   
+ 		FROM users
+		WHERE user_no = #{userNo}
 	</select>
 	
 	
+	<!-- 팔로우여부 확인 -->
+	<select id="selectFollow"  parameterType="int">
+		SELECT follow_no 
+          FROM follow 
+         WHERE follower_id = #{userNo} 
+           AND following_id = #{otherNo}
+	</select>
 	
+	<!-- 팔로잉 목록 -->
+	<select id="followingList" resultType="SnsVO">
+		SELECT u.user_no
+               ,u.nickname
+               ,u.profile_img
+               ,f.follower_id
+               ,(SELECT follow_no 
+                   FROM follow 
+              	  WHERE follower_id= #{userNo} 
+              	    AND following_id = u.user_no) as follow_yn 
+	      FROM users u JOIN follow f 
+					     ON f.following_id = u.user_no
+		  WHERE follower_id= #{userNo}
+	</select>
+	
+	<!-- 팔로워 목록 -->
+	<select id="followerList" resultType="SnsVO">
+		SELECT u.user_no
+               ,u.nickname
+               ,u.profile_img
+               ,f.following_id
+               ,(SELECT follow_no 
+                   FROM follow 
+              	  WHERE follower_id= #{userNo} 
+              	    AND following_id = u.user_no) as follow_yn 
+		  FROM users u JOIN follow f 
+					   ON f.follower_id = u.user_no
+		 WHERE following_id= #{userNo}
+	</select>
+	
+	<!-- 차단 목록 -->
+	<select id="blockList" resultType="SnsVO">
+		SELECT b.user_no
+               ,u.nickname
+               ,u.profile_img
+               ,b.block_user_no
+               ,b.sns_block_no
+		  FROM users u JOIN sns_block b 
+		                 ON b.block_user_no = u.user_no
+		 WHERE b.user_no= #{userNo}
+	</select>
+
 </mapper>

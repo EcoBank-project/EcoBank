@@ -3,69 +3,100 @@
 <mapper namespace="com.ecobank.app.challenge.mapper.ChallMapper">
 	<!-- 챌린지 전체 조회 - 관리자-->
 	<select id="selectChallAll" resultType="ChallVO">
-	
-		    SELECT chall_no
-		         , chall_title
-		         , chall_content
-		         , chall_startAt
-		         , chall_closeAt
-		         , chall_state
-		         , main_img
-		         , detail_img
-		         , chall_score
-		         , chall_createAt
-		    FROM (
-		            SELECT ROWNUM r
-		                 , c.chall_no
-		                 , c.chall_title
-		                 , c.chall_content
-		                 , c.chall_startAt
-		                 , c.chall_closeAt
-		                 , c.chall_state
-		                 , c.main_img
-		                 , c.detail_img
-		                 , c.chall_score
-		                 , c.chall_createAt
-		            FROM chall c
-		            WHERE ROWNUM 	<![CDATA[<=  ]]> #{pageNum} * #{amount}
-		            
-		            ORDER BY c.chall_no DESC
-		    )
-		    WHERE r > (#{pageNum} - 1) * #{amount}
-		
+	    SELECT b.* 
+	    FROM (	
+	    		SELECT ROWNUM r               
+	    						, a.*	    
+	    		FROM (
+			            SELECT  c.chall_no
+			                 , c.chall_title
+			                 , c.chall_content
+			                 , c.chall_startAt
+			                 , c.chall_closeAt
+			                 , c.chall_state
+			                 , c.main_img
+			                 , c.detail_img
+			                 , c.chall_score
+			                 , c.chall_createAt
+			            FROM chall c
+						<where>
+							<if test="challState != null and challState != ''.toString()">
+								AND chall_state = #{challState}
+							</if>
+							<if test="keyword != null and keyword != ''.toString()">
+								AND chall_title like '%' || #{keyword} || '%' 
+							</if>
+						</where> 
+			            ORDER BY c.chall_no DESC
+                		) a        
+ 				WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}         
+ 				) b 
+ 		WHERE r <![CDATA[ > ]]> (#{pageNum} - 1) * #{amount}
 	</select>
 	
 	<!-- 챌린지 목록 개수 -->
 	<select id="getTotal" resultType="int">
-		SELECT count(*)
-		FROM chall
+	SELECT count(*)
+	FROM chall
+	<where>
+		<if test="challState != null and challState != ''.toString()">
+			AND chall_state = #{challState}
+		</if>
+		<if test="keyword != null and keyword != ''.toString()">
+			AND chall_title like '%' || #{keyword} || '%'
+		</if>
+	</where>
 	</select>
 	
 	<!-- 챌린지 상태별로 전체 조회 - 회원 -->
 	<select id="getChallList" resultType="ChallVO" parameterType="map">
-		SELECT chall_no
-		        , chall_title
-		        , chall_content
-		        , chall_startAt
-		        , chall_closeAt
-		        , chall_state
-		        , main_img
-		FROM chall
-		WHERE chall_state = #{challVO.challState}
-		<if test="challVO.challTitle != null and challVO.challTitle != ''.toString()">
-			AND chall_title like '%' || #{challVO.challTitle} || '%' 
-		</if>
-		ORDER BY chall_no DESC
+		SELECT b.* 
+		FROM (	
+		    SELECT ROWNUM r               
+		           , a.*
+		    FROM (
+		            SELECT chall_no
+		                    , chall_title
+		                    , chall_content
+		                    , chall_startAt
+		                    , chall_closeAt
+		                    , chall_state
+		                    , main_img
+		                    , to_date(chall_startAt,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd') AS d_day
+		            FROM chall
+					<where>
+						<if test="challState != null and challState != ''.toString()">
+							AND chall_state = #{challState}
+						</if>
+						<if test="keyword != null and keyword != ''.toString()">
+							AND chall_title like '%' || #{keyword} || '%' 
+						</if>
+					</where> 
+		            ORDER BY chall_no DESC
+		            ) a        
+ 				WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}         
+ 				) b 
+ 		WHERE r <![CDATA[ > ]]> (#{pageNum} - 1) * #{amount}
 	</select>
 	
-	<!-- 챌린지 개수 가져오기 -->
+	<!-- 챌린지 개수 가져오기 - 총개수 -->
 	<select id="countAllChallenges" resultType="int">
 		SELECT count(*)
 		FROM chall
 		WHERE chall_state = #{challState}
-		<if test="challTitle != null and challTitle != ''.toString()">
-			AND chall_title like '%' || #{challTitle} || '%' 
-		</if>
+	</select>
+	
+	<!-- 페이징때문 -->
+	<select id="getTotalByState" resultType="int">
+		SELECT count(*)
+		FROM chall
+		WHERE chall_state = #{challState}
+			<if test="challState != null and challState != ''.toString()">
+				AND chall_state = #{challState}
+			</if>
+			<if test="keyword != null and keyword != ''.toString()">
+				AND chall_title like '%' || #{keyword} || '%'
+			</if>
 	</select>
 	
 	<!-- 단건조회 - 관리자 -->
@@ -83,6 +114,56 @@
 		FROM chall
 		WHERE chall_no = #{challNo}
 	</select>
+	
+	<!-- 챌린지 D2에 참여한 인원 카운트 -->
+	<select id="enterUserCount" parameterType="int">
+		SELECT COUNT(e.user_no)
+		FROM chall c JOIN chall_enter e
+		            ON c.chall_no = e.chall_no
+		WHERE c.chall_state = 'D2'
+		AND c.chall_no = #{challNo}
+	</select>
+	
+	<!-- 챌린지 좋아요 개수 -->
+	<select id="challLikeTotalCnt" parameterType="int">
+		SELECT COUNT(*)
+		FROM chall_like
+		WHERE chall_no = #{challNo}
+	</select>
+	
+	<!-- 챌린지 좋아요 여부 -->
+	<select id="challLikeStatus" parameterType="int">
+		SELECT COUNT(*)
+		FROM chall_like
+		WHERE chall_no = #{challNo}
+		AND user_no = #{userNo}
+	</select>
+	
+	<!-- 챌린지 좋아요 등록 -->
+	<insert id="insertChallLike" parameterType="ChallVO">
+		<selectKey keyProperty="challLikeNo" 
+					resultType="Integer"
+					order="BEFORE">
+			SELECT NVL(MAX(chall_like_no), 0) + 1
+			FROM chall_like
+		</selectKey>
+		INSERT INTO chall_like(
+								chall_like_no
+								, user_no
+								, chall_no
+								)
+		VALUES (#{challLikeNo}
+				, #{userNo}
+				, #{challNo}
+				)
+	</insert>
+	
+	<!-- 챌린지 좋아요 삭제 -->
+	<delete id="deleteChallLike" parameterType="int">
+		DELETE FROM chall_like
+		WHERE user_no = #{userNo}
+		AND chall_no = #{challNo}
+	</delete>
 	
 	<!-- 등록 -->
 	<insert id="insertChallInfo" parameterType="ChallVO">
@@ -135,18 +216,151 @@
 		WHERE chall_no = #{challNo}
 	</delete>
 	
+	<!-- 점수 전체 조회 -->
 	<select id="selectScoreAll" resultType="Map">
-		SELECT DISTINCT s.score_no "scoreNo"
-				, f.user_no "userNo"
-				, c.chall_title "challTitle"
-				, s.confirm_count "confirmCount"
-				, TO_CHAR(c.chall_startAt, 'YYYY/MM/DD')|| ' - ' || TO_CHAR(c.chall_closeAt, 'YYYY/MM/DD') "term"
-				, s.confirm_count * 10 "score"
-		FROM score s JOIN chall c
+		SELECT b.* 
+		FROM (	
+		    SELECT ROWNUM r               
+		           , a.*	    
+		    FROM (
+		            SELECT DISTINCT s.score_no "scoreNo"
+		                    , f.user_no "userNo"
+		                    , c.chall_title "challTitle"
+		                    , s.confirm_count "confirmCount"
+		                    , TO_CHAR(c.chall_startAt, 'YYYY/MM/DD')|| ' - ' || TO_CHAR(c.chall_closeAt, 'YYYY/MM/DD') "term"
+		                    , s.confirm_count * 10 "score"
+		            FROM score s JOIN chall c
+		                           ON s.chall_no = c.chall_no            
+		                         JOIN chall_confirm f
+		                           ON s.user_no = f.user_no
+	            	<where>
+						<if test="challState != null and challState != ''.toString()">
+							AND chall_state = #{challState}
+						</if>
+						<if test="keyword != null and keyword != ''.toString()">
+							AND chall_title like '%' || #{keyword} || '%' 
+						</if>
+					</where> 
+		            ORDER BY s.score_no DESC
+		         ) a        
+		    WHERE ROWNUM <![CDATA[ <= ]]> #{pageNum} * #{amount}       
+		) b 
+		WHERE r <![CDATA[ > ]]> (#{pageNum} - 1) * #{amount}
+	</select>
+	
+	<!-- 점수 테이블 전체 개수 가져오기 -->
+	<select id="getScoreTotal" resultType="int">
+		SELECT COUNT(*)
+        FROM score s JOIN chall c
 		               ON s.chall_no = c.chall_no            
 		             JOIN chall_confirm f
 		               ON s.user_no = f.user_no
-		ORDER BY s.score_no DESC
+	<where>
+		<if test="challState != null and challState != ''.toString()">
+			AND chall_state = #{challState}
+		</if>
+		<if test="keyword != null and keyword != ''.toString()">
+			AND chall_title like '%' || #{keyword} || '%'
+		</if>
+	</where>
 	</select>
+	
+	<!-- 챌린지 목록에서 정렬 - 좋아요/참여중/최신날짜순 -->
+	<select id="orderByLike">
+		SELECT c.*
+		FROM chall c
+		LEFT JOIN (
+		    SELECT chall_no, COUNT(chall_like_no) AS like_count
+		    FROM chall_like
+		    GROUP BY chall_no
+		) cl ON c.chall_no = cl.chall_no
+		WHERE c.chall_state = 'D2'
+		ORDER BY COALESCE(cl.like_count, 0) DESC
+	</select>
+	
+	<select id="orderByEnter" parameterType="int">
+		SELECT c.*
+		FROM chall c
+		INNER JOIN chall_enter cp ON c.chall_no = cp.chall_no
+		WHERE cp.user_no = #{userNo}
+		AND c.chall_state = 'D2'
+	</select>
+	
+	<select id="orderByDate">
+		SELECT *
+		FROM chall
+		WHERE chall_state = 'D2'
+		ORDER BY chall_createAt DESC
+	</select>
+	
+	<!-- 후기 목록 -->
+	<select id="selectReviewAll" parameterType="ChallVO">
+		SELECT r.review_no
+		     , r.review_content
+		     , r.review_createAt
+		     , r.review_star
+		     , u.nickname
+		     , u.user_no
+		     , r.chall_no
+		     , u.profile_img
+		FROM chall_review r JOIN users u 
+		                        ON r.user_no = u.user_no
+		WHERE r.chall_no = #{challNo}
+		ORDER BY r.review_no DESC
+	</select>
+	
+	<!-- 후기 평균 별점 -->
+	<select id="getAvgStar">
+		SELECT ROUND(AVG(review_star), 1) AS avgStar
+        FROM chall_review
+        WHERE chall_no = #{challNo}
+	</select>
+	
+	<!-- 후기 등록 여부 -->
+	<select id="reviewStatus" parameterType="int">
+		SELECT COUNT(*)
+		FROM chall_review
+		WHERE chall_no = #{challNo}
+		AND user_no = #{userNo}
+	</select>
+	
+	<!-- 후기 등록 -->
+	<insert id="insertReview" parameterType="ReviewDTO">
+		<selectKey keyProperty="reviewNo"
+			resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(review_no), 0) + 1
+			FROM chall_review
+		</selectKey>
+		INSERT INTO chall_review(
+		                            review_no
+		                            , review_content
+		                            , review_createAt
+		                            , review_star
+		                            , user_no
+		                            , chall_no
+		                        )
+		VALUES (
+				#{reviewNo}
+				, #{reviewContent}
+				, SYSDATE
+				, #{reviewStar}
+				, #{userNo}
+				, #{challNo}
+				)
+	</insert>
+	
+	<!-- 후기 삭제하려고 후기 유저 번호 가져오기 -->
+	<select id="findUserNoByReviewNo" parameterType="int">
+		SELECT user_no
+		FROM chall_review
+		WHERE review_no = #{reviewNo}
+	</select>
+	
+	<!-- 후기 삭제 -->
+	<delete id="deleteReview" parameterType="int">
+		DELETE FROM chall_review
+		WHERE review_no = #{reviewNo}
+	</delete>
 	
 </mapper>

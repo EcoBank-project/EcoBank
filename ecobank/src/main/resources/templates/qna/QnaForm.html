@@ -6,31 +6,127 @@
 <head>
     <meta charset="UTF-8">
     <title>QNA 등록</title>
+    <!-- 스타일 정의 -->
+    <style>
+        .body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .form-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .input-text, .textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .button, .back-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .button:hover, .back-link:hover {
+            background-color: #218838;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container a {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-<body>
-    <h1>QNA 등록</h1>
+<body class="body">
+    <div class="container">
+        <h1 class="header">QNA 등록</h1>
 
-    <!-- 등록 폼 -->
-    <form th:action="@{/QnaForm}" method="post" th:object="${qnaVO}">
-        <div>
-            <label for="qnaTitle">제목:</label>
-            <input type="text" id="qnaTitle" name="qnaTitle" th:field="*{qnaTitle}" required>
-        </div>
-        <div>
-            <label for="qnaContent">내용:</label>
-            <textarea id="qnaContent" name="qnaContent" th:field="*{qnaContent}" required></textarea>
-        </div>
-        <div>
-            <input type="hidden" id="userNo" name="userNo" th:field="*{userNo}">
-        </div>
-        <button type="submit">등록</button>
-    </form>
+        <!-- 등록 폼 -->
+        <form th:action="@{/QnaForm}" method="post" th:object="${qnaVO}" class="form-container">
+            <div class="form-group">
+                <label for="qnaTitle" class="label">제목:</label>
+                <input type="text" id="qnaTitle" name="qnaTitle" th:field="*{qnaTitle}" class="input-text" required>
+            </div>
+            <div class="form-group">
+                <label for="qnaContent" class="label">내용:</label>
+                <textarea id="qnaContent" name="qnaContent" th:field="*{qnaContent}" class="textarea" required></textarea>
+            </div>
+            <div>
+                <input type="hidden" id="userNo" name="userNo" th:field="*{userNo}">
+            </div>
+            <div class="button-container">
+                <button type="submit" class="button">등록</button>
+            </div>
+        </form>
 
-    <!-- 오류 메시지 -->
-    <div th:if="${error}" style="color: red;">
-        <p th:text="${error}"></p>
+        <!-- 오류 메시지 -->
+        <div th:if="${error}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
+        
+        <div class="button-container">
+            <a href="#" th:href="@{/QnaUserList}" class="back-link">목록으로 돌아가기</a>
+        </div>
     </div>
-
-    <a href="#" th:href="@{/QnaUserList}">목록으로 돌아가기</a>
 </body>
 </html>

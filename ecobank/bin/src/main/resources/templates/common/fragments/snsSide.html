@@ -5,18 +5,14 @@
 <th:block xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="snsSideFragment">
-
-    		<div class="side">
-			
- 	
-				<a class="sideBtn btn btn-link" th:href="@{/snsP}">인기글</a>
-				<a class="sideBtn btn btn-link" th:href="@{/sns}">전체글</a>
-				<a class="sideBtn btn btn-link" th:href="@{/mySns}">My Feed</a>
-			    <a class="sideBtn btn btn-link" th:href="@{/snsSearch}">Search</a> 
-			    <a class="sideBtn btn btn-link" th:href="@{/snsInsert}">Insert</a>
-			    <a class="sideBtn btn btn-link" href="https://instagram.com">계정 연결</a>
-		
-		</div>
+      <div class="side">
+		<div class="sideL" th:classappend="${#request.requestURI == '/snsP'} ? 'sideAc' : ''" ><a class="sideBtn btn btn-link" th:href="@{/snsP}">인기글</a></div>
+		<div class="sideL" th:classappend="${#request.requestURI == '/sns'} ? 'sideAc' : ''" ><a class="sideBtn btn btn-link" th:href="@{/sns}">전체글</a></div>
+		<div class="sideL" th:classappend="${#request.requestURI == '/mySns'} ? 'sideAc' : ''" ><a class="sideBtn btn btn-link" th:href="@{/mySns}">My Feed</a></div>
+		<div class="sideL" th:classappend="${#request.requestURI == '/snsSearch'} ? 'sideAc' : ''" ><a class="sideBtn btn btn-link" th:href="@{/snsSearch}">Search</a></div> 
+		<div class="sideL" th:classappend="${#request.requestURI == '/snsInsert'} ? 'sideAc' : ''" ><a class="sideBtn btn btn-link" th:href="@{/snsInsert}">Insert</a></div>
+		<div class="sideL" th:classappend="${#request.requestURI == ''} ? 'sideAc' : ''" ><a class="sideBtn btn btn-link" href="https://instagram.com">계정 연결</a></div>
+	</div>
 </th:block>
 
 

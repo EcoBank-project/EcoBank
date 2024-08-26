@@ -1,12 +1,186 @@
-<html xmlns:th="https://www.thymeleaf.org/">
-<meta charset="UTF-8">
 <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 1000px;">
 	<h3 class="text-primary">Challenge Guide</h3>
 	<h1 class="mb-2">How To Challenge Yourself Everyday</h1>
 	<div class="detail-image">
 		<img th:src="@{/images/{img}(img=${detail.detailImg})}" alt="상세 이미지" style="object-fit: cover; width:1000px; height:800px">
+		<p>출처 : Designed by Freepik <b>or</b> Getty Images/게티이미지코리아</p>
 	</div>
-</div>
-</html>
+	<div class="container mt-5" th:if="${detail.challState} == 'D2'">
 	
-				
+	<!-- review -->
+	<section id="testimonials" class="testimonials section-bg">
+	  <div class="container" data-aos="fade-up">
+	    <div class="section-header">
+	      <h2>Challengers' reviews</h2>
+	      <div class="explain">
+	      <p>First, after the challenge,<br> Please write a review by pressing the write</p>
+	      <p>Second, for the review of the challenge, <br> Write a review after choosing a star rating.</p>
+	      <p>Third, your participation is very helpful <br> to the Challengers.</p>
+	      </div>
+	      <div style="padding-top:10px;">
+	        <button type="button" class="btn btn-primary" id="writeBtn">WRITE</button>
+	      </div>
+		<th:block th:if="${avg} != null">
+	      <hr/>
+          <p style="font-weight: bold;"> 에코뱅크 챌린저들이 남긴 후기의 평점은 ? </p>
+          	<p style="font-size: 30px; font-weight: bold;"><i class="bi bi-star-fill" th:text="' ' + ${avg} + ' 점'"></i></p>
+        </th:block>
+	    </div>
+		
+			<!-- 데이터가 있을 때 -->
+			<th:block th:if="${#lists.size(reviewList) > 0}">
+			    <!-- Slider main container -->
+			    <div class="swiper testimonial-carousel">
+			      <!-- Additional required wrapper -->
+			      <div class="swiper-wrapper">
+			        <!-- Slides -->
+			        <th:block th:each="review : ${reviewList}">
+			          <div class="swiper-slide">
+			            <div class="testimonial-wrap">
+			              <div class="testimonial-item">
+			              	<input type="hidden" th:value="${review.challNo}" id="cNo">
+			                <input type="hidden" th:value="${review.userNo}">
+			                <img th:src=@{/images/{filePath}(filePath=${review.profileImg})} alt="Profile Image" class="profile-img">
+			                <h3 th:text="${review.nickname}"></h3>
+			                <h4 th:text="${#dates.format(review.reviewCreateAt, 'yyyy/MM/dd')}"></h4>
+			                <div class="stars">
+			                  <!-- 채워진 별 표시 -->
+			                  <th:block th:if="${review.reviewStar >= 1}"><i class="bi bi-star-fill"></i></th:block>
+			                  <th:block th:if="${review.reviewStar >= 2}"><i class="bi bi-star-fill"></i></th:block>
+			                  <th:block th:if="${review.reviewStar >= 3}"><i class="bi bi-star-fill"></i></th:block>
+			                  <th:block th:if="${review.reviewStar >= 4}"><i class="bi bi-star-fill"></i></th:block>
+			                  <th:block th:if="${review.reviewStar == 5}"><i class="bi bi-star-fill"></i></th:block>
+			                  
+			                  <!-- 빈 별 표시 -->
+			                  <th:block th:if="${review.reviewStar < 5}"><i class="bi bi-star"></i></th:block>
+			                  <th:block th:if="${review.reviewStar < 4}"><i class="bi bi-star"></i></th:block>
+			                  <th:block th:if="${review.reviewStar < 3}"><i class="bi bi-star"></i></th:block>
+			                  <th:block th:if="${review.reviewStar < 2}"><i class="bi bi-star"></i></th:block>
+			                  <th:block th:if="${review.reviewStar < 1}"><i class="bi bi-star"></i></th:block>
+			                </div>
+			                <hr style="width: 100%; height: 5px; border: none;" />
+			                <p th:text="${review.reviewContent}"></p>
+			                <hr style="margin: 10px;" />
+			               	<button type="button" class="btn btn-secondary" id="reviewDelete" aria-label="Close" th:data-reviewno="${review.reviewNo}" th:if="${review.userNo} == ${userNo}">
+			               		Delete
+			               	</button>
+			              </div>
+			            </div>
+			          </div><!-- End swiper-slide -->
+			        </th:block>
+			      
+			    </div>
+			      <!-- If we need navigation buttons -->
+			      <div class="swiper-button-prev"></div>
+			      <div class="swiper-button-next"></div>
+			  </div>
+	  </th:block>
+	  
+	<!-- 데이터가 없을 때 -->
+	<th:block th:unless="${#lists.size(reviewList) > 0}">
+	    <tr>
+	        <td colspan="6" class="text-center">첫 리뷰를 작성해주세요.</td>
+	    </tr>
+	</th:block>
+	</section><!-- End Testimonials Section -->
+	<script>
+    //리뷰 등록 여부
+	    $('#writeBtn').click(function(event){
+    	event.preventDefault();
+    	
+    	let cNo = $('#cNo').val();
+    	console.log(cNo, "cno");
+    	$.ajax({
+    		url : '/reviewStatus',
+    		type : 'get',
+    		data : {
+    			challNo : cNo
+    		},
+    		success : function(isConfirmed) {
+				console.log("isConfirmed:", isConfirmed);
+				if (isConfirmed) {
+					alert("후기 작성이 이미 완료되었습니다.");
+					
+				}else{
+					reviewModal();
+				}
+			},
+			error : function(err) {
+				console.log(err);
+				alert("오류");
+			}
+    	})
+    });  
+		//리뷰 등록 모달창
+		function reviewModal(){
+			event.preventDefault();
+			
+			modal.style.display="block";
+		}
+		
+		//리뷰 모달
+		var modal = document.querySelector('.modal');
+	    	$('#btn-close').on('click', function(){
+	    		 modal.style.display="none";
+	    	}); 
+	    	
+	    //리뷰 등록
+	    $('#btn-review').click(function(){
+	    	$.ajax({
+	    		url : 'reviewInsert',
+	    		type : 'post',
+	    		data : $('#reviewStar').serialize(), //form태그안에 값 다 가져오려고
+	    		success : function(result){
+	    			console.log(result);
+	    			alert('리뷰 작성이 완료되었습니다.');
+	    			modal.style.display="none";
+	    			detailImg();
+	    			$('#reviewContent').val('');
+	    		},
+	    		error : function(err){
+	    			console.log(err);
+	    		}
+	    	})
+	    })
+	    
+	    //리뷰 삭제
+	    $(document).on('click', '#reviewDelete', function() {
+	    	let rNo = $(this).data('reviewno');
+	    	console.log(rNo,"리뷰넘버");
+	    	if(confirm('해당 리뷰 글을 삭제하겠습니까?')){
+		    	$.ajax({
+		    		url : 'reviewDelete',
+		    		type : 'post',
+		    		data : {
+		    			reviewNo : rNo
+		    		},
+		    		success : function(result){
+	    				if(result == 1){
+	    					alert('리뷰가 삭제되었습니다.');
+	    					detailImg();
+	    				}else{
+	    					alert('삭제 권한이 없습니다.');
+	    				}
+	    			},
+	    			error : function(err){
+	    				console.log(err);
+	    			}
+		    	})
+	    	}
+	    })	
+	
+		//리뷰 목록 스와이퍼
+		var swiper = new Swiper('.testimonial-carousel', {
+			slidesPerView : 1, //한 번에 하나의 슬라이드만 보여줌
+			spaceBetween : 30, //슬라이드 간 간격
+			loop : true, //슬라이드 반복
+			navigation : {
+				nextEl : '.swiper-button-next',
+				prevEl : '.swiper-button-prev',
+			},
+			autoplay : {
+				delay : 5000, //자동 슬라이드 속도 (밀리초 단위), 5초
+				disableOnInteraction : false, //사용자가 클릭해도 자동 슬라이드 유지
+			},
+		});
+	</script>	
