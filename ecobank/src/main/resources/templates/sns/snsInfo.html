@@ -217,7 +217,7 @@ input[type=radio]:checked + label{
 	height: 100%;
 }
 
-.profile-img {
+.profile-imgs {
 	width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -271,15 +271,6 @@ input[type=radio]:checked + label{
     width: 330px;
 }
 
-.profile{
-width: 50px;
-height: 50px;
-}
-
-.profile-img-reply{
-width: 30px;
-height: 30px;
-}
 .slider-container {
     position: relative;
     width: 100%;
@@ -307,10 +298,9 @@ height: 30px;
     position: relative;
 }
 
-img {
+.sns-img-fluid {
     max-width: 50%;
     height:400px;
-  
     display: block;
 }
 
@@ -352,55 +342,49 @@ img {
         	<div class="col-lg-12 d-flex align-items-center">
         		<div class="other">
         			<div th:text=${sns.userNo} hidden></div>
-            		<img  th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Profile Image" class="profile-img">
-            		
+            		<img  th:src=@{/images/{filePath}(filePath=${sns.profileImg})} alt="Profile Image" class="profile-imgs">
                 	<div style="display:inline-block;">
-                   	<h4 class="mb-1" th:text=${sns.nickname}></h4>
+                   		<h4 class="mb-1" th:text=${sns.nickname}></h4>
                		</div>
                		<div>
-               		<small class="text-muted" th:text="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}"></small>
+               			<small class="text-muted" th:text="${#dates.format(sns.feedCreateAt,'yyyy-MM-dd')}"></small>
                		</div>
                	</div>
                 <div class="ms-auto action-buttons">
 					<button type="button" th:data-userno="${sns.userNo}" class="followBtn btn btn-primary" th:if="${sns.followYn == null}  and ${sns.userNo} != ${session.userNo}">팔로우</button>
 					<button type="button" th:data-followno="${sns.followYn}" class="followCancleBtn btn btn-secondary" th:unless="${sns.followYn == null}">팔로잉</button>
 					<div th:if="${sns.userNo} == ${session.userNo}">
-						
 						<button type="button" class="btn btn-secondary" id="updateA">수정하기</button>
 						<button type="button" class="btn btn-danger" id="deleteA" >삭제하기</button>
-			
 					</div>
                 </div>
             </div>
         </div>
-    
-    <div class="container-xxl py-5">
-    <div class="container">
-        <input type="number" th:value="${sns.feedNo}" hidden>
-        <div class="slider-container">
-            <button class="prev-btn">&#10094;</button>
-            <div class="slider">
-                <div class="slider-wrapper wow fadeInUp" data-wow-delay="0.1s">
-                    <th:block th:each="file, sts : ${snsFileInfo}">
-                        <div class="slide">
-                            <img class="img-fluid"    style="width: 400px;  height:400px;"   th:src="@{/images/{filePath}(filePath=${file.filePath})}" alt="Slide Image">
-                        </div>
-                    </th:block>
-                </div>
-            </div>
-            <button class="next-btn">&#10095;</button>
-        </div>
-    </div>
-</div>
-    
-
+    	<!-- 이미지 -->
+	    <div class="container-xxl py-5">
+	    	<div class="container">
+		        <input type="number" th:value="${sns.feedNo}" hidden>
+		        <div class="slider-container">
+		            <button class="prev-btn">&#10094;</button>
+		            <div class="slider">
+		                <div class="slider-wrapper wow fadeInUp" data-wow-delay="0.1s">
+		                    <th:block th:each="file, sts : ${snsFileInfo}">
+		                        <div class="slide">
+		                            <img class="sns-img-fluid"    style="width: 400px;  height:400px;"   th:src="@{/images/{filePath}(filePath=${file.filePath})}" alt="Slide Image">
+		                        </div>
+		                    </th:block>
+		                </div>
+		            </div>
+		            <button class="next-btn">&#10095;</button>
+		        </div>
+		    </div>
+		</div>
         <!-- Confirm Content -->
         <div class="row mb-4">
         	<div class="col-lg-12">
     	        <div class="border p-4 bg-light rounded">
                 	<p class="mb-0"  th:text="${sns.feedContent}"></p>
                     <p class="mb-0"  th:text="${sns.hashtag}"></p>
-                    
                  </div>
              </div>
         </div>
@@ -421,35 +405,27 @@ img {
 			        	<i class="bi bi-share"></i>
 			        </button>
 		            <span class="ms-1">Share</span>
-		            
 			        <button class="btn btn-outline-danger ms-auto" th:onclick="declareModal('feed',[[${sns.feedNo}]])"  th:if="${sns.userNo} != ${session.userNo}">
 			        	<i class="declareModal bi bi-exclamation-triangle"  ></i>
 			        </button>
-			       
-
 				</div>
 			</div>
 		</div>
         <!-- Comments Section -->
-       
         <div class="row comment-section">
            	<div  class="col-lg-12 comment-list" >
            		<div id="commentList" >
-           		
-           					 <div class="replyArea">
-           					 
-           					 </div><!-- 댓글출력 -->
-           		
+           			<div class="replyArea">
+           				<!-- 댓글출력 -->
+           			</div>
+				</div>
 			</div>
-			   </div>
 			<div class="d-flex">
 				<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
                	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent" name="replyContent" required> </textarea>
                 <button type="button" id="writeBtn" style="margin-left:10px; height:60px;" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
              </div>
-          
 		</div>
-		
 		<!-- 모달영역 -->
  		<div class="modal">
        		<div class="modal_body">
@@ -467,46 +443,44 @@ img {
           		<button type="button"  class="btn btn-primary" id="btn-close" aria-label="Close">닫기</button>
         	</div>
     	</div>
-    	
     	<!-- 공유모달영역 -->
  		<div class="sModal">
        		<div class="sModal_body">
-            	<div class="inputleft">
+            	<div class="inputleft" style=" text-align:center;">
 		            <h4>공유하기</h4>
 		        	<hr style="width:100%;height:5px;border:none;"/>
-		        	<div class="mb-3">
+		        	<div class="mb-3" style="display: inline-block; ">
 			             <a type="btnTwitter" class="link-icon twitter" onclick="shareToTwitter()">
-		             <img src="./img/icon-twitter.png" alt="트위터 공유하기" style="width:40px; height: 40px;">
-		            </a>
+		             	<img src="./img/icon-twitter.png" alt="트위터 공유하기" style="width:40px; height: 40px; ">
+		            	</a>
 			            <a type="btnKakao" class="link-icon kakao" onclick="shareToKakao()">
-		             <img src="./img/icon-kakao.png" alt="카카오 공유하기" style="width:40px; height: 40px;">
-		            </a>
-		  	   <a type="btnNaver" class="link-icon naver" onclick="shareToNaver()">
-		             <img src="./img/icon-naver.png" alt="네이버 공유하기" style="width:40px; height: 40px;">
-		            </a>
-				</div>
+		            	<img src="./img/icon-kakao.png" alt="카카오 공유하기" style="width:40px; height: 40px;">
+		            	</a>
+		  	  			<a type="btnNaver" class="link-icon naver" onclick="shareToNaver()">
+		             	<img src="./img/icon-naver.png" alt="네이버 공유하기" style="width:40px; height: 40px;">
+		            	</a>
+					</div>
+        		</div>
           		<button type="button"  class="btn btn-primary" id="s-close" aria-label="Close">닫기</button>
-        	</div>
+    		</div>
     	</div>
-    </div>
-    </div>
+	</div>
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 	<script th:inline="javascript">
 		
 		let feedNo = $('#feedNo').val();
 		let replyNo = $('#replyNo').val();
 		let replyContent = $('#replyContent');
-	
 		let userNo = [[${session.userNo}]];
 		
 		 Kakao.init('7c62496966b3d918a5362dc448ca959d'); // 자신의 앱 키로 교체하세요
 
-	        function shareToTwitter() {
-	            const text = encodeURIComponent('EcoBank');
-	            const url = encodeURIComponent('http://localhost:8080');
-	            const twitterShareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-	            window.open(twitterShareUrl, 'twitter-share-dialog', 'width=800,height=600');
-	        }
+	     function shareToTwitter() {
+	     	const text = encodeURIComponent('EcoBank');
+	        const url = encodeURIComponent('http://localhost:8080');
+	        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+	        window.open(twitterShareUrl, 'twitter-share-dialog', 'width=800,height=600');
+	     }
 		 
 	        function shareToKakao() {
 	            Kakao.Link.sendDefault({
@@ -541,6 +515,7 @@ img {
 	            const naverShareUrl = `https://share.naver.com/web/shareView.nhn?url=${url}&title=${title}`;
 	            window.open(naverShareUrl, 'naver-share-dialog', 'width=800,height=600');
 	        }
+	        
 		//개인피드이동
 		$(".other").on('click', function(event) {
 			let uno = $(event.currentTarget).children().first().text();
@@ -602,8 +577,6 @@ img {
 				rContent.focus();
 				return false;
 			}
-			
-
 			return true;
 		}
 		
@@ -705,7 +678,7 @@ img {
 				output += "<div class='comment-item' >";
 				output +=`<div class="d-flex justify-content-between align-items-center">`;
 				output += `<div onclick="replyother(${list[i].userNo})" style="float:left;">`;
-				output += `<img src="/images/${list[i].profileImg}" alt="Profile Image" class="profile-img">`;
+				output += `<img src="/images/${list[i].profileImg}" alt="Profile Image" class="profile-imgs">`;
 				output += "<strong>" + list[i].nickname +"</strong>";
 				output += `</div>`;
 				output += `<input type="hidden" name="replyNo" value="${list[i].replyNo}">`;

@@ -105,7 +105,7 @@ textarea {
 	        const previewContainer = document.getElementById('imagePreview');
 	        previewContainer.innerHTML = '';
 	        for (let i = 0; i < files.length; i++) {
-	            if (files[i] && files[i].type.startsWith('image/')) {
+	            if (files[i] && files[i].type.startsWith('image/{filePath}(filePath=${sns.filePath})}')) {
 	                const reader = new FileReader();
 	                reader.onload = function(e) {
 	                    const img = document.createElement('img');
