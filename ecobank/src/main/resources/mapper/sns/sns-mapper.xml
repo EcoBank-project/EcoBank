@@ -26,7 +26,8 @@
               	WHERE follower_id=#{userNo} and following_id = s.user_no) as follow_yn
              ,(SELECT sns_like_no 
                  FROM sns_like
-            	WHERE feed_no=s.feed_no) as snslike_yn
+            	WHERE feed_no=s.feed_no
+            	  AND user_no=#{userNo}) as snslike_yn
              , (SELECT count(file_path)
                  FROM files
                 WHERE file_code_no = s.feed_no
@@ -72,7 +73,8 @@
               	  AND following_id = s.user_no) as follow_yn
              ,(SELECT sns_like_no 
                  FROM sns_like
-                WHERE feed_no=s.feed_no) as snslike_yn
+                WHERE feed_no=s.feed_no
+                  AND user_no=#{userNo}) as snslike_yn
              ,(SELECT count(file_path)
                  FROM files
                 WHERE file_code_no = s.feed_no
@@ -115,7 +117,8 @@
               	     AND following_id = s.user_no) as follow_yn
               	,(SELECT sns_like_no 
                     FROM sns_like
-            	   WHERE feed_no=s.feed_no) as snslike_yn
+            	   WHERE feed_no=s.feed_no
+            	     AND user_no=#{userNo}) as snslike_yn
 		FROM sns s JOIN users u 
 		             ON s.user_no = u.user_no
 		WHERE s.feed_no = #{feedNo} 
@@ -224,7 +227,8 @@
               	     AND following_id = s.user_no) as follow_yn
                 ,(SELECT sns_like_no 
                     FROM sns_like
-                   WHERE feed_no=s.feed_no) as snslike_yn
+                   WHERE feed_no=s.feed_no
+                     AND user_no=#{userNo}) as snslike_yn
                 ,(SELECT count(file_path)
                  	FROM files
                	   WHERE file_code_no = s.feed_no

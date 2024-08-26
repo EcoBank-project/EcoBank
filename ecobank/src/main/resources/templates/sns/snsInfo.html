@@ -473,40 +473,40 @@ input[type=radio]:checked + label{
 		let replyContent = $('#replyContent');
 		let userNo = [[${session.userNo}]];
 		
-		 Kakao.init('7c62496966b3d918a5362dc448ca959d'); // 자신의 앱 키로 교체하세요
+		Kakao.init('7c62496966b3d918a5362dc448ca959d'); // 자신의 앱 키로 교체하세요
 
-	     function shareToTwitter() {
-	     	const text = encodeURIComponent('EcoBank');
+	    function shareToTwitter() {
+	    	const text = encodeURIComponent('EcoBank');
 	        const url = encodeURIComponent('http://localhost:8080');
 	        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
 	        window.open(twitterShareUrl, 'twitter-share-dialog', 'width=800,height=600');
 	     }
 		 
-	        function shareToKakao() {
-	            Kakao.Link.sendDefault({
-	                objectType: 'feed',
-	                content: {
-	                    title: "Ecobank",
-	                    description: "Ecobank Sns",
-	                    imageUrl: '이미지 URL을 입력하세요',
-	                    link: {
-	                        webUrl: 'http://localhost:8080'
-	                    }
-	                },
-	                social: {
-	                    likeCount: 100,
-	                    commentCount: 200,
-	                    sharedCount: 300
-	                },
-	                buttons: [
-	                    {
-	                        title: '웹에서 보기',
-	                        link: {
-	                            webUrl: '공유할 웹 페이지의 URL을 입력하세요'
-	                        }
-	                    }
-	                ]
-	            });
+	     function shareToKakao() {
+	     	Kakao.Link.sendDefault({
+	        	objectType: 'feed',
+	            content: {
+	            title: "Ecobank",
+	            description: "Ecobank Sns",
+	            imageUrl: '이미지 URL을 입력하세요',
+	            link: {
+	            	webUrl: 'http://localhost:8080/snsInfo?feedNo='+feedNo
+	            	}
+	         	},
+		         social: {
+		         	likeCount: 100,
+		            commentCount: 200,
+		            sharedCount: 300
+		         },
+		         buttons: [
+		         	{
+		            	title: '웹에서 보기',
+		                link: {
+		                	webUrl: '공유할 웹 페이지의 URL을 입력하세요'
+		                }
+		           }
+		         ]
+		        });
 	        }
 
 	        function shareToNaver() {
