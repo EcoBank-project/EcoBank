@@ -22,7 +22,7 @@ public class SmsUtil {
 	@Value("${coolsms.api.secret}")
 	private String secret;
 	
-	@Value("${coolsms.sms.phoneNumber}")
+	@Value("${coolsms.fromnumber}")
 	private String phoneNum;
 	
     private DefaultMessageService messageService;
