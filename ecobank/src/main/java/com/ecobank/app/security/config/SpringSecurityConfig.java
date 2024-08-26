@@ -37,12 +37,13 @@ public class SpringSecurityConfig {
 
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        	http
         		.authorizeRequests(requests -> requests
                         .antMatchers("/css/**", "/js/**", "/img/**", "/lib/**").permitAll() // 정적 자원 허용
                         .antMatchers("/", "/login*", "/signup", "/user/**",
                                 "/about", "/find*", "/ip-info", "/set-country",
                                 "/reset_pw", "/introduce").permitAll() // 인증 필요 없는 경로
+                        .antMatchers("/admin*").hasRole("A2") // "/admin*"는 A2(ADMIN) 권한만 가능
                         .anyRequest().authenticated())
                 .formLogin(login -> login
                         .loginPage("/login") // 로그인 페이지 설정
@@ -57,8 +58,7 @@ public class SpringSecurityConfig {
                         .loginPage("/login") // 로그인 페이지 설정
                         .successHandler(googleAuthenticationSuccessHandler)
                         .userInfoEndpoint()
-                        .userService(customOAuth2UserService));
-        			
+                        .userService(customOAuth2UserService));	
         return http.build();
     }
 }
