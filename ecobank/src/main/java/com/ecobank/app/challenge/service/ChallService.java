@@ -26,6 +26,9 @@ public interface ChallService {
 	
 	//챌린지 D2에 참여한 인원 카운트
 	public int enterUserCount(int challNo);
+	
+	//챌린지 상태 가져오는 쿼리
+	public String getChallState(int challNo);
 
 	//챌린지 좋아요 전체 개수
 	public int challLikeCnt(int challNo);

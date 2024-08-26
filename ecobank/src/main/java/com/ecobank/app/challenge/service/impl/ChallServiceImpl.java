@@ -103,6 +103,12 @@ public class ChallServiceImpl implements ChallService{
 	public int enterUserCount(int challNo) {
 		return challMapper.enterUserCount(challNo);
 	}
+	
+	//챌린지 상태 가져오는 쿼리
+	@Override
+	public String getChallState(int challNo) {
+		return challMapper.getChallState(challNo);
+	}
 
 	//챌린지 좋아요 개수
 	@Override

@@ -131,7 +131,7 @@
 	    width: 300px;
 	    height: 300px;
 	}
-   .testimonial-carousel .owl-nav {
+   	.testimonial-carousel .owl-nav {
          top:120px;
 	}
 	
@@ -154,8 +154,8 @@
 	}
 	
 	.profile-img {
-	    width: 50px;
-	    height: 50px;
+	    width: 60px;
+	    height: 60px;
 	    border-radius: 50%;
 	    object-fit: cover;
 	    margin-right: 15px;
@@ -173,13 +173,13 @@
 	<div class="challenge-links">
 		<ul>
 			<li>
-				<a th:href="@{/ready}" id="ready" title="오픈 예정 챌린지">오픈 예정 챌린지</a> 
+				<a th:href="@{/ready}" id="ready" title="오픈 예정 챌린지" th:class="${status=='D1' ? 'active' : ''}">오픈 예정 챌린지</a> 
 			</li>
 			<li>
-				<a th:href="@{/progress}" id="progress" title="진행 중인 챌린지" >진행 중인 챌린지</a> 
+				<a th:href="@{/progress}" id="progress" title="진행 중인 챌린지" th:class="${status=='D2' ? 'active' : ''}">진행 중인 챌린지</a> 
 			</li>
 			<li>
-				<a th:href="@{/end}" id="end" title="종료된 챌린지" >종료된 챌린지</a> 
+				<a th:href="@{/end}" id="end" title="종료된 챌린지" th:class="${status=='D3' ? 'active' : ''}">종료된 챌린지</a> 
 			</li>
 		</ul>
     </div>
@@ -218,30 +218,35 @@
     </div>
 	<!-- About End -->
 	<div class="container-xxl py-5">
-		<div class="container">
-			<div class="row mt-n2 wow fadeInUp" data-wow-delay="0.3s">
-				<div class="col-12 text-center">
-					<ul class="list-inline mb-5" id="portfolio-flters">
-						<li class="mx-2 filter-item active" data-filter="*" id="detailImg">
-							<i class="bi bi-bookmark-heart"></i> <span>챌린지 상세 이미지</span>
-						</li>
-						<li class="mx-2 filter-item" data-filter=".first" id="myConfirm">
-							<i class="bi bi-cloud"></i> <span>나의 인증 내역</span>
-						</li>
-						<li class="mx-2 filter-item" data-filter=".second" id="myCalendar">
-							<i class="bi bi-calendar-check"></i> <span>나의 인증 캘린더</span>
-						</li>
-						<li class="mx-2 filter-item" data-filter=".third" id="others">
-							<i class="bi bi-clouds"></i> <span>참가자 인증 내역</span>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div id="contents">
-				<!-- 상세이미지/리뷰 -->
-			</div>
-		</div>
+	    <div class="container">
+	        <div class="row mt-n2 wow fadeInUp" data-wow-delay="0.3s">
+	            <div class="col-12 text-center">
+	                <ul class="list-inline mb-5" id="portfolio-flters">
+	                    <li class="mx-2 filter-item active" data-filter="*" id="detailImg">
+	                        <i class="bi bi-bookmark-heart"></i> <span>챌린지 상세 이미지</span>
+	                    </li>
+	                    <th:block th:if="${status == 'D2'}">
+	                        <li class="mx-2 filter-item" data-filter=".first" id="myConfirm">
+	                            <i class="bi bi-cloud"></i> <span>나의 인증 내역</span>
+	                        </li>
+	                        <li class="mx-2 filter-item" data-filter=".second" id="myCalendar">
+	                            <i class="bi bi-calendar-check"></i> <span>나의 인증 캘린더</span>
+	                        </li>
+	                    </th:block>
+	                    <th:block th:if="${status == 'D2' or status == 'D3'}">
+	                        <li class="mx-2 filter-item" data-filter=".third" id="others">
+	                            <i class="bi bi-clouds"></i> <span>참가자 인증 내역</span>
+	                        </li>
+	                    </th:block>
+	                </ul>
+	            </div>
+	        </div>
+	        <div id="contents">
+	            <!-- 상세이미지/리뷰 -->
+	        </div>
+	    </div>
 	</div>
+
 	<!-- 모달영역 -->
 	<div class="modal">
 		<div class="modal_body">

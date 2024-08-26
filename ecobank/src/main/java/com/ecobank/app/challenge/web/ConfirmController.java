@@ -150,7 +150,7 @@ public class ConfirmController {
 		model.addAttribute("reviewList", list);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("avg", avgStar);
-		System.out.println(list + "상세에 리뷰안에 뭐있는지 확인 - 여기에 다른 유저번호");
+		//System.out.println(list + "상세에 리뷰안에 뭐있는지 확인 - 여기에 다른 유저번호");
 		//System.out.println(userNo + "유저번호 뭔지 - 현재 접속한 유저 번호");
 		//System.out.println(avgStar + "평균 별점");
 		return "chall/review";
