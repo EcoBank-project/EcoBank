@@ -105,9 +105,9 @@ public class SnsServiceImpl implements SnsService{
 	
 	//마이피드 조회
 	@Override
-	public List<SnsVO> mySns(SnsVO snsVO) {
-		System.out.println("서비"+snsVO);
-		return snsMapper.selectMySns(snsVO);
+	public List<SnsVO> mySns(Integer userNo, Integer feedUser) {
+		
+		return snsMapper.selectMySns(userNo, feedUser);
 	}
 
 	//마이피드 세부 조회
