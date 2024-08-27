@@ -98,7 +98,7 @@ public class SnsReplyController {
 	
 	//파일 삭제
 	@DeleteMapping("deletesnsImg")
-	public int deleteFile(int feedNo) {
-		return fileService.deleteFile(feedNo);
+	public int deleteFile(int feedNo, int fileNo) {
+		return fileService.deleteFile(feedNo, fileNo);
 	}
 }

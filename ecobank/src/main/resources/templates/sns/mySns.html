@@ -227,7 +227,6 @@ li{
 			let url = '/snsInfo?feedNo=' + fno;
 			location.href = url;
 		});
-		
 		//개인피드이동
 		function replyother(rUserNo) {
 			console.log("dd")
@@ -269,7 +268,7 @@ li{
 					},
 					error :  function(error){
 						console.log(error);
-						alert("실패");
+						alert("좋아요 취소 실패");
 					}
 				});
 			});
@@ -285,7 +284,7 @@ li{
 				data : {userNo, followingId},
 				dataType : "json",
 				success : function(){
-					alert("팔로우 되었습니다.");
+					location.reload();
 				},
 				error :  function(error){
 					console.log(error);
@@ -304,11 +303,11 @@ li{
 				data : {followNo},
 				dataType : "json",
 				success : function(){
-					alert("팔로우취소 성공");
+					location.reload();
 				},
 				error :  function(error){
 					console.log(error);
-					alert("실패");
+					alert("팔로우 취소 실패");
 				}
 			});
 		});
@@ -358,11 +357,11 @@ li{
 				data : {snsBlockNo},
 				dataType : "json",
 				success : function(){
-					alert("차단취소 성공");
+					location.reload();
 				},
 				error :  function(error){
 					console.log(error);
-					alert("실패");
+					alert("차단 취소 실패");
 				}
 			});
 		})

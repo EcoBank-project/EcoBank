@@ -66,7 +66,6 @@ public class SnsServiceImpl implements SnsService{
 		if(result == 1) {
 			isSuccessed = true;
 		}
-		
 		map.put("result", isSuccessed); //map에 결과를 넣어줌(put)
 		map.put("target", snsVO);
 		
@@ -79,7 +78,7 @@ public class SnsServiceImpl implements SnsService{
 		//댓글삭제
 		snsMapper.deleteSnsReplyAll(SnsNo);
 		//파일삭제
-		fileMapper.deleteFileInfo(SnsNo);
+		fileMapper.deleteFileAll(SnsNo);
 		//sns지우기
 		return snsMapper.deleteSnsInfo(SnsNo);
 	}
@@ -106,7 +105,6 @@ public class SnsServiceImpl implements SnsService{
 	//마이피드 조회
 	@Override
 	public List<SnsVO> mySns(Integer userNo, Integer feedUser) {
-		
 		return snsMapper.selectMySns(userNo, feedUser);
 	}
 

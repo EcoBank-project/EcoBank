@@ -12,6 +12,7 @@
 		GROUP BY s.feed_no  
                  ,f.file_no
                  ,f.file_path
+        ORDER BY file_no desc
 	</select>
 	
 	<!-- 등록 -->
@@ -39,10 +40,16 @@
 			)
 	</insert>
 	
-	<!-- 수정 및 삭제 -->
-	<delete id="deleteFileInfo" parameterType="int">
+	<!-- 수정 시 단건 삭제 -->
+	<delete id="deleteFileInfo" parameterType="Map">
 		DELETE FROM files
 		WHERE file_code_no = #{feedNo} and file_code='J1' and file_no = #{fileNo} 
+	</delete>
+	
+	<!-- 전체삭제 -->
+	<delete id="deleteFileAll" parameterType="int">
+		DELETE FROM files
+		WHERE file_code_no = #{feedNo} and file_code='J1'
 	</delete>
 	
 	<!-- 나의 인증내역에 해당 인증게시글에 사진 하나만 불러오게 -->
