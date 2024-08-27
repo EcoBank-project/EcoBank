@@ -33,15 +33,13 @@ public interface ChatService {
 	public List<String> ChatUserList(Integer chatNo);
 	
 	// 채팅방 참가자 수
-	public int getUsersChatRoom(Integer chatNo);
+	public int getUsersChatRoom(Integer chatNo, ChatMessageVO message, String nickName);
 	// 채팅방 나가기
 	public int chatEntryUpdate(Integer userNo, Integer chatNo);
-	// 채팅방 삭제
-	public int chatRoomDelete(Integer chatNo);
-	// 채팅방 참여자 삭제
-	public int ChatPartDelete(Integer chatNo);
+	
 	// 채팅방 메시지 삭제
 	public int chatAllMessageDelete(Integer chatNo);
+	
 	// 채팅방 남은 아이디 조회
 	public List<String> chatLeaveUser(Integer userNo, Integer chatNo);
 	// 채팅방 방장 조회

@@ -54,7 +54,7 @@
                                 <a th:href="@{/SnsReplyDeclareList(feed_no=${adminSns.feedNo})}" class="btn btn-secondary btn-sm">댓글 보기</a>
                             </td>
                             <td class="text-center" th:text="${adminSns.declareNo}"></td>
-                            <td class="text-center" th:text="${adminSns.declareat}"></td>
+							<td class="text-center" th:text="${#dates.format(adminSns.declareat, 'yyyy/MM/dd')}"></td>
                             <td class="text-center" th:text="${adminSns.confirmUserNo}"></td>
                             <td class="text-center" th:text="${adminSns.declareCode}"></td>
                         </tr>

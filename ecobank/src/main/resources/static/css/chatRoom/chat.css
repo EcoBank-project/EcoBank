@@ -566,3 +566,35 @@ input:checked+.slider:before {
 	color: #FFFFFF;
 	text-decoration: underline;
 }
+
+
+/* .input-group {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    position: relative;
+    border: 1px solid #2f3136;
+}
+
+.file-button {
+	background-color: #32C36C;
+    color: white;
+    border: 1px;
+    border-radius: 50px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 18px; 
+}
+
+.file-button:hover {
+    background-color: #28a745; 
+}
+
+#file-upload {
+    display: none;
+} */

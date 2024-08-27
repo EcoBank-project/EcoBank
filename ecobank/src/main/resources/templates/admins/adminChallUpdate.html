@@ -22,7 +22,7 @@
 </style>
 </head>
 <body>
-	<div>
+	<div class="container mt-5">
 		<h3>챌린지 수정</h3>
 		<form name="updateForm" th:object="${challup}" enctype="multipart/form-data">
 			<input type="hidden" th:field="*{challNo}" id="cNo">
@@ -31,23 +31,23 @@
 			<table class="table">
 				<tr>
 					<th>제목</th>
-					<td><input type="text" th:field="*{challTitle}"></td>
+					<td><input type="text" style="width:720px;" th:field="*{challTitle}"></td>
 				</tr>
 				<tr>
 					<th>내용</th>
-					<td><textarea th:field="*{challContent}" cols="30" rows="5"></textarea></td>
+					<td><textarea th:field="*{challContent}" cols="100" rows="7"></textarea></td>
 				</tr>
 				<tr>
 					<th>메인 이미지</th>
 					<td>
-						<img th:src="@{'/images/' + ${challup.mainImg}}" alt="이미지" style="width:100px; height:100px"> 
+						<img th:src="@{'/images/' + ${challup.mainImg}}" alt="이미지" style="width:200px; height:200px"> 
 						<input type="file" name="images">
 					</td>
 				</tr>
 				<tr>
 					<th>상세 이미지</th>
 					<td>
-						<img th:src="@{'/images/' + ${challup.detailImg}}" alt="이미지" style="width:100px; height:100px"> 
+						<img th:src="@{'/images/' + ${challup.detailImg}}" alt="이미지" style="width:200px; height:200px"> 
 						<input type="file" name="images">
 					</td>
 				</tr>
