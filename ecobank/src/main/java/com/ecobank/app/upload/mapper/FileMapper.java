@@ -10,8 +10,11 @@ public interface FileMapper {
 	//등록
 	public int insertFileInfo(FileVO fileVO);
 	
-	//삭제
-	public int deleteFileInfo(int fileVO);
+	//파일 단건 삭제
+	public int deleteFileInfo(int feedNo, int fileNo);
+	
+	//게시글 삭제 할때 전체 삭제
+	public int deleteFileAll(int feedNo);
 	
 	//파일조회
 	public List<FileVO> selectSnsFileInfo(int feedNo);

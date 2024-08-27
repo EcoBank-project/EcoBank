@@ -10,8 +10,11 @@ public interface FileService {
 	public int insertFile(MultipartFile[] images, String fileCode, int fileCodeNo);
 
 	//삭제
-	public int deleteFile(int feedNo);
+	public int deleteFile(int feedNo, int fileNo);
 	
+	//게시글 삭제 할때 전체 삭제
+	public int deleteFileAll(int feedNo);
+		
 	//파일조회
 	public List<FileVO> selectFileInfo(int feedNo);
 	

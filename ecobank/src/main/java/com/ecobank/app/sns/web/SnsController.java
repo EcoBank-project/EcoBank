@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -111,23 +113,31 @@ public class SnsController {
 
 	// 수정 페이지
 	@GetMapping("snsUpdate")
-	public String snsUpdateForm(SnsVO snsVO, Model model) {
+	public String snsUpdateForm(SnsVO snsVO, FileVO fileVO, Model model) {
 		SnsVO findVO = snsService.snsInfo(snsVO);
 		List<FileVO> list  = fileService.selectFileInfo(snsVO.getFeedNo());
-		int delete = fileService.deleteFile(snsVO.getFeedNo());
+		//int delete = fileService.deleteFile(snsVO.getFeedNo(),fileVO.getFileNo());
 		model.addAttribute("snsInfo", findVO);
 		model.addAttribute("fileInfo", list);
-		model.addAttribute("filedelete", delete);
+		//model.addAttribute("filedelete", delete);
 		System.out.println("수정"+findVO);
 		System.out.println("이미지"+list);
-		System.out.println("삭제"+delete);
+		//System.out.println("삭제"+delete);
 		return "sns/snsUpdate";
 	}
 
 	// 수정 처리
 	@PostMapping("snsUpdate")
 	@ResponseBody
-	public Map<String, Object> snsUpdateAJAXJSON(@RequestBody SnsVO snsVO) {
+	public Map<String, Object> snsUpdateAJAXJSON(@ModelAttribute SnsVO snsVO, 
+			                                     @RequestPart(value="image",required=false) MultipartFile[] images) {
+		String snsCode = "J1";
+		int snsNum = snsVO.getFeedNo();
+		if(images != null) {
+			fileService.insertFile(images, snsCode, snsNum); // 피드번호
+		}
+		System.out.println("피드번호"+snsNum);
+		System.out.println("이미지"+images);
 		return snsService.updateSns(snsVO);
 	}
 
@@ -156,10 +166,6 @@ public class SnsController {
 		List<SnsVO> followerList = snsService.followerInfo(snsVO);
 		List<SnsVO> followingList = snsService.followingInfo(snsVO);
 		List<SnsVO> blockList = snsService.blockInfo(snsVO);
-		System.out.println("확인1"+findVO);
-		System.out.println("확인2"+followerList);
-		System.out.println("확인3"+followingList);
-		System.out.println("확인4"+blockList);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("mySns", list);
 		model.addAttribute("countMySns", findVO);
@@ -176,16 +182,10 @@ public class SnsController {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		Integer result = snsService.selectFollow(userNo, snsVO.getUserNo());
 		List<SnsVO> list = snsService.mySns(snsVO.getUserNo(), userNo);
-		System.out.println("확인 ㄱㄱ"+userNo); //feeduser
 		SnsVO findVO = snsService.countMySns(snsVO);
 		model.addAttribute("userSns", list);
 		model.addAttribute("countMySns", findVO);
 		model.addAttribute("followCheck", result);
-		
-		System.out.println("확인1"+userNo); //나번호
-		System.out.println("확인2"+result);
-		System.out.println("확인2"+findVO);
-		System.out.println("확인3"+list);
 	
 		if(userNo == findVO.getUserNo()) {
 			return "sns/mySns";

@@ -579,40 +579,69 @@ input[type=radio]:checked + label{
 			}
 			return true;
 		}
-		
+	
 		//게시글 삭제
 		$('#deleteA').on('click', function(){
-			if(confirm("정말 삭제하시겠습니까 ?") == true){   
-				$.ajax({
-					 url:"snsDelete?feedNo="+feedNo,
-					 type: 'GET',
-					 success: function(result) {
-			    	  	 alert("삭제되었습니다");
-			    	  	 location.href="sns";
-					 },
-					 error: function(error) {
-						  console.log(error);
-					      alert('삭제가 실패되었습니다');
-					 }
-				});	
-			}
+			
+			Swal.fire({
+	              title: "정말 삭제하시겠습니까?",
+	              icon: 'warning',
+	              showDenyButton: true,
+	              confirmButtonText: "네",
+	              denyButtonText: `아니요`,
+	              confirmButtonColor: "#32C36C", 
+	            }).then((result) => {
+	              /* Read more about isConfirmed, isDenied below */
+	              if (result.isConfirmed) {
+	          		$.ajax({
+						 url:"snsDelete?feedNo="+feedNo,
+						 type: 'GET',
+						 success: function(result) {
+							 Swal.fire({
+						            icon: 'success',              // Alert 타입
+						            title: '삭제되었습니다.',
+						            confirmButtonColor: "#32C36C", // Alert 제목
+						        }).then(function(){
+						        	location.href='sns';
+						 })
+						 },
+						 error: function(error) {
+							  console.log(error);
+						      alert('삭제가 실패되었습니다');
+						 }
+					});	
+	              } 
+	            });
+			
+			
 		});
 	
 		//게시글수정
 		$('#updateA').on('click', function(){
-			if(confirm("수정하시겠습니까 ?") == true){   
-				$.ajax({
-					 url:"snsUpdate?feedNo="+feedNo,
-					 type: 'GET',
-					 success: function(result) {
-			    	  	 location.href="snsUpdate?feedNo="+feedNo;
-					 },
-					  error: function(error) {
-						  console.log(error);
-					      alert('수정에 실패되었습니다');
-					 }
-				});	
-			}
+			Swal.fire({
+	              title: "수정하시겠습니까?",
+	              icon: 'warning',
+	              showDenyButton: true,
+	              confirmButtonText: "네",
+	              denyButtonText: `아니요`,
+	              confirmButtonColor: "#32C36C", 
+	            }).then((result) => {
+	              /* Read more about isConfirmed, isDenied below */
+	              if (result.isConfirmed) {
+	          		$.ajax({
+						 url:"snsUpdate?feedNo="+feedNo,
+						 type: 'GET',
+						 success: function(result) {
+				    	  	 location.href="snsUpdate?feedNo="+feedNo;
+						 },
+						  error: function(error) {
+							  console.log(error);
+						      alert('수정에 실패되었습니다');
+						 }
+					});	
+	              } 
+	            });
+	
 		});
 		
 		// ajax로 댓글 불러오기
@@ -655,20 +684,36 @@ input[type=radio]:checked + label{
 		
 		//댓글 삭제
 		function deleteBtn(replyNo){
-			if(confirm("정말 삭제하시겠습니까 ?") == true){   
-				$.ajax({
-					 url:"snsReply?replyNo=" + replyNo,
-					 type: 'delete',
-					 data: {replyNo},
-					 success: function(result) {
-					     	  	 alert("댓글이 삭제되었습니다");
-					        	 location.reload();
-					        	},
-					  error: function() {
-					          	alert('댓글 삭제가 실패되었습니다');
-					          	}
-				});		
-			};
+			Swal.fire({
+	              title: "댓글을 삭제하시겠습니까?",
+	              icon: 'warning',
+	              showDenyButton: true,
+	              confirmButtonText: "네",
+	              denyButtonText: `아니요`,
+	              confirmButtonColor: "#32C36C", 
+	            }).then((result) => {
+	              /* Read more about isConfirmed, isDenied below */
+	              if (result.isConfirmed) {
+	          		$.ajax({
+						 url:"snsReply?replyNo=" + replyNo,
+						 type: 'delete',
+						 data: {replyNo},
+						 success: function(result) {
+							 Swal.fire({
+						            icon: 'success',              // Alert 타입
+						            title: '댓글이 삭제되었습니다.', 
+						            confirmButtonColor: "#32C36C", // Alert 제목
+						        }).then(function(){
+						        	 location.reload();
+								 })
+						  },
+						  error: function() {
+					       	alert('댓글 삭제가 실패되었습니다');
+						 }
+					});	
+	              } 
+	            });
+
 		}
 		
 		//댓글목록 출력
@@ -729,10 +774,8 @@ input[type=radio]:checked + label{
 		
 		function sModal(state, stateNo){
 			event.preventDefault();
-			
 			shModal.style.display="block";
 			console.log(state);
-		
 		}
 			
 		$('#s-close').on('click', function(){
@@ -743,9 +786,6 @@ input[type=radio]:checked + label{
 		let declareId = [[${snsDeclare}]];
 		function getDeclare() {
 			let codeId = "";
-			console.log('id',declareId);
-			console.log('rno',replyNo);
-			console.log('fno',feedNo);
 			$('.radioBtn').each(function(){
 			  if($(this).is(":checked")){
 				    codeId=$(this).val();
@@ -758,8 +798,13 @@ input[type=radio]:checked + label{
 				url : "declareInsert?feedNo="+feedNo +"&replyNo=" +replyNo,
 				data : {feedNo, replyNo, userNo, codeId},
 				success : function(list){
-					 alert("해당글이 신고되었습니다.");
-					 location.href="sns";
+					Swal.fire({
+			            icon: 'success',              // Alert 타입
+			            title: '신고되었습니다.',         // Alert 제목
+			            confirmButtonColor: "#32C36C", 
+			        }).then(function(){
+			        	location.href='sns';
+					 })
 				},
 				error :  function(error){
 					console.log('에러',error);
@@ -820,7 +865,6 @@ input[type=radio]:checked + label{
 					data : {userNo, followingId},
 					dataType : "json",
 					success : function(){
-						alert("팔로우 성공");
 						location.reload();
 					},
 					error :  function(error){
@@ -842,7 +886,7 @@ input[type=radio]:checked + label{
 				data : {followNo},
 				dataType : "json",
 				success : function(){
-					alert("팔로우취소 성공");
+					location.reload();
 				},
 				error :  function(error){
 					console.log(error);

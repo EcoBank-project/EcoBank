@@ -93,8 +93,14 @@ public class FileServiceImpl implements FileService{
 		
 		//sns 사진 삭제
 		@Override
-		public int deleteFile(int feedNo) {
-			return fileMapper.deleteFileInfo(feedNo);
+		public int deleteFile(int feedNo, int fileNo) {
+			return fileMapper.deleteFileInfo(feedNo, fileNo);
+		}
+		
+		//sns 사진 전체 삭제
+		@Override
+		public int deleteFileAll(int feedNo) {
+			return fileMapper.deleteFileAll(feedNo);
 		}
 
 		@Override
@@ -131,5 +137,6 @@ public class FileServiceImpl implements FileService{
 		public int confirmFileDelete(int confirmNo) {
 			return fileMapper.deleteConfirmFileInfo(confirmNo);
 		}
+
 		
 }

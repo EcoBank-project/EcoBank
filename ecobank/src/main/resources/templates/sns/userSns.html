@@ -171,7 +171,7 @@
 				},
 				error :  function(error){
 					console.log(error);
-					alert("실패");
+					alert("좋아요 취소 실패");
 				}
 			});
 		});
@@ -189,7 +189,6 @@
 					if (typeof sendAlarm === "function") {
 						sendAlarm('H5', followingId);
 	                } 
-					alert("팔로우 성공");
 					location.reload();
 				},
 				error :  function(error){
@@ -209,7 +208,6 @@
 				data : {followNo},
 				dataType : "json",
 				success : function(){
-					alert("팔로우취소 성공");
 					location.reload();
 				},
 				error :  function(error){
@@ -229,7 +227,6 @@
 				data : {userNo, blockUserNo},
 				dataType : "json",
 				success : function(){
-					alert("차단 성공");
 					location.href="sns";
 					
 				},
