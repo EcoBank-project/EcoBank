@@ -43,6 +43,13 @@ public class ChatRoomController {
 		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo, nickName);
 		String lagCode = chatService.laguageCodeSelect(userId);
 		
+		//번역
+//		for(ChatRoomVO chat : chatList) {
+//			// 채팅방
+//			String translatedText = chatService.translateMessage(chat.getChatName(), lagCode);
+//			String decodedText = decodeHtmlEntities(translatedText);
+//			chat.setChatName(decodedText);
+//		}
 		
 		ChatRoomUserVO chatRoomUser = chatService.ChatProfileInfo(userNo);
 		model.addAttribute("userNo", userNo);
@@ -64,12 +71,22 @@ public class ChatRoomController {
 			return "redirect:/chatRoom";
 		}
 		
+		
+		
 		List<ChatRoomVO> chatList = chatService.chatRoomList(userNo, nickName);
 		String lagCode = chatService.laguageCodeSelect(userId);
 		String chatType = chatRoom.getChatType();
 		String chatName = chatRoom.getChatName();
 		
 		ChatRoomUserVO chatRoomUser = chatService.ChatProfileInfo(userNo);
+		
+		//번역
+//		for(ChatRoomVO chat : chatList) {
+//			// 채팅방
+//			String translatedText = chatService.translateMessage(chat.getChatName(), lagCode);
+//			String decodedText = decodeHtmlEntities(translatedText);
+//			chat.setChatName(decodedText);
+//		}
 		
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("chatType", chatType);
@@ -88,13 +105,18 @@ public class ChatRoomController {
 	public List<ChatMessageVO> ChatRoom(HttpSession httpSession, @RequestParam Integer roomId) {
 		List<ChatMessageVO> msgList = chatService.chatMessageList(roomId);
 		//메시지 번역
-//		String userId = (String) httpSession.getAttribute("useId");
-//		String lagCode = chatService.laguageCodeSelect(userId);
-//		for(ChatMessageVO msg : msgList) {
+		String userId = (String) httpSession.getAttribute("useId");
+		String lagCode = chatService.laguageCodeSelect(userId);
+		for(ChatMessageVO msg : msgList) {
+//			//메시지
 //			String translatedText = chatService.translateMessage(msg.getMsgContent(), lagCode);
 //			String decodedText = decodeHtmlEntities(translatedText);
 //			msg.setMsgContent(decodedText);
-//		}
+//			//닉네임
+//			translatedText = chatService.translateMessage(msg.getNickName(), lagCode);
+//			decodedText = decodeHtmlEntities(translatedText);
+//			msg.setNickName(decodedText);
+		}
 		
 		return msgList;
 	}

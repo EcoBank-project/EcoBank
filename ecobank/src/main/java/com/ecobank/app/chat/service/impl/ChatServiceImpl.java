@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,11 +38,13 @@ public class ChatServiceImpl implements ChatService{
 	
 	private ChatMapper chatMapper;
 	private final Translate translate;
+	private SimpMessagingTemplate messagingTemplate;
 	
 	@Autowired
-	ChatServiceImpl(ChatMapper chatMapper, Translate translate) {
+	ChatServiceImpl(ChatMapper chatMapper, Translate translate, SimpMessagingTemplate messagingTemplate) {
 		this.chatMapper = chatMapper;
 		this.translate = translate;
+		this.messagingTemplate = messagingTemplate;
 	}
 	// 채팅방 목록 조회
 	@Override
@@ -179,8 +183,30 @@ public class ChatServiceImpl implements ChatService{
 	
 	// 채팅방 참여자 숫자 조회
 	@Override
-	public int getUsersChatRoom(Integer chatNo) {
+	public int getUsersChatRoom(Integer chatNo, ChatMessageVO message, String nickName) {
 		int result = chatMapper.selectUsersChatRoom(chatNo);
+		if(result < 1) {
+			// 채팅방에 아무도 없을 경우
+
+			// 채팅방 메시지 삭제
+			chatMapper.deleteAllMessage(chatNo);
+			// 채팅방 참여자 삭제
+			chatMapper.deleteChatPart(chatNo);
+			// 채팅방 삭제
+			chatMapper.deleteChatRoom(chatNo);
+		
+			messagingTemplate.convertAndSendToUser(nickName, "/queue/chatList", message);
+		}else {
+			// 채팅방 나가는 메시지 저장
+			chatMapper.insertChatMessage(message);
+			message.setForMatTime(formatMessageDate(message.getMsgSendTime()));
+			// 채팅방 남은 사람에게 메시지
+			messagingTemplate.convertAndSendToUser(nickName, "/queue/chatList", message);
+			List<String> receiverIds = chatMapper.selectLeaveUser(message.getUserNo(), chatNo);
+			for(String receiverId : receiverIds) {
+				messagingTemplate.convertAndSendToUser(receiverId, "/queue/leaveChatRoom", message);
+			}
+		}
 		return result;
 	}
 	// 채팅방 참여자 나가기
@@ -188,19 +214,12 @@ public class ChatServiceImpl implements ChatService{
 	public int chatEntryUpdate(Integer userNo, Integer chatNo) {
 		return chatMapper.updateChatEntry(userNo, chatNo);
 	}
-	// 채팅방 삭제
-	@Override
-	public int chatRoomDelete(Integer chatNo) {
-		return chatMapper.deleteChatRoom(chatNo);
-	}
-	// 채팅방 참여자 삭제
-	@Override
-	public int ChatPartDelete(Integer chatNo) {
-		return chatMapper.deleteChatPart(chatNo);
-	}
+
 	// 채팅방 메시지 전부 삭제
 	@Override
 	public int chatAllMessageDelete(Integer chatNo) {
+		chatMapper.deleteAllMessage(chatNo);
+		chatMapper.deleteChatPart(chatNo);
 		return chatMapper.deleteAllMessage(chatNo);
 	}
 	// 채팅방 남은 사람 조회
