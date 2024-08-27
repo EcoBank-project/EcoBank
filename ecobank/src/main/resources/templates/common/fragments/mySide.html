@@ -1,28 +1,65 @@
 <!DOCTYPE html>
 <th:block xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	th:fragment="mySideFragment">
-	<div class="my-side">
-		<p class="my-side-ul">챌린지</p>
-		<ul>
-			<li><a class="sideBtn btn btn-link" th:href="@{/ongoingChall}">진행중인 챌린지</a></li>
-			<li><a class="sideBtn btn btn-link" th:href="@{/exitChall}">완료한 챌린지</a></li>
-		</ul>
-		<p class="my-side-ul">내 정보 관리</p>
-		<ul>
-			<li><a class="sideBtn btn btn-link" th:href="@{/userEdit}">회원정보수정</a></li>
-			<li><a class="sideBtn btn btn-link" th:href="@{/userDel}">회원탈퇴</a></li>
-		</ul>
-	</div>
-<style>
-.my-side-ul {
- font-size : 30px;
- font-weight : bold;
-}
-.my-side {
-    width: 250px;
-    border-right: 2px solid #ddd; /* 오른쪽 구분선 추가 */
-    padding-right: 20px; /* 오른쪽 여백 추가 (구분선과 콘텐츠 간격 조정) */
-    box-sizing: border-box; /* 패딩과 보더를 포함한 전체 너비 계산 */}
-</style>
+          xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+          th:fragment="mySideFragment">
+    <div class="my-side">
+        <p class="my-side-ul">챌린지</p>
+        <ul>
+            <!-- 진행중인 챌린지 -->
+            <li>
+                <a class="sideBtn btn btn-link" 
+                   th:href="@{/ongoingChall}" 
+                   th:classappend="${#httpServletRequest.requestURI.contains('/ongoingChall')} ? 'active' : ''">
+                    진행중인 챌린지
+                </a>
+            </li>
+            <!-- 완료한 챌린지 -->
+            <li>
+                <a class="sideBtn btn btn-link" 
+                   th:href="@{/exitChall}" 
+                   th:classappend="${#httpServletRequest.requestURI.contains('/exitChall')} ? 'active' : ''">
+                    완료한 챌린지
+                </a>
+            </li>
+        </ul>
+
+        <p class="my-side-ul">내 정보 관리</p>
+        <ul>
+            <!-- 회원정보수정 -->
+            <li>
+                <a class="sideBtn btn btn-link" 
+                   th:href="@{/userEdit}" 
+                   th:classappend="${#httpServletRequest.requestURI.contains('/userEdit')} ? 'active' : ''">
+                    회원정보수정
+                </a>
+            </li>
+            <!-- 회원탈퇴 -->
+            <li>
+                <a class="sideBtn btn btn-link" 
+                   th:href="@{/userDel}" 
+                   th:classappend="${#httpServletRequest.requestURI.contains('/userDel')} ? 'active' : ''">
+                    회원탈퇴
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <style>
+        .my-side-ul {
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .my-side {
+            width: 250px;
+            border-right: 2px solid #ddd;
+            padding-right: 20px;
+            box-sizing: border-box;
+        }
+    
+        .active {
+            font-weight: bold;
+            color: #007bff;
+            
+        }
+    </style>
 </th:block>

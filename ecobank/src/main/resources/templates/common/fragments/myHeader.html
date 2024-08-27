@@ -10,7 +10,7 @@
 				<img src="" alt="기본 이미지" class="profile-image" />
 			</div>
 			<div class="user-info">
-				<p>
+				<p class="nickname2">
 					<span class="nickname" th:text="${session.nickname}"></span>님의
 					마이페이지
 				</p>
@@ -169,13 +169,14 @@ ul li img {
 
 .user-info .nickname {
 	font-weight: 700;
-	font-size: 22px;
+	font-size: 34px;
 	color: black; 
 	background-color: rgba(255, 255, 255, 0.1); 
 	padding: 6px 12px;
 	border-radius: 8px; 
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 
 .user-info .nickname:hover {
 	background-color: rgba(255, 255, 255, 0.3); 
@@ -195,13 +196,13 @@ ul li img {
 }
 
 .info-label {
-	font-size: 14px;
+	font-size: 27px;
 	margin: 0;
 	color: rgba(255, 255, 255, 0.7);
 }
 
 .info-value {
-	font-size: 20px;
+	font-size: 33px;
 	font-weight: bold;
 	margin: 0;
 	color: #fff;
