@@ -22,12 +22,14 @@
 	margin-bottom: 20px; /* Space between title and cards */
 	text-align: center; /* Center-align title text */
 }
+
 .no-challenge-message {
 	font-size: 1.5em;
 	color: #777;
 	margin-top: 20px;
 	text-align: center;
 }
+
 .challenge-card-container {
 	display: flex;
 	flex-wrap: wrap;
@@ -330,14 +332,24 @@ $('.confirmBtn').click(function(event) {
         success: function(isConfirmed) {
             console.log("isConfirmed:", isConfirmed);
             if (isConfirmed) {
-                alert("이미 오늘 인증되었습니다.");
+                Swal.fire({
+                    title: '인증 완료',
+                    text: '이미 오늘 인증되었습니다.',
+                    icon: 'info',
+                    confirmButtonText: '확인'
+                });
             } else {
                 location.href = 'confirmInsert?challNo=' + cNo;
             }
         },
         error: function(err) {
             console.log(err);
-            alert("인증 오류");
+            Swal.fire({
+                title: '오류 발생',
+                text: '인증 오류가 발생했습니다.',
+                icon: 'error',
+                confirmButtonText: '확인'
+            });
         }
     });
 });
@@ -359,14 +371,24 @@ $('.writeBtn').click(function(event) {
         success: function(isConfirmed) {
             console.log("isConfirmed:", isConfirmed);
             if (isConfirmed) {
-                alert("후기 작성이 이미 완료되었습니다.");
+            	Swal.fire({
+                    title: '후기 작성 완료',
+                    text: '이미 후기를 작성하셨습니다.',
+                    icon: 'info',
+                    confirmButtonText: '확인'
+                });
             } else {
                 reviewModal(); // 모달 열기
             }
         },
         error: function(err) {
             console.log(err);
-            alert("오류");
+            Swal.fire({
+                title: '오류 발생',
+                text: '후기 작성 중 오류가 발생했습니다.',
+                icon: 'error',
+                confirmButtonText: '확인'
+            });
         }
     });
 });
@@ -378,25 +400,55 @@ $('.cancleBtn').click(function(event){
 	let cNo = $(this).closest('.challenge-card').find('.cNo').val();
     let userNo = [[${session.userNo}]];
 
-	$.ajax({
-		url : '/cancelChallenge',
-		type: 'POST',
-		data : {
-			challNo : cNo,
-			userNo : userNo
-		},
-		success: function(response) {
-            alert("챌린지가 성공적으로 취소되었습니다.");
-            location.reload();  // 페이지를 새로고침하여 변경사항을 반영
-        },
-        error: function(err) {
-            console.log(err);
-            alert("챌린지 취소 오류");
-        }
-		
-	})
+    Swal.fire({
+        title: '정말 포기하시겠습니까?',
+        text: "이 작업은 되돌릴 수 없습니다!",
+        icon: 'warning',
+        showCancelButton: true,  // 취소 버튼 표시
+        confirmButtonColor: '#dc3545',  // 확인 버튼 색상 (빨간색)
+        cancelButtonColor: '#007bff',   // 취소 버튼 색상 (파란색)
+        confirmButtonText: '네',
+        cancelButtonText: '아니오'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 사용자가 '네'를 선택한 경우
+            $.ajax({
+                url: '/cancelChallenge',
+                type: 'POST',
+                data: {
+                    challNo: cNo,
+                    userNo: userNo
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: '취소됨',
+                        text: '챌린지가 성공적으로 취소되었습니다.',
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    }).then(() => {
+                        location.reload();  // 페이지 새로고침
+                    });
+                },
+                error: function(err) {
+                    console.log(err);
+                    Swal.fire({
+                        title: '오류 발생',
+                        text: '챌린지 취소 중 오류가 발생했습니다.',
+                        icon: 'error',
+                        confirmButtonText: '확인'
+                    });
+                }
+            });
+        } else {
+            // 사용자가 '아니오'를 선택한 경우
+            Swal.fire({
+                title: '취소',
+                text: '취소되었습니다.',
+                icon: 'info',
+                confirmButtonText: '확인'
+            });
+}})
 })
-
 // 리뷰 모달 열기
 function reviewModal() {
     $('.modal-review').css('display', 'block');
