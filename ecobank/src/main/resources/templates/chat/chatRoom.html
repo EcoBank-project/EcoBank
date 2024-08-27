@@ -96,15 +96,14 @@
 							<div class="chatbox" id="chatbox"></div>
 						</div>
 						<!-- 메시지 입력 -->
-						<div class="input-group mt-3">
-							<input type="text" class="form-control" placeholder="메시지..." id="message" th:onkeydown="enterKeyDown(event, [[${userNo}]])">
-							<!-- <label for="file-upload" class="file-button">
+						<div class="input-message">
+							<label for="file-upload" class="file-button">
 				                <i class="fas fa-file-upload"></i>
 				                <input type="file" id="file-upload" />
-				            </label> -->
+				            </label>
+							<input type="text" class="message-input" placeholder="메시지..." id="message" th:onkeydown="enterKeyDown(event, [[${userNo}]])">
 							<div class="input-group-append">
-								<button class="btn btn-primary" type="button"
-									th:onclick="sendMessage([[${userNo}]])">보내기</button>
+								<button class="btn btn-primary" type="button" th:onclick="sendMessage([[${userNo}]])">보내기</button>
 							</div>
 						</div>
 					</div>
@@ -1021,6 +1020,7 @@
 	
 	// 오픈 채팅 업데이트
 	$('#OpenChatUpdateBtn').on('click', function(evnet){
+		let oldName = $('#roomName').text();
 		let chatNo = currentRoomId;
 		let chatName = $('#openChatNameUpdate').val();
         let passWord = $('#openChatPasswordUpdate').val();
@@ -1035,6 +1035,7 @@
         formData.append('chatSearchAllow', allowSearch);
         formData.append('chatType', 'O3');
         
+        
         if (fileInput.files.length > 0) {
             formData.append('image', fileInput.files[0]);
         } 
@@ -1047,21 +1048,13 @@
             processData: false,
             success: function(result) {
             	allClose();
-                $.ajax({
-					url : "/chat.changeName",
-					method : "POST",
-					data: {
-						chatNo : result,
-						chatName : chatName
-					},
-					success: function(result){
-						console.log(result);
-						
-					},
-					err : function(err){
-						console.log(err);
-					}
-				})
+            	if(oldName != result){
+					Swal.fire({
+						icon: 'warning',
+						title: '이미 사용 중인 채팅방 이름입니다.',
+						confirmButtonText: '예'
+					});
+				}
             },
             error: function(error) {
                 console.log(error);
@@ -1175,6 +1168,7 @@
             success: function(result){
             	$('#profilChatModal').hide();
             	$('.user-status').text(language);
+            	location.reload(true);
             },
             error: function(error){
             	console.log(error);

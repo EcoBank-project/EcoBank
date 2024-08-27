@@ -220,7 +220,7 @@ public class ChatServiceImpl implements ChatService{
 	public int chatAllMessageDelete(Integer chatNo) {
 		chatMapper.deleteAllMessage(chatNo);
 		chatMapper.deleteChatPart(chatNo);
-		return chatMapper.deleteAllMessage(chatNo);
+		return chatMapper.deleteChatRoom(chatNo);
 	}
 	// 채팅방 남은 사람 조회
 	@Override
