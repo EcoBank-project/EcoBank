@@ -568,12 +568,46 @@ input:checked+.slider:before {
 }
 
 
-/* .input-group {
+.input-message {
+	margin-top : 10px;
     display: flex;
     align-items: center;
     border-radius: 8px;
     position: relative;
-    border: 1px solid #2f3136;
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+}
+
+.input-message input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.input-message input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.message-input {
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	border: 2px solid #ddd;
+	border-radius: 5px;
+	color: #333;
+	font-size: 16px;
+	background-color: #f7f7f7;
+}
+
+.message-input:focus {
+	border:none;
+    outline: none;
 }
 
 .file-button {
@@ -597,4 +631,4 @@ input:checked+.slider:before {
 
 #file-upload {
     display: none;
-} */
+} 

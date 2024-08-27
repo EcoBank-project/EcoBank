@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +29,12 @@ import com.ecobank.app.chat.service.ChatService;
 @Controller
 public class ChatRoomController {
 	private ChatService chatService;
+	private SimpMessagingTemplate messagingTemplate;
 	
 	@Autowired
-	ChatRoomController(ChatService chatService){
+	ChatRoomController(ChatService chatService, SimpMessagingTemplate messagingTemplate){
 		this.chatService = chatService;
+		this.messagingTemplate = messagingTemplate;
 	}
 	
 	// 채팅방 목록
@@ -107,7 +110,7 @@ public class ChatRoomController {
 		//메시지 번역
 		String userId = (String) httpSession.getAttribute("useId");
 		String lagCode = chatService.laguageCodeSelect(userId);
-		for(ChatMessageVO msg : msgList) {
+//		for(ChatMessageVO msg : msgList) {
 //			//메시지
 //			String translatedText = chatService.translateMessage(msg.getMsgContent(), lagCode);
 //			String decodedText = decodeHtmlEntities(translatedText);
@@ -116,7 +119,7 @@ public class ChatRoomController {
 //			translatedText = chatService.translateMessage(msg.getNickName(), lagCode);
 //			decodedText = decodeHtmlEntities(translatedText);
 //			msg.setNickName(decodedText);
-		}
+//		}
 		
 		return msgList;
 	}
@@ -144,6 +147,17 @@ public class ChatRoomController {
 		Integer userNo = (Integer) httpSession.getAttribute("userNo");
 		String nickName = (String) httpSession.getAttribute("nickname");
 		List<ChatRoomVO> roomlist = chatService.chatRoomList(userNo, nickName);
+		
+		String userId = (String) httpSession.getAttribute("useId");
+		String lagCode = chatService.laguageCodeSelect(userId);
+		//번역
+//		for (ChatRoomVO chat : roomlist) {
+//			// 채팅방
+//			String translatedText = chatService.translateMessage(chat.getChatName(), lagCode);
+//			String decodedText = decodeHtmlEntities(translatedText);
+//			chat.setChatName(decodedText);
+//		}
+		
 		return roomlist;
 	}
 	
@@ -194,11 +208,22 @@ public class ChatRoomController {
 	// 채팅방 업데이트 - 오픈 채팅
 	@PostMapping("/chatRoom/updateOpenChat")
 	@ResponseBody
-	public Integer chatOpenUpdate(HttpSession httpSession,
+	public String chatOpenUpdate(HttpSession httpSession,
 			                @ModelAttribute ChatRoomVO chatRoom, 
-			                @RequestPart(value = "image", required = false) MultipartFile[] images) {		
+			                @RequestPart(value = "image", required = false) MultipartFile[] images) {
+		Integer result = chatService.getChatName(chatRoom.getChatName());
+		if(result != null) {
+			return chatRoom.getChatName();
+		}
 		chatService.OpenChatChangeUpdate(chatRoom, images);
-		return chatRoom.getChatNo();
+		
+		List<String> receiverIds = chatService.ChatUserList(chatRoom.getChatNo());
+		for(String receiverId : receiverIds) {
+			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatList", chatRoom.getChatNo());
+			messagingTemplate.convertAndSendToUser(receiverId, "/queue/chatUpdate/" + chatRoom.getChatNo(), chatRoom.getChatName());
+		}
+		
+		return null;
 	}
 	
 	// 오픈 채팅방 팔로우 초대목록 조회
