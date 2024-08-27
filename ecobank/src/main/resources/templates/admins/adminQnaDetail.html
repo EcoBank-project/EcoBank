@@ -123,13 +123,9 @@
                                       th:text="${reply.qnaReplyContent}"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">답글 수정하기</button>
+                        <button type="submit" class="btn btn-success" th:formaction="@{/deleteqnadeclare}">답글 삭제하기</button>
                     </form>
-                    <!-- 삭제 버튼 -->
-                    <form th:action="@{/deleteqnadeclare}" method="post" style="display:inline;">
-                        <input type="hidden" name="qnaReplyNo" th:value="${reply.qnaReplyNo}" />
-                        <input type="hidden" name="qnaNo" th:value="${qna.qnaNo}" />
-                        <button type="submit" class="btn btn-success">답글 삭제하기</button>
-                    </form>
+                
                 </div>
 
                 <div th:if="${reply == null}">
