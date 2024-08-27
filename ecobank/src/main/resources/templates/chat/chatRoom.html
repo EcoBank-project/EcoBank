@@ -97,8 +97,11 @@
 						</div>
 						<!-- 메시지 입력 -->
 						<div class="input-group mt-3">
-							<input type="text" class="form-control" placeholder="메시지..."
-								id="message" th:onkeydown="enterKeyDown(event, [[${userNo}]])">
+							<input type="text" class="form-control" placeholder="메시지..." id="message" th:onkeydown="enterKeyDown(event, [[${userNo}]])">
+							<!-- <label for="file-upload" class="file-button">
+				                <i class="fas fa-file-upload"></i>
+				                <input type="file" id="file-upload" />
+				            </label> -->
 							<div class="input-group-append">
 								<button class="btn btn-primary" type="button"
 									th:onclick="sendMessage([[${userNo}]])">보내기</button>
