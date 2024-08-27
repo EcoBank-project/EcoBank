@@ -65,4 +65,7 @@ public interface ChatService {
 	
 	//회원 프로필
 	public ChatRoomUserVO ChatProfileInfo(Integer userNo);
+	
+	//파일 업로드
+	public String getfileURL(MultipartFile[] images);
 }

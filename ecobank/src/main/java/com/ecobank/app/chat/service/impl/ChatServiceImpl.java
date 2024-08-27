@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecobank.app.chat.mapper.ChatMapper;
+import com.ecobank.app.chat.service.ChatFileVO;
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatPartVO;
@@ -79,6 +80,13 @@ public class ChatServiceImpl implements ChatService{
 	@Override
 	public ChatMessageVO ChatMessageInsert(ChatMessageVO message) {
 		int result = chatMapper.insertChatMessage(message);
+		if(message.getMsgFilePath() != null) {
+			ChatFileVO chatFile = new ChatFileVO();
+			chatFile.setMsgFilePath(message.getMsgFilePath());
+			chatFile.setMsgNo(message.getMsgNo());
+			chatFile.setChatNo(message.getChatNo());
+			chatMapper.insertChatFileMessage(chatFile);
+		}
 		message.setForMatTime(formatMessageDate(message.getMsgSendTime()));
 		return message;
 	}
@@ -156,6 +164,31 @@ public class ChatServiceImpl implements ChatService{
 		int result = chatMapper.updateOpenChatChange(chatRoom);
 		return result;
 	}	
+	
+	//채팅방 파일 저장
+	@Override
+	public String getfileURL(MultipartFile[] images) {
+		String filesName = null;
+		if (images != null) {
+	        for (MultipartFile image : images) {
+	        	String fileName = image.getOriginalFilename();
+	        	String folderPath = makeFolder();
+	        	UUID uuid = UUID.randomUUID();
+				String uniqueFileName = folderPath + "/" + uuid + "_" + fileName;
+				String saveName = uploadPath + "/" + uniqueFileName;
+				filesName = uniqueFileName;
+				Path savePath = Paths.get(saveName);
+				try {
+					image.transferTo(savePath);
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+	        }
+	    }
+		return filesName;
+	}
+	
+	
 	// 오픈 채팅방 이미지 저장
 	private String makeFolder() {
 		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
@@ -188,13 +221,15 @@ public class ChatServiceImpl implements ChatService{
 		if(result < 1) {
 			// 채팅방에 아무도 없을 경우
 
+			// 채팅방 파일 삭제
+			chatMapper.deleteChatFileMessage(chatNo);
 			// 채팅방 메시지 삭제
 			chatMapper.deleteAllMessage(chatNo);
 			// 채팅방 참여자 삭제
 			chatMapper.deleteChatPart(chatNo);
 			// 채팅방 삭제
 			chatMapper.deleteChatRoom(chatNo);
-		
+			
 			messagingTemplate.convertAndSendToUser(nickName, "/queue/chatList", message);
 		}else {
 			// 채팅방 나가는 메시지 저장
@@ -218,6 +253,7 @@ public class ChatServiceImpl implements ChatService{
 	// 채팅방 메시지 전부 삭제
 	@Override
 	public int chatAllMessageDelete(Integer chatNo) {
+		chatMapper.deleteChatFileMessage(chatNo);
 		chatMapper.deleteAllMessage(chatNo);
 		chatMapper.deleteChatPart(chatNo);
 		return chatMapper.deleteChatRoom(chatNo);

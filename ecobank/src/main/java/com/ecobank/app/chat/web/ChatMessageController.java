@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ecobank.app.chat.service.ChatFileVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatRoomUserVO;
 import com.ecobank.app.chat.service.ChatService;
@@ -63,7 +64,6 @@ public class ChatMessageController {
 	public void sendUser(@Payload ChatMessageVO message, Principal principal) {
 		// 메시지 저장
 		ChatMessageVO chatMessage = chatService.ChatMessageInsert(message);
-		
 		
 		ChatRoomUserVO chatRoomUser = chatService.ChatProfileInfo(message.getUserNo());
 		

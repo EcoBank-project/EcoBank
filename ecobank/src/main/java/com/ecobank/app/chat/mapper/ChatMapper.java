@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.ecobank.app.chat.service.ChatFileVO;
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatPartVO;
@@ -20,6 +21,9 @@ public interface ChatMapper {
 	public List<ChatMessageVO> selectChatMessage(Integer chatNo);
 	// 채팅방 채팅로그 기록
 	public int insertChatMessage(ChatMessageVO chatMessageVO);
+	// 채팅방 채팅파일 기록
+	public int insertChatFileMessage(ChatFileVO chatFileVO);
+	
 	
 	// 채팅방 만들기
 	public int insertChatRoom(ChatRoomVO chatRoomVO);
@@ -42,6 +46,8 @@ public interface ChatMapper {
 	public int deleteChatPart(Integer chatNo);
 	// 채팅방 메시지 삭제
 	public int deleteAllMessage(Integer chatNo);
+	// 채팅방 파일 삭제
+	public int deleteChatFileMessage(Integer chatNo);
 	// 채팅방 나가고 남은 사람 조회
 	public List<String> selectLeaveUser(@Param("userNo")Integer userNo, @Param("chatNo")Integer chatNo);
 	// 채팅방 방장 조회

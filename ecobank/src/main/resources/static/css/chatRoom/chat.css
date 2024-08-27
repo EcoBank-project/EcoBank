@@ -629,6 +629,11 @@ input:checked+.slider:before {
     background-color: #28a745; 
 }
 
-#file-upload {
+#message-file-upload {
     display: none;
 } 
+
+
+.chat_files{
+	max-width: 100%;
+}

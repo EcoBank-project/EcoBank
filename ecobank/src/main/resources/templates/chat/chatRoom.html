@@ -97,9 +97,9 @@
 						</div>
 						<!-- 메시지 입력 -->
 						<div class="input-message">
-							<label for="file-upload" class="file-button">
+							<label for="message-file-upload" class="file-button">
 				                <i class="fas fa-file-upload"></i>
-				                <input type="file" id="file-upload" />
+				                <input type="file" id="message-file-upload" />
 				            </label>
 							<input type="text" class="message-input" placeholder="메시지..." id="message" th:onkeydown="enterKeyDown(event, [[${userNo}]])">
 							<div class="input-group-append">
@@ -272,7 +272,7 @@
 	function connect(roomId,roomType) {
 		var socket = new SockJS('/ws');
 		stompClient = Stomp.over(socket);
-		stompClient.debug = null;
+		//stompClient.debug = null;
 	    stompClient.connect({}, function(frame) {
 			if(roomType != null){
 			    // 채팅
@@ -342,16 +342,43 @@
 		if(chatSubScription){
 		    let input = document.getElementById("message");
 		    let today = new Date(); 
+		    let msgType = 'I1';
+		    let messageFile = document.getElementById("message-file-upload");
+		    
 		    const chatMessage = {
 		        userNo: userNo,
 		        chatNo: currentRoomId,
 		        msgContent: input.value,
-		        msgType: 'I1',
+		        msgType: msgType,
 		        msgSendTime: today,
 		        nickName: "[[${nickname}]]",
 		    };
-		    stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
-		    input.value = "";			
+		    if (messageFile.files.length > 0) {
+		    	msgType = 'I2';
+		    	chatMessage.msgType = 'I2';
+		    	let formData = new FormData();
+		    	formData.append('messageFile', messageFile.files[0]);
+		    	$.ajax({
+		    		url: '/chatRoom/chatMessageFile',
+		    		method: 'POST',
+		    		data: formData,
+		            contentType: false,
+		            processData: false,
+		            success: function(result) {
+		            	chatMessage.msgFilePath = result;
+		            	stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
+		            	input.value = "";
+		            	messageFile.value = "";
+		            },
+		            err: function(err){
+		            	
+		            }
+		    	})
+		    	
+		    }else{
+			    stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));		    	
+			    input.value = "";			
+		    }
 		}else{
 			Swal.fire({
 				icon: 'warning',
@@ -408,21 +435,34 @@
 	    let uname = document.createElement("span");
 	    uname.classList.add('username');
 	    uname.textContent = message.nickName;
+	    content.appendChild(uname);
 	    //시간
 	    let totime = document.createElement("span");
 	    totime.classList.add('sendtime');
 	    totime.textContent = message.forMatTime;
+	    content.appendChild(totime);
+	    //파일
+	    let files = document.createElement("img");
+	    if(message.msgType == 'I2'){
+	    	files.classList.add("chat_files");
+	    	files.src="/images/"+message.msgFilePath;
+	    	content.appendChild(files);
+	    }
 	    //내용
 	    let texts = document.createElement("div");
 	    texts.classList.add('text');
-	    texts.innerHTML = linkify(message.msgContent);
-	    
-	    content.appendChild(uname);
-	    content.appendChild(totime);
+	    texts.innerHTML = linkify(message.msgContent);    
 	    content.appendChild(texts);
+	    
 	    newMessage.appendChild(content);
 	    chatbox.appendChild(newMessage);
-	    chatbox.scrollTop = chatbox.scrollHeight;
+	    if(message.msgFilePath != null){
+		    files.onload = function(){
+		    	chatbox.scrollTop = chatbox.scrollHeight;
+		    }	    	
+	    }else{
+		    chatbox.scrollTop = chatbox.scrollHeight;	    	
+	    }
 	}
 	
 	// 주소창
@@ -595,7 +635,8 @@
 	    		result.forEach(function(message){
 	    			if(message.msgType == 'I4' || message.msgType == 'I3'){
 	    				stateMessage(message);
-	    			}else if(message.msgType == 'I1'){
+	    			}else{
+	    				console.log(message);
 		    			showMessage(message);	    				
 	    			}
 	    		});

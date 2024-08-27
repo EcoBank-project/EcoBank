@@ -30,14 +30,17 @@
 	</select>
 	<!-- 채팅방 채팅 로그 조회 -->
 	<select id="selectChatMessage" resultType="ChatMessageVO">
-		select msg_no, 
+		select m.msg_no, 
 		       msg_content, 
 		       msg_type, 
 		       msg_send_time, 
 		       m.user_no, 
 		       chat_no,
 		       nickname,
-		       profile_img
+		       profile_img,
+		       (select msg_file_path
+                FROM chat_file
+                WHERE msg_no = m.msg_no)as msg_file_path
 		from msg m join users u 
 		           on m.user_no = u.user_no
 		where chat_no = #{chatNO}
@@ -68,12 +71,39 @@
 		VALUES
 			(
 				#{msgNo}
-				,#{msgContent}
+				,#{msgContent}	
 				,#{msgType}
 				,#{userNo}
 				,#{chatNo}
 			)	
 	</insert>
+	<!-- 채팅방 채팅 파일 저장 -->
+	<insert id="insertChatFileMessage">
+		<selectKey keyProperty="chatFileNo"
+		           resultType="Integer"
+		           order="BEFORE">
+		    SELECT NVL(MAX(chat_file_no), 0) + 1
+			FROM chat_file     
+		</selectKey>
+		INSERT INTO chat_file
+			(
+				chat_file_no,
+				msg_file_path,
+				msg_no,
+				chat_no
+			)
+		VALUES
+			(
+				#{chatFileNo}
+				,#{msgFilePath}
+				,#{msgNo}
+				,#{chatNo}
+			)
+	</insert>
+	<delete id="deleteChatFileMessage">
+		DELETE FROM chat_file
+		WHERE chat_no = #{chatNo}
+	</delete>
 	<!-- 채팅방 팔로우 목록 -->
 	<select id="selectChatFollowAll">
 		select following_id,

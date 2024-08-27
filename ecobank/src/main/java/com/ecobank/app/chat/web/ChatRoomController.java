@@ -1,6 +1,10 @@
 package com.ecobank.app.chat.web;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -184,6 +188,14 @@ public class ChatRoomController {
 			chatService.ChatUserInsert(chatNo, user);
 		};
 		return chatNo;
+	}
+	
+	// 채팅 파일 저장
+	@PostMapping("/chatRoom/chatMessageFile")
+	@ResponseBody
+	public String chatMessageFileSave(@RequestPart(value = "messageFile") MultipartFile[] images) {
+		String fileURL = chatService.getfileURL(images);
+		return fileURL;
 	}
 	
 	// 채팅방 생성 - 오픈 채팅
