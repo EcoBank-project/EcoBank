@@ -588,7 +588,8 @@ input[type=radio]:checked + label{
 	              icon: 'warning',
 	              showDenyButton: true,
 	              confirmButtonText: "네",
-	              denyButtonText: `아니요`
+	              denyButtonText: `아니요`,
+	              confirmButtonColor: "#32C36C", 
 	            }).then((result) => {
 	              /* Read more about isConfirmed, isDenied below */
 	              if (result.isConfirmed) {
@@ -598,7 +599,8 @@ input[type=radio]:checked + label{
 						 success: function(result) {
 							 Swal.fire({
 						            icon: 'success',              // Alert 타입
-						            title: '삭제되었습니다.',         // Alert 제목
+						            title: '삭제되었습니다.',
+						            confirmButtonColor: "#32C36C", // Alert 제목
 						        }).then(function(){
 						        	location.href='sns';
 						 })
@@ -621,7 +623,8 @@ input[type=radio]:checked + label{
 	              icon: 'warning',
 	              showDenyButton: true,
 	              confirmButtonText: "네",
-	              denyButtonText: `아니요`
+	              denyButtonText: `아니요`,
+	              confirmButtonColor: "#32C36C", 
 	            }).then((result) => {
 	              /* Read more about isConfirmed, isDenied below */
 	              if (result.isConfirmed) {
@@ -686,7 +689,8 @@ input[type=radio]:checked + label{
 	              icon: 'warning',
 	              showDenyButton: true,
 	              confirmButtonText: "네",
-	              denyButtonText: `아니요`
+	              denyButtonText: `아니요`,
+	              confirmButtonColor: "#32C36C", 
 	            }).then((result) => {
 	              /* Read more about isConfirmed, isDenied below */
 	              if (result.isConfirmed) {
@@ -697,7 +701,8 @@ input[type=radio]:checked + label{
 						 success: function(result) {
 							 Swal.fire({
 						            icon: 'success',              // Alert 타입
-						            title: '댓글이 삭제되었습니다.',         // Alert 제목
+						            title: '댓글이 삭제되었습니다.', 
+						            confirmButtonColor: "#32C36C", // Alert 제목
 						        }).then(function(){
 						        	 location.reload();
 								 })
@@ -796,6 +801,7 @@ input[type=radio]:checked + label{
 					Swal.fire({
 			            icon: 'success',              // Alert 타입
 			            title: '신고되었습니다.',         // Alert 제목
+			            confirmButtonColor: "#32C36C", 
 			        }).then(function(){
 			        	location.href='sns';
 					 })

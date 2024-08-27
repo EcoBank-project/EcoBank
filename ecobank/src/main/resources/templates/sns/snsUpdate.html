@@ -235,7 +235,8 @@ textarea {
 		              icon: 'warning',
 		              showDenyButton: true,
 		              confirmButtonText: "네",
-		              denyButtonText: `아니요`
+		              denyButtonText: `아니요`,
+		              confirmButtonColor: "#32C36C", 
 		            }).then((result) => {
 		              /* Read more about isConfirmed, isDenied below */
 		              if (result.isConfirmed) {
@@ -249,7 +250,8 @@ textarea {
 							success : function(){
 								Swal.fire({
 						            icon: 'success',              // Alert 타입
-						            title: '삭제되었습니다.',         // Alert 제목
+						            title: '삭제되었습니다.',    
+						            confirmButtonColor: "#32C36C", // Alert 제목
 						        }).then(function(){
 									location.reload();
 								})
