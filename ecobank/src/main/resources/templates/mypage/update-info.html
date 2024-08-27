@@ -65,8 +65,7 @@
         }
 
         .btn.small-btn {
-            font-size: 12px;
-            padding: 5px 10px;
+            margin-left: auto;
         }
 
         /* 모달창 스타일 */
@@ -162,22 +161,22 @@
                 <span>닉네임</span>
                 <div>
                     <p th:text="${session.nickname}"></p>
-                    <a href="#" class="btn small-btn" onclick="openModal('nicknameModal')">변경하기</a>
                 </div>
+                    <a href="#" class="btn small-btn" onclick="openModal('nicknameModal')">변경</a>
             </li>
             <li class="info-item2">
                 <span>현재 아이디(이메일)</span>
                 <div>
                     <p class="eng" th:text="${session.useId}"></p>
-                    <a href="#" class="btn small-btn" onclick="openModal('emailModal')">변경하기</a>
                 </div>
+                    <a href="#" class="btn small-btn" onclick="openModal('emailModal')">변경</a>
             </li>
             <li class="info-item2">
                 <span>현재 비밀번호</span>
                 <div>
                     <input type="password" th:value="${session.userPw}" disabled>
-                    <a href="#" class="btn small-btn" onclick="openModal('passwordModal')">변경하기</a>
                 </div>
+                    <a href="#" class="btn small-btn" onclick="openModal('passwordModal')">변경</a>
             </li>
         </ul>
     </div>
