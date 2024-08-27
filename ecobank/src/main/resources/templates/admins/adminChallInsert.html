@@ -22,53 +22,54 @@
 </style>
 </head>
 <body>
-	<div>
-		<h3>챌린지 등록</h3>
-		<form name="insertForm" th:action="@{/challInsert}" method="post" enctype="multipart/form-data">
-			<table class="table">
-				<tr>
-					<th>제목</th>
-					<td><input type="text" name="challTitle"></td>
-				</tr>
-				<tr>
-					<th>챌린지 시작 일자</th>
-					<td><label for="date"></label>
-						<input type="date"
-						        id="startDate"
-						        max="2030-08-06"
-						        min="2024-07-01"
-						        name="challStartAt"
-						        onchange="calculateScore()"></td>
-				</tr>
-				<tr>
-					<th>챌린지 종료 일자</th>
-					<td><label for="date"></label>
-						<input type="date"
-						        id="endDate"
-						        max="2030-08-06"
-						        min="2024-07-01"
-						        name="challCloseAt"
-						        onchange="calculateScore()"></td>
-				</tr>
-                <tr>
-                    <th>챌린지 인증 완료 후 받는 총 점수</th>
-                    <td><input type="text" id="challScore" name="challScore" readonly></td>
-                </tr>
-				<tr>
-					<th>내용</th>
-					<td><textarea name="challContent" cols="30" rows="5"></textarea></td>
-				</tr>
-				<tr>
-					<th>메인 이미지</th>
-					<td><input type="file" name="images"></td>
-				</tr>
-				<tr>
-					<th>상세 이미지</th>
-					<td><input type="file" name="images"></td>
-				</tr>
-			</table>
-			<button type="submit" class="btn btn-custom">등록</button>
-		</form>
+	<div class="container mt-5">
+		<h3 class="mb-4">챌린지 등록</h3>
+		<div class="card">
+			<form name="insertForm" th:action="@{/challInsert}" method="post" enctype="multipart/form-data">
+				<table class="table">
+					<tr>
+						<th>제목</th>
+						<td><input type="text" name="challTitle" style="width:510px;"></td>
+					</tr>
+					<tr>
+						<th>챌린지 시작 일자</th>
+						<td><label for="date"></label>
+							<input type="date"
+							        id="startDate"
+							        max="2030-08-06"
+							        min="2024-07-01"
+							        name="challStartAt"
+							        onchange="calculateScore()"></td>
+
+						<th>챌린지 종료 일자</th>
+						<td><label for="date"></label>
+							<input type="date"
+							        id="endDate"
+							        max="2030-08-06"
+							        min="2024-07-01"
+							        name="challCloseAt"
+							        onchange="calculateScore()"></td>
+					</tr>
+	                <tr>
+	                    <th>챌린지 인증 완료 후 받는 총 점수</th>
+	                    <td><input type="text" id="challScore" name="challScore" style="width:510px;" readonly></td>
+	                </tr>
+					<tr>
+						<th>내용</th>
+						<td><textarea name="challContent" cols="70" rows="7"></textarea></td>
+					</tr>
+					<tr>
+						<th>메인 이미지</th>
+						<td><input type="file" name="images"></td>
+					</tr>
+					<tr>
+						<th>상세 이미지</th>
+						<td><input type="file" name="images"></td>
+					</tr>
+				</table>
+				<button type="submit" class="btn btn-custom">등록</button>
+			</form>
+		</div>
 	</div>
 	<script>  
 	    function calculateScore() {
