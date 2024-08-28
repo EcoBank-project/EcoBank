@@ -80,9 +80,11 @@ public class ChatServiceImpl implements ChatService{
 	@Override
 	public ChatMessageVO ChatMessageInsert(ChatMessageVO message) {
 		int result = chatMapper.insertChatMessage(message);
+		
 		if(message.getMsgFilePath() != null) {
 			ChatFileVO chatFile = new ChatFileVO();
 			chatFile.setMsgFilePath(message.getMsgFilePath());
+			chatFile.setMsgFileType(message.getMsgFileType());
 			chatFile.setMsgNo(message.getMsgNo());
 			chatFile.setChatNo(message.getChatNo());
 			chatMapper.insertChatFileMessage(chatFile);
@@ -167,16 +169,19 @@ public class ChatServiceImpl implements ChatService{
 	
 	//채팅방 파일 저장
 	@Override
-	public String getfileURL(MultipartFile[] images) {
-		String filesName = null;
+	public ChatFileVO getfileURL(MultipartFile[] images) {
+		ChatFileVO chatFile = new ChatFileVO();
 		if (images != null) {
 	        for (MultipartFile image : images) {
 	        	String fileName = image.getOriginalFilename();
+	        	String fileType = image.getContentType();
 	        	String folderPath = makeFolder();
 	        	UUID uuid = UUID.randomUUID();
 				String uniqueFileName = folderPath + "/" + uuid + "_" + fileName;
 				String saveName = uploadPath + "/" + uniqueFileName;
-				filesName = uniqueFileName;
+				
+				chatFile.setMsgFilePath(uniqueFileName); 
+				chatFile.setMsgFileType(fileType);
 				Path savePath = Paths.get(saveName);
 				try {
 					image.transferTo(savePath);
@@ -185,7 +190,7 @@ public class ChatServiceImpl implements ChatService{
 				}
 	        }
 	    }
-		return filesName;
+		return chatFile;
 	}
 	
 	

@@ -89,6 +89,7 @@
 			(
 				chat_file_no,
 				msg_file_path,
+				msg_file_type,
 				msg_no,
 				chat_no
 			)
@@ -96,6 +97,7 @@
 			(
 				#{chatFileNo}
 				,#{msgFilePath}
+				,#{msgFileType}
 				,#{msgNo}
 				,#{chatNo}
 			)

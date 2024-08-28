@@ -22,5 +22,7 @@ public class ChatMessageVO {
 	
 	private List<Integer> userNos;	//사용자 번호
 	private String profileImg;
+	
 	private String msgFilePath;
+	private String msgFileType;
 }

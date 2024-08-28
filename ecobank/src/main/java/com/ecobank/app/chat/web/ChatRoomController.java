@@ -1,10 +1,6 @@
 package com.ecobank.app.chat.web;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ecobank.app.chat.service.ChatFileVO;
 import com.ecobank.app.chat.service.ChatFollowVO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatPartVO;
@@ -193,8 +190,8 @@ public class ChatRoomController {
 	// 채팅 파일 저장
 	@PostMapping("/chatRoom/chatMessageFile")
 	@ResponseBody
-	public String chatMessageFileSave(@RequestPart(value = "messageFile") MultipartFile[] images) {
-		String fileURL = chatService.getfileURL(images);
+	public ChatFileVO chatMessageFileSave(@RequestPart(value = "messageFile") MultipartFile[] images) {
+		ChatFileVO fileURL = chatService.getfileURL(images);
 		return fileURL;
 	}
 	

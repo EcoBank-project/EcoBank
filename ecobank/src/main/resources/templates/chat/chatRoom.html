@@ -368,7 +368,8 @@
 		            contentType: false,
 		            processData: false,
 		            success: function(result) {
-		            	chatMessage.msgFilePath = result;
+		            	chatMessage.msgFilePath = result.msgFilePath;
+		            	chatMessage.msgFileType = result.msgFileType;
 		            	stompClient.send("/app/chat.message/" + currentRoomId, {}, JSON.stringify(chatMessage));
 		            	input.value = "";
 		            	$('.showChatImg').empty();
