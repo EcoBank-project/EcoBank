@@ -34,7 +34,7 @@
 	align-items: flex-start;
 	margin-bottom: 20px;
 	align-self: flex-start;
-	max-width: 50%;
+	max-width: 40%;
 }
 
 .message_right {
@@ -42,7 +42,7 @@
 	align-items: flex-start;
 	margin-bottom: 20px;
 	align-self: flex-end;
-	max-width: 50%;
+	max-width: 40%;
 }
 
 .chat_profil_img {
@@ -636,4 +636,16 @@ input:checked+.slider:before {
 
 .chat_files{
 	max-width: 100%;
+}
+
+.showChatImg img{
+	max-width: 300px;
+    max-height: 200px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.showClose{
+    cursor: pointer;
+    font-size: 20px;
 }
