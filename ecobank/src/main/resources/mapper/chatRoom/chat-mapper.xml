@@ -71,7 +71,7 @@
 		VALUES
 			(
 				#{msgNo}
-				,#{msgContent}	
+				,#{msgContent, jdbcType=VARCHAR}	
 				,#{msgType}
 				,#{userNo}
 				,#{chatNo}

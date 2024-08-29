@@ -342,16 +342,20 @@
 	
 	// 채팅방 - 메시지 입력 - 보내기
 	function sendMessage(userNo) {
+		let messageFile = document.getElementById("message-file-upload");
+		if($('.message-input').val().trim() === '' && messageFile.files.length < 1){
+			return;
+		}
 		if(chatSubScription){
 		    let input = document.getElementById("message");
 		    let today = new Date(); 
 		    let msgType = 'I1';
-		    let messageFile = document.getElementById("message-file-upload");
+		    let msgContent = input.value.trim();
 		    
 		    const chatMessage = {
 		        userNo: userNo,
 		        chatNo: currentRoomId,
-		        msgContent: input.value,
+		        msgContent: msgContent === '' ? null : msgContent,
 		        msgType: msgType,
 		        msgSendTime: today,
 		        nickName: "[[${nickname}]]",
@@ -453,11 +457,13 @@
 	    	files.src="/images/"+message.msgFilePath;
 	    	content.appendChild(files);
 	    }
-	    //내용
-	    let texts = document.createElement("div");
-	    texts.classList.add('text');
-	    texts.innerHTML = linkify(message.msgContent);    
-	    content.appendChild(texts);
+	    if(message.msgContent != null){
+		    //내용
+		    let texts = document.createElement("div");
+		    texts.classList.add('text');
+		    texts.innerHTML = linkify(message.msgContent);    	    	
+		    content.appendChild(texts);
+	    }
 	    
 	    newMessage.appendChild(content);
 	    chatbox.appendChild(newMessage);
