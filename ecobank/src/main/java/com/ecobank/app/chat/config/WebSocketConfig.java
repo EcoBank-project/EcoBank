@@ -13,11 +13,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/ws") // 엔드포인트 => URL 경로, 접근할수 있게
-		        .setAllowedOrigins("*") // 
+		        .setAllowedOriginPatterns("*") // 
 		        .withSockJS(); //WebSockek을 지원하지 않는 브라우저에서도 기능을 가능하게
 		
 		registry.addEndpoint("/ws-alarm") // 엔드포인트 => URL 경로, 접근할수 있게
-        .setAllowedOrigins("*") // 
+        .setAllowedOriginPatterns("*")// 
         .withSockJS(); //WebSockek을 지원하지 않는 브라우저에서도 기능을 가능하게
 		
 	}
