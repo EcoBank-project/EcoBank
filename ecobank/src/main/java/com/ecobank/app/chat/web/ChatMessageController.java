@@ -75,9 +75,13 @@ public class ChatMessageController {
 		for(String receiverId : receiverIds) {
 			// 메시지 번역
 			String lagCode = chatService.laguageCodeSelect(receiverId);
-			String translatedText = chatService.translateMessage(message.getMsgContent(), lagCode);
-			String decodedText = decodeHtmlEntities(translatedText);
-			message.setMsgContent(decodedText);
+			String translatedText = null;
+			String decodedText = null;
+			if(message.getMsgContent() != null) {
+				translatedText = chatService.translateMessage(message.getMsgContent(), lagCode);
+				decodedText = decodeHtmlEntities(translatedText);
+				message.setMsgContent(decodedText);				
+			}
 			//닉네임
 			translatedText = chatService.translateMessage(message.getNickName(), lagCode);
 			decodedText = decodeHtmlEntities(translatedText);
