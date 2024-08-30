@@ -11,6 +11,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -50,6 +51,9 @@ public class MypageController {
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Value("${file.upload.path}")
+	private String uploadPath;
 	
 	@GetMapping("mypage")
 	public String getMypage(HttpSession session, Model model) {
@@ -248,7 +252,7 @@ public class MypageController {
 
         try {
             String fileName = profileImage.getOriginalFilename();
-            String filePath = "D:/upload/profile/" + fileName; // 이미지 저장 경로
+            String filePath = uploadPath +"/profile/"+ fileName; // 이미지 저장 경로
             System.out.println("-------" + fileName);
 
             // 파일 저장
