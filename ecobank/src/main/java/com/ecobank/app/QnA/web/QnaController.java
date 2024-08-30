@@ -30,7 +30,7 @@ public class QnaController {
         Integer userNo = (Integer) session.getAttribute("userNo");
         model.addAttribute("QnaUserList", QnaUserList);
         model.addAttribute("loggedInUserNo", userNo); // 로그인한 사용자 번호 추가
-        return "QnA/QnaUserList";
+        return "qna/QnaUserList";
     }
 
     // QNA 등록 페이지
@@ -42,7 +42,7 @@ public class QnaController {
             qnaVO.setUserNo(userNo);
         }
         model.addAttribute("qnaVO", qnaVO);
-        return "QnA/QnaForm";
+        return "qna/QnaForm";
     }
 
     // QNA 등록 기능
@@ -66,7 +66,7 @@ public class QnaController {
               
         // 작성자 번호와 로그인한 사용자 번호 비교 (int 타입 비교)
         if (qnaVO.getUserNo() != loggedInUserNo) {
-            return "QnA/error"; // 권한 없음 페이지로 리디렉션
+            return "qna/error"; // 권한 없음 페이지로 리디렉션
         }
 
         // 답글 리스트 조회

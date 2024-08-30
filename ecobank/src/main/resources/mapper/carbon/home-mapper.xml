@@ -131,58 +131,57 @@
 	<!-- 종료임박챌린지 -->
 	<select id="getOverSoonChallenges" resultType="com.ecobank.app.home.service.ChallengeVO">
 		SELECT chall_no, 
-		       chall_title,
-		       chall_content,
-		       chall_startat, 
-		       chall_closeat, 
-		       chall_state, 
-		       main_img, 
-		       detail_img, 
-		       chall_score, 
-		       view_count, 
-		       chall_createat, 
-		       chall_updateat, 
-		       user_no,
-		       user_count,
-		       d_day
-		FROM (
-		        SELECT c.chall_no,
-		               c.chall_title, 
-		               c.chall_content, 
-		               c.chall_startat, 
-		               c.chall_closeat, 
-		               c.chall_state, 
-		               c.main_img, 
-		               c.detail_img, 
-		               c.chall_score, 
-		               c.view_count, 
-		               c.chall_createat, 
-		               c.chall_updateat, 
-		               c.user_no,
-		               count(e.user_no) AS user_count,
-		               to_date(c.chall_closeat,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd') AS d_day
-		        FROM chall c 
-		        JOIN chall_enter e 
-		          ON c.chall_no = e.chall_no
-		        WHERE chall_state = 'D2'
-		        GROUP BY c.chall_no,
-		                 c.chall_title, 
-		                 c.chall_content, 
-		                 c.chall_startat, 
-		                 c.chall_closeat, 
-		                 c.chall_state, 
-		                 c.main_img, 
-		                 c.detail_img, 
-		                 c.chall_score, 
-		                 c.view_count, 
-		                 c.chall_createat, 
-		                 c.chall_updateat, 
-		                 c.chall_no, 
-		                 c.user_no,
-		                 to_date(c.chall_closeat,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd')
-		        ORDER BY user_count DESC, d_day asc
-		)
-		WHERE ROWNUM BETWEEN 1 AND 6
+       chall_title,
+       chall_content,
+       chall_startat, 
+       chall_closeat, 
+       chall_state, 
+       main_img, 
+       detail_img, 
+       chall_score, 
+       view_count, 
+       chall_createat, 
+       chall_updateat, 
+       user_no,
+       user_count,
+       d_day
+FROM (
+      SELECT c.chall_no,
+             c.chall_title, 
+             c.chall_content, 
+             c.chall_startat, 
+             c.chall_closeat, 
+             c.chall_state, 
+             c.main_img, 
+             c.detail_img, 
+             c.chall_score, 
+             c.view_count, 
+             c.chall_createat, 
+             c.chall_updateat, 
+             c.user_no,
+             COUNT(e.user_no) AS user_count,
+             TRUNC(c.chall_closeat) - TRUNC(SYSDATE) AS d_day
+      FROM chall c 
+      JOIN chall_enter e 
+        ON c.chall_no = e.chall_no
+      WHERE chall_state = 'D2'
+      GROUP BY c.chall_no,
+               c.chall_title, 
+               c.chall_content, 
+               c.chall_startat, 
+               c.chall_closeat, 
+               c.chall_state, 
+               c.main_img, 
+               c.detail_img, 
+               c.chall_score, 
+               c.view_count, 
+               c.chall_createat, 
+               c.chall_updateat, 
+               c.user_no
+      ORDER BY user_count DESC, d_day ASC
+      )
+WHERE ROWNUM BETWEEN 1 AND 6
+
 	</select>
 	
 	<!-- 랭킹(1~3위) -->
@@ -225,7 +224,7 @@
 		                 u.user_state, 
 		                 u.confirm_createat
 		)
-		WHERE ROWNUM BETWEEN 1 AND 4
+		WHERE ROWNUM BETWEEN 1 AND 3
 	</select>
 </mapper>
 	
