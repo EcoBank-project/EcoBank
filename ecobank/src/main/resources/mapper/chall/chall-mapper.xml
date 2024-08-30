@@ -62,7 +62,7 @@
 		                    , chall_closeAt
 		                    , chall_state
 		                    , main_img
-		                    , to_date(chall_startAt,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd') AS d_day
+		                    , TRUNC(chall_startAt) - TRUNC(sysdate) AS d_day
 		            FROM chall
 					<where>
 						<if test="challState != null and challState != ''.toString()">
