@@ -252,7 +252,7 @@ public class MypageController {
 
         try {
             String fileName = profileImage.getOriginalFilename();
-            String filePath = uploadPath +"/"+ fileName; // 이미지 저장 경로
+            String filePath = uploadPath +"/profile/"+ fileName; // 이미지 저장 경로
             System.out.println("-------" + fileName);
 
             // 파일 저장
