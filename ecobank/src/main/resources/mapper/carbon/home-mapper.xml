@@ -225,7 +225,7 @@
 		                 u.user_state, 
 		                 u.confirm_createat
 		)
-		WHERE ROWNUM BETWEEN 1 AND 4
+		WHERE ROWNUM BETWEEN 1 AND 3
 	</select>
 </mapper>
 	
