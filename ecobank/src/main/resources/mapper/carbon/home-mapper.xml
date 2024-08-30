@@ -160,7 +160,7 @@
 		               c.chall_updateat, 
 		               c.user_no,
 		               count(e.user_no) AS user_count,
-		               to_date(c.chall_closeat,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd') AS d_day
+		               trunc(c.chall_closeat) - trunc(sysdate) AS d_day
 		        FROM chall c 
 		        JOIN chall_enter e 
 		          ON c.chall_no = e.chall_no
