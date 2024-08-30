@@ -179,7 +179,7 @@
 		                 c.chall_updateat, 
 		                 c.chall_no, 
 		                 c.user_no,
-		                 to_date(c.chall_closeat,'yyyy-MM-dd') - to_date(sysdate,'yyyy-MM-dd')
+		                 TRUNC(chall_closeAt) - TRUNC(sysdate) AS d_day
 		        ORDER BY user_count DESC, d_day asc
 		)
 		WHERE ROWNUM BETWEEN 1 AND 6
