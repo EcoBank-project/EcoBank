@@ -130,7 +130,7 @@ public class SnsController {
 	@PostMapping("snsUpdate")
 	@ResponseBody
 	public Map<String, Object> snsUpdateAJAXJSON(@ModelAttribute SnsVO snsVO, 
-			                                     @RequestPart(value="image",required=false) MultipartFile[] images) {
+			                                     @RequestPart(value="images",required=false) MultipartFile[] images) {
 		String snsCode = "J1";
 		int snsNum = snsVO.getFeedNo();
 		if(images != null) {
