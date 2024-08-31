@@ -2,21 +2,20 @@ package com.ecobank.app.chat.web;
 
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ecobank.app.chat.service.ChatFileVO;
+import com.ecobank.app.chat.service.ChatMessageDTO;
 import com.ecobank.app.chat.service.ChatMessageVO;
 import com.ecobank.app.chat.service.ChatRoomUserVO;
 import com.ecobank.app.chat.service.ChatService;
@@ -75,23 +74,30 @@ public class ChatMessageController {
 		for(String receiverId : receiverIds) {
 			// 메시지 번역
 			String lagCode = chatService.laguageCodeSelect(receiverId);
-			String translatedText = chatService.translateMessage(message.getMsgContent(), lagCode);
-			String decodedText = decodeHtmlEntities(translatedText);
-			message.setMsgContent(decodedText);
+			String translatedText = null;
+			String decodedText = null;
+			if(message.getMsgContent() != null) {
+				translatedText = chatService.translateMessage(message.getMsgContent(), lagCode);
+				decodedText = decodeHtmlEntities(translatedText);
+				message.setMsgContent(decodedText);				
+			}
 			//닉네임
 			translatedText = chatService.translateMessage(message.getNickName(), lagCode);
 			decodedText = decodeHtmlEntities(translatedText);
 			message.setNickName(decodedText);
 			
+			ChatMessageDTO chatDetail = new ChatMessageDTO();
+			BeanUtils.copyProperties(message, chatDetail);
+			
 			if("O1".equals(chatType)) {
 				//1대1 채팅
-				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), message);
+				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), chatDetail);
 			}else if("O2".equals(chatType)){
 				//그룹 채팅
-				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), message);
+				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), chatDetail);
 				//오픈 채팅	
 			}else if("O3".equals(chatType)){
-				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), message);			
+				messagingTemplate.convertAndSendToUser(receiverId, "/queue/messages/" + chatMessage.getChatNo(), chatDetail);			
 			}
 		}
 	}

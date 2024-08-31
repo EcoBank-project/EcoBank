@@ -46,8 +46,11 @@ public interface ChatMapper {
 	public int deleteChatPart(Integer chatNo);
 	// 채팅방 메시지 삭제
 	public int deleteAllMessage(Integer chatNo);
-	// 채팅방 파일 삭제
+	// 채팅방 파일 DB 삭제
 	public int deleteChatFileMessage(Integer chatNo);
+	// 채팅방 파일 경로 조회후 삭제
+	public List<ChatFileVO> selectChatFilePath(Integer chatNo);
+	
 	// 채팅방 나가고 남은 사람 조회
 	public List<String> selectLeaveUser(@Param("userNo")Integer userNo, @Param("chatNo")Integer chatNo);
 	// 채팅방 방장 조회

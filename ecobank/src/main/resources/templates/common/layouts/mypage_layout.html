@@ -98,9 +98,13 @@ main {
 				xhr.setRequestHeader(header, token);
 			}
 		});
+		
+		let userNumber = [[${session.userNo != null ? session.userNo : 'null'}]];
+		  userNumber = userNumber === 'null' ? null : userNumber;
 	</script>
 	<th:block
 		th:replace="common/configs/config :: MainTemplateScriptConfig"></th:block>
+		<th:block th:replace="common/configs/config :: AlarmSocketScriptConfig"></th:block>
 </body>
 
 </html>

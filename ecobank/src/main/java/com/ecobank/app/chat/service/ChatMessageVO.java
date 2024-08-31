@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 public class ChatMessageVO {
-	private Integer msgNo;		//채팅방 번호
+	private Integer msgNo;		//메시지 번호
 	private String msgContent; 	//채팅 내용
 	private String nickName;	//회원 닉네임
 	private String msgType;		//채팅 타입	

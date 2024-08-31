@@ -102,7 +102,7 @@
 						<div class="input-message">
 							<label for="message-file-upload" class="file-button">
 				                <i class="fas fa-file-upload"></i>
-				                <input type="file" id="message-file-upload" />
+				                <input type="file" id="message-file-upload" accept=".jpg,.jpeg,.png,.gif,.webp"/>
 				            </label>
 							<input type="text" class="message-input" placeholder="메시지..." id="message" th:onkeydown="enterKeyDown(event, [[${userNo}]])">
 							<div class="input-group-append">
@@ -275,7 +275,7 @@
 	function connect(roomId,roomType) {
 		var socket = new SockJS('/ws');
 		stompClient = Stomp.over(socket);
-		//stompClient.debug = null;
+		stompClient.debug = null;
 	    stompClient.connect({}, function(frame) {
 			if(roomType != null){
 			    // 채팅
@@ -647,7 +647,6 @@
 	    			if(message.msgType == 'I4' || message.msgType == 'I3'){
 	    				stateMessage(message);
 	    			}else{
-	    				console.log(message);
 		    			showMessage(message);	    				
 	    			}
 	    		});

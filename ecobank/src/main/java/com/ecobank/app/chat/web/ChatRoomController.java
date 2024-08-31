@@ -113,9 +113,13 @@ public class ChatRoomController {
 		String lagCode = chatService.laguageCodeSelect(userId);
 		for(ChatMessageVO msg : msgList) {
 			//메시지
-			String translatedText = chatService.translateMessage(msg.getMsgContent(), lagCode);
-			String decodedText = decodeHtmlEntities(translatedText);
-			msg.setMsgContent(decodedText);
+			String translatedText = null;
+			String decodedText = null;
+			if(msg.getMsgContent() != null) {
+				translatedText = chatService.translateMessage(msg.getMsgContent(), lagCode);
+				decodedText = decodeHtmlEntities(translatedText);
+				msg.setMsgContent(decodedText);				
+			}
 			//닉네임
 			translatedText = chatService.translateMessage(msg.getNickName(), lagCode);
 			decodedText = decodeHtmlEntities(translatedText);
