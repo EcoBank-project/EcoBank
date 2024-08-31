@@ -396,11 +396,11 @@ input[type=radio]:checked + label{
 						<i id="likeIcon" class="bi bi-heart" th:data-feedno="${sns.feedNo}" th:if="${sns.snslikeYn == null}"></i>
 						<i id="likeIcon" class="bi-heart-fill bi-heart-fill" th:data-snslikeno="${sns.snslikeYn}" th:unless="${sns.snslikeYn == null}"></i>
 					</button>
-						<span class="likes-count" th:text="${sns.countLike} + ' Likes'"></span>
+						<span class="likes-count" id='snslike' th:text="${sns.countLike} + ' Likes'"></span>
 					<button class="btn btn-outline-secondary ms-3">
 						<i class="bi bi-chat-dots"></i>
 					</button>
-					<span class="comments-count" th:text="${sns.countReply} + ' Comments'"></span>
+					<span class="comments-count" id='snsReply' th:text="${sns.countReply} + ' Comments'"></span>
 			        <button class="btn btn-outline-success ms-3" th:onclick="sModal('feed',[[${sns.feedNo}]])">
 			        	<i class="bi bi-share"></i>
 			        </button>
@@ -471,13 +471,16 @@ input[type=radio]:checked + label{
 		let feedNo = $('#feedNo').val();
 		let replyNo = $('#replyNo').val();
 		let replyContent = $('#replyContent');
+		let snsLike = $('#snsLike');
+		let snsReply = $('#snsReply');
 		let userNo = [[${session.userNo}]];
+	
 		
 		Kakao.init('7c62496966b3d918a5362dc448ca959d'); // 자신의 앱 키로 교체하세요
 
 	    function shareToTwitter() {
 	    	const text = encodeURIComponent('EcoBank');
-	        const url = encodeURIComponent('http://localhost:8080');
+	        const url = encodeURIComponent(`"http://ecotogether.store/snsInfo?feedNo=" + feedNo`);
 	        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
 	        window.open(twitterShareUrl, 'twitter-share-dialog', 'width=800,height=600');
 	     }
@@ -490,13 +493,13 @@ input[type=radio]:checked + label{
 	            description: "Ecobank Sns",
 	            imageUrl: '이미지 URL을 입력하세요',
 	            link: {
-	            	webUrl: 'http://localhost:8080/snsInfo?feedNo='+feedNo
+	            	webUrl: 'http://ecotogether.store/snsInfo?feedNo=' + feedNo
 	            	}
 	         	},
 		         social: {
-		         	likeCount: 100,
-		            commentCount: 200,
-		            sharedCount: 300
+		         	likeCount: snsLike,
+		            commentCount: snsReply,
+		          
 		         },
 		         buttons: [
 		         	{
@@ -510,7 +513,7 @@ input[type=radio]:checked + label{
 	        }
 
 	        function shareToNaver() {
-	            const url = encodeURIComponent('http://localhost:8080');
+	            const url = encodeURIComponent(`"http://ecotogether.store/snsInfo?feedNo=" + feedNo`);
 	            const title = encodeURIComponent('EcoBank');
 	            const naverShareUrl = `https://share.naver.com/web/shareView.nhn?url=${url}&title=${title}`;
 	            window.open(naverShareUrl, 'naver-share-dialog', 'width=800,height=600');
