@@ -52,6 +52,11 @@
 		FROM users
 		WHERE user_no = #{userNo}
 	</select>
+	<select id="selectChatFilePath">
+		SELECT msg_file_path
+		FROM chat_file
+		WHERE chat_no = #{chatNo}
+	</select>
 	<!-- 채팅방 채팅 로그 저장 -->
 	<insert id="insertChatMessage" parameterType="ChatMessageVO">
 		<selectKey keyProperty="msgNo"

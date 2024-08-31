@@ -2,6 +2,7 @@ package com.ecobank.app.chat.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
@@ -225,9 +226,27 @@ public class ChatServiceImpl implements ChatService{
 		int result = chatMapper.selectUsersChatRoom(chatNo);
 		if(result < 1) {
 			// 채팅방에 아무도 없을 경우
-
-			// 채팅방 파일 삭제
+			
+			List<ChatFileVO> chatFiles = chatMapper.selectChatFilePath(chatNo);
+			// 채팅방 파일 DB 삭제
 			chatMapper.deleteChatFileMessage(chatNo);
+			
+			if(chatFiles != null && !chatFiles.isEmpty()) {
+				for(ChatFileVO chatFile : chatFiles) {
+					String filePath = chatFile.getMsgFilePath();
+					Path path = Paths.get(uploadPath, filePath); 
+					
+					//파일이 존재하면 삭제
+					if(Files.exists(path)) {
+						try {
+							Files.delete(path);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}				
+			}
+					
 			// 채팅방 메시지 삭제
 			chatMapper.deleteAllMessage(chatNo);
 			// 채팅방 참여자 삭제
@@ -258,7 +277,24 @@ public class ChatServiceImpl implements ChatService{
 	// 채팅방 메시지 전부 삭제
 	@Override
 	public int chatAllMessageDelete(Integer chatNo) {
+		List<ChatFileVO> chatFiles = chatMapper.selectChatFilePath(chatNo);
 		chatMapper.deleteChatFileMessage(chatNo);
+		if(chatFiles != null && !chatFiles.isEmpty()) {
+			for(ChatFileVO chatFile : chatFiles) {
+				String filePath = chatFile.getMsgFilePath();
+				Path path = Paths.get(uploadPath, filePath); 
+				
+				//파일이 존재하면 삭제
+				if(Files.exists(path)) {
+					try {
+						Files.delete(path);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}				
+		}
+		
 		chatMapper.deleteAllMessage(chatNo);
 		chatMapper.deleteChatPart(chatNo);
 		return chatMapper.deleteChatRoom(chatNo);
