@@ -239,7 +239,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 						<button class="btn btn-outline-secondary ms-3">
 							<i class="bi bi-chat-dots"></i>
 						</button>
-						<span class="comments-count" th:text="${myConfirm.cntReply} + ' Comments'"></span>
+						<span class="comments-count" th:text="${myConfirm.cntReply} + ' Comments'" id="replyCnt"></span>
 			            <button class="btn btn-outline-success ms-3" id="shareModal"  th:onclick="shareModal('share', [[${myConfirm.confirmNo}]])">
 			                <i class="bi bi-share"></i>
 			            </button>
@@ -359,7 +359,6 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     	replyList();
     	function replyList() {
    	        $('#reply').load('replyList?confirmNo=' + fNo);
-   	        
     	}
     	
     	//댓글 등록
@@ -382,7 +381,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     	            console.log(result);
     	            //댓글 등록 후 댓글 목록 호출
     	            replyList();
-    	            //$('.comments-count').text(totalCnt + ' Comments');
+    	            $('#replyCnt').text(result  + ' Comments');
     	            $('#confirmReplyContent').val(''); //댓글창 비우기
     	        },
     	        error: function(err) {
@@ -402,7 +401,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     				confirmReplyNo : replyNo
     			},
     			success : function(result){
-    				if(result == 1){
+     				if(result.state == 1){
     					Swal.fire({
     		                title: '댓글이 삭제되었습니다',
     		                icon: 'success',
@@ -410,6 +409,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     		                confirmButtonColor: "#32C36C"
     		            });
 	    				replyList();
+	    				$('#replyCnt').text(result.replyCnt  + ' Comments');
     				}else{
     					Swal.fire({
     		                title: '삭제되지 않았습니다',
@@ -417,7 +417,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     		                confirmButtonText: 'OK',
     		                confirmButtonColor: "#32C36C"
     		            });
-    				}
+    				} 
     			},
     			error : function(err){
     				console.log(err);
@@ -434,8 +434,8 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 		        showCancelButton: true,
 		        confirmButtonText: '삭제',
 		        cancelButtonText: '취소',
-		        confirmButtonColor: "#32C36C",
-		        cancelButtonColor: "#d33"
+		        confirmButtonColor: "#d33",
+		        cancelButtonColor: "#32C36C"
 		    }).then((result) => {
 		        if (result.isConfirmed) {
 		            $.ajax({

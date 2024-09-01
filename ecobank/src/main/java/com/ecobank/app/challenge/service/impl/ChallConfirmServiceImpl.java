@@ -63,7 +63,6 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 			cnt += 1;
 		}
 		dto.setRemainCount(cnt);
-		//System.out.println(isTodayPresent);
 		return dto;
 	}
 	
@@ -137,9 +136,6 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 				}
 			}
 			
-			//인증 댓글 삭제
-			//challConfirmMapper.deleteReply(confirmNo);
-			
 			//인증 글 삭제
 			int result = challConfirmMapper.deleteConfirmInfo(confirmNo);
 			return result;
@@ -168,7 +164,6 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	    challConfirmMapper.insertReply(replyVO);
 	    //댓글 전체 개수 반환
 	    int totalCnt = challConfirmMapper.replyTotalCnt(replyVO.getConfirmNo());
-	    System.out.println(totalCnt + "개수몇개???");
 	    return totalCnt;
 	}
 	
@@ -221,6 +216,17 @@ public class ChallConfirmServiceImpl implements ChallConfirmService{
 	public int declareInsert(ChallConfirmVO challConfirmVO) {
 		int result = challConfirmMapper.insertConfirmDeclare(challConfirmVO);
 		return result == 1 ? challConfirmVO.getConfirmDeclareNo() : -1;
+	}
+	
+	//댓글 개수
+	@Override
+	public int getReplyCnt(int confirmNo) {
+		return challConfirmMapper.replyTotalCnt(confirmNo);
+	}
+
+	@Override
+	public int getConfirmNoFromReplyNo(int confirmReplyNo) {
+		return challConfirmMapper.getConfirmNoFromReplyNo(confirmReplyNo);
 	}
 
 }

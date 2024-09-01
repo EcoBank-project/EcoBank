@@ -169,7 +169,6 @@ public class ChallServiceImpl implements ChallService{
 	@Override
 	public int reviewInsert(ReviewDTO reviewDTO) {
 		int result = challMapper.insertReview(reviewDTO);
-		//System.out.println(result + "후기 결과에 뭐있나");
 		return result == 1 ? reviewDTO.getReviewNo() : -1;
 	}
 
@@ -179,7 +178,6 @@ public class ChallServiceImpl implements ChallService{
 		int otherUserNo = challMapper.findUserNoByReviewNo(reviewNo);
 		if(userNo == otherUserNo) {
 			int result = challMapper.deleteReview(reviewNo);
-			//System.out.println(result + "결과값");
 			return result;
 		}else {
 			return 0;

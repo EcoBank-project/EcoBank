@@ -17,11 +17,11 @@
                 <input type="hidden" name="challNo" id="challNo" th:value="${param.challNo}">
                 <div class="mb-3">
 		            <label for="confirmContent" class="mb-2 pb-2">인증 내용을 작성해주세요 (300자 내외)</label>
-                    <textarea rows="7" id="confirmContent" name="confirmContent" placeholder="오늘 기후를 위해 여러분들이 실천한 행동을 공유해주세요" required></textarea>
+                    <textarea rows="7" id="confirmContent" name="confirmContent" placeholder="오늘 기후를 위해 여러분들이 실천한 행동을 공유해주세요"></textarea>
                 </div>
                 <div class="mb-3">
                 	<label for="images" class="mb-2 pb-2">인증 이미지를 선택해주세요 (최대 3장)</label>
-                    <input type="file" id="images" name="images" multiple required>
+                    <input type="file" id="images" name="images" multiple>
                 </div>
                 <!-- image preview -->
                 <div class="image-preview" id="imagePreview"></div>
@@ -33,6 +33,43 @@
         </div>
     </div>
     <script>
+	    $('form[name=insertForm]').on('submit', confirmHandler);
+		function confirmHandler(event){
+			event.preventDefault(); 
+			
+			let confirmContent = $('textarea[name="confirmContent"]');
+			if(confirmContent.val() == ''){
+				Swal.fire({
+	                title: '내용을 입력해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+				confirmContent.focus();
+				return;
+			}
+			
+			let images = $('input[name="images"]');
+			if(images.val() == ''){
+				Swal.fire({
+	                title: '사진을 선택해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+				images.focus();
+				return;
+			}
+	
+			Swal.fire({
+                title: '인증글이 등록되었습니다.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: "#32C36C"
+            });
+			insertForm.submit();
+		}
+		
     	$(document).ready(function() {
 	        $('#images').on('change', function() {
 	            var files = $(this)[0].files;

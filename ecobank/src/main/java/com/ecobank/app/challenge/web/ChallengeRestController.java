@@ -1,7 +1,9 @@
 package com.ecobank.app.challenge.web;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -87,7 +89,6 @@ public class ChallengeRestController {
 	@GetMapping("enterStatus")
 	public boolean isUserParticipated(@RequestParam("challNo") int challNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
-		//System.out.println(challConfirmService.isUserParticipated(userNo, challNo) + "뭘 반환해 안했으면 false/했으면 true");
 		return challConfirmService.isUserParticipated(userNo, challNo);
 	}
 	
@@ -104,15 +105,23 @@ public class ChallengeRestController {
 	public int replyInsert(ReplyVO replyVO) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		int result = challConfirmService.replyInsert(userNo, replyVO);
+		result = challConfirmService.getReplyCnt(replyVO.getConfirmNo());
 		return result;
 	}
 	
 	//인증 댓글 삭제
 	@PostMapping("replyDelete")
-	public int replyDelete(@RequestParam("confirmReplyNo") int confirmReplyNo) {
+	public Map<String, Integer> replyDelete(@RequestParam("confirmReplyNo") int confirmReplyNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
-		int result = challConfirmService.replyDelete(userNo, confirmReplyNo);
-		return result;
+		Map<String, Integer> map = new HashMap<>();
+		int confirmNo = challConfirmService.getConfirmNoFromReplyNo(confirmReplyNo);
+		int state = challConfirmService.replyDelete(userNo, confirmReplyNo);
+		int replyCnt = challConfirmService.getReplyCnt(confirmNo);
+		
+		map.put("replyCnt", replyCnt);
+		map.put("state", state);
+		
+		return map;
 	}
 	
 	//인증 글 삭제
@@ -160,7 +169,6 @@ public class ChallengeRestController {
 	public int reviewStatus(@RequestParam("challNo") int challNo) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		int isConfirmed = challService.reviewStatus(userNo, challNo);
-		//System.out.println(isConfirmed + "0인지 1인지 /작성했을때 1 안했을때 0");
 		return isConfirmed;
 	}
 	

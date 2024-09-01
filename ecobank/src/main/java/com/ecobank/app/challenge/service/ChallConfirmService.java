@@ -46,6 +46,12 @@ public interface ChallConfirmService {
 	//인증 댓글 삭제
 	public int replyDelete(int nowUserNo, int confirmReplyNo);
 	
+	//인증 개수
+	public int getReplyCnt(int confirmNo);
+	
+	//인증 댓글 개수
+	public int getConfirmNoFromReplyNo(int confirmReplyNo);
+	
 	//인증 좋아요 등록
 	public LikeDTO confirmLikeInsert(ChallConfirmVO challConfirmVO);
 	
