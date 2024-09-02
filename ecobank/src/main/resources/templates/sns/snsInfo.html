@@ -475,6 +475,10 @@ input[type=radio]:checked + label{
 		let snsReply = $('#snsReply');
 		let userNo = [[${session.userNo}]];
 
+		
+		//댓글 유효성
+		
+        
 		Kakao.init('7c62496966b3d918a5362dc448ca959d'); // 자신의 앱 키로 교체하세요
 
 	    function shareToTwitter() {
@@ -666,7 +670,18 @@ input[type=radio]:checked + label{
 		$('#writeBtn').click(function(){
 			let replyContent = $('#replyContent').val();
 			let fno = $('#feedNo').val();
-	
+			
+			if (replyContent.trim() == '') {
+				Swal.fire({
+		              title: "댓글을 입력하세요",
+		              icon: 'warning',
+		             
+		              confirmButtonText: "닫기",
+		             
+		            })
+	            return; // 댓글이 없으면 함수 종료
+	        }
+			
 		// ajax로 댓글 등록하기
 			$.ajax({
 				type : "POST",

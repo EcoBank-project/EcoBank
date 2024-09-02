@@ -60,7 +60,7 @@ input::placeholder {
 		<br/>
 		<form name="searchForm" th:action="@{/snsSearch}" method="get">		
 			<div class="position-relative mx-auto ">
-            	<input class="form-control border-0 w-100 py-3 ps-4 pe-5 "  name="keyword" type="text" placeholder="#해시태그 또는 닉네임을 입력하세요">
+            	<input class="form-control border-0 w-100 py-3 ps-4 pe-5 "  required name="keyword" type="text" placeholder="#해시태그 또는 닉네임을 입력하세요">
                 <button type="submit" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Search</button>
             </div>
 		</form>
