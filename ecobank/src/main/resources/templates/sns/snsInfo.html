@@ -370,7 +370,7 @@ input[type=radio]:checked + label{
 		                <div class="slider-wrapper wow fadeInUp" data-wow-delay="0.1s">
 		                    <th:block th:each="file, sts : ${snsFileInfo}">
 		                        <div class="slide">
-		                            <img class="sns-img-fluid"    style="width: 400px;  height:400px;"   th:src="@{/images/{filePath}(filePath=${file.filePath})}" alt="Slide Image">
+		                            <img class="sns-img-fluid" id="filePath" style="width: 400px;  height:400px;"   th:src="@{/images/{filePath}(filePath=${file.filePath})}" alt="Slide Image">
 		                        </div>
 		                    </th:block>
 		                </div>
@@ -471,52 +471,49 @@ input[type=radio]:checked + label{
 		let feedNo = $('#feedNo').val();
 		let replyNo = $('#replyNo').val();
 		let replyContent = $('#replyContent');
-		let snsLike = $('#snsLike');
-		let snsReply = $('#snsReply');
+		
+		let filePath = $('#filePath')[0].currentSrc;
 		let userNo = [[${session.userNo}]];
 
+		//공유모달		
+		const shModal = document.querySelector('.sModal');
 		
-		//댓글 유효성
-		
+		function sModal(state, stateNo){
+			event.preventDefault();
+			shModal.style.display="block";
+			console.log(state);
+		}
+			
+		$('#s-close').on('click', function(){
+			shModal.style.display="none";
+		});
         
 		Kakao.init('7c62496966b3d918a5362dc448ca959d'); // 자신의 앱 키로 교체하세요
 
 	    function shareToTwitter() {
 	    	const text = encodeURIComponent('EcoBank');
-			const url = encodeURIComponent(`"http://ecotogether.store/snsInfo?feedNo=" + feedNo`);
+			const url = encodeURIComponent("http://ecotogether.store/snsInfo?feedNo=") + feedNo;
 	        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
 	        window.open(twitterShareUrl, 'twitter-share-dialog', 'width=800,height=600');
 	     }
-		 
-	     function shareToKakao() {
-	     	Kakao.Link.sendDefault({
-	        	objectType: 'feed',
-	            content: {
-	            title: "Ecobank",
-	            description: "Ecobank Sns",
-	            imageUrl: '이미지 URL을 입력하세요',
-	            link: {
-	            	webUrl: 'http://ecotogether.store/snsInfo?feedNo=' + feedNo
-	            	}
-	         	},
-		         social: {
-		         	likeCount: snsLike,
-		            commentCount: snsReply,
-		          
-		         },
-		         buttons: [
-		         	{
-		            	title: '웹에서 보기',
-		                link: {
-		                	webUrl: '공유할 웹 페이지의 URL을 입력하세요'
-		                }
-		           }
-		         ]
+		
+	    function shareToKakao() {
+	   
+	     	Kakao.Link.sendCustom({
+	        	templateId: 111480,
+	        	templateArgs: {
+	        		url: "http://ecotogether.store/snsInfo?feedNo=" + feedNo,
+					THU: filePath,
+					like:"[[${sns.countLike}]]",
+					reply:"[[${sns.countReply}]]",
+					
+	        	}
 		        });
 	        }
-
+		
+		
 	        function shareToNaver() {
-	            const url = encodeURIComponent(`"http://ecotogether.store/snsInfo?feedNo=" + feedNo`);
+	            const url = encodeURIComponent("http://ecotogether.store/snsInfo?feedNo=") + feedNo;
 	            const title = encodeURIComponent('EcoBank');
 	            const naverShareUrl = `https://share.naver.com/web/shareView.nhn?url=${url}&title=${title}`;
 	            window.open(naverShareUrl, 'naver-share-dialog', 'width=800,height=600');
@@ -675,7 +672,6 @@ input[type=radio]:checked + label{
 				Swal.fire({
 		              title: "댓글을 입력하세요",
 		              icon: 'warning',
-		             
 		              confirmButtonText: "닫기",
 		             
 		            })
@@ -786,18 +782,7 @@ input[type=radio]:checked + label{
 			 modal.style.display="none";
 		});
 		
-		//공유모달		
-		const shModal = document.querySelector('.sModal');
-		
-		function sModal(state, stateNo){
-			event.preventDefault();
-			shModal.style.display="block";
-			console.log(state);
-		}
-			
-		$('#s-close').on('click', function(){
-			shModal.style.display="none";
-		});
+
 		
 		//신고하기
 		let declareId = [[${snsDeclare}]];
