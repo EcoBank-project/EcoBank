@@ -422,7 +422,7 @@ input[type=radio]:checked + label{
 			</div>
 			<div class="d-flex">
 				<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
-               	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent" name="replyContent" required> </textarea>
+               	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent" name="replyContent" > </textarea>
                 <button type="button" id="writeBtn" style="margin-left:10px; height:60px;" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
              </div>
 		</div>
@@ -471,13 +471,14 @@ input[type=radio]:checked + label{
 		let feedNo = $('#feedNo').val();
 		let replyNo = $('#replyNo').val();
 		let replyContent = $('#replyContent');
-		let userNo = [[${session.userNo}]];
 		
+		let userNo = [[${session.userNo}]];
+
 		Kakao.init('7c62496966b3d918a5362dc448ca959d'); // 자신의 앱 키로 교체하세요
 
 	    function shareToTwitter() {
 	    	const text = encodeURIComponent('EcoBank');
-	        const url = encodeURIComponent('http://localhost:8080');
+	        const url = encodeURIComponent('http://ecotogether.store');
 	        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
 	        window.open(twitterShareUrl, 'twitter-share-dialog', 'width=800,height=600');
 	     }
@@ -490,7 +491,7 @@ input[type=radio]:checked + label{
 	            description: "Ecobank Sns",
 	            imageUrl: '이미지 URL을 입력하세요',
 	            link: {
-	            	webUrl: 'http://localhost:8080/snsInfo?feedNo='+feedNo
+	            	webUrl: 'http://ecotogether.store/snsInfo?feedNo='+feedNo
 	            	}
 	         	},
 		         social: {
@@ -510,7 +511,7 @@ input[type=radio]:checked + label{
 	        }
 
 	        function shareToNaver() {
-	            const url = encodeURIComponent('http://localhost:8080');
+	            const url = encodeURIComponent('http://ecotogether.store');
 	            const title = encodeURIComponent('EcoBank');
 	            const naverShareUrl = `https://share.naver.com/web/shareView.nhn?url=${url}&title=${title}`;
 	            window.open(naverShareUrl, 'naver-share-dialog', 'width=800,height=600');
