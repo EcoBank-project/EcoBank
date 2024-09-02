@@ -341,12 +341,12 @@
 	
 	
 	// 채팅방 - 메시지 입력 - 보내기
-	function sendMessage(userNo) {
-		let messageFile = document.getElementById("message-file-upload");
-		if($('.message-input').val().trim() === '' && messageFile.files.length < 1){
-			return;
-		}
+	function sendMessage(userNo) {		
 		if(chatSubScription){
+			let messageFile = document.getElementById("message-file-upload");
+			if($('.message-input').val().trim() === '' && messageFile.files.length < 1){
+				return;
+			}
 		    let input = document.getElementById("message");
 		    let today = new Date(); 
 		    let msgType = 'I1';
@@ -726,9 +726,14 @@
 			url: "/chatRoom/follow",
 			method: "GET",
 			success: function(result){
-				result.forEach(function(follow){
-					showFollow(follow);
-				})
+				if(result.length < 1){
+					$('#followListPrivate').append($('<p />').text("팔로우가 없습니다. 팔로우 해주세요"));
+					$('#followListGroup').append($('<p />').text("팔로우가 없습니다. 팔로우 해주세요"));
+				}else{
+					result.forEach(function(follow){
+						showFollow(follow);
+					})										
+				}
 			},
 			error: function(error){
 				console.log(error);	
@@ -737,7 +742,6 @@
 	}
 	//채팅방 팔로우목록 만들기 
 	function showFollow(follow){
-		console.log(follow);
 		let label1 = $('<label />').prop('for','private_'+follow.followingId).addClass('follow-item');
 		let span1 = $('<span />')
 		let pro_img1 = $('<img />').prop('src','/images/'+follow.profileImg).addClass('profil_img');
