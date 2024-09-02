@@ -134,6 +134,28 @@
 	    	
 	    //리뷰 등록
 	    $('#btn-review').click(function(){
+	    	if(!$('input[name=reviewStar]').is(":checked")){
+	    		Swal.fire({
+	                title: '별점을 선택해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+	    		return;
+	    	}else{
+	    		let reviewContent = $('textarea[name="reviewContent"]');
+				if(reviewContent.val() == ''){
+					Swal.fire({
+		                title: '내용을 입력해주세요.',
+		                icon: 'info',
+		                confirmButtonText: 'OK',
+		                confirmButtonColor: "#32C36C"
+		            });
+					reviewContent.focus();
+					return;
+				}
+	    	}
+	    	
 	    	$.ajax({
 	    		url : 'reviewInsert',
 	    		type : 'post',
@@ -161,6 +183,7 @@
 	    			console.log(err);
 	    		}
 	    	})
+	    	
 	    })
 	    
 	    //리뷰 삭제
