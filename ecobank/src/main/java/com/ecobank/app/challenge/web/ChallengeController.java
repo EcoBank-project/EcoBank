@@ -169,6 +169,7 @@ public class ChallengeController {
 		for(MultipartFile image : images) {
 			//1)원래 파일이름
 			String fileName = image.getOriginalFilename();
+			//상세이미지가 없을때
 			if(fileName.equals("")) {
 				index++;
 				continue;

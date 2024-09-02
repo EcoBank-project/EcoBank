@@ -92,28 +92,48 @@
  		function validationCheck(){
 			let challTitle = $('[name="challTitle"]');
 			if(challTitle.val() == ''){
-				alert('제목을 입력해주세요.');
+				Swal.fire({
+	                title: '제목을 입력해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
 				challTitle.focus();
 				return false; 
 			}
 			
 			let challContent = $('[name="challContent"]');
 			if(challContent.val() == ''){
-				alert('내용을 입력해주세요.');
+				Swal.fire({
+	                title: '내용을 입력해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
 				challContent.focus();
 				return false;
 			}
 			
 			let mainImg = $('[name="mainImg"]');
 			if(mainImg.val() == ''){
-				alert('메인이미지를 선택해주세요.');
+				Swal.fire({
+	                title: '메인이미지를 선택해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
 				mainImg.focus();
 				return false;
 			}
 			
 			let detailImg = $('[name="detailImg"]');
 			if(detailImg.val() == ''){
-				alert('상세이미지를 선택해주세요.');
+				Swal.fire({
+	                title: '상세이미지를 선택해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
 				detailImg.focus();
 				return false;
 			}
