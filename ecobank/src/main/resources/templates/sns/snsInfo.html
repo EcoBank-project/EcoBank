@@ -422,7 +422,7 @@ input[type=radio]:checked + label{
 			</div>
 			<div class="d-flex">
 				<input type="hidden" th:value="${sns.feedNo}" id="feedNo" />
-               	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent" name="replyContent" required> </textarea>
+               	<textarea class="form-control comment-input" th:text="${replyContent}" placeholder="Add a comment..." id="replyContent" name="replyContent" > </textarea>
                 <button type="button" id="writeBtn" style="margin-left:10px; height:60px;" class="btn btn-primary btn-sm comment-submit-btn">Submit</button>
              </div>
 		</div>
@@ -474,13 +474,12 @@ input[type=radio]:checked + label{
 		let snsLike = $('#snsLike');
 		let snsReply = $('#snsReply');
 		let userNo = [[${session.userNo}]];
-	
-		
+
 		Kakao.init('7c62496966b3d918a5362dc448ca959d'); // 자신의 앱 키로 교체하세요
 
 	    function shareToTwitter() {
 	    	const text = encodeURIComponent('EcoBank');
-	        const url = encodeURIComponent(`"http://ecotogether.store/snsInfo?feedNo=" + feedNo`);
+			const url = encodeURIComponent(`"http://ecotogether.store/snsInfo?feedNo=" + feedNo`);
 	        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
 	        window.open(twitterShareUrl, 'twitter-share-dialog', 'width=800,height=600');
 	     }
