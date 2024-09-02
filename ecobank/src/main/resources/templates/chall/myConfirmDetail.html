@@ -364,6 +364,17 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     	//댓글 등록
     	$(document).on('click', '#replyBtn', function() {
     	    let replyContent = $('#confirmReplyContent').val();
+    	    if(replyContent.trim() == ''){
+    	    	Swal.fire({
+	                title: '댓글을 입력해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+    	    	replyContent.focus();
+    	    	return;
+    	    }
+    	    
     	    $.ajax({
     	        url: 'replyInsert',
     	        type: 'post',
