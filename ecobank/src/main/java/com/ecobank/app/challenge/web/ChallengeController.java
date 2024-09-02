@@ -70,9 +70,6 @@ public class ChallengeController {
         model.addAttribute("status", "D2");
 		model.addAttribute("list", list);
 		model.addAttribute("page", new PageDTO(8, challService.getTotalByState(criteria), criteria));
-		//model.addAttribute("userCnt", userCnt);
-		//System.out.println(userCnt + "몇명참여?");
-		//System.out.println(list + "몇명참여?");
 		return "chall/challenge";
 	}
 	
@@ -107,7 +104,6 @@ public class ChallengeController {
 	@GetMapping("detail")
 	public String challdetail(ChallVO challVO, Model model) {
 		String challState = challService.getChallState(challVO.getChallNo());
-		System.out.println(challState + "스테이트는 ");
 		ChallVO findVO = challService.challInfo(challVO);
 		
 		model.addAttribute("detail", findVO);
@@ -173,16 +169,18 @@ public class ChallengeController {
 		for(MultipartFile image : images) {
 			//1)원래 파일이름
 			String fileName = image.getOriginalFilename();
-			//System.out.println(fileName);
+			//상세이미지가 없을때
+			if(fileName.equals("")) {
+				index++;
+				continue;
+			}
 			//고유한 식별자로 이미지 저장해서 클라이언트가 업로드했을때 파일이름이 겹치지 않도록 하는거
 			UUID uuid = UUID.randomUUID();
 			String uniqueFileName = uuid + "_" + fileName;
 			
 			//2)실제로 저장할 경로를 생성 : 서버의 업로드 경로 + 파일이름
 			String saveName = uploadPath + File.separator + uniqueFileName; //""가 /와 같아
-			//System.out.println(saveName);
 			Path savePath = Paths.get(saveName); //여기에 경로 담았음
-			//System.out.println(savePath);
 
 			if(index == 0) {
 				challVO.setMainImg(uniqueFileName); //파일의 정보를 가져와서 challVO에 파일의 이름을 넣어줌

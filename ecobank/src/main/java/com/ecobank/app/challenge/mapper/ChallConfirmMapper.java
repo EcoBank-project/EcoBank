@@ -65,6 +65,9 @@ public interface ChallConfirmMapper {
 	//인증 댓글 전체 개수
 	public int replyTotalCnt(int confirmNo);
 	
+	//인증 댓글 개수
+	public int getConfirmNoFromReplyNo(int confirmReplyNo);
+	
 	//인증 좋아요 등록
 	public int insertConfirmLike(ChallConfirmVO challConfirmVO);
 	

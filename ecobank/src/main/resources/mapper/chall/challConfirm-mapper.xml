@@ -205,6 +205,13 @@
 		WHERE confirm_no = #{confirmNo}
 	</select>
 	
+	<!-- 인증번호 가져오기(댓글때문에) -->
+	<select id="getConfirmNoFromReplyNo" parameterType="int">
+		SELECT confirm_no
+		FROM chall_confirm_reply
+		WHERE confirm_reply_no = #{confirmReplyNo}
+	</select>
+	
 	<!-- 인증 좋아요 등록 -->
 	<insert id="insertConfirmLike" parameterType="ChallConfirmVO">
 		<selectKey keyProperty="confirmLikeNo" 

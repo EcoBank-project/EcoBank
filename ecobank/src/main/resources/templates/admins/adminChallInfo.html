@@ -54,7 +54,7 @@
                                 <img th:src="@{'/images/' + ${challenge.mainImg}}" class="img-fluid" style="width:200px; height:200px">
                             </td>
                         </tr>
-                       <tr>
+                       <tr th:if="${challenge.detailImg} != null">
                             <th class="table-warning">상세이미지</th>
                             <td>
                                 <img th:src="@{/images/{fileName}(fileName=${challenge.detailImg})}" class="img-fluid" style="width:200px; height:200px">

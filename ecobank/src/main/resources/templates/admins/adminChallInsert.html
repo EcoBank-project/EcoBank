@@ -40,7 +40,8 @@
 							        min="2024-07-01"
 							        name="challStartAt"
 							        onchange="calculateScore()"></td>
-
+					</tr>
+					<tr>
 						<th>챌린지 종료 일자</th>
 						<td><label for="date"></label>
 							<input type="date"
@@ -60,11 +61,11 @@
 					</tr>
 					<tr>
 						<th>메인 이미지</th>
-						<td><input type="file" name="images"></td>
+						<td><input type="file" name="images" id="mainImg"></td>
 					</tr>
 					<tr>
 						<th>상세 이미지</th>
-						<td><input type="file" name="images"></td>
+						<td><input type="file" name="images" id="detailImg"></td>
 					</tr>
 				</table>
 				<button type="submit" class="btn btn-custom">등록</button>
@@ -86,6 +87,91 @@
 	            scoreInput.val(score);
 	        }
 	    }
+	    
+	    $('form[name=insertForm]').on('submit', challHandler);
+		function challHandler(event){
+			event.preventDefault(); 
+			
+			let challTitle = $('input[name="challTitle"]');
+			if(challTitle.val() == ''){
+				Swal.fire({
+	                title: '제목을 입력해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+				challTitle.focus();
+				return;
+			}
+			
+			let challStartAt = $('input[name="challStartAt"]');
+			if(challStartAt.val() == ''){
+				Swal.fire({
+	                title: '시작 일자가 선택되지 않았습니다.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+				challStartAt.focus();
+				return;
+			}
+			
+			let challCloseAt = $('input[name="challCloseAt"]');
+			if(challCloseAt.val() == ''){
+				Swal.fire({
+	                title: '종료 일자가 선택되지 않았습니다.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+				challCloseAt.focus();
+				return;
+			}
+			
+			let challContent = $('textarea[name="challContent"]');
+			if(challContent.val() == ''){
+				Swal.fire({
+	                title: '내용을 입력해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+				challContent.focus();
+				return;
+			}
+			
+			let mainImg = $('#mainImg');
+			if(mainImg.val() == ''){
+				Swal.fire({
+	                title: '메인이미지를 선택해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+				mainImg.focus();
+				return;
+			}
+			
+ 			let detailImg = $('#detailImg');
+			if(detailImg.val() == ''){
+				Swal.fire({
+	                title: '상세이미지를 선택해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+				detailImg.focus();
+				return;
+			} 
+			
+			Swal.fire({
+                title: '게시글이 등록되었습니다.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: "#32C36C"
+            });
+			insertForm.submit();
+		}
 	</script>
 </body>
 </html>

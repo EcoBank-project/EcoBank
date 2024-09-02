@@ -67,10 +67,9 @@ public class ConfirmController {
 	//나의 인증 내역
 	@GetMapping("getMyConfirm")
 	public String myConfirm(Model model, @RequestParam("challNo") Integer challNo, FileVO fileVO) {
-		//model에 review.html안에 th에 넣는 ""값이 여기에 있는거 기억하기
-		//detailImg를 여기에 따로 추가해야해
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		List<FileVO> list = fileService.selectFileInfo(userNo, challNo, "J3");	
+		
 		model.addAttribute("fileList", list);
 		return "chall/myConfirm";
 	}
@@ -87,7 +86,6 @@ public class ConfirmController {
 		model.addAttribute("myConfirm", findVO);
 		model.addAttribute("list", list);
 		model.addAttribute("nowUserNo", userNo);
-		//System.out.println(findVO + "파인드브오에 뭐 있는지, 신고");
 		
 		//인증 신고 목록
 		List<CodeVO> declarelist = commonService.codeList("0C");
@@ -100,12 +98,10 @@ public class ConfirmController {
 	public String replyList(Model model, ChallConfirmVO challConfirmVO) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		List<ChallConfirmVO> list = challConfirmService.confirmReplyList(challConfirmVO);
-		//ChallConfirmVO findVO = challConfirmService.myConfirmInfo(challConfirmVO);
+		
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("replyList", list);
-		//model.addAttribute("myConfirm", findVO);
-		System.out.println(list + "리스트에 뭐있는지");
-		//System.out.println(findVO + "파인드 브오에 뭐있는지");
+
 		return "chall/reply";
 	}
 	
@@ -150,9 +146,7 @@ public class ConfirmController {
 		model.addAttribute("reviewList", list);
 		model.addAttribute("userNo", userNo);
 		model.addAttribute("avg", avgStar);
-		//System.out.println(list + "상세에 리뷰안에 뭐있는지 확인 - 여기에 다른 유저번호");
-		//System.out.println(userNo + "유저번호 뭔지 - 현재 접속한 유저 번호");
-		//System.out.println(avgStar + "평균 별점");
+
 		return "chall/review";
 	}	
 	
