@@ -134,6 +134,28 @@
 	    	
 	    //리뷰 등록
 	    $('#btn-review').click(function(){
+	    	if(!$('input[name=reviewStar]').is(":checked")){
+	    		Swal.fire({
+	                title: '별점을 선택해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+	    		return;
+	    	}else{
+	    		let reviewContent = $('textarea[name="reviewContent"]');
+				if(reviewContent.val() == ''){
+					Swal.fire({
+		                title: '내용을 입력해주세요.',
+		                icon: 'info',
+		                confirmButtonText: 'OK',
+		                confirmButtonColor: "#32C36C"
+		            });
+					reviewContent.focus();
+					return;
+				}
+	    	}
+	    	
 	    	$.ajax({
 	    		url : 'reviewInsert',
 	    		type : 'post',
@@ -153,7 +175,8 @@
 	    		},
 	    		error : function(err){
 	    			Swal.fire({
-                        title: '<span style="font-size: 20px;">도전하기 버튼을 누른 후 작성해주세요</span>',
+                        //title: '<span style="font-size: 20px;">도전하기 버튼을 누른 후 작성해주세요</span>',
+                        title: '리뷰 작성되지 않았습니다.',
                         icon: 'info',
                         confirmButtonText: 'OK',
                         confirmButtonColor: "#32C36C"
@@ -161,6 +184,7 @@
 	    			console.log(err);
 	    		}
 	    	})
+	    	
 	    })
 	    
 	    //리뷰 삭제

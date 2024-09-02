@@ -364,6 +364,17 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     	//댓글 등록
     	$(document).on('click', '#replyBtn', function() {
     	    let replyContent = $('#confirmReplyContent').val();
+    	    if(replyContent.trim() == ''){
+    	    	Swal.fire({
+	                title: '댓글을 입력해주세요.',
+	                icon: 'info',
+	                confirmButtonText: 'OK',
+	                confirmButtonColor: "#32C36C"
+	            });
+    	    	replyContent.focus();
+    	    	return;
+    	    }
+    	    
     	    $.ajax({
     	        url: 'replyInsert',
     	        type: 'post',
@@ -612,7 +623,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 
     		function shareTwitter() {
    		    var sendText = "에코뱅크"; // 전달할 텍스트
-   		    var sendUrl = "http://ecotogether.store"; // 전달할 URL
+   		    var sendUrl = "http://ecotogether.store/othersInfo?confirmNo=" + fNo; // 전달할 URL
    		    window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl);
    		}
     	
@@ -626,12 +637,12 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     		    objectType: 'feed',
     		    content: {
     		      title: "Ecobank", // 보여질 제목
-    		      description: "에코뱅크 챌린지", // 보여질 설명
+    		      description: "에코뱅크 챌린지 인증글", // 보여질 설명
     		      imageUrl: "./img/favicon.png", // 콘텐츠 URL
     		      link: {
     		         //webUrl: "http://localhost:8080"
     		         //webUrl: "http://ecotogether.store/confirmInfo?confirmNo=" + cNo
-    		         webUrl: "http://ecotogether.store"
+    		         webUrl: "http://ecotogether.store/othersInfo?confirmNo=" + fNo
 		      }
 		    }
 		  });
@@ -640,8 +651,8 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 		// NAVER
 		function shareNaver() {
 			  const title = "Ecobank";
-			  const url = "http://ecotogether.store";
-			  window.open("https://share.naver.com/web/shareView?url=" + url + "&title=" + title
+			  const url = "http://ecotogether.store/othersInfo?confirmNo=" + fNo
+			  window.open("https://share.naver.com/web/shareView?url=" + url
 		  );
 		}
     </script>
