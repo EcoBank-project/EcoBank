@@ -89,7 +89,7 @@ public class ChallengeController {
 	}
 	
 	//챌린지 정렬
-	@GetMapping("challengeSort")
+	@GetMapping("progressSort")
 	public String challengeSort(Model model, @RequestParam("select") int select) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		List<ChallVO> list = challService.challengeSort(userNo, select);
@@ -199,7 +199,7 @@ public class ChallengeController {
 	}
 	
 	//챌린지 목록 - 관리자
-	@GetMapping("adminScoreList")
+	@GetMapping("scoreList")
 	public String scoreList(Model model, Criteria criteria) {
 		criteria.setAmount(5);
 		List<Map<String, Object>> list = challService.scoreList(criteria);

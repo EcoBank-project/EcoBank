@@ -83,7 +83,7 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	    <p>총 <span th:text="${count}" style="text-decoration: underline; font-weight: bold"></span>개의 챌린지</p>
 	    <div class="inputSearchBox">
 		    <div th:if="${status=='D2'}">
-			    <select class="form-select" aria-label="Default select example" id="orderSelect" onchange="updateDisplay()">
+			    <select class="form-select" aria-label="Default select example" id="orderSelect">
 			        <option value="1">최신 날짜 순</option>
 			        <option value="2">좋아요 순</option>
 			        <option value="3">내가 참여 중인 챌린지</option>
@@ -175,23 +175,9 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 		//정렬 기능 load()
 		$('#orderSelect').change(function(){
 			let sel = $('#orderSelect').val();
-	 		$('#sort').load("challengeSort?select=" + sel);
+	 		$('#sort').load("progressSort?select=" + sel);
 		})
-		
-		//D2에 Dday표시 안하게
-/* 		function updateDisplay() {
-	        var status = document.getElementById("orderSelect").value;
-	        var dDayDivs = document.querySelectorAll("#dDay");
-	
-	        dDayDivs.forEach(function(div) {
-	            if(status === "D2") {
-	                div.style.display = "none";
-	            } else {
-	                div.style.display = "block";
-	            }
-	        });
-	    } */
-		
+			
 		$(document).on('click', '.go-challenge', function(){
 	        let cNo = $(this).closest('.card-body').find('.cNo').val();
 	        $.ajax({
