@@ -250,7 +250,8 @@
                ,profile_img
                , (SELECT count(feed_no) 
                     FROM sns
-                   WHERE sns.user_no = users.user_no) as count_feed
+                   WHERE sns.user_no = users.user_no
+                     AND feed_state = 'F1') as count_feed
                , (SELECT count(following_id) 
                     FROM follow
                    WHERE follow.following_id = users.user_no) as count_following      
