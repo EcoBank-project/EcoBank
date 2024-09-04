@@ -199,7 +199,7 @@ public class ChallengeController {
 	}
 	
 	//챌린지 목록 - 관리자
-	@GetMapping("scoreList")
+	@GetMapping("adminScoreList")
 	public String scoreList(Model model, Criteria criteria) {
 		criteria.setAmount(5);
 		List<Map<String, Object>> list = challService.scoreList(criteria);
