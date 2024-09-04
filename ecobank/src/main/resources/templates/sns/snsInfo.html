@@ -522,8 +522,15 @@ input[type=radio]:checked + label{
 		//개인피드이동
 		$(".other").on('click', function(event) {
 			let uno = $(event.currentTarget).children().first().text();
-			let url = '/userSns?userNo=' + uno;
-			location.href = url;
+			console.log('uno',uno);
+			console.log('user0',userNo);
+			if(uno == userNo){
+				let url = '/mySns'
+				location.href = url;
+			}else{
+				let url = '/userSns?userNo=' + uno;
+				location.href = url;
+			}
 		});
 		
 		document.addEventListener("DOMContentLoaded", function() {
@@ -756,10 +763,15 @@ input[type=radio]:checked + label{
 		}
 		//개인피드이동
 		function replyother(rUserNo) {
+			if(rUserNo == userNo){
+				let url = '/mySns'
+				location.href = url;
+			}else{
 			let url = '/userSns?userNo=' + rUserNo;
 			location.href = url;
+			}
 		};
-		
+
 		//신고모달		
 		const modal = document.querySelector('.modal');
 	

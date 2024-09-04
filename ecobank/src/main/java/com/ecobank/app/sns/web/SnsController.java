@@ -186,7 +186,8 @@ public class SnsController {
 		model.addAttribute("userSns", list);
 		model.addAttribute("countMySns", findVO);
 		model.addAttribute("followCheck", result);
-	
+		System.out.println("나는"+userNo);
+		System.out.println("글쓴사람은"+ snsVO.getUserNo());
 		if(userNo == findVO.getUserNo()) {
 			return "sns/mySns";
 		}
