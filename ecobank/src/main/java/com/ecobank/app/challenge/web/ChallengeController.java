@@ -89,7 +89,7 @@ public class ChallengeController {
 	}
 	
 	//챌린지 정렬
-	@GetMapping("challengeSort")
+	@GetMapping("progressSort")
 	public String challengeSort(Model model, @RequestParam("select") int select) {
 		int userNo = (Integer) httpSession.getAttribute("userNo");
 		List<ChallVO> list = challService.challengeSort(userNo, select);

@@ -85,7 +85,7 @@ public class AdminController {
     }
 
     // 챌린지 신청 목록 조회
-    @GetMapping("/ChallDeclareList")
+    @GetMapping("/adminChallDeclareList")
     public String getChallDeclareList(Model model) {
         List<ChallDeclareVO> list = adminService.ChallDeclareList(); // 챌린지 신청 목록 조회
 
@@ -158,7 +158,7 @@ public class AdminController {
     }
 
     // QNA 목록 페이지
-    @GetMapping("/QnaUser")
+    @GetMapping("/adminQnaUser")
     public String getQnaUser(Model model) {
         List<QnaVO> qnaUser = adminService.qnaUser(); // QNA 목록 조회
         
