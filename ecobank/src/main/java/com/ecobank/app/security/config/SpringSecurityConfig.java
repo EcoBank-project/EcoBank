@@ -44,7 +44,7 @@ public class SpringSecurityConfig {
                                 "/about", "/find*", "/ip-info", "/set-country",
                                 "/reset_pw", "/introduce").permitAll() // 인증 필요 없는 경로
                         .antMatchers("/admin*").hasRole("A2") // "/admin*"는 A2(ADMIN) 권한만 가능
-                        .antMatchers("/chall*").hasRole("A2") 
+                        //.antMatchers("/chall*").hasRole("A2") 
                         .antMatchers("/score*").hasRole("A2") 
                         .anyRequest().authenticated())
                 .formLogin(login -> login
